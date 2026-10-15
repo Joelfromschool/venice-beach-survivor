@@ -1083,7 +1083,7 @@ function drawHUD(){R(0,0,W,22,'rgba(18,10,36,.88)');R(0,22,W,1,'#ffd23f');T(CH0(
   const CH=['W','L + ratio','lmaooo','first!','he\'s cooked','BASED','fake fight?','clip it!!','💀💀','smash like'];for(let i=0;i<3;i++)T(CH[((tm*1.5|0)+i*3)%CH.length],W-68,39+i*8,['#80ffff','#ffff80','#ff80ff'][i],5);X.restore();}
  if(mode==='surv'&&surv){T('WAVE '+surv.wave,W/2,24,'#9cff6a',8,'center');T('KILLS '+surv.kills+'  TIME '+Math.floor(surv.t/60)+':'+String(Math.floor(surv.t%60)).padStart(2,'0'),W/2,34,'#fff',6,'center');}
  if(goT>0&&(tm*4|0)%2){T('GO!',W-56,70,'#ffe040',16);X.fillStyle=OL;X.beginPath();X.moveTo(W-22,62);X.lineTo(W-6,78);X.lineTo(W-22,94);X.fill();X.fillStyle='#ffe040';X.beginPath();X.moveTo(W-21,66);X.lineTo(W-9,78);X.lineTo(W-21,90);X.fill();}
- if(!isTouch)T('WASD move · J punch/swing · K kick · SPACE jump · L special · E throw weapon · B gear bag · ESC menu',W/2,172,'rgba(255,255,255,.7)',5,'center');
+ if(!isTouch)T('WASD move · J punch/swing · K kick · SPACE jump · L special · E throw weapon · B perks · ESC menu',W/2,172,'rgba(255,255,255,.7)',5,'center');
  drawMsgs();}
 function drawMsgs(y=46){msgs.slice(-3).forEach((m,i)=>T(m.t,W/2,y+i*10,'#fff',7,'center'));}
 function drawTitle(){stageI=0;cam=(tm*20)%1200;if(!pl)pl=newPlayer();ens=ens||[];drawBG();flushL();
