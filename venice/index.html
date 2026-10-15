@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8">
+<html lang="en"><head>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="build" content="v10"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1094,7 +1095,7 @@ function drawTitle(){stageI=0;cam=(tm*20)%1200;if(!pl)pl=newPlayer();ens=ens||[]
  T('A boardwalk brawl of the absurd',W/2,80,'#fff',7,'center');
  {const a=sprFor('dad',0),b=sprFor('infl',0),g=sprFor('gymbro',0),z=sprFor('zee',0);if(a&&b&&g&&z){drawSpr(a,40,150,1,(tm*2|0)%2?'punch':'idle',0,false,50);drawSpr(z,82,152,1,'walk',tm*8,false,46);drawSpr(g,250,152,-1,'idle',0,false,54);drawSpr(b,288,150,-1,'phone',0,false,46);}}
  if((tm*2.5|0)%2)T('PRESS START',W/2,100,'#fff',11,'center');else T(tokens>0?'INSERT COIN':'INSERT COIN',W/2,100,'#ffd000',11,'center');T('CREDITS '+String(tokens).padStart(2,'0'),300,170,'#fff',6,'right');T('★ '+cred+' CRED',20,170,'#40ffe0',6,'left');
- T('Collect junk. Merge it. Survive the boardwalk.',W/2,120,'#a0ffa0',6,'center');
+ T('Collect junk. Level it up. Survive the boardwalk.',W/2,120,'#a0ffa0',6,'center');
  {drawBtns(titleBtns());
   const hs=survScores();if(hs.length)T('SURVIVOR BEST: '+hs[0].s+' (wave '+hs[0].w+', '+hs[0].c+')',W/2,128,'#9cff6a',6,'center');}
  T('(c) 2026 Grok Bot Arcade',W/2,170,'#c0c0c0',5,'center');T(UNL.filter(Boolean).length+'/5 FIGHTERS   SECRETS '+Object.keys(SEC).length+'/6',W/2,160,'#ffb0ff',5,'center');}
@@ -1671,7 +1672,7 @@ CAPS.__get=null;
 {const _r10=render;render=function(){_r10();if(state==='intro'&&mode!=='demo'){X.setTransform(SC,0,0,SC,0,0);menuOn();const p=Math.min(1,tm*3),nm=STAGES[stageI].name,m=/^STAGE (\d+): (.*)$/.exec(nm)||[0,stageI+1,nm];
   X.save();X.translate((1-p)*-330,0);R(-MX,62,GW,46,'rgba(10,6,24,.92)');R(-MX,62,GW,2,UI.gold);R(-MX,106,GW,2,UI.gold);T('STAGE '+m[1],W/2,66,'#40e0ff',8,'center');T(m[2],W/2,78,UI.gold,12,'center');T(STAGES[stageI].sub||'',W/2,96,'#fff',6,'center');X.restore();flushL();menuOff();}};}
 // --- weapon anchored to each sprite pose's hand ---
-const HANDS={dad:[.88,.48],tina:[.84,.42],sal:[.88,.47],zee:[.80,.55],ren:[.80,.40],vibe:[.80,.55],vibe_ride:[.92,.47],vibe_swing:[.45,.11],vibe_win:[.85,.14]};
+const HANDS={dad:[.94,.42],tina:[.95,.37],sal:[.94,.40],zee:[.94,.56],ren:[.92,.38],vibe:[.89,.50],vibe_ride:[.92,.47],vibe_swing:[.61,.20],vibe_win:[.82,.22]};
 let LSPR=null;
 function poseXf(p,walk){let rot=0,ax=1,ay=1,dx=0,dy=0;if(p==='walk'){dy=-Math.abs(Math.sin(walk*.9))*1.8;rot=Math.sin(walk*.9)*.05;}else if(p==='idle'||p==='phone'||p==='hold'){ay=1+Math.sin(tm*4)*.018;ax=1-Math.sin(tm*4)*.01;}
  else if(p==='punch'||p==='swing'){rot=.13;dx=3;ax=1.06;}else if(p==='upper'){rot=-.1;dy=-3;ay=1.08;ax=.95;}else if(p==='kick'||p==='fkick'){rot=p==='fkick'?.35:-.18;dx=2;}else if(p==='hurt'){rot=-.12;dx=-2;ax=1.12;ay=.86;}return{rot,ax,ay,dx,dy};}
@@ -1680,13 +1681,21 @@ function poseXf(p,walk){let rot=0,ax=1,ay=1,dx=0,dy=0;if(p==='walk'){dy=-Math.ab
  const r=_sd9(ch,sx,sy,o);if(isP&&LSPR){LSPR.want=false;LSPR.ok=!!LSPR.m;}return r;};}
 // which sheet key the player sprite used (vibe picks per pose)
 function sprKeyOf(L){if(L.k!=='vibe')return L.k;for(const k of['vibe_ride','vibe','vibe_swing','vibe_win']){const s=SPC[k+'|0|']||SPC[k+'|0|gold'];if(s&&(L.c===s||(s._s&&Object.values(s._s).includes(L.c))))return k;}return 'vibe';}
-drawPlayer=(function(_dp0){return function(){const hadW=pl.wpn;const keep=pl.wpn;pl.wpn=null;try{_dp0();}finally{pl.wpn=keep;}
- if(!pl.wpn||pl.hold||(pl.inv>0&&(tm*20|0)%2)||!LSPR||!LSPR.ok)return;const L=LSPR,w=WPN[pl.wpn.k],key=sprKeyOf(L),hd=HANDS[key]||[.8,.5];
- const ww=L.c.width/L.c.height*L.h,xf=poseXf(L.pose,L.walk);
- X.save();X.setTransform(L.m);X.translate(L.sx+xf.dx*L.f,L.sy+xf.dy);X.scale(L.f,1);X.rotate(xf.rot);X.scale(xf.ax,xf.ay);X.translate(-ww/2+hd[0]*ww,-L.h+hd[1]*L.h);
- let ang=key==='vibe_swing'?-1.4:-1.05+Math.sin(tm*3)*.04;if(pl.atk&&pl.wd){const p=clamp(1-pl.atkT/pl.wd,0,1);ang=(key==='vibe_swing'?-1.9:-2.2)+p*3.0;}
- const gun=w.fx==='blow'||w.fx==='sonic';if(gun)ang=pl.atk?-.05:.12;X.rotate(ang+.785);const sz=gun?18:22;
- if(gun)drawIco(w.ico,-6,-sz/2,sz);else drawIco(w.ico,-4,-sz+4,sz);X.restore();};})(drawPlayer);
+drawPlayer=(function(_dp0){return function(){const keep=pl.wpn;pl.wpn=null;try{_dp0();}finally{pl.wpn=keep;}
+ if(!pl.wpn||pl.hold||(pl.inv>0&&(tm*20|0)%2)||!LSPR||!LSPR.ok)return;const L=LSPR,w=WPN[pl.wpn.k],key=sprKeyOf(L),hd=HANDS[key]||[.9,.42];
+ const ww=L.c.width/L.c.height*L.h,xf=poseXf(L.pose,L.walk),gun=w.fx==='blow'||w.fx==='sonic';
+ // ang = weapon axis from +x (facing dir), negative = up. lift = extra grip raise (fraction of height)
+ let ang,lift=0,fwd=0;
+ if(pl.atk&&pl.wd){const p=clamp(1-pl.atkT/pl.wd,0,1),e=p<.5?2*p*p:1-2*(1-p)*(1-p);ang=-2.5+e*2.25;lift=.10*Math.sin(Math.PI*Math.min(1,p*1.3))+.04;fwd=.04*e;}
+ else if(L.pose==='walk'||key==='vibe_ride'){ang=-1.15+Math.sin(L.walk*.9)*.08;lift=.03;}
+ else{ang=-2.15+Math.sin(tm*3)*.03;lift=.06;fwd=-.08;}
+ if(key==='vibe_swing'||key==='vibe_win'){lift=0;fwd=0;}
+ if(gun){ang=pl.atk?-.05:-.25;lift=.02;fwd=0;}
+ const hx=-ww/2+(hd[0]+fwd)*ww,hy=-L.h+(hd[1]-lift)*L.h;
+ X.save();X.setTransform(L.m);X.translate(L.sx+xf.dx*L.f,L.sy+xf.dy);X.scale(L.f,1);X.rotate(xf.rot);X.scale(xf.ax,xf.ay);X.translate(hx,hy);
+ const sz=Math.round(L.h*(gun?.3:.42));X.rotate(ang+(gun?0:Math.PI/4));
+ if(gun)drawIco(w.ico,-sz*.25,-sz/2,sz);else drawIco(w.ico,-sz*.12,-sz*.88,sz);
+ if(window.HDBG){X.rotate(-(ang+(gun?0:Math.PI/4)));X.fillStyle='#0f0';X.fillRect(-1.5,-1.5,3,3);}X.restore();};})(drawPlayer);
 // --- mobile / store basics ---
 addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play'){state='pause';}});
 (function(){const st=document.createElement('style');st.textContent='html,body,canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none;touch-action:none}#rot9{position:fixed;inset:0;z-index:99;background:#0a0618;color:#ffd23f;font:bold 18px monospace;display:none;align-items:center;justify-content:center;text-align:center;flex-direction:column}#rot9 b{font-size:54px;display:block;animation:r9 1.6s infinite}@keyframes r9{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(-90deg)}}@media (orientation:portrait) and (pointer:coarse){#rot9{display:flex}}';document.head.appendChild(st);
@@ -1720,6 +1729,64 @@ const PJMAP={cd:'cd',souvenir:'souvenir',rent:'rent',hoa:'hoa',gel:'gel',card:'t
  if(o.k==='cone'&&hasPX('cone_p')){shadow(sx,o.y,8);if(o.hit)X.globalAlpha=.4;drawPX('cone_p',sx,o.y+1,22);X.globalAlpha=1;return;}
  _do9(o);};}
 {const _gg=goldGull;goldGull=function(){if(hasPX('gull_gold'))return icoCv('px_gull_gold',96);return _gg();};}
+
+// ===== v10: PERKS (replaces bag grid), build tag, cache =====
+const BUILD='v10';
+const PK_MAX=6,PK_LV=3,PK_POOL=['churro','skate','sunscreen','boombox','batteries','surfboard','ticket','kombucha','crystal','avocado','seagull'];
+const perks=()=>bagItems.filter(i=>i.g===0&&IT[i.k]);
+function pkNorm(){const out=[],by={};for(const it of bagItems){if(!IT[it.k])continue;if(by[it.k]){by[it.k].tier=Math.min(PK_LV,(by[it.k].tier||1)+(it.tier||1));continue;}
+ if(out.length>=PK_MAX)continue;it.g=0;it.cx=out.length;it.cy=0;by[it.k]=it;out.push(it);}bagItems=out;}
+adjPairs=function(){return[];};
+{const _ai=addItem;addItem=function(k){if(!IT[k])return null;if(k==='buddy'||k==='token')return _ai(k);pkNorm();
+ const ex=bagItems.find(i=>i.k===k);if(ex){if((ex.tier||1)>=PK_LV)return null;ex.tier=(ex.tier||1)+1;SFX.merge&&SFX.merge();msgs.push({t:IT[k].n+' → Lv'+ex.tier+'!',life:1.6});pkHud();return ex;}
+ if(bagItems.length>=PK_MAX)return null;const it=mk(k);it.g=0;it.cx=bagItems.length;it.cy=0;it.tier=1;bagItems.push(it);pkHud();return it;};}
+const PKSP={sonic:'Special: bass wave',tickets:'Special: ticket storm'};
+function pkEff(k,lv){const d=IT[k],st=d.st||{},nm={atk:'attack',def:'defense',spd:'speed',hp:'max HP',regen:'regen'};const p=[];
+ for(const s in st)p.push('+'+st[s]*lv+' '+nm[s]);if(d.sp)p.unshift(PKSP[d.sp]||'New special');
+ if(k==='seagull')p.unshift('Gull pal pecks foes');if(k==='batteries')p.push('powers Boombox');if(k==='ticket'&&!p.length)p.push('combine 2 for shuriken');return p.slice(0,2).join(', ')||'mystery perk';}
+function pkRecipes(){const own=perks(),has=k=>own.find(i=>i.k===k),out=[];
+ for(const r in RECIPES){const[a,b]=r.split('+'),res=RECIPES[r];if(a===b){const x=has(a);if(x&&(x.tier||1)>=2)out.push({a,b,res});}else if(has(a)&&has(b))out.push({a,b,res});}return out;}
+function pkCombine(rc){const own=perks();if(rc.a===rc.b){const x=own.find(i=>i.k===rc.a);if(!x)return;bagItems=bagItems.filter(i=>i!==x);}
+ else bagItems=bagItems.filter(i=>i.k!==rc.a&&i.k!==rc.b);addItem(rc.res);SFX.merge&&SFX.merge();burst(160,60,'#ffe040',24,true);msgs.push({t:'COMBINED: '+IT[rc.res].n+'!',life:2});}
+let pkCh=[],pkPicked=false;
+function pkRoll(){pkNorm();const own=perks(),full=own.length>=PK_MAX;let pool=full?own.filter(i=>(i.tier||1)<PK_LV).map(i=>i.k):PK_POOL.filter(k=>{const o=own.find(i=>i.k===k);return!o||(o.tier||1)<PK_LV;});
+ pool=[...new Set(pool)];pkCh=[];while(pkCh.length<3&&pool.length){const k=pool.splice(Math.random()*pool.length|0,1)[0];pkCh.push(k);}pkPicked=false;}
+{const _ob=openBag;openBag=function(m){_ob(m);pkNorm();if(m!=='pause')pkRoll();uiF=-1;};}
+const sh=(s,n)=>s.length>n?s.slice(0,n-1)+'.':s;
+function pkBtns(){const b=[],pause=bagMode==='pause';pkRecipes().slice(0,2).forEach((r,i)=>b.push({x:8,y:84+i*13,w:304,h:12,l:IT[r.a].n+' + '+IT[r.b].n+' → '+IT[r.res].n+':  tap to combine',c:'#8040c0',a:'pkc'+i,sz:5}));
+ if(!pause){pkCh.forEach((k,i)=>b.push({x:8+i*103,y:120,w:98,h:36,l:'',c:pkPicked?'#2a2440':'#2a5070',a:pkPicked?null:'pkp'+i,card:k}));
+  if(!pkPicked)b.push({x:8,y:160,w:90,h:17,l:'REROLL  $5',c:'#a07020',a:'pkr',sz:6});}
+ b.push({x:212,y:160,w:100,h:17,l:pause?'RESUME ▶':(bagMode==='wave'?'NEXT WAVE ▶':'NEXT STAGE ▶'),c:'#3a9a28',a:'pkdone',sz:6});return b;}
+{const _ua=uiAct;uiAct=function(a){if(typeof a==='string'&&a.startsWith('pk')){if(a==='pkdone'){closeBag();return;}
+ if(a==='pkr'){if(coins>=5){coins-=5;pkRoll();SFX.coin&&SFX.coin();}else SFX.bad&&SFX.bad();return;}
+ if(a.startsWith('pkc')){const r=pkRecipes()[+a.slice(3)];if(r)pkCombine(r);return;}
+ if(a.startsWith('pkp')){const k=pkCh[+a.slice(3)];if(k&&!pkPicked&&addItem(k)){pkPicked=true;SFX.pick&&SFX.pick();if(bagMode!=='pause'){const s=stats();}}return;}return;}return _ua(a);};}
+bagDown=function(){};bagUp=function(){};bagMove=function(){};
+bagUpdate=function(dt){if(P.bag||P.pause||(bagMode==='pause'&&P.start&&uiF<0)){closeBag();return;}uiNav(pkBtns());};
+function pkSlot(it,x,y,w,h,lv,hi){RR(x-1,y-1,w+2,h+2,UI.ol);RR(x,y,w,h,hi?'#3a2a66':UI.bg2);
+ if(!it){T('empty',x+w/2,y+h/2-3,'#5a4a80',5,'center');return;}const k=it.k||it;drawItemIcon(k,x+w/2-11,y+3,22);
+ T(sh(IT[k].n,13),x+w/2,y+27,'#fff',5,'center');T(sh(pkEff(k,lv),18),x+w/2,y+35,'#9fe8ff',4,'center');
+ for(let i=0;i<PK_LV;i++)R(x+w/2-10+i*7,y+h-6,5,3,i<lv?UI.gold:'#4a3a70');}
+drawBag=function(){drawWorld();flushL();X.globalAlpha=.9;R(0,0,W,H,'#120a24');X.globalAlpha=1;menuOn();const pause=bagMode==='pause';
+ R(0,0,320,16,UI.hd);R(0,16,320,1,UI.gold);T(pause?'PERKS':'PREPARE FOR NEXT STAGE',6,4,UI.gold,8);T('$'+coins,314,4,'#ffe040',7,'right');
+ T('YOUR PERKS  ('+perks().length+'/6)  ·  duplicates level up automatically (max Lv3)',6,19,'#c8b8f0',5);
+ const own=perks();for(let i=0;i<PK_MAX;i++){const it=own[i];pkSlot(it,6+i*52,27,48,54,it?(it.tier||1):0);}
+ const bs=pkBtns();
+ if(!pkRecipes().length)T(pause?'Tip: own two matching perks to unlock a combo.':'',160,90,'#8a7ab0',5,'center');
+ if(!pause){T(pkPicked?'PERK TAKEN!':'CHOOSE 1 OF 3 NEW PERKS',160,111,pkPicked?'#80ff80':UI.gold,7,'center');}
+ drawBtns(bs.filter(b=>!b.card));
+ bs.filter(b=>b.card).forEach((b,i)=>{const k=b.card,o=own.find(q=>q.k===k),lv=o?(o.tier||1)+1:1,hov=uiF===bs.indexOf(b)||(!isTouch&&uIn(b,ptr));
+  RR(b.x-1,b.y-1,b.w+2,b.h+2,hov&&!pkPicked?UI.gold:UI.ol);RR(b.x,b.y,b.w,b.h,b.c);X.globalAlpha=pkPicked?.45:1;drawItemIcon(k,b.x+4,b.y+7,24);
+  T(sh(IT[k].n,15),b.x+32,b.y+5,'#fff',6);T(sh(pkEff(k,lv),22),b.x+32,b.y+16,'#9fe8ff',5);T(o?'LEVEL UP → Lv'+lv:'NEW  ·  Lv1',b.x+32,b.y+27,o?UI.gold:'#80ff80',5);X.globalAlpha=1;});
+ const lm=msgs.length&&msgs[msgs.length-1];if(lm&&lm.life>0)T(lm.t,232,5,'#80ff80',5,'center');};
+// HUD: BAG button becomes a row of perk icons
+function pkHud(){const el=document.querySelector('.tb[data-k="bag"]');if(!el)return;const own=perks();const sig=own.map(i=>i.k+(i.tier||1)).join();if(el._sig===sig)return;el._sig=sig;
+ el.style.width='auto';el.style.minWidth='68px';el.style.padding='0 6px';el.style.whiteSpace='nowrap';el.style.display=el.style.display;
+ el.innerHTML=own.length?own.map(i=>'<img src="'+(ART['it_'+i.k]||'')+'" style="width:22px;height:22px;vertical-align:middle;margin:0 1px;filter:drop-shadow(0 1px 0 #000)">'+((i.tier||1)>1?'<sup style="font:bold 9px monospace;color:#ffd23f">'+(i.tier)+'</sup>':'')).join(''):'★ PERKS';}
+{const _u10=update;update=function(dt){_u10(dt);if(((tm*4)|0)%2===0)pkHud();};}
+TUT.steps.forEach(s=>{const m=s.m();if(/BAG|GEAR|MERGE/.test(m))s.m=()=>isTouch?'Items you grab become PERKS (top bar). Duplicates level up! Tap the icons to see them.':'Items you grab become PERKS. Duplicates level up! Press B to see them.';});
+// build tag on title
+{const _r10=render;render=function(){_r10();if(state==='title'){menuOn();T('BUILD '+BUILD,316,170,UI.gold,6,'right');}};}
 
 // ---------- main loop ----------
 let last=performance.now(),fc=0;
