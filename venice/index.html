@@ -124,8 +124,9 @@ let lastMS='';function musicTick(){const k=musicFor();if(k!==songK)playSong(k);i
 // ---------- input ----------
 const K={},P={};// held, pressed this frame
 const KM={ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',KeyJ:'punch',KeyZ:'punch',KeyK:'kick',KeyX:'kick',Space:'jump',KeyC:'jump',KeyL:'special',KeyV:'special',KeyB:'bag',Enter:'start',Escape:'pause',KeyP:'pause',KeyM:'mute',KeyR:'rotate',KeyU:'weapon',KeyE:'weapon',KeyQ:'swap',Tab:'swap'};
-addEventListener('keydown',e=>{if(document.getElementById('pwgate')||(document.activeElement&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)))return;const k=KM[e.code];if(!k)return;e.preventDefault();initAudio();if(!K[k])P[k]=1;K[k]=1;});
-addEventListener('keyup',e=>{const k=KM[e.code];if(k)K[k]=0;});
+function gameKeysBlocked(){return !!(document.getElementById('pwgate')||(document.activeElement&&/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)));}
+addEventListener('keydown',e=>{if(gameKeysBlocked())return;const k=KM[e.code];if(!k)return;e.preventDefault();initAudio();if(!K[k])P[k]=1;K[k]=1;});
+addEventListener('keyup',e=>{if(gameKeysBlocked())return;const k=KM[e.code];if(k)K[k]=0;});
 if(isTouch){document.getElementById('touch').style.display='block';}
 const pad=document.getElementById('pad'),knob=document.getElementById('knob');let padId=null;
 const CL={pad:['L',14,14,150,150],punch:['R',90,16,74,74],kick:['R',10,68,74,74],jump:['R',100,98,54,54],special:['R',26,144,54,54],weapon:['R',168,36,58,58],swap:['R',168,100,58,38],pause:['T',8,48,66,38],bag:['T',80,48,68,38]};
@@ -281,12 +282,15 @@ const CHARS=[
   look:{skin:'#f0c090',shirt:'#c0ff20',stripe:'#ff40c0',pants:'#202020',hair:'#ff8020',hairStyle:'cap',shoe:'#ff40c0',glove:'#f0c090',small:1}}];
 let charI=0;const CH0=()=>CHARS[charI];
 function newPlayer(){const s=stats();const ch=CH0();s.atk+=ch.atk;s.spd+=ch.spd;return{x:60,y:150,z:0,vz:0,f:1,hp:ch.hp+s.hp,mhp:ch.hp+s.hp,atkT:0,atk:null,hitDone:false,combo:0,comboT:0,hurtT:0,inv:0,stun:0,walk:0,meter:50,hold:null,down:0,stats:s};}
-function save(){if(mode!=='story')return;try{localStorage.setItem('vbs_save',JSON.stringify({stageI,charI,coins,tokens,bag:bagItems.map(i=>({k:i.k,g:i.g,cx:i.cx,cy:i.cy,s:i.s,tier:i.tier||1}))}));}catch(e){}}
-function loadSave(){try{return JSON.parse(localStorage.getItem('vbs_save'));}catch(e){return null;}}
-let cred=+(localStorage.getItem('vbs_cred')||0);
-function addCred(n=1){if(mode==='demo')return;cred+=n;credRun+=n;try{localStorage.setItem('vbs_cred',cred);}catch(e){}}
-let clearCred=0,credRun=0,UNL=[1,1,0,0,0];try{const u=JSON.parse(localStorage.getItem('vbs_unl')||'null');if(u)UNL=u;}catch(e){}if(DEBUG&&location.hash==='#unlockall')UNL=[1,1,1,1,1];
-const UPRICE=[0,0,60,100,150];function saveUnl(){try{localStorage.setItem('vbs_unl',JSON.stringify(UNL));}catch(e){}}
+function save(){if(mode!=='story')return;try{localStorage.setItem('vbs_save',JSON.stringify({v:1,stageI,charI,coins,tokens,bag:bagItems.map(i=>({k:i.k,g:i.g,cx:i.cx,cy:i.cy,s:i.s.map(c=>c.slice()),tier:i.tier||1}))}));}catch(e){}}
+function loadSave(){try{const s=JSON.parse(localStorage.getItem('vbs_save'));if(!s||typeof s!=='object')return null;if(s.stageI==null||s.charI==null)return null;return s;}catch(e){return null;}}
+let cred=0;try{cred=Math.max(0,+(localStorage.getItem('vbs_cred')||0)||0);}catch(e){cred=0;}
+function saveCred(){try{localStorage.setItem('vbs_cred',String(cred|0));}catch(e){}}
+function addCred(n=1){if(mode==='demo')return;cred=(cred|0)+n;credRun+=n;saveCred();}
+let clearCred=0,credRun=0,UNL=[1,1,0,0,0];
+function loadUnl(){try{const u=JSON.parse(localStorage.getItem('vbs_unl')||'null');if(Array.isArray(u)&&u.length>=5)UNL=u.slice(0,5).map(x=>x?1:0);}catch(e){}}
+loadUnl();if(DEBUG&&location.hash==='#unlockall')UNL=[1,1,1,1,1];
+const UPRICE=[0,0,60,100,150];function saveUnl(){try{localStorage.setItem('vbs_unl',JSON.stringify(UNL.map(x=>x?1:0)));}catch(e){}}
 function toggleGold(){goldSkin=SET.gold=SET.gold?0:1;saveSet();found('konami');SFX.special();msgs.push({t:goldSkin?'RETRO GOLD SKIN: ON':'RETRO GOLD SKIN: OFF',life:2});}
 function stselBtns(){return[0,1,2,3].map(i=>({x:20+i*72,y:80,w:66,h:30,l:'STAGE '+(i+1),c:['#e03070','#c07020','#7a50b0','#2060a0'][i],a:'st'+i})).concat([{x:120,y:140,w:80,h:18,l:'BACK',c:'#606070',a:'stback'}]);}
 function unlockAll(){UNL=[1,1,1,1,1];saveUnl();msgs.push({t:'DEBUG: ALL FIGHTERS UNLOCKED',life:2});}
@@ -311,9 +315,16 @@ function drawSecrets(list){if(mode==='surv'||!sx2.wall)return;const v=sx2.vendor
   if(tr.st==='wait'){bubble(x,tr.y-56,'Excuse me... which way to the pier?');if(tr.t>0){R(x-10,tr.y-44,20,3,OL);R(x-10,tr.y-44,20*tr.t/1.6,3,'#80ff80');}}else bubble(x,tr.y-56,'Thank you! Here, for the arcade!');}});
  const g=sx2.gull;if(g)list.push({y:g.y,d:()=>{const x=g.x-cam,y=g.y-26+Math.sin(g.t*6)*4,f=Math.sign(g.vx),wf=Math.sin(g.t*18)*5;shadow(x,g.y,6);X.save();X.translate(x,y);X.scale(f,1);EO(0,0,8,4,'#ffd000');R(5,-3,4,3,'#ffd000');R(9,-2,3,1,'#ff8000');R(6,-2,1,1,OL);X.fillStyle='#ffe870';X.beginPath();X.moveTo(-3,-1);X.lineTo(-6,-6-wf);X.lineTo(3,-1);X.fill();X.restore();if((tm*8|0)%2)R(x-10+rnd(0,20),y-6+rnd(0,10),1,1,'#fff');}});}
 let stageJump=0,selBuy=-1,unlockFx=null,kbuf='',idleT=0,demoT=0,perfect=true;
-addEventListener('keydown',e=>{if(document.getElementById('pwgate')||(document.activeElement&&/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)))return;if(state==='title'){kon.push(e.code);kon=kon.slice(-10);if(kon.join(',')==='ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA'){toggleGold();e.stopImmediatePropagation();}}kbuf=(kbuf+(e.key||'')).slice(-12).toLowerCase();if(DEBUG&&kbuf.endsWith('vbsall'))unlockAll();if(state==='title'&&kbuf.endsWith('stage')){found('stsel');state='stsel';tm=0;uiF=-1;}},true);
-['keydown','pointerdown','touchstart'].forEach(ev=>addEventListener(ev,()=>{idleT=0;if(mode==='demo'&&state!=='title'){mode='story';state='title';tm=0;song=null;ally=null;}},true));
-function continueGame(){const sv=loadSave();if(!sv)return startGame();charI=sv.charI;coins=sv.coins;tokens=sv.tokens??1;bagItems=sv.bag.map(o=>Object.assign(mk(o.k),o));startStage(sv.stageI);}
+addEventListener('keydown',e=>{if(gameKeysBlocked())return;if(state==='title'){kon.push(e.code);kon=kon.slice(-10);if(kon.join(',')==='ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA'){toggleGold();e.stopImmediatePropagation();}}kbuf=(kbuf+(e.key||'')).slice(-12).toLowerCase();if(DEBUG&&kbuf.endsWith('vbsall'))unlockAll();if(state==='title'&&kbuf.endsWith('stage')){found('stsel');state='stsel';tm=0;uiF=-1;}},true);
+['keydown','pointerdown','touchstart'].forEach(ev=>addEventListener(ev,e=>{if(ev==='keydown'&&gameKeysBlocked())return;idleT=0;if(mode==='demo'&&state!=='title'){mode='story';state='title';tm=0;song=null;ally=null;}},true));
+function continueGame(){const sv=loadSave();if(!sv){msgs.push({t:'No save found — starting fresh',life:2});return startGame();}
+ try{charI=Math.max(0,Math.min(4,sv.charI|0));if(!UNL[charI]){const i=UNL.findIndex(Boolean);charI=i<0?0:i;}
+  coins=Math.max(0,sv.coins|0);tokens=sv.tokens==null?1:Math.max(0,sv.tokens|0);bagItems=[];
+  (sv.bag||[]).forEach(o=>{if(!o||!IT[o.k])return;const it=mk(o.k);it.g=o.g?1:0;it.cx=o.cx|0;it.cy=o.cy|0;it.tier=Math.max(1,Math.min(3,o.tier|0||1));
+   if(Array.isArray(o.s)&&o.s.length)it.s=o.s.map(c=>Array.isArray(c)?c.slice():c);bagItems.push(it);});
+  if(!bagItems.length)CHARS[charI].items.forEach(addItem);
+  startStage(Math.max(0,Math.min(STAGES.length-1,sv.stageI|0)));}
+ catch(err){console.warn('continue failed',err);msgs.push({t:'Save corrupted — starting fresh',life:2.5});startGame();}}
 function startStage(i){refillAmmo();if(ally){ally.hp=ally.mhp;setTimeout(()=>{if(ally&&state!=='title')allyEnter();},2300);}stageI=i;perfect=true;pl=newPlayer();initSecrets();ens=[];projs=[];props=[];drops=[];parts=[];floaters=[];cam=0;waveI=0;waveActive=false;goT=0;boss=null;truck=null;stageDone=0;lockX=null;robot=null;scene=null;bgOff=0;warns=[];evK=null;techSeg=0;bladeT=0;STAGES.forEach(S=>S.waves.forEach(w=>{w.shot=0;w.wrapped=0;}));squadT=-1;squadIntro=0;hype=0;
  const st=STAGES[i];for(let x=150;x<st.len-100;x+=rnd(140,240))props.push({x,y:rnd(128,168),z:0,vx:0,vz:0,k:Math.random()<.3?'crate':pick(['trash','cone','ball','cart']),fly:false});
  state='intro';tm=0;playSong(i);save();}
@@ -612,7 +623,7 @@ function updTruck(dt){const tr=truck,b=tr.b;tr.t+=dt;
  else if(tr.ph==='out'){tr.x+=200*dt;if(tr.x>cam+W+120)truck=null;}}
 // ---------- backpack screen ----------
 let drag=null;
-function openBag(mode){state='bag';bagMode=mode;tm=0;drag=null;tipK=null;shopPress=null;
+function openBag(mode){state='bag';bagMode=mode;tm=0;drag=null;tipK=null;shopPress=null;if(mode==='wave'||mode==='shop')save();
  if(mode!=='pause'){rollShop();}}
 function rollShop(){{shop=[];const pool=DROPS.concat(['boombox','batteries','skate']);for(let i=0;i<3;i++){const k=pick(pool);shop.push({k,price:10+IT[k].s.length*6,sold:false});}if(Math.random()<.14)shop[1]={k:'token',price:60,sold:false};}}
 function closeBag(){TUT.ev('bag');if(bagMode==='wave')refillAmmo();if(ally&&ally.drop&&bagMode!=='shop')setTimeout(allyEnter,50);const old=pl;const s=stats();mergeFx=[];
@@ -1140,7 +1151,7 @@ function uiNav(bs){const act=bs.map((b,i)=>b.a?i:-1).filter(i=>i>=0);if(P.up||P.
  if(ptr.rel){const r=ptr.rel;ptr.rel=null;for(const b of bs)if(b.a&&uIn(b,r)&&uIn(b,r.dn)){uiAct(b.a);return true;}}
  if((P.start||P.punch)&&uiF>=0&&bs[uiF]&&bs[uiF].a){uiAct(bs[uiF].a);return true;}return false;}
 function uiAct(a){SFX.go();buzz(10);if(/^st\d$/.test(a)){mode='story';stageJump=+a[2];state='select';tm=0;return;}if(a==='stback'){state='title';tm=0;return;}
- if(a==='buyno'){selBuy=-1;return;}if(a==='buyyes'){const i=selBuy,p=UPRICE[i];if(cred>=p){cred-=p;try{localStorage.setItem('vbs_cred',cred);}catch(e){}UNL[i]=1;saveUnl();selBuy=-1;charI=i;unlockFx={i,t:0};SFX.special();sting('unlock');buzz(120);shake=6;}else{SFX.bad();selBuy=-1;msgs.push({t:'Need '+(p-cred)+' more CRED!',life:2});}return;}
+ if(a==='buyno'){selBuy=-1;return;}if(a==='buyyes'){const i=selBuy,p=UPRICE[i];if(cred>=p){cred-=p;saveCred();UNL[i]=1;saveUnl();selBuy=-1;charI=i;unlockFx={i,t:0};SFX.special();sting('unlock');buzz(120);shake=6;}else{SFX.bad();selBuy=-1;msgs.push({t:'Need '+(p-cred)+' more CRED!',life:2});}return;}
  if(a==='tut'){SET.tut=0;saveSet();if(setBack==='pause'&&mode==='story'&&stageI===0)TUT.start();msgs.push({t:'Tutorial will replay!',life:2});return;}if(a.startsWith('inc:')||a.startsWith('dec:')){const k=a.slice(4),r=SROWS.find(r=>r[1]===k),d=a[0]==='i'?1:-1;SET[k]=r[3]===1?1-SET[k]:clamp(SET[k]+d,r[2],r[3]);saveSet();if(k==='haptics'&&SET.haptics)buzz(30);return;}
  uiF=-1;if(a==='story'){mode='story';state='select';tm=0;}else if(a==='surv'){mode='surv';state='select';tm=0;}else if(a==='cont'){mode='story';continueGame();}
  else if(a==='settings'){setBack=state;state='settings';tm=0;}else if(a==='back'){state=setBack;tm=.5;}else if(a==='resume')state='play';else if(a==='bag')openBag('pause');
@@ -1321,11 +1332,22 @@ function render(){W=GW;X.setTransform(SC,0,0,SC,0,0);X.globalAlpha=1;TQ.length=0
  if(state==='win'){R(0,0,W,H,'rgba(0,0,30,.6)');T('YOU SURVIVED',W/2,50,'#ffe040',20,'center');T('VENICE BEACH!',W/2,74,'#40e0ff',18,'center');
   T('Venice is saved! Gridlock got a fire-truck ride to committee review.',W/2,102,'#fff',6,'center');T('Final cash: $'+coins,W/2,116,'#80ff80',8,'center');}}
 try{history.pushState({g:1},'');addEventListener('popstate',()=>{history.pushState({g:1},'');if(state==='play')P.pause=1;else if(state==='pause'||state==='bag'||state==='settings'||state==='select')P.pause=1;});}catch(e){}
+addEventListener('visibilitychange',()=>{if(document.hidden){try{if(mode==='story'&&(state==='play'||state==='bag'||state==='pause'))save();saveUnl();saveCred();}catch(e){}}});
+addEventListener('pagehide',()=>{try{if(mode==='story'&&(state==='play'||state==='bag'||state==='pause'))save();saveUnl();saveCred();}catch(e){}});
 fit();requestAnimationFrame(frame);
 // test hooks
 window.G={get state(){return state},set state(v){state=v},startGame,startStage,openBag,closeBag,addItem,tryMerge,stats,spawnBoss,
  get bag(){return bagItems},get pl(){return pl},get ens(){return ens},get boss(){return boss},get truck(){return truck},K,P,
  setCam(x){cam=x;},ET,spawn,setWave(i){waveI=i;},buyShop,get shop(){return shop},get projs(){return projs},get drops(){return drops},get scene(){return scene},get stageI(){return stageI},get waveI(){return waveI},setChar(i){charI=i},unlockAll,get UNL(){return UNL},get cred(){return cred},set cred(v){cred=v},startDemo,get mode(){return mode},set unlockFx(v){unlockFx=v},set selBuy(v){selBuy=v},set tm(v){tm=v},get sx2(){return sx2},toggleGold,get SEC(){return SEC},get songK(){return songK},get perfect(){return perfect},set perfect(v){perfect=v},get bagMode(){return bagMode},place,occ,hurtEnemy,get drops(){return drops},get waveActive(){return waveActive},get coins(){return coins},get cam(){return cam},get ally(){return ally},hireBuddy,allyEnter,startSurv,get surv(){return surv},setMode(m){mode=m}};
-</script><div id="pwgate" style="position:fixed;inset:0;z-index:99999;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;color:#fff"><div style="font-size:22px;margin-bottom:14px">Enter password</div><input id="pwin" type="password" autocomplete="off" autocapitalize="off" style="font-size:20px;padding:10px;border-radius:8px;border:0;width:200px;text-align:center"><button id="pwbtn" style="margin-top:12px;font-size:18px;padding:10px 26px;border-radius:8px;border:0;background:#f90;color:#000">Play</button><div id="pwerr" style="color:#f66;margin-top:10px;height:20px"></div></div>
-<script>(function(){var KEY="pw_ok_venice";if(sessionStorage.getItem(KEY)==="1"){var g=document.getElementById("pwgate");if(g)g.remove();return;}function t(){var el=document.getElementById("pwin");if(!el)return;if(el.value.trim().toLowerCase()==="demo"){sessionStorage.setItem(KEY,"1");var g=document.getElementById("pwgate");if(g)g.remove();}else{document.getElementById("pwerr").textContent="Wrong password";}}document.getElementById("pwbtn").onclick=t;var inp=document.getElementById("pwin");inp.addEventListener("keydown",function(e){e.stopPropagation();if(e.key==="Enter")t();});inp.addEventListener("keyup",function(e){e.stopPropagation();});setTimeout(function(){try{inp.focus();}catch(e){}},50);})();</script>
+</script><div id="pwgate" style="position:fixed;inset:0;z-index:99999;background:#111;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:sans-serif;color:#fff"><div style="font-size:22px;margin-bottom:14px">Enter password</div><input id="pwin" type="password" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" style="font-size:20px;padding:10px;border-radius:8px;border:0;width:200px;text-align:center"><button id="pwbtn" style="margin-top:12px;font-size:18px;padding:10px 26px;border-radius:8px;border:0;background:#f90;color:#000">Play</button><div id="pwerr" style="color:#f66;margin-top:10px;height:20px"></div></div>
+<script>(function(){var KEY="pw_ok_venice";
+try{if(sessionStorage.getItem(KEY)==="1"){var g=document.getElementById("pwgate");if(g)g.remove();return;}}catch(e){}
+function t(){var el=document.getElementById("pwin");if(!el)return;if(el.value.trim().toLowerCase()==="demo"){try{sessionStorage.setItem(KEY,"1");}catch(e){}var g=document.getElementById("pwgate");if(g)g.remove();}else{document.getElementById("pwerr").textContent="Wrong password";}}
+document.getElementById("pwbtn").onclick=t;
+var inp=document.getElementById("pwin");
+function stop(e){e.stopPropagation();if(e.stopImmediatePropagation)e.stopImmediatePropagation();}
+["keydown","keyup","keypress"].forEach(function(ev){inp.addEventListener(ev,function(e){stop(e);if(ev==="keydown"&&e.key==="Enter")t();},true);});
+function focusIn(){try{inp.focus();}catch(e){}}
+focusIn();setTimeout(focusIn,50);setTimeout(focusIn,250);
+})();</script>
 </body></html>
