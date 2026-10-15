@@ -1579,7 +1579,7 @@ let RS={t:0,ko:0,maxc:0,chain:0,chainT:0,dmg:0,hp0:100},RUN={t:0,ko:0,score:0,dm
 function resetRS(){RS={t:0,ko:0,maxc:0,chain:0,chainT:0,dmg:0,hp0:pl?pl.mhp:100};}
 {const _sg9=startGame;startGame=function(){RUN={t:0,ko:0,score:0,dmg:0,maxc:0,stages:0,ranks:[]};_sg9();};}
 {const _ss9=startStage;startStage=function(i){_ss9(i);resetRS();};}
-{const _he=hurtEnemy;hurtEnemy=function(e,dmg,dir,kd){const was=!e.dead;_he(e,dmg,dir,kd);if(!was||state==='title')return;RS.chain++;RS.chainT=1.6;RS.maxc=Math.max(RS.maxc,RS.chain);if(e.dead){RS.ko++;}};}
+{const _he=hurtEnemy;hurtEnemy=function(e,dmg,dir,kd){const was=!e.dead;_he(e,dmg,dir,kd);if(!was||state==='title')return;RS.chain++;RS.chainT=1.6;RS.maxc=Math.max(RS.maxc,RS.chain);if((e.dead||e.hp<=0)&&!e._ko9){e._ko9=1;RS.ko++;}};}
 {const _hp=hurtPlayer;hurtPlayer=function(d,dir){const h0=pl.hp;_hp(d,dir);if(pl.hp<h0){RS.dmg+=h0-pl.hp;RS.chain=0;}};}
 function stageScore(){return Math.max(0,Math.round(RS.ko*150+RS.maxc*60+Math.max(0,240-RS.t)*15-RS.dmg*6+(RS.dmg<1?1500:0)));}
 function stageRank(){const r=RS.dmg/Math.max(1,RS.hp0);return r<.15&&RS.t<300?'S':r<.4?'A':r<.8?'B':'C';}
