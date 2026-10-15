@@ -1745,15 +1745,15 @@ function pkEff(k,lv){const d=IT[k],st=d.st||{},nm={atk:'ATK',def:'DEF',spd:'SPD'
  for(const s in st)p.push('+'+st[s]*lv+' '+nm[s]);if(d.sp)p.unshift(PKSP[d.sp]||'New special');
  if(k==='seagull')p.unshift('Gull pal');if(k==='batteries')p.push('fuels Boombox');if(k==='ticket'&&!p.length)p.push('collectible');return p.slice(0,2).join(', ')||'mystery';}
 function pkRecipes(){const own=perks(),has=k=>own.find(i=>i.k===k),out=[];
- for(const r in RECIPES){const[a,b]=r.split('+'),res=RECIPES[r];if(a!==b&&has(a)&&has(b))out.push({a,b,res});}return out;}
-function pkCombine(rc){const own=perks();if(rc.a===rc.b){const x=own.find(i=>i.k===rc.a);if(!x)return;bagItems=bagItems.filter(i=>i!==x);}
+ for(const r in RECIPES){const[a,b]=r.split('+'),res=RECIPES[r];if(a!==b&&has(a)&&has(b))out.push({a,b,res});else if(a===b){const x=has(a);if(x&&(x.tier||1)>=PK_LV)out.push({a,b,res,evo:1});}}return out;}
+function pkCombine(rc){const own=perks();if(rc.a===rc.b){const x=own.find(i=>i.k===rc.a);if(!x)return;bagItems=bagItems.filter(i=>i!==x);const ex=bagItems.find(i=>i.k===rc.res);if(!ex){const it=mk(rc.res);it.g=0;it.tier=1;bagItems.push(it);}else addItem(rc.res);pkNorm();SFX.merge&&SFX.merge();tone(880,.12,'triangle',.12,0,600);tone(1320,.18,'triangle',.1,.08,400);pkFlash=1;burst(160,60,'#ffd23f',40,true);msgs.push({t:'EVOLVED: '+IT[rc.res].n+'!',life:2});pkHud();return;}
  else bagItems=bagItems.filter(i=>i.k!==rc.a&&i.k!==rc.b);addItem(rc.res);SFX.merge&&SFX.merge();burst(160,60,'#ffe040',24,true);msgs.push({t:'COMBINED: '+IT[rc.res].n+'!',life:2});}
-let pkCh=[],pkPicked=false;
+let pkFlash=0;let pkCh=[],pkPicked=false;
 function pkRoll(){pkNorm();const own=perks(),full=own.length>=PK_MAX;let pool=full?own.filter(i=>(i.tier||1)<PK_LV).map(i=>i.k):PK_POOL.filter(k=>{const o=own.find(i=>i.k===k);return!o||(o.tier||1)<PK_LV;});
  pool=[...new Set(pool)];pkCh=[];while(pkCh.length<3&&pool.length){const k=pool.splice(Math.random()*pool.length|0,1)[0];pkCh.push(k);}pkPicked=false;}
 {const _ob=openBag;openBag=function(m){_ob(m);pkNorm();if(m!=='pause')pkRoll();uiF=-1;};}
 const sh=(s,n)=>s.length>n?s.slice(0,n-1)+'.':s;
-function pkBtns(){const b=[],pause=bagMode==='pause';pkRecipes().slice(0,2).forEach((r,i)=>b.push({x:8,y:84+i*13,w:304,h:12,l:IT[r.a].n+' + '+IT[r.b].n+' → '+IT[r.res].n+':  tap to combine',c:'#8040c0',a:'pkc'+i,sz:5}));
+function pkBtns(){const b=[],pause=bagMode==='pause';pkRecipes().slice(0,2).forEach((r,i)=>b.push({x:8,y:84+i*13,w:304,h:12,l:r.evo?IT[r.a].n+' Lv3 → '+IT[r.res].n+':  tap to evolve':IT[r.a].n+' + '+IT[r.b].n+' → '+IT[r.res].n+':  tap to combine',c:r.evo?'#b08010':'#8040c0',a:'pkc'+i,sz:5}));
  if(!pause){pkCh.forEach((k,i)=>b.push({x:8+i*103,y:120,w:98,h:36,l:'',c:pkPicked?'#2a2440':'#2a5070',a:pkPicked?null:'pkp'+i,card:k}));
   if(!pkPicked)b.push({x:8,y:160,w:90,h:17,l:'REROLL  $5',c:'#a07020',a:'pkr',sz:6});}
  b.push({x:212,y:160,w:100,h:17,l:pause?'RESUME ▶':(bagMode==='wave'?'NEXT WAVE ▶':'NEXT STAGE ▶'),c:'#3a9a28',a:'pkdone',sz:6});return b;}
@@ -1778,7 +1778,7 @@ drawBag=function(){drawWorld();flushL();X.globalAlpha=.9;R(0,0,W,H,'#120a24');X.
  bs.filter(b=>b.card).forEach((b,i)=>{const k=b.card,o=own.find(q=>q.k===k),lv=o?(o.tier||1)+1:1,hov=uiF===bs.indexOf(b)||(!isTouch&&uIn(b,ptr));
   RR(b.x-1,b.y-1,b.w+2,b.h+2,hov&&!pkPicked?UI.gold:UI.ol);RR(b.x,b.y,b.w,b.h,b.c);X.globalAlpha=pkPicked?.45:1;drawItemIcon(k,b.x+4,b.y+7,24);
   T(sh(IT[k].n,15),b.x+32,b.y+5,'#fff',6);T(pkEff(k,lv),b.x+32,b.y+16,'#9fe8ff',5);T(o?'LEVEL UP → Lv'+lv:'NEW  ·  Lv1',b.x+32,b.y+27,o?UI.gold:'#80ff80',5);X.globalAlpha=1;});
- const lm=msgs.length&&msgs[msgs.length-1];if(lm&&lm.life>0)T(lm.t,314,19,'#80ff80',5,'right');};
+ const lm=msgs.length&&msgs[msgs.length-1];if(lm&&lm.life>0)T(lm.t,314,19,'#80ff80',5,'right');if(pkFlash>0){X.globalAlpha=Math.min(1,pkFlash)*.55;R(0,0,320,180,'#ffd23f');X.globalAlpha=1;pkFlash-=.04;}};
 // HUD: BAG button becomes a row of perk icons
 function pkHud(){const el=document.querySelector('.tb[data-k="bag"]');if(!el)return;const own=perks();const sig=own.map(i=>i.k+(i.tier||1)).join();if(el._sig===sig)return;el._sig=sig;
  el.style.width='auto';el.style.minWidth='68px';el.style.padding='0 6px';el.style.whiteSpace='nowrap';el.style.display=el.style.display;
