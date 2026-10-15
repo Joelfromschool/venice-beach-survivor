@@ -1735,7 +1735,7 @@ const PJMAP={cd:'cd',souvenir:'souvenir',rent:'rent',hoa:'hoa',gel:'gel',card:'t
 {const _gg=goldGull;goldGull=function(){if(hasPX('gull_gold'))return icoCv('px_gull_gold',96);return _gg();};}
 
 // ===== v10: PERKS (replaces bag grid), build tag, cache =====
-const BUILD='v12.1';
+const BUILD='v12.2';
 const PK_MAX=6,PK_LV=3,PK_POOL=['churro','skate','sunscreen','boombox','batteries','surfboard','ticket','kombucha','crystal','avocado','seagull'];
 const perks=()=>bagItems.filter(i=>i.g===0&&IT[i.k]);
 function pkNorm(){const out=[],by={};for(const it of bagItems){if(!IT[it.k])continue;if(by[it.k]){by[it.k].tier=Math.min(PK_LV,(by[it.k].tier||1)+(it.tier||1));continue;}
@@ -1853,6 +1853,13 @@ let a2T=0;{const _r12=render;render=function(){_r12();if((A2HS||window.FORCE_A2H
 
 // v12.1: stage 3 is ~15% easier (enemy damage)
 {const _hp121=hurtPlayer;hurtPlayer=function(d,dir){if(mode==='story'&&stageI===2)d*=0.85;return _hp121(d,dir);};}
+
+// ===== v12.2: update check (version.json) =====
+window.__BUILD__=BUILD;setTimeout(function(){(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
+function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}
+function chk(){try{fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&newer(j.build,B)&&!document.getElementById('updbar')){var d=document.createElement('div');d.id='updbar';d.textContent='Update available — tap to reload';d.style.cssText='position:fixed;left:50%;bottom:calc(10px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99998;background:#1a1530ee;color:#ffe58a;border:2px solid #ffe58a;border-left:8px solid #ff5fa8;padding:10px 18px;font:800 17px "VBF",sans-serif;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 0 #000a;cursor:pointer;pointer-events:auto';d.onclick=function(e){e.stopPropagation();location.reload()};d.addEventListener('pointerdown',function(e){e.stopPropagation()});document.body.appendChild(d)}}).catch(function(){})}catch(e){}}
+chk();document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')chk()});})();
+},0);
 
 // ---------- main loop ----------
 let last=performance.now(),fc=0;
