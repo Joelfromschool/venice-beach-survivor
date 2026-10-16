@@ -5,7 +5,7 @@ import base64,io,os,json
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-SHEETS=[('space_sheet1.jpg',4,3,['hero_back',None,None,'hero_bump','boss_cloud','boss_blob','boss_robot','boss_dragon','boss_moon','alien','jelly','comet']),
+SHEETS=[('space_sheet1.jpg',4,3,[None,None,None,None,'boss_cloud','boss_blob','boss_robot','boss_dragon','boss_moon','alien','jelly','comet']),
         ('space_sheet2.jpg',3,2,['star','satellite','whale','planet','asteroid','fluff'])]
 MAXS={'hero_back':720,'hero_bump':720,'whale':512}
 def key(cell,bg):
@@ -40,4 +40,8 @@ for fn,C,Rw,names in SHEETS:
             q=max(im.size);sq=Image.new('RGBA',(q,q));sq.paste(im,((q-im.width)//2,(q-im.height)//2));im=sq
         b=io.BytesIO();im.save(b,'WEBP',quality=88);out[n]='data:image/webp;base64,'+base64.b64encode(b.getvalue()).decode()
         im.save('/tmp/prev_'+n+'.png');print('ok',n,im.size)
+if os.path.exists('space_chars.jpg'):
+    import slice_chars
+    for n,im in slice_chars.run('space_chars.jpg').items():
+        b=io.BytesIO();im.save(b,'WEBP',quality=90);out[n]='data:image/webp;base64,'+base64.b64encode(b.getvalue()).decode();print('ok',n,im.size)
 open('space_art.js','w').write('window.SART='+json.dumps(out)+';\n');print('wrote',len(out))
