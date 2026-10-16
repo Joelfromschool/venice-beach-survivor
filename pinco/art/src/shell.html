@@ -78,18 +78,41 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 #look img{max-width:100%;max-height:62vh;border-radius:20px;box-shadow:0 8px 30px #0006}#look-t{color:#fff;font-weight:900;font-size:20px}
 #toast{position:fixed;left:50%;top:calc(var(--sat) + 64px);transform:translate(-50%,-20px);background:#2b2233ee;color:#fff;font-weight:900;font-size:15px;padding:10px 18px;border-radius:20px;opacity:0;pointer-events:none;transition:all .25s;z-index:40;max-width:90vw;text-align:center}#toast.on{opacity:1;transform:translate(-50%,0)}
 #flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:50}#flash.on{animation:fl .5s}@keyframes fl{0%{opacity:.95}100%{opacity:0}}
+.hm{flex:none;width:44px;height:44px;border-radius:22px;background:#fffd;font-size:20px;box-shadow:0 3px 0 #0001}
+.hm.corner{position:fixed;left:12px;top:calc(var(--sat) + 12px);height:40px;width:40px}
+.card0{position:relative}.hm.incard{position:absolute;left:12px;top:12px;background:#f7ecfb}
+.big.gold{background:linear-gradient(#ffe066,#ffb020);color:#6a3a00;box-shadow:0 5px 0 #c47a00,0 10px 24px #ffb02055}
+.tbtns{gap:12px}.tbtns .big{min-height:54px}
+#confirm{position:fixed;inset:0;z-index:45;background:#2a0b3daa;display:none;align-items:center;justify-content:center}#confirm.on{display:flex}
+.cbox{width:min(86vw,340px);background:#fff;border-radius:24px;padding:20px 16px 16px;text-align:center;box-shadow:0 8px 0 #ff9fca;animation:pop .35s cubic-bezier(.2,1.6,.4,1)}.cbox .ce{font-size:44px}.cbox h3{margin:4px 0;font-size:24px;color:var(--pk)}.cbox p{margin:0 0 14px;font-weight:700;color:#8a5a9a}
+#s-bank .topbar{width:100%}.big-pill{font-size:20px;padding:8px 16px;background:#fff;color:#8a5a00}
+.bank-title{text-align:center;font-weight:900;font-size:30px;color:#fff;-webkit-text-stroke:1.5px #5d1fb0;text-shadow:0 4px 0 #5d1fb0;margin-top:2px}
+#bank-host{position:relative;height:30vh;min-height:190px;pointer-events:none}
+#bank-say{position:absolute;right:3%;top:30%;max-width:42%;background:#fff;color:#8e44ec;font-weight:900;font-size:15px;padding:8px 12px;border-radius:16px;box-shadow:0 4px 0 #0002}
+#bank-say::after{content:'';position:absolute;left:14px;bottom:-10px;border:10px solid transparent;border-top-color:#fff;border-bottom:0}
+#bank-say.pop{animation:pop .4s cubic-bezier(.2,1.6,.4,1)}
+#bank-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:6px 14px calc(var(--sab) + 16px);align-content:start}
+.bcard{position:relative;background:linear-gradient(#fffdf2,#ffeec2);border-radius:20px;padding:16px 8px 10px;text-align:center;box-shadow:0 5px 0 #c47a00,0 0 0 3px #ffcc33 inset}
+.bcard.hot{background:linear-gradient(#fff4fb,#ffd6ea);box-shadow:0 5px 0 #c4166a,0 0 0 3px #ff7eb6 inset}.bcard.royal{grid-column:1/-1;background:linear-gradient(#f3e6ff,#d9b8ff);box-shadow:0 5px 0 #5d1fb0,0 0 0 3px #b39dff inset}
+.bcard img{width:100%;max-width:120px;height:auto}.rib{position:absolute;left:50%;top:-8px;transform:translateX(-50%);white-space:nowrap;background:linear-gradient(#ff6fae,#ff3d8b);color:#fff;font-size:12px;font-weight:900;padding:4px 12px;border-radius:6px;box-shadow:0 3px 0 #c4166a;letter-spacing:.5px}
+.bcard:not(.hot):not(.royal) .rib{background:linear-gradient(#ffd34d,#ffb020);color:#6a3a00;box-shadow:0 3px 0 #c47a00}.royal .rib{background:linear-gradient(#b48bff,#8e44ec);box-shadow:0 3px 0 #5d1fb0}
+.amt{font-size:26px;font-weight:900;color:#8a5a00;line-height:1}.lbl{font-size:12px;font-weight:800;color:#b07a20;margin-bottom:8px}
+.free{width:100%;min-height:46px;border-radius:23px;font-size:20px;font-weight:900;color:#fff;background:linear-gradient(#5be38c,#22b35a);box-shadow:0 4px 0 #167a3c;letter-spacing:1px;animation:wig 2.4s ease-in-out infinite}
+.free:active{transform:translateY(3px);box-shadow:0 1px 0 #167a3c}.free.cd{filter:grayscale(.7) brightness(.95);animation:none}
+@keyframes wig{0%,90%,100%{transform:none}93%{transform:rotate(-3deg) scale(1.04)}96%{transform:rotate(3deg) scale(1.04)}}
+.coinic.fly{position:fixed;left:0;top:0;z-index:60;pointer-events:none;width:22px;height:22px}
 </style></head><body>
 <canvas id="c"></canvas>
 <div class="scr" id="s-title">
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i>Pretty Princess</i></div>
- <div class="tbtns"><span id="t-best"></span><button class="big" data-a="play">▶ PLAY</button><button class="big alt" data-a="closet">👗 MY CLOSET</button></div>
+ <div class="tbtns"><span id="t-best"></span><button class="big" data-a="play">▶ PLAY</button><button class="big alt" data-a="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank">🍯 POOH BANK</button></div>
  <div class="ver">%BUILD%</div>
 </div>
-<div class="scr" id="s-theme"><div class="card0"><small>TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
+<div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small>TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div class="rule">90 seconds to style Pinco · ✨ = on-theme item</div><button class="big" data-a="start" style="width:100%">LET'S STYLE! 💖</button></div></div>
 <div class="scr" id="s-dress">
- <div id="d-top"><span class="pill" id="d-theme"></span><div class="timer"><div id="d-bar"></div><span id="d-time">90s</span></div><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
+ <div id="d-top"><button class="hm" data-a="gohome" aria-label="Main menu">🏠</button><span class="pill" id="d-theme"></span><div class="timer"><div id="d-bar"></div><span id="d-time">90s</span></div><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div id="d-panel">
   <div id="tools"><button id="stampbtn" data-a="stamp">✏️ Stamp</button><div class="row" id="sw"></div></div>
   <div id="stampbar"><button class="stp" data-t="star">⭐</button><button class="stp" data-t="heart">💖</button><button class="stp" data-t="dot">⚪</button><button class="stp" data-a="clrst" style="width:auto;padding:0 12px;font-size:14px;font-weight:900">Clear</button></div>
@@ -99,12 +122,15 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
   <div id="donebar"><button class="big" data-a="done">✨ TO THE RUNWAY!</button></div>
  </div>
 </div>
-<div class="scr" id="s-run"><button class="skip" data-a="skip">Skip ⏩</button></div>
-<div class="scr" id="s-judge"><button class="skip" data-a="skip">Skip ⏩</button></div>
+<div class="scr" id="s-run"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip">Skip ⏩</button></div>
+<div class="scr" id="s-judge"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip">Skip ⏩</button></div>
 <div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> coins</div><div id="sc-unl"></div><div id="sc-tip"></div>
  <div class="btn2"><button class="big ghost" data-a="photo">📸 Photo</button><button class="big ghost" data-a="closet">👗 Closet</button><button class="big alt" data-a="home">🏠 Home</button><button class="big" data-a="next">▶ Next</button></div></div></div>
 <div class="scr" id="s-closet"><div class="topbar"><h2>👗 My Closet</h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px">Back</button></div><div id="cl-grid"></div></div>
 <div id="look"><div id="look-t"></div><img id="look-img" alt=""><div style="display:flex;gap:10px"><button class="big" id="look-photo">📸 Save PNG</button><button class="big alt" id="look-del">🗑</button><button class="big ghost" data-a="lookx">Close</button></div></div>
+<div class="scr" id="s-bank"><div class="topbar"><button class="hm" data-a="bankx" aria-label="Main menu">🏠</button><span class="pill big-pill" id="bank-bal"><i class="coinic"></i><span class="coins">0</span></span><span style="width:44px"></span></div>
+ <div class="bank-title">🍯 POOH BANK</div><div id="bank-host"><div id="bank-say"></div></div><div id="bank-grid"></div></div>
+<div id="confirm"><div class="cbox"><div class="ce">🏠</div><h3>Leave this round?</h3><p>Your look won't be judged and the timer stops.</p><div class="btn2"><button class="big ghost" data-a="stay">Keep styling</button><button class="big" data-a="leave">Leave</button></div></div></div>
 <div id="toast"></div><div id="flash"></div>
 <script>
 %ITEMS%
