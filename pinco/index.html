@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.0.1"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.1"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -51,11 +51,11 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 #stampbar{display:none;gap:8px;padding:4px 10px 0;align-items:center}#stampbar.on{display:flex}
 .stp{width:52px;height:44px;border-radius:14px;background:#fff;font-size:22px;box-shadow:0 3px 0 #ecd6f5}.stp.on{background:var(--pk2);color:#fff;box-shadow:0 3px 0 #c4166a}
 #hint{font-size:13px;font-weight:800;color:#a06aa8;padding:2px 14px;min-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tab{flex:none;width:64px;height:50px;border-radius:16px;background:#f7ecfb;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.tab{flex:none;width:72px;height:58px;border-radius:16px;background:#f7ecfb;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
 .tab b{font-size:21px;line-height:1}.tab span{font-size:11px;font-weight:900;margin-top:3px}.tab.on{background:linear-gradient(#ff8fc0,#ff3d8b);color:#fff;box-shadow:0 3px 0 #c4166a}
 .tab.has::after{content:'';position:absolute;top:5px;right:7px;width:9px;height:9px;border-radius:50%;background:#7ee8c6;box-shadow:0 0 0 2px #fff}
-.card{flex:none;width:82px;height:96px;border-radius:18px;background:#fff;box-shadow:0 3px 0 #ecd6f5,0 0 0 2px #f4e4fa inset;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 4px;position:relative;transition:transform .1s}
-.card:active{transform:scale(.94)}.card img{width:58px;height:58px;object-fit:contain}.card span{font-size:11.5px;font-weight:900;line-height:1.1;text-align:center;margin-top:2px}
+.card{flex:none;width:94px;height:110px;border-radius:18px;background:#fff;box-shadow:0 3px 0 #ecd6f5,0 0 0 2px #f4e4fa inset;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:6px 4px;position:relative;transition:transform .1s}
+.card:active{transform:scale(.94)}.card img{width:68px;height:68px;object-fit:contain}.card span{font-size:11.5px;font-weight:900;line-height:1.1;text-align:center;margin-top:2px}
 .card.sel{box-shadow:0 0 0 3px var(--pk) inset,0 3px 0 #c4166a;background:#fff0f7}.card.none b{font-size:28px;line-height:58px;color:#d8b8e0}
 .card em{position:absolute;top:4px;left:6px;font-style:normal;font-size:14px}.card.lock img{filter:grayscale(.6) brightness(1.05);opacity:.6}
 .card u{position:absolute;top:24px;left:50%;transform:translateX(-50%);text-decoration:none;background:#2b2233dd;color:#ffe066;font-size:12px;font-weight:900;border-radius:10px;padding:2px 7px;white-space:nowrap}
@@ -66,7 +66,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 #s-score{align-items:center;justify-content:flex-end;padding-bottom:calc(var(--sab) + 14px)}
 .res{width:min(92vw,380px);background:#fff;border-radius:26px;padding:16px 16px 14px;text-align:center;box-shadow:0 8px 0 #ff9fca,0 18px 40px #0004;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
 #sc-stars{font-size:44px;color:#ffcc33;letter-spacing:2px;-webkit-text-stroke:1.5px #c48a00;line-height:1}#sc-stars span{color:#eee;-webkit-text-stroke:1.5px #ddd}
-#sc-tot{font-weight:900;font-size:20px;color:var(--pk);margin-top:2px}.gain{display:inline-flex;align-items:center;gap:6px;font-weight:900;font-size:22px;margin:6px 0;color:#c48a00}
+#sc-pose{display:inline-block;background:#8e44ec;color:#fff;font-weight:900;font-size:14px;border-radius:14px;padding:4px 12px;margin:2px 0;border:2px solid #ffcc33}#sc-pose:empty{display:none}#sc-tot{font-weight:900;font-size:20px;color:var(--pk);margin-top:2px}.gain{display:inline-flex;align-items:center;gap:6px;font-weight:900;font-size:22px;margin:6px 0;color:#c48a00}
 #sc-unl{font-weight:800;font-size:14px;color:var(--pu)}#sc-tip{font-weight:700;font-size:13px;color:#a06aa8;margin:4px 0 10px}
 .btn2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn2 .big{min-height:52px;font-size:17px;padding:0 10px}
 /* closet */
@@ -104,7 +104,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 :root{--F:ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN","Hiragino Sans","Arial Rounded MT Bold","Nunito","Noto Sans JP","Yu Gothic",system-ui,sans-serif}
 .trow{display:flex;gap:10px;width:min(78vw,320px)}.trow .big{flex:1;width:auto;padding:0 6px;font-size:16px}
 .big.sm{min-height:44px;font-size:16px}.big.pink2{background:linear-gradient(#ff9fca,#ff6fae);box-shadow:0 5px 0 #d43c84}
-#opts,#rconfirm,#tut,#gift{position:fixed;inset:0;z-index:55;background:#2a0b3dcc;display:none;align-items:center;justify-content:center}#opts.on,#rconfirm.on,#tut.on,#gift.on{display:flex}#rconfirm{z-index:56}
+#opts,#rconfirm,#tut,#gift,#svc{position:fixed;inset:0;z-index:55;background:#2a0b3dcc;display:none;align-items:center;justify-content:center}#opts.on,#rconfirm.on,#tut.on,#gift.on,#svc.on{display:flex}#rconfirm,#svc{z-index:56}body:not(.dbgon) .dbg{display:none!important}#svc-b{font-weight:800;color:#5a2a6a;margin:6px 0}
 .obox{text-align:left;display:flex;flex-direction:column;gap:10px}.obox h3{text-align:center}
 .orow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:900;font-size:15px}.orow input{flex:1;max-width:52%;accent-color:#ff3d8b}
 .seg{display:flex;border-radius:16px;overflow:hidden;box-shadow:0 0 0 2px #ff7eb6}.seg button{padding:7px 10px;font-weight:900;background:#fff;font-size:14px}.seg button.on{background:#ff3d8b;color:#fff}
@@ -123,16 +123,16 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 #sv-top{padding:calc(var(--sat) + 8px) 10px 6px;display:flex;gap:8px;align-items:center}#sv-name{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #sv-bar{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#ffcc33,#ff9a2e)}#sv-time{position:relative;display:block;text-align:center;line-height:34px;font-weight:900;font-size:17px}
 #sv-panel{margin-top:auto;background:linear-gradient(#fffffff0,#fff4fa);border-radius:26px 26px 0 0;box-shadow:0 -6px 24px #8e44ec33;padding:8px 10px calc(var(--sab) + 10px)}
-#sv-tray{display:flex;gap:6px;align-items:center;min-height:52px;background:#f7ecfb;border-radius:16px;padding:4px 8px;margin-bottom:8px}#sv-tray img{width:44px;height:44px}#sv-tray .lbl0{font-weight:900;color:#b07ac0;font-size:13px;margin-right:auto}
-#sv-tray .trash{margin-left:auto;width:44px;height:44px;border-radius:14px;background:#fff;font-size:20px;flex:none}
-#sv-foods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.food{position:relative;height:84px;border-radius:18px;background:#fff;box-shadow:0 4px 0 #ecd6f5;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:12px;overflow:hidden}
-.food img{width:54px;height:54px}.food:active{transform:scale(.94)}.food i{position:absolute;left:0;bottom:0;height:6px;background:#ff9a2e;width:0}
+#sv-tray{display:flex;gap:6px;align-items:center;min-height:60px;background:#f7ecfb;border-radius:16px;padding:4px 8px;margin-bottom:8px}#sv-tray img{width:44px;height:44px}#sv-tray .lbl0{font-weight:900;color:#b07ac0;font-size:13px;margin-right:auto}
+#sv-tray .trash{margin-left:auto;width:52px;height:52px;border-radius:14px;background:#fff;font-size:20px;flex:none}
+#sv-foods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.food{position:relative;height:100px;border-radius:18px;background:#fff;box-shadow:0 4px 0 #ecd6f5;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:12px;overflow:hidden}
+.food img{width:64px;height:64px}.food:active{transform:scale(.94)}.food i{position:absolute;left:0;bottom:0;height:6px;background:#ff9a2e;width:0}
 .food.cook{background:#fff3d6}
 #s-shop{background:linear-gradient(#fff0f7,#ffd6ea)}#s-shop h2{margin:0;font-size:24px;color:var(--pk);font-weight:900}#sh-note{padding:4px 14px;font-weight:800;color:#8e44ec;font-size:13px}
 #sh-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 12px;align-content:start}.shopc{position:relative;background:#fff;border-radius:16px;padding:6px 4px;box-shadow:0 3px 0 #ecd6f5;text-align:center;font-weight:900;font-size:11.5px}
 .shopc img{width:64px;height:64px}.shopc button{display:block;width:100%;margin-top:4px;min-height:32px;border-radius:12px;background:linear-gradient(#ffd34d,#ffb020);color:#6a3a00;font-weight:900;font-size:13px}.shopc.own button{background:#e8f8ef;color:#22b35a}.shopc.poor button{opacity:.55}
 .shopc em{position:absolute;top:4px;left:6px;font-style:normal}.shbar{padding:8px 12px calc(var(--sab) + 12px);display:flex}.shbar .big{flex:1}
-#sh-tabs .tab{height:44px}
+#sh-tabs .tab{height:50px}
 .cltabs{display:flex;gap:8px;padding:8px 12px 0}.ctab{flex:1;height:38px;border-radius:19px;background:#fff;font-weight:900;color:#8e44ec}.ctab.on{background:var(--pk);color:#fff}
 .gift{background:#fff;border-radius:16px;padding:6px;box-shadow:0 3px 0 #ecd6f5;text-align:center;font-weight:900;font-size:12px}.gift img{width:64px;height:64px}.gift small{display:block;color:#b07ac0}
 .gbox #gift-h{font-size:22px;font-weight:900;color:var(--pk)}.gbox #gift-who{height:110px;animation:bob 1.4s ease-in-out infinite}.gbox #gift-it{width:110px;height:110px;animation:reveal 1.2s cubic-bezier(.2,1.6,.4,1);filter:drop-shadow(0 0 16px #ffcc33)}
@@ -144,8 +144,8 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 <div class="scr" id="s-title">
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
- <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ FREE STYLE</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
- <div class="ver">v2.0.1</div>
+ <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ RUNWAY</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
+ <div class="ver">v2.1</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
@@ -162,7 +162,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 </div>
 <div class="scr" id="s-run"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip" data-i18n="skip"></button></div>
 <div class="scr" id="s-judge"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip" data-i18n="skip"></button></div>
-<div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> <span data-i18n="coins"></span></div><div id="sc-unl"></div><div id="sc-tip"></div>
+<div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> <span data-i18n="coins"></span></div><div id="sc-pose"></div><div id="sc-unl"></div><div id="sc-tip"></div>
  <div class="btn2" id="sc-free"><button class="big ghost" data-a="photo" data-i18n="photo"></button><button class="big ghost" data-a="closet" data-i18n="closet2"></button><button class="big alt" data-a="home" data-i18n="home"></button><button class="big" data-a="next" data-i18n="next"></button></div><div class="btn2" id="sc-story"></div></div></div>
 <div class="scr" id="s-closet"><div class="topbar"><h2 data-i18n="mycloset"></h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px" data-i18n="back"></button></div><div class="cltabs"><button class="ctab on" data-ct="looks" data-i18n="looks"></button><button class="ctab" data-ct="gifts" data-i18n="gifts"></button></div><div id="cl-grid"></div></div>
 <div id="look"><div id="look-t"></div><img id="look-img" alt=""><div style="display:flex;gap:10px"><button class="big" id="look-photo" data-i18n="savepng"></button><button class="big alt" id="look-del">🗑</button><button class="big ghost" data-a="lookx" data-i18n="close"></button></div></div>
@@ -179,12 +179,13 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <button class="big sm" data-a="optsx" data-i18n="close" style="width:100%"></button></div></div>
 <div id="rconfirm"><div class="cbox"><div class="ce">🗑</div><p data-i18n="o_resetq"></p><div class="btn2"><button class="big ghost" data-a="rno" data-i18n="no"></button><button class="big" data-a="ryes" data-i18n="yes"></button></div></div></div>
 <div class="scr" id="s-smenu"><div class="topbar" style="width:100%"><button class="hm" data-a="gohome2">🏠</button><span class="pill"><i class="coinic"></i><span class="scoins">0</span></span></div>
- <div class="logo"><b style="font-size:min(12vw,50px)" data-i18n="storytitle"></b></div><div class="tbtns"><button class="big" data-a="scont" id="sm-cont"></button><button class="big alt" data-a="snew" data-i18n="newgame"></button><button class="big ghost sm" data-a="sdebug" data-i18n="debug"></button></div></div>
+ <div class="logo"><b style="font-size:min(12vw,50px)" data-i18n="storytitle"></b></div><div class="tbtns"><button class="big" data-a="scont" id="sm-cont"></button><button class="big alt" data-a="snew" data-i18n="newgame"></button><button class="big ghost sm dbg" data-a="snext" data-i18n="dnext"></button><button class="big ghost sm dbg" data-a="sdebug" data-i18n="debug"></button></div></div>
 <div class="scr" id="s-intro"><button class="skip" data-a="introskip" data-i18n="intro_skip"></button><div id="in-cap"></div><button id="in-help" data-a="inhelp"></button></div>
 <div class="scr" id="s-story"><button class="skip" data-a="dskip" data-i18n="skipall"></button><div id="dlg"><img id="dlg-p" alt=""><div id="dlg-b"><b id="dlg-n"></b><div id="dlg-t"></div><small data-i18n="tap"></small></div></div></div>
-<div class="scr" id="s-serve"><div id="sv-top"><button class="hm" data-a="gohome">🏠</button><span class="pill" id="sv-name"></span><div class="timer"><div id="sv-bar"></div><span id="sv-time"></span></div><span class="pill"><i class="coinic"></i><span id="sv-coins">0</span></span></div>
+<div class="scr" id="s-serve"><div id="sv-top"><button class="hm" data-a="gohome">🏠</button><span class="pill" id="sv-name"></span><div class="timer"><div id="sv-bar"></div><span id="sv-time"></span></div><span class="pill"><i class="coinic"></i><span id="sv-coins">0</span></span><button class="hm svsk" data-a="svskip" aria-label="Skip to end">⏭</button></div>
  <div id="sv-panel"><div id="sv-tray"></div><div id="sv-foods"></div></div></div>
 <div class="scr" id="s-shop"><div class="topbar"><h2 data-i18n="shop"></h2><span class="pill big-pill"><i class="coinic"></i><span class="scoins">0</span></span></div><div id="sh-note"></div><div class="row" id="sh-tabs"></div><div id="sh-grid"></div><div class="shbar"><button class="big" data-a="shopnext" data-i18n="shopnext"></button></div></div>
+<div id="svc" class="modal2"><div class="cbox"><h3 data-i18n="svskip"></h3><div id="svc-b"></div><div style="display:flex;gap:8px;margin-top:10px"><button class="big ghost" data-a="svc-no" data-i18n="no" style="flex:1"></button><button class="big" data-a="svc-yes" data-i18n="yes" style="flex:1"></button></div></div></div>
 <div id="tut"><div class="cbox"><h3 id="tut-h"></h3><div id="tut-b"></div><button class="big" data-a="tutok" data-i18n="gotit" style="width:100%"></button></div></div>
 <div id="gift"><div class="cbox gbox"><div id="gift-h"></div><img id="gift-who" alt=""><p id="gift-say"></p><img id="gift-it" alt=""><b id="gift-n"></b><button class="big" data-a="giftok" data-i18n="yay" style="width:100%"></button></div></div>
 <div id="toast"></div><div id="flash"></div>
@@ -487,10 +488,16 @@ ITEMS.push(
  {id:'swampbg',c:'bg',n:'Moonlit Swamp',k:'swamp',col:'#3fae5a',tags:['swamp'],p:50},
  {id:'honeybg',c:'bg',n:'Honey Hall',k:'honey',col:'#ffcc33',tags:['honey'],p:50},
  {id:'gardenbg',c:'bg',n:'Pea Garden',k:'garden',col:'#8fd14f',tags:['pea'],p:50});
+// ===== v2.1 real-photo items (story gifts; usable in RUNWAY once unlocked) =====
+ITEMS.push(
+ {id:'mirrorshades',c:'acc',n:'Mirror Shades',k:'ph',col:'#9aa0a6',tags:['pop','space','sparkle'],p:0,gift:1,ph:'art/i_shades.png?v21',r:[146,72,152,56]},
+ {id:'papercrown',c:'hat',n:'Paper Crown',k:'ph',col:'#ff9a2e',tags:['royal','pop','sweet'],p:0,gift:1,ph:'art/i_paper.png?v21',r:[126,-72,162,151]},
+ {id:'partycap',c:'hat',n:'Party Cap',k:'ph',col:'#4fd8ff',tags:['pop','sweet','sparkle'],p:0,gift:1,ph:'art/i_partycap.png?v21',r:[166,-196,100,220],rot:.12});
+const PHIMG={};
 
 // ===== v2.0 i18n: every UI + story string lives here. [English, 日本語] =====
 const STR={
- play:['▶ FREE STYLE','▶ フリースタイル'],story:['📖 STORY','📖 ストーリー'],closet:['👗 MY CLOSET','👗 クローゼット'],bank:['🍯 POOH BANK','🍯 プーさん銀行'],options:['⚙️ OPTIONS','⚙️ オプション'],
+ play:['▶ RUNWAY','▶ ランウェイ'],story:['📖 STORY','📖 ストーリー'],closet:['👗 MY CLOSET','👗 クローゼット'],bank:['🍯 POOH BANK','🍯 プーさん銀行'],options:['⚙️ OPTIONS','⚙️ オプション'],
  logo2:['Pretty Princess','プリティ・プリンセス'],
  best:['Rounds: {0} · Best: {1}★','ラウンド {0} ・ ベスト {1}★'],
  todaytheme:["TODAY'S THEME",'きょうのテーマ'],rule:['90 seconds to style Pinco · ✨ = on-theme item','90秒でピンコをコーデ ・ ✨=テーマにぴったり'],letsstyle:["LET'S STYLE! 💖",'コーデしよう！💖'],
@@ -515,7 +522,7 @@ const STR={
  // options
  o_title:['⚙️ Options','⚙️ オプション'],o_music:['🎵 Music','🎵 おんがく'],o_sfx:['🔔 Sound FX','🔔 こうかおん'],o_lang:['🌐 Language','🌐 ことば'],o_easy:['🎯 Easy rhythm poses','🎯 かんたんポーズリズム'],
  o_reset:['🗑 Reset progress','🗑 データをリセット'],o_resetq:['Reset ALL progress? Coins, items, story and closet will be erased.','ぜんぶリセットする？ コイン・アイテム・ストーリー・クローゼットが消えるよ。'],o_resetdone:['Progress reset ✨','リセットしたよ ✨'],
- o_credits:['Credits','クレジット'],o_by:['A game by AMSA Baby Productions','制作：AMSA Baby Productions'],o_thanks:['Starring Pinco and the plush crew 💖','出演：ピンコとぬいぐるみのなかまたち 💖'],
+ o_credits:['Credits','クレジット'],o_by:['A game by AMSA Baby Productions','制作：AMSA Baby Productions'],o_thanks:['Starring Pinco and friends 💖','出演：ピンコとぬいぐるみのなかまたち 💖'],
  o_on:['ON','オン'],o_off:['OFF','オフ'],yes:['Yes','はい'],no:['No','いいえ'],resume:['▶ Resume','▶ つづける'],
  // story ui
  tap:['tap ▶','タップ ▶'],skipall:['Skip ⏭','スキップ ⏭'],chapter:['Chapter {0}','第{0}話'],goal:['Goal: {0}★ or more','目標：{0}★以上'],
@@ -530,28 +537,28 @@ const STR={
  tut2:['2. Tap foods below to put them on your tray.','2. 下の料理をタップしてトレーにのせる。'],
  tut3:['3. Tap the customer to serve! Fast = big tips, streaks = combo!','3. お客さんをタップして出す！早いとチップ、連続でコンボ！'],
  tut4:['🗑 clears the tray. Don\'t let the patience bar run out!','🗑でトレーをリセット。ガマンゲージに注意！'],
- gotit:['Got it! 💖','わかった！💖'],shiftover:['Shift over!','おつかれさま！'],served:['Served: {0}','提供：{0}'],angry:['Walked out: {0}','帰っちゃった：{0}'],
+ gotit:['Got it! 💖','わかった！💖'],shiftover:['Shift over!','おつかれさま！'],served:['Served: {0}','提供：{0}'],angry:['Hungry ghosts: {0}','はらぺこおばけ：{0}'],
  tips:['Tips: +{0}','チップ：+{0}'],earned:['Earned {0} coins','{0}コインかせいだ！'],combo:['COMBO ×{0}!','コンボ ×{0}！'],wrong:['Wrong order!','注文ちがい！'],
- trayfull:['Tray full!','トレーがいっぱい！'],cooking:['Cooking…','調理中…'],hmph:['Hmph!','ふんっ！'],thanks:['Thanks!','ありがとう！'],yum:['Yum!','おいしい！'],
+ trayfull:['Tray full!','トレーがいっぱい！'],cooking:['Cooking…','調理中…'],hmph:['Starved… 👻','はらぺこ…👻'],growl:['*grumble* 🤤','ぐぅ〜 🤤'],svskip:['⏭ SKIP TO END','⏭ スキップ'],svskipq:['End the shift now and keep the {0} coins you earned?','いまシフトを終わって、かせいだ{0}コインをもらう？'],yes:['Yes','はい'],no:['Keep going','つづける'],thanks:['Thanks!','ありがとう！'],yum:['Yum!','おいしい！'],
  critic:['CRITIC','評論家'],
  // pose rhythm
  posetap:['TAP TO POSE!','タップでポーズ！'],perfect:['PERFECT!','パーフェクト！'],good:['GOOD!','グッド！'],miss:['MISS','ミス'],
  poseTut:['Rhythm Pose!','リズムポーズ！'],poseTut1:['Circles pop up on the beat. Tap each one when the shrinking ring touches it!','ビートにあわせて丸が出るよ。リングが重なった瞬間にタップ！'],
  poseTut2:['More PERFECTs = a fancier pose + a judge bonus!','パーフェクトが多いほど豪華なポーズ＆審査ボーナス！'],
  p_wave:['A cute wave!','かわいく手をふる！'],p_hip:['Hand on hip!','腰に手を！'],p_twirl:['Twirl!','くるっとターン！'],p_kiss:['Blown kiss! 💋','投げキッス！💋'],p_princess:['PRINCESS POSE! 👑','プリンセスポーズ！👑'],
- p_bonus:['+{0}★ judge bonus','審査ボーナス +{0}★'],
+ p_bonus:['POSE BONUS +{0}★','ポーズボーナス +{0}★'],p_chip:['+{0} pose','ポーズ +{0}'],p_sum:['{0}★ + {1}★ pose = {2}★','{0}★ + ポーズ{1}★ = {2}★'],p_plus:['+ {0}★ pose','+ ポーズ {0}★'],p_coins:['📸 {0}: +{1}★ · +{2} coins','📸 {0}：+{1}★・+{2}コイン'],
  // gifts
  gifts:['🎁 Gifts','🎁 プレゼント'],nogifts:['No gifts yet. Someone special might be watching your shows… 👀','まだプレゼントはないよ。だれかがショーを見てるかも…👀'],
  giftfrom:['From {0}','{0}より'],giftnew:['🎁 Secret fan!','🎁 ひみつのファン！'],giftsay:['I love what you did! Take my {0}!','すてきだった！私の{0}をあげる！'],
  yay:['Yay! 💖','やったー！💖'],incrowd:['👀 {0} is in the crowd!','👀 {0}が観客席に！'],looks:['Looks','コーデ'],
  venue_alley:['Back-Alley Show','路地裏ショー'],venue_mall:['Mall Pop-Up','モールのポップアップ'],venue_city:['City Fashion Show','シティ・ファッションショー'],venue_tokyo:['Tokyo Fashion Week','東京ファッションウィーク'],venue_paris:['Paris Fashion Week','パリ・ファッションウィーク'],venue_london:['LONDON FASHION WEEK','ロンドン・ファッションウィーク'],
  st_yaki:['Street Yakitori Stand','屋台やきとり'],st_sushi:['Sushi Cart','おすし屋台'],st_ramen:['Ramen Shop','ラーメン屋'],st_cafe:['Café & Bakery','カフェ＆ベーカリー'],st_bistro:['Bistro','ビストロ'],st_fine:['Fine Dining','高級レストラン'],
- debug:['🐞 Debug: jump to finale','🐞 デバッグ：最終話へ'],theend:['THE END 👑','おしまい 👑'],
+ giftstory:['🎁 A gift for you!','🎁 プレゼント！'],giftstory2:['A special {0}, just for you! It\'s in your closet now — wear it on any runway.','とくべつな{0}をきみに！クローゼットに入れたよ — どのランウェイでも着られるよ。'],debug:['🐞 Debug: jump to finale','🐞 デバッグ：最終話へ'],dnext:['🐞 Skip chapter (debug)','🐞 章スキップ（デバッグ）'],theend:['THE END 👑','おしまい 👑'],
  intro_skip:['Skip intro ⏭','スキップ ⏭'],
 };
 const LANG=()=>(typeof S!=='undefined'&&S&&S.lang)||'en';
 function T(k,...a){const e=STR[k];let s=e?(LANG()==='ja'&&e[1]!=null?e[1]:e[0]):k;a.forEach((v,i)=>{s=s.split('{'+i+'}').join(v);});return s;}
-const JA_ITEM={gown:'ボールガウン',sun:'サンドレス',tee:'ハートT',pop:'スパンコールトップ',spacedr:'ギャラクシードレス',spooky:'コウモリドレス',hoodie:'くもパーカー',mermaid:'マーメイドガウン',overall:'ピクニックオーバーオール',tutu:'チュチュ',shorts:'デニムショーツ',leggings:'星のレギンス',starskirt:'星のスカート',cargo:'ゆるパンツ',bloomers:'ハートブルマ',heels:'ガラスのヒール',sneaks:'スニーカー',jelly:'ゼリーサンダル',boots:'ゴーゴーブーツ',moon:'ムーンブーツ',slippers:'うさぎスリッパ',tiara:'ティアラ',sunhat:'むぎわら帽子',crown:'おおきな王冠',witch:'まじょの帽子',helmet:'宇宙ヘルメット',beret:'ベレー帽',bunny:'うさみみ',pearls:'パール',shades:'星のサングラス',purse:'ハートポーチ',mic:'キラキラマイク',earstar:'星のイヤリング',cape:'星空マント',wings:'妖精の羽',classic:'定番リボン',polka:'水玉リボン',ribbon:'ロングリボン',flower:'お花クリップ',starw:'星のステッキ',heartw:'ハートのステッキ',moonw:'月の王笏',bubble:'シャボン玉ステッキ',pumpkin:'かぼちゃステッキ',ballroom:'舞踏会',beachbg:'ビーチ',bedroom:'ピンクのお部屋',concert:'コンサート',spacebg:'宇宙',spookybg:'おばけの庭',
+const JA_ITEM={mirrorshades:'ミラーサングラス',papercrown:'ペーパークラウン',partycap:'パーティキャップ',gown:'ボールガウン',sun:'サンドレス',tee:'ハートT',pop:'スパンコールトップ',spacedr:'ギャラクシードレス',spooky:'コウモリドレス',hoodie:'くもパーカー',mermaid:'マーメイドガウン',overall:'ピクニックオーバーオール',tutu:'チュチュ',shorts:'デニムショーツ',leggings:'星のレギンス',starskirt:'星のスカート',cargo:'ゆるパンツ',bloomers:'ハートブルマ',heels:'ガラスのヒール',sneaks:'スニーカー',jelly:'ゼリーサンダル',boots:'ゴーゴーブーツ',moon:'ムーンブーツ',slippers:'うさぎスリッパ',tiara:'ティアラ',sunhat:'むぎわら帽子',crown:'おおきな王冠',witch:'まじょの帽子',helmet:'宇宙ヘルメット',beret:'ベレー帽',bunny:'うさみみ',pearls:'パール',shades:'星のサングラス',purse:'ハートポーチ',mic:'キラキラマイク',earstar:'星のイヤリング',cape:'星空マント',wings:'妖精の羽',classic:'定番リボン',polka:'水玉リボン',ribbon:'ロングリボン',flower:'お花クリップ',starw:'星のステッキ',heartw:'ハートのステッキ',moonw:'月の王笏',bubble:'シャボン玉ステッキ',pumpkin:'かぼちゃステッキ',ballroom:'舞踏会',beachbg:'ビーチ',bedroom:'ピンクのお部屋',concert:'コンサート',spacebg:'宇宙',spookybg:'おばけの庭',
  lilygown:'スイレンのガウン',cloakdr:'真夜中のマント',swampsiren:'沼のセイレーン',honeygown:'ハニカムガウン',beetee:'ミツバチT',redtee:'プーさん赤T',honeyhood:'はちみつパーカー',peadress:'えんどう豆ドレス',gardenover:'ガーデンオーバーオール',starhood:'星空パーカー',candysun:'キャンディストライプ',pearlmaid:'パールマーメイド',plaidcrop:'チェックのクロップ',nebula:'星雲ガウン',lilytutu:'スイレンのチュチュ',honeytutu:'はちみつチュチュ',beeshorts:'ミツバチショーツ',peaskirt:'えんどう豆スカート',plaidleg:'チェックのレギンス',gardenpants:'ガーデンパンツ',honeybloom:'はちみつブルマ',swampskirt:'沼のスカート',lilyslip:'スイレンのスリッパ',rainboots:'レインブーツ',beesneaks:'ミツバチスニーカー',frogboots:'カエルブーツ',rubyheels:'ルビーのヒール',peasandal:'えんどう豆サンダル',starmoon:'星と月のブーツ',lilyhat:'はっぱの帽子',honeypot:'はちみつ壺ハット',antenna:'ミツバチの触角',peabeanie:'えんどう豆ニット帽',meshcap:'フルーツキャップ',frogcrown:'カエル王子の王冠',rosetiara:'バラのティアラ',starberet:'星のベレー帽',dipper:'ハニーディッパー',jar:'ホタルのびん',peapurse:'えんどう豆ポーチ',beewings:'ミツバチの羽',batwings:'コウモリの羽',lilybeads:'スイレンのネックレス',honeypearls:'はちみつパール',nightcape:'夜のマント',beebow:'ミツバチリボン',lilyclip:'スイレンの花',peabow:'えんどう豆リボン',batbow:'コウモリリボン',starribbon:'星のリボン',lilyw:'スイレンのステッキ',hexw:'ハニカムステッキ',peaw:'えんどう豆ステッキ',fireflyw:'ホタルのステッキ',sunw:'ひまわりステッキ',swampbg:'月夜の沼',honeybg:'はちみつホール',gardenbg:'えんどう豆の庭'};
 const JA_THEME={royal:['舞踏会','ガウン、王冠、パールでキラキラ！'],beach:['ビーチの日','晴れて、さわやか、あかるく！'],pop:['ポップスター','大胆に、元気に、ピカピカに！'],space:['宇宙プリンセス','シルバー、星、宇宙のかがやき！'],spooky:['おばけカワイイ','コウモリ、かぼちゃ、むらさき！'],sweet:['スイーツピクニック','パステル、リボン、おやつ！'],swamp:['沼のガラ','スイレン、真夜中マント、カエル王子のドラマ！'],honey:['はちみつパーティー','金色で、あまくて、ちょっとベタベタ！'],pea:['えんどう豆ガーデン','みどり、お花、えんどう豆！']};
 const JA_CAT={top:'ドレス',bot:'ボトムス',shoe:'くつ',hat:'かんむり',acc:'こもの',bow:'リボン',wand:'ステッキ',bg:'ばしょ'};
@@ -593,12 +600,12 @@ function drawLegs(x,ph){const sw=Math.sin(ph||0);for(const s of[0,1]){x.save();c
  const g=x.createLinearGradient(hx-24,0,hx+24,0);g.addColorStop(0,'#c86f8c');g.addColorStop(.45,'#f2a3bb');g.addColorStop(1,'#bd6683');x.fillStyle=g;x.fill(p);x.strokeStyle='rgba(120,70,80,.35)';x.lineWidth=3;x.stroke(p);
  x.fillStyle='rgba(255,255,255,.12)';for(let yy=560;yy<880;yy+=18){x.fillRect(hx-6+(fx-hx)*((yy-530)/360),yy,3,8);}
  const f=new Path2D();f.ellipse(fx+(s?8:-8),900,30,16,0,0,7);x.fillStyle=rg(x,fx,895,32,'#ee9db6');x.fill(f);x.stroke(f);x.restore();}}
-function itemDraw(x,id,o,extra){const it=IT[id];const c=col(o,id);if(drawSheetItem(x,it,c))return null;
+function itemDraw(x,id,o,extra){const it=IT[id];if(it.ph){if(extra===true)return null;const im=phImg(it);if(im.complete&&im.naturalWidth){const [rx,ry,rw,rh]=it.r;x.save();x.translate(rx+rw/2,ry+rh);if(it.rot)x.rotate(it.rot);x.drawImage(im,-rw/2,-rh,rw,rh);x.restore();}return null;}const c=col(o,id);if(drawSheetItem(x,it,c))return null;
  switch(it.c){case'top':return drawTop(x,it,c);case'bot':return drawBot(x,it,c);case'shoe':return drawShoe(x,it,c);case'hat':return drawHat(x,it,c);case'acc':return drawAcc(x,it,c,extra);case'bow':return drawBow(x,it,c);case'wand':return drawWand(x,it,c);}}
 const STAMPS={star:(x,s)=>x.fill(starP(s.x,s.y,16)),heart:(x,s)=>x.fill(heartP(s.x,s.y,15)),dot:(x,s)=>x.fill(circP(s.x,s.y,10))};
 function stampClip(o){if(o.top&&!SHEETS.top)return TOPSHAPE[IT[o.top].shape]();return TORSO();}
 function drawPinco(x,o,opt){opt=opt||{};
- if(o.acc&&!(SHEETS.acc))drawAcc(x,IT[o.acc],col(o,o.acc),true);
+ if(o.acc&&!IT[o.acc].ph&&!(SHEETS.acc))drawAcc(x,IT[o.acc],col(o,o.acc),true);
  drawLegs(x,opt.ph);
  drawPinBody(x,opt);
  if(o.bot)itemDraw(x,o.bot,o);
@@ -675,8 +682,8 @@ function goTheme(){audio();theme=pickTheme();scene='theme';st=0;show('s-theme');
 function goDress(){scene='dress';st=0;timeLeft=90;O=newOutfit();show('s-dress');$('d-theme').textContent=theme.e+' '+THN(theme);UI.cat='top';UI.stamp=false;renderTabs();renderItems();renderTools();playSong('dress');setCoins();}
 function goRunway(){if(scene!=='dress')return;scene='runway';st=0;show('s-run');playSong('run');P=[];RESULT=score(O,theme);RUN=newRun();SFX.fan();buzz(20);}
 function goJudge(){scene='judge';st=0;show('s-judge');}
-function goScore(){scene='score';show('s-score');const R=RESULT;const tot=R.stars.reduce((a,b)=>a+b,0);
- $('sc-stars').innerHTML='★'.repeat(Math.round(tot/3))+'<span>'+'★'.repeat(5-Math.round(tot/3))+'</span>';$('sc-tot').textContent=T('stars15',tot);$('sc-coin').textContent='+'+R.coins;
+function goScore(){scene='score';show('s-score');const R=RESULT;const base=R.stars.reduce((a,b)=>a+b,0),tot=base+(R.bonus||0);const sr=Math.min(5,Math.round(tot/3));
+ $('sc-stars').innerHTML='★'.repeat(sr)+'<span>'+'★'.repeat(5-sr)+'</span>';$('sc-tot').textContent=T('stars15',base)+(R.bonus?'  '+T('p_plus',R.bonus):'');$('sc-coin').textContent='+'+R.coins;$('sc-pose').innerHTML=R.pose?T('p_coins',poseName(R.pose,0).replace(/[!！].*$/,''),R.bonus||0,R.pcoins||0):'';
  if(!R.paid){R.paid=1;WALLET(R.coins);S.rounds++;S.best=Math.max(S.best,tot);const th=lookThumb(O,240,320);S.closet.push({o:JSON.parse(JSON.stringify(O)),th,theme:theme.n,stars:tot,d:Date.now()});if(S.closet.length>24)S.closet.shift();save();}
  setCoins();const afford=ST.on?0:ITEMS.filter(i=>!S.owned[i.id]&&i.p<=S.coins).length;const nx=ITEMS.filter(i=>!S.owned[i.id]).sort((a,b)=>a.p-b.p)[0];$('sc-unl').textContent=afford?T('afford',afford):nx?T('nextunl',IN(nx),nx.p):T('ownall');
  $('sc-tip').textContent=R.tip;SFX.fan();afterScore(R,tot);}
@@ -697,12 +704,14 @@ function score(o,t){const worn=CATS.map(c=>o[c[0]]).filter(Boolean);let match=0;
  return{stars,coins,tip,say,themeS,colorS,creS};}
 // ---------- dress-up UI ----------
 let THUMBS={};
+function phImg(it){if(!PHIMG[it.id]){const i=new Image();i.onload=()=>{for(const k in THUMBS)if(k===it.id)delete THUMBS[k];if(typeof renderItems==='function'&&scene==='dress')renderItems();};i.src=it.ph;PHIMG[it.id]=i;}return PHIMG[it.id];}
 function thumb(id){if(THUMBS[id])return THUMBS[id];const it=IT[id],c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+ if(it.ph){const im=phImg(it);if(!(im.complete&&im.naturalWidth))return c.toDataURL();const k=112/Math.max(im.naturalWidth,im.naturalHeight),w=im.naturalWidth*k,h=im.naturalHeight*k;x.drawImage(im,64-w/2,64-h/2,w,h);return THUMBS[id]=c.toDataURL();}
  if(it.c==='bg'){const o=newOutfit();o.bg=id;bgDraw(x,o,128,128,0);}
  else{const [bx,by,bw,bh]=BOX[it.c];const s=112/Math.max(bw,bh);x.translate(64-(bx+bw/2)*s,64-(by+bh/2)*s);x.scale(s,s);const o=newOutfit();if(it.c==='acc'&&(it.k==='cape'||it.k==='wings')){o.acc=id;if(it.k==='cape')drawAcc(x,it,it.col,true);else if(!SHEETS.acc)drawWings(x,it.col);}itemDraw(x,id,o,false);}
  return THUMBS[id]=c.toDataURL();}
 function renderTabs(){$('tabs').innerHTML=CATS.map(([k,n,e])=>'<button class="tab'+(UI.cat===k?' on':'')+(O[k]?' has':'')+'" data-c="'+k+'"><b>'+e+'</b><span>'+CATN(k)+'</span></button>').join('');}
-function renderItems(){const list=ITEMS.filter(i=>i.c===UI.cat&&(!ST.on||OWN()[i.id]));let h='<button class="card none'+(O[UI.cat]?'':' sel')+'" data-i=""><b>✖</b><span>'+T('none')+'</span></button>';
+function renderItems(){const list=ITEMS.filter(i=>i.c===UI.cat&&(!ST.on||OWN()[i.id])&&(!i.gift||S.owned[i.id]||OWN()[i.id]));let h='<button class="card none'+(O[UI.cat]?'':' sel')+'" data-i=""><b>✖</b><span>'+T('none')+'</span></button>';
  for(const it of list){const own=OWN()[it.id],m=it.tags.includes(theme.id);h+='<button class="card'+(O[UI.cat]===it.id?' sel':'')+(own?'':' lock')+'" data-i="'+it.id+'"><img src="'+thumb(it.id)+'" alt="">'+(m?'<em>✨</em>':'')+'<span>'+IN(it)+'</span>'+(own?'':'<u>🔒 '+it.p+'</u>')+'</button>';}
  $('items').innerHTML=h;}
 function renderTools(){$('sw').innerHTML=SW.map(([c,n])=>'<button class="swb'+(UI.sw===c?' on':'')+'" data-s="'+c+'" title="'+n+'" style="background:'+c+'"></button>').join('');
@@ -844,11 +853,11 @@ JUDGES.length=0;JUDGES.push(
  {n:'Dark Kermit',nj:'ダーク・カーミット',img:'kermit',r:'Critique',rj:'辛口',c:'#2b2233',h:150,
   lines:[['A TRAGEDY.','I must lie down.','Hideous. Next!'],['Mediocre. Ugh.','The swamp weeps.'],['Acceptable… barely.','Hmph. Fine.'],['I am… almost moved.','Not terrible. Shocking.'],['MAGNIFICENT! *faints*','I take back every word!']],
   lj:[['悲劇だ。','横にならせてくれ…','ひどい。次！'],['平凡。うぅ。','沼が泣いている。'],['まあ…ギリ合格。','ふん。いいだろう。'],['私が…感動しかけた。','悪くない。おどろいた。'],['すばらしい！*気絶*','前言撤回だ！']]},
- {n:'Pooh',nj:'プーさん',img:'pooh',r:'Yum Factor',rj:'おいしさ',c:'#ffcc33',h:160,
-  lines:[['Oh bother… is it lunch?','I like it! …I think?'],['Pretty! Got any honey?','Ooh, sparkly…'],['Yummy outfit!','Lovely! Like honey!'],['Oh my! Delicious!','Hunny-licious!'],['BEST THING EVER!!','Sweeter than hunny! 🍯']],
-  lj:[['やれやれ…お昼ごはん？','好き！…たぶん？'],['かわいい！はちみつある？','わあ、キラキラ…'],['おいしそうなコーデ！','すてき！はちみつみたい！'],['わあ！おいしそう！','はちみつ級！'],['さいこう！！','はちみつよりあまい！🍯']]});
+ {n:'Pooh',nj:'プーさん',img:'pooh',r:'Cha-Ching',rj:'もうかり度',c:'#ffcc33',h:160,
+  lines:[['Ew. I wouldn\'t even SELL that!','Refund please!!','My piggy bank is crying'],['Hmm… like three coins of pretty.','Can I have it? I\'m gonna sell it!'],['Ooh! That\'s worth a LOT of coins!','Not bad! I\'d charge two coins to look!'],['That\'s a MILLION coins of pretty!','I\'d pay to see that… no wait, YOU pay ME!'],['CHA-CHING!! Best outfit EVER!','Mom says I\'m a business genius. YOU are too! 💰']],
+  lj:[['うえ〜。これ売れないよ！','おかね返して〜！！','ぼくのブタさん貯金箱が泣いてる'],['うーん…3コインぶんのかわいさかな','それちょうだい！売るから！'],['わあ！それ、すっごい高く売れるよ！','いいね！見るだけで2コインね！'],['100万コインぶんかわいい！','お金はらって見たい…やっぱりキミがはらって！'],['チャリーン！！さいこうのコーデ！','ママがね、ぼくは商売の天才だって。キミも天才！💰']]});
 const BUNDLES_JA=['おためし壺','はちみつびん','人気No.1','いちばんお得','メガ巣箱','王家の宝物庫'];
-const KING_LINES_JA=['王家のファッションには王家のコインを！','王の命令じゃ：タダである！','プリンセスたるもの、コイン切れはならぬ。','持っていきなさい、宝物庫は底なしじゃ！','はちみつもコインも？ なんという王国！','かしこく使うのじゃ…いや、使っちゃえ！ホッホー！'];
+const KING_LINES_JA=['王さまのコインで王さまのファッション！…2回かぞえたよ！','王さまの命令：タダだよ！（ぼくの貯金箱にはないしょね）','プリンセスはコインを切らしちゃダメ。コインはさいこう！','あげる！コインのお部屋があるの！そこで泳いでるの！','チャリーン！それが王さまの音だよ！','ぜんぶ使って！そしてまた来てね！リピーター大歓迎！'];const _KJ_OLD=['王家のファッションには王家のコインを！','王の命令じゃ：タダである！','プリンセスたるもの、コイン切れはならぬ。','持っていきなさい、宝物庫は底なしじゃ！','はちみつもコインも？ なんという王国！','かしこく使うのじゃ…いや、使っちゃえ！ホッホー！'];
 const KL=()=>LANG()==='ja'?KING_LINES_JA:KING_LINES;
 const pk=a=>a[Math.floor(Math.random()*a.length)];
 score=function(o,t){const worn=CATS.map(c=>o[c[0]]).filter(Boolean);let match=0;
@@ -879,14 +888,20 @@ drawJudge=function(x,j,cx,cy,s,t,stars,shown,say,idx){const im=JIMG[j.img];const
  x.translate(0,-bob);x.scale(1/sq*(1+rev*.05),sq);x.rotate(Math.sin(t*2+idx*2)*.03);
  if(im.naturalWidth)x.drawImage(im,-W0/2,-H0,W0,H0);x.restore();
  x.save();x.font='800 '+Math.round(11.5*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillStyle=idx===1?'#2b2233':'#5a2a6a';x.fillText(LANG()==='ja'?j.nj:j.n,cx,cy+90*s);x.restore();
- if(say){x.save();x.font='800 '+Math.round(12*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';let fs=Math.round(12*s/.85);x.font='800 '+fs+'px ui-rounded,system-ui';while(x.measureText(say).width+14>W/3-4&&fs>8){fs--;x.font='800 '+fs+'px ui-rounded,system-ui';}const tw=x.measureText(say).width+14,bx=Math.max(4,Math.min(W-tw-4,cx-tw/2)),by=cy+96*s;x.fillStyle=idx===1?'#2b2233':'#fff';x.strokeStyle=idx===1?'#8fd14f':'#ff7eb6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,by,tw,24,12):x.rect(bx,by,tw,24);x.fill();x.stroke();x.fillStyle=idx===1?'#8fd14f':'#8e44ec';x.textAlign='center';x.fillText(say,bx+tw/2,by+17);x.restore();}};
+ if(say){x.save();let fs=Math.round(12*s/.85);x.font='800 '+fs+'px '+FONT;let ls=wrapT(x,say,W/3-22);while(ls.length>3&&fs>9){fs--;x.font='800 '+fs+'px '+FONT;ls=wrapT(x,say,W/3-22);}
+  const lh=fs+3,tw=Math.max(...ls.map(l=>x.measureText(l).width))+14,bh=ls.length*lh+9,bx=Math.max(4,Math.min(W-tw-4,cx-tw/2)),by=Math.min(H-bh-6,cy+96*s);x.fillStyle=idx===1?'#2b2233':'#fff';x.strokeStyle=idx===1?'#8fd14f':'#ff7eb6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,by,tw,bh,12):x.rect(bx,by,tw,bh);x.fill();x.stroke();
+  const tx=Math.max(bx+12,Math.min(bx+tw-12,cx));x.beginPath();x.moveTo(tx-6,by+1);x.lineTo(tx+(cx<tx?-8:8),by-8);x.lineTo(tx+6,by+1);x.fill();x.fillStyle=idx===1?'#8fd14f':'#8e44ec';x.textAlign='center';ls.forEach((l,j)=>x.fillText(l,bx+tw/2,by+4+fs+j*lh-1));x.restore();}};
 judging=function(t){bgDraw(X,O,W,H,t);X.fillStyle='rgba(30,0,50,.35)';X.fillRect(0,0,W,H);
  const pl=place(W*.2,H*.05,W*.6,H*.44);X.save();X.translate(pl.ox,pl.oy);X.scale(pl.s,pl.s);drawPinco(X,O);X.restore();
  X.fillStyle='rgba(255,255,255,.92)';X.beginPath();X.roundRect?X.roundRect(8,H*.5,W-16,H*.47,24):X.rect(8,H*.5,W-16,H*.47);X.fill();
  X.textAlign='center';X.fillStyle='#8e44ec';X.font='800 '+Math.round(W*.055)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';X.fillText(T('judgessay'),W/2,H*.5+W*.075);
  const s=Math.min(W/3/140,H*.3/230);RUN.jt=RUN.jt||[];for(let i=0;i<3;i++){const jt=t-.6-i*1.1,shown=Math.max(0,jt);const st=RESULT.stars[i];
   const prev=RUN.jn[i]||0,nowN=Math.min(st,Math.floor(shown*6));if(nowN>prev){for(let q=prev;q<nowN;q++)SFX.judge(q);RUN.jn[i]=nowN;if(nowN===st){RUN.jt[i]=t;burst(W*(i+.5)/3,H*.66,st*4,i===1?['#8fd14f','#2b2233']:['#ffcc33','#fff'],120);buzz(10);if(i===1&&st<=2)SFX.boo();}}
-  drawJudge(X,JUDGES[i],W*(i+.5)/3,H*.74,s,t,jt>0?st:0,shown,jt>1?RESULT.say[i]:null,i);}};
+  drawJudge(X,JUDGES[i],W*(i+.5)/3,H*.74,s,t,jt>0?st:0,shown,jt>1?RESULT.say[i]:null,i);
+  const pa=(RESULT.padd||[0,0,0])[i];if(pa&&jt>1.3){const ct=jt-1.3;if(!RUN.pch)RUN.pch={};if(!RUN.pch[i]){RUN.pch[i]=1;SFX.sparkle();burst(W*(i+.5)/3,H*.74+126*s,10,['#ffcc33','#b39dff','#fff'],120);}
+   const sc=ct<.25?ct/.25*1.25:ct<.4?1.25-(ct-.25)/.15*.25:1,txt=T('p_chip',pa);X.save();X.translate(W*(i+.5)/3,H*.74+(RESULT.say&&RESULT.say[i]&&jt>1?150:128)*s+Math.sin(t*4+i)*2);X.scale(sc,sc);X.font='900 '+Math.round(13*s/.85)+'px '+FONT;const tw=X.measureText(txt).width+18;
+   X.fillStyle='#8e44ec';X.strokeStyle='#ffcc33';X.lineWidth=3;X.beginPath();X.roundRect?X.roundRect(-tw/2,-12,tw,24,12):X.rect(-tw/2,-12,tw,24);X.fill();X.stroke();X.fillStyle='#fff';X.textAlign='center';X.fillText(txt,0,5);X.restore();}}
+ if(RESULT.bonus!=null&&t>4.2){const tot=RESULT.stars.reduce((a,b)=>a+b,0);X.save();X.textAlign='center';X.font='900 '+Math.round(W*.045)+'px '+FONT;X.fillStyle='#ff3d8b';const tx=T('p_sum',tot,RESULT.bonus||0,tot+(RESULT.bonus||0));X.fillText(tx,W/2,H*.5+W*.14);X.restore();}};
 // ---------- home buttons + leave confirm ----------
 let PAUSED=false;
 function askLeave(){if(!['dress','runway','judge'].includes(scene)){goTitle();return;}PAUSED=true;$('confirm').classList.add('on');SFX.tap();}
@@ -895,7 +910,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  else if(a==='bank'){SFX.tap();openBank();}else if(a==='bankx'){SFX.tap();goTitle();}});
 // ---------- Pooh Bank ----------
 const BUNDLES=[[100,'Starter Pot',1],[500,'Honey Jar',2],[1200,'POPULAR',3],[3000,'BEST VALUE',4],[7500,'Mega Hive',5],[20000,'ROYAL TREASURY',6]];
-const KING_LINES=['Royal coins for royal fashion!','By royal decree: it is FREE!','A princess must never run short of coins.','Take them, my dear — the treasury is bottomless!','Hunny AND coins? What a kingdom!','Spend wisely… or don\'t! Ho ho!'];
+const KING_LINES=['Royal coins for royal fashion! …I counted them twice!','By royal decree: it is FREE! (Don\'t tell my piggy bank.)','A princess must never run short of coins. Coins are the BEST.','Take them! I have a whole ROOM of coins! I swim in it!','Cha-ching! That\'s the sound of royalty!','Spend it all! Then come back! Repeat customers!'];const _K_OLD=['Royal coins for royal fashion!','By royal decree: it is FREE!','A princess must never run short of coins.','Take them, my dear — the treasury is bottomless!','Hunny AND coins? What a kingdom!','Spend wisely… or don\'t! Ho ho!'];
 let bankCD=0;
 function coinArt(n){const c=document.createElement('canvas');c.width=180;c.height=110;const x=c.getContext('2d');
  if(n>=6){const p=rrP(30,40,120,62,10);fillP(x,p,lg(x,40,102,'#a0522d'),'#a0522d',4);fillP(x,rrP(26,24,128,26,12),lg(x,24,50,'#c8743a'),'#a0522d',4);x.fillStyle='#ffcc33';x.fillRect(30,46,120,6);x.fillRect(84,40,12,62);for(let i=0;i<9;i++)fillP(x,circP(40+i*12,24-Math.abs(4-i)*3,9),rg(x,40+i*12,20,9,'#ffcc33'),'#c48a00',2);x.fillStyle='#ff3d8b';x.fill(circP(90,70,7));spark(x,140,20,10);spark(x,36,30,7);return c.toDataURL();}
@@ -969,15 +984,16 @@ askLeave=function(){if(!['dress','runway','judge','serve'].includes(scene)){goTi
 // ---- cast art ----
 const CAST={
  pinco:{img:'art/pinco.png',n:'Pinco',nj:'ピンコ',col:'#ff7eb6'},
- party:{img:'art/c_party.png',n:'Polka Pete',nj:'ポルカ・ピート',col:'#4fd8ff',vibe:['pop','sweet'],cols:['#ff3d8b','#4fd8ff','#7ee8c6','#ffcc33']},
+ party:{img:'art/c_party.png',n:'Party Hat Guy',nj:'パーティハット君',col:'#4fd8ff',vibe:['pop','sweet'],cols:['#ff3d8b','#4fd8ff','#7ee8c6','#ffcc33']},
  holiday:{img:'art/c_holiday.png',n:'Jolly Jingles',nj:'ジョリー・ジングル',col:'#e23b3b',vibe:['royal','honey'],cols:['#e23b3b','#fffafc','#c48a00']},
  baller:{img:'art/c_baller.png',n:'Slam Dunkle',nj:'スラム・ダンクル',col:'#ffcc33',vibe:['pop','beach'],cols:['#ffcc33','#8e44ec']},
- mole:{img:'art/c_mole.png',n:'Mochi Mole',nj:'もぐもち',col:'#ff9fca',vibe:['sweet','pea'],cols:['#ff7eb6','#d6dbe6']},
- tad:{img:'art/c_tad.png',n:'Madame Smugsworth',nj:'マダム・スマッグ',col:'#a0522d',vibe:['royal','spooky','swamp'],cols:['#ffcc33','#2b2233','#ff9a2e']},
+ mole:{img:'art/c_mole.png',n:'Mogu Mogu',nj:'もぐもぐ',col:'#ff9fca',vibe:['sweet','pea'],cols:['#ff7eb6','#d6dbe6']},
+ tad:{img:'art/c_tad.png',n:'Mr Pooping',nj:'ミスター・プーピング',col:'#a0522d',vibe:['royal','spooky','swamp'],cols:['#ffcc33','#2b2233','#ff9a2e']},
  leaf:{img:'art/c_leaf.png',n:'Sprout',nj:'スプラウト',col:'#8fd14f',vibe:['pea','swamp','sweet'],cols:['#8fd14f','#3fae5a','#e23b3b']},
  bean:{img:'art/j_bean.png?v2',n:'Emo Bean',nj:'エモ・ビーン',col:'#8fd14f'},
  kermit:{img:'art/j_kermit.png?v2',n:'Dark Kermit',nj:'ダーク・カーミット',col:'#2b2233'},
  pooh:{img:'art/j_pooh.png?v2',n:'Pooh',nj:'プーさん',col:'#ffcc33'},
+ max:{img:'art/c_max.png?v21',n:'Max',nj:'マックス',col:'#c0392b',vibe:['pop','sweet','beach'],cols:['#e23b3b','#ffcc33']},
  king:{img:'art/j_king.png',n:'King Pooh',nj:'キング・プー',col:'#c0182f'},
  shadow:{img:'',n:'???',nj:'？？？',col:'#2b2233'}};
 for(const k in CAST){if(!CAST[k].img)continue;const i=new Image();i.src=CAST[k].img;CAST[k].im=i;}
@@ -1008,6 +1024,11 @@ SFX.gasp=function(){if(!AC)return;const t=AC.currentTime;noise(t,.4,.2,1800);ton
 SFX.angry=function(){if(!AC)return;const t=AC.currentTime;tone(200,t,.2,'sawtooth',.08,null,140);tone(150,t+.15,.25,'sawtooth',.08,null,110);};
 SFX.coin=function(){if(!AC)return;const t=AC.currentTime;tone(1568,t,.08,'square',.06);tone(2093,t+.07,.18,'square',.06);};
 
+// v2.1 text wrap helper (EN by words, JA by characters)
+function wrapT(x,s,mw){const ja=/[\u3000-\u9fff\uff00-\uffef]/.test(s);const toks=ja?[...s]:s.split(' ');const out=[];let cur='';
+ for(const tk of toks){const nx=cur?(ja?cur+tk:cur+' '+tk):tk;if(x.measureText(nx).width>mw&&cur){out.push(cur);cur=tk;}else cur=nx;}if(cur)out.push(cur);
+ if(ja)for(let i=1;i<out.length;i++){if(/^[、。！？…ー〜）」』!?]/.test(out[i])){out[i-1]+=out[i][0];out[i]=out[i].slice(1);}}return out.filter(l=>l);}
+
 // ===== v2.0 runway: venues, crowd, reactions, secret cameos, rhythm POSE =====
 const VENUES=['alley','mall','city','tokyo','paris','london'];
 const CROWD_N=[3,10,20,30,42,64];
@@ -1030,8 +1051,8 @@ function pickReacts(tot,vi,tid){const L=REACT[LANG()]||REACT.en;let n=1+(tot>=9?
  if(LANG()==='ja'&&Math.random()<.03)out[out.length-1]=REACT.ja.rare;return out;}
 // ---- secret cameo (≈15% of shows) ----
 const CAMEO_CATS=['hat','bow','acc','wand'];
-function pickCameo(){if(Math.random()>(window.__CAMEO??.15))return null;const who=pk(['party','holiday','baller','mole','tad','leaf']);
- let pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c)&&!OWN()[i.id]&&!['cape','wings'].includes(i.k));if(!pool.length)pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c));
+function pickCameo(){if(Math.random()>(window.__CAMEO??.15))return null;const who=pk(['party','holiday','baller','mole','tad','leaf','max']);
+ let pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c)&&!i.gift&&!OWN()[i.id]&&!['cape','wings'].includes(i.k));if(!pool.length)pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c)&&!i.gift);
  const pref=pool.filter(i=>i.tags.some(t=>CAST[who].vibe.includes(t)));const it=pk(pref.length?pref:pool);return{who,id:it.id,side:Math.random()<.5?0:1};}
 function cameoLikes(c,o,t,tot){const goal=ST.on?CH[S.story.ch].goal:10;if(tot<Math.max(9,goal))return false;const it=IT[c.id],cs=CAST[c.who];
  if(it.tags.includes(t.id)||cs.vibe.includes(t.id))return true;const worn=CATS.map(q=>o[q[0]]).filter(Boolean);
@@ -1039,7 +1060,7 @@ function cameoLikes(c,o,t,tot){const goal=ST.on?CH[S.story.ch].goal:10;if(tot<Ma
 function drawItemOn(x,id,cx,cy,w){const it=IT[id],[bx,by,bw,bh]=BOX[it.c];const s=w/bw;x.save();x.translate(cx-(bx+bw/2)*s,cy-(by+bh/2)*s);x.scale(s,s);const o=newOutfit();o[it.c]=id;itemDraw(x,id,o,false);x.restore();}
 // cameo anchor: where on each cut-out the item goes (fractions of w,h from top-centre)
 const ANCH={party:{hat:[0,.1,.9],bow:[.25,.16,.5],acc:[0,.5,1.4],wand:[.5,.45,.7]},holiday:{hat:[0,.1,.9],bow:[.3,.12,.5],acc:[0,.45,1.6],wand:[.5,.4,.7]},baller:{hat:[0,.06,.6],bow:[.2,.08,.35],acc:[0,.35,1.1],wand:[.45,.5,.6]},
- mole:{hat:[0,.08,.6],bow:[.3,.1,.3],acc:[0,.5,.9],wand:[.45,.5,.4]},tad:{hat:[.05,.42,.7],bow:[.25,.45,.4],acc:[0,.75,1],wand:[.45,.75,.5]},leaf:{hat:[0,.1,.7],bow:[.3,.15,.35],acc:[0,.6,1],wand:[.45,.6,.5]}};
+ mole:{hat:[0,.08,.6],bow:[.3,.1,.3],acc:[0,.5,.9],wand:[.45,.5,.4]},tad:{hat:[.05,.42,.7],bow:[.25,.45,.4],acc:[0,.75,1],wand:[.45,.75,.5]},leaf:{hat:[0,.1,.7],bow:[.3,.15,.35],acc:[0,.6,1],wand:[.45,.6,.5]},max:{hat:[0,.08,.8],bow:[.28,.14,.45],acc:[0,.5,1.3],wand:[.48,.5,.6]}};
 function drawCameo(x,c,cx,by,h,t){const im=CAST[c.who].im;if(!im||!im.naturalWidth)return;const w=h*im.naturalWidth/im.naturalHeight,bob=Math.abs(Math.sin(t*5))*h*.05;
  drawCut(x,c.who,cx,by-bob,h,t,{rot:Math.sin(t*3)*.05});const it=IT[c.id],a=(ANCH[c.who]||ANCH.party)[it.c];drawItemOn(x,c.id,cx+a[0]*w,by-bob-h+a[1]*h,w*a[2]);
  if(t%1.2<.6){x.save();x.globalAlpha=.9;spark(x,cx+w*.45,by-h*.95-bob,8);x.restore();}}
@@ -1087,23 +1108,24 @@ function drawCrowdP(x,p,t){const b=Math.abs(Math.sin(t*4+(p.ph||0)))*p.r*.15;con
 // ---- rhythm pose ----
 const POSES={wave:{k:'p_wave'},hip:{k:'p_hip'},twirl:{k:'p_twirl'},kiss:{k:'p_kiss'},princess:{k:'p_princess'}};
 function newRun(){const vi=ST.on?CH[S.story.ch].v:2;return{fl:[],white:0,posed:0,jn:[],jt:[],vi,pops:[],react:null,cameo:pickCameo(),done:0,rh:null,pose:null,rt:0};}
-function startRhythm(){const beat=60/126,easy=!!S.easy,n=easy?4:(RUN.vi>=3?6:5),t0=AC?AC.currentTime+.25:performance.now()/1000+.25;const cs=[];
- let lx=W/2,ly=H*.45;const slots=n===4?[2,3,4,6]:n===5?[2,3,4,5,6]:[2,3,4,5,6,7];
- for(let i=0;i<n;i++){let px,py,g=0;do{px=W*(.18+Math.random()*.64);py=H*(.26+Math.random()*.42);g++;}while(Math.hypot(px-lx,py-ly)<W*.28&&g<30);lx=px;ly=py;cs.push({x:px,y:py,bt:t0+slots[i]*beat,g:null,n:i+1});}
- RUN.rh={t0,beat,cs,easy,pw:easy?.12:.075,gw:easy?.24:.16,app:beat*(easy?2.6:2)};stopSong();sting(t0,beat);}
+function startRhythm(){const beat=60/126,easy=!!S.easy,n=easy?4:5,t0=AC?AC.currentTime+.25:performance.now()/1000+.25;const cs=[];
+ let lx=W/2,ly=H*.45;const slots=n===4?[2,3,4,6]:[2,3,4,5,6];
+ for(let i=0;i<n;i++){let px,py,g=0;do{px=W*(.22+Math.random()*.56);py=H*(.28+Math.random()*.38);g++;}while(Math.hypot(px-lx,py-ly)<W*.34&&g<30);lx=px;ly=py;cs.push({x:px,y:py,bt:t0+slots[i]*beat,g:null,n:i+1});}
+ RUN.rh={t0,beat,cs,easy,slots,pw:easy?.17:.112,gw:easy?.34:.24,app:beat*(easy?3.6:3),r0:W*(easy?.12:.11),hz:W*(easy?.21:.19)};stopSong();sting(t0,beat);}
 function nowA(){return AC?AC.currentTime:performance.now()/1000;}
 function sting(t0,b){if(!AC)return;const bus=MG;for(let i=0;i<8;i++){const t=t0+i*b;tone(140,t,.18,'sine',.6,bus,45);if(i%2)noise(t,.1,.3,1700,bus);noise(t+b/2,.03,.12,9000,bus,'highpass');
   const ch=i<4?[69,73,76]:[74,78,81];ch.forEach(n=>tone(mf(n),t,b*.6,'square',.03,bus));tone(mf((i<4?45:50)),t,b*.9,'sawtooth',.06,bus);if(i>=2)tone(mf([81,83,85,86,88,90][i-2]),t,b*.5,'triangle',.14,bus);}
  const te=t0+8*b;noise(te,1.2,.3,6000,bus,'highpass');[74,78,81,86].forEach(n=>tone(mf(n),te,1.2,'triangle',.1,bus));}
 function hitCircle(cx,cy){const R=RUN.rh;if(!R||R.over)return;const now=nowA();let best=null;
- for(const c of R.cs){if(c.g)continue;const dt=now-c.bt;if(dt<-R.gw*1.6||dt>R.gw)continue;if(Math.hypot(cx-c.x,cy-c.y)>W*.13)continue;if(!best||Math.abs(dt)<Math.abs(now-best.bt))best=c;}
+ for(const c of R.cs){if(c.g)continue;const dt=now-c.bt;if(dt<-R.gw*1.6||dt>R.gw)continue;if(Math.hypot(cx-c.x,cy-c.y)>R.hz)continue;if(!best||Math.abs(dt)<Math.abs(now-best.bt))best=c;}
  if(!best)return;const d=Math.abs(now-best.bt);best.g=d<=R.pw?'perfect':d<=R.gw?'good':'miss';best.gt=now;
  if(best.g!=='miss'){RUN.white=best.g==='perfect'?.35:.2;SFX.click();SFX.ooh(.5);burst(best.x,best.y,best.g==='perfect'?22:10,['#fff','#ffcc33','#ff7eb6'],180);RUN.fl.push({x:best.x,y:best.y,t:0,r:30});buzz(15);}else SFX.bad();}
 function rhythmTick(){const R=RUN.rh,now=nowA();for(const c of R.cs)if(!c.g&&now>c.bt+R.gw){c.g='miss';c.gt=now;}
  if(!R.over&&R.cs.every(c=>c.g)){R.over=now;const pts=R.cs.reduce((a,c)=>a+(c.g==='perfect'?2:c.g==='good'?1:0),0)/(2*R.cs.length);
   const tier=pts>=.999?'princess':pts>=.75?'kiss':pts>=.45?(Math.random()<.5?'hip':'twirl'):'wave';RUN.pose=tier;RUN.poseT=now;
-  const add={princess:[1,1,1],kiss:[1,0,1],hip:[0,0,1],twirl:[0,0,1],wave:[0,0,0]}[tier];RESULT.bonus=add.reduce((a,b)=>a+b,0);RESULT.stars=RESULT.stars.map((s,i)=>Math.min(5,s+add[i]));
-  const tot=RESULT.stars.reduce((a,b)=>a+b,0);RESULT.coins=5+tot*2+(tot>=13?10:0);RESULT.pose=tier;RESULT.say=RESULT.stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[s-1]));
+  const add={princess:[1,1,1],kiss:[1,0,1],hip:[0,0,1],twirl:[0,0,1],wave:[0,0,0]}[tier];RESULT.padd=add;RESULT.bonus=add.reduce((a,b)=>a+b,0);
+  RESULT.pcoins={princess:12,kiss:8,hip:4,twirl:4,wave:0}[tier];const tot=RESULT.stars.reduce((a,b)=>a+b,0)+RESULT.bonus;RESULT.coins=5+tot*2+(tot>=13?10:0)+RESULT.pcoins;
+  RESULT.say=RESULT.stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[Math.min(5,s+add[i])-1]));SFX.coin&&setTimeout(()=>SFX.sparkle(),500);RESULT.pose=tier;RESULT.say=RESULT.stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[s-1]));
   if(tier==='princess'){SFX.cheer();burst(W/2,H*.4,90,['#fff','#ffcc33','#ff7eb6','#b39dff'],320);}else if(tier==='kiss'){SFX.clap(24,1.5);SFX.ooh(1);for(let i=0;i<14;i++)RUN.hearts.push({x:W/2+(Math.random()-.5)*60,y:H*.4,vx:(Math.random()-.5)*160,vy:-80-Math.random()*120,t:0});}else{SFX.clap(tier==='wave'?8:16,1);}
   for(let i=0;i<6;i++)setTimeout(()=>{if(RUN){RUN.fl.push({x:Math.random()*W,y:H*(.3+Math.random()*.5),t:0,r:26});SFX.flash();RUN.white=.3;}},i*120);}}
 function poseArm(tier,t){switch(tier){case'wave':return[420+Math.sin(t*12)*40,40,-1];case'hip':return[318,360,1];case'kiss':return[236+Math.sin(t*3)*6,118,-1];case'princess':return[440,-60,-1];case'twirl':return[440,160,-1];default:return null;}}
@@ -1137,18 +1159,23 @@ runway=function(t,dt){const vi=RUN.vi,hz=H*.36;RUNI=vi;if(!RUN.hearts)RUN.hearts
  for(const f of RUN.fl){f.t+=dt;X.globalAlpha=Math.max(0,1-f.t*4);X.fillStyle='#fff';X.fill(starP(f.x,f.y,f.r*1.4*(1+f.t*3),f.r*.3));if(f.t===dt&&Math.random()<.5){SFX.flash();RUN.white=Math.max(RUN.white,.2);}}
  X.globalAlpha=1;RUN.fl=RUN.fl.filter(f=>f.t<.3);
  // crowd pops
- for(const p of RUN.pops){p.t+=dt;const a=p.t<.2?p.t/.2:Math.max(0,1-(p.t-1.6)/.5),sc=p.t<.2?.6+p.t*2:1;if(a<=0)continue;X.save();X.globalAlpha=a;X.translate(p.x,p.y-p.t*18);X.scale(sc,sc);X.font='900 '+Math.round(Math.min(18,W*.045))+'px '+FONT;const tw=Math.min(W*.8,X.measureText(p.s).width+22);
-  X.fillStyle='#fff';X.strokeStyle='#ff7eb6';X.lineWidth=3;X.beginPath();X.roundRect?X.roundRect(-tw/2,-18,tw,32,16):X.rect(-tw/2,-18,tw,32);X.fill();X.stroke();X.beginPath();X.moveTo(-6,14);X.lineTo(0,24);X.lineTo(6,14);X.fill();X.fillStyle='#8e44ec';X.textAlign='center';X.fillText(p.s,0,4,tw-12);X.restore();}
+ for(const p of RUN.pops){p.t+=dt;const a=p.t<.2?p.t/.2:Math.max(0,1-(p.t-1.6)/.5),sc=p.t<.2?.6+p.t*2:1;if(a<=0)continue;const fs=Math.round(Math.min(18,W*.045));X.save();X.font='900 '+fs+'px '+FONT;const ls=wrapT(X,p.s,W*.66),lh=fs+4,tw=Math.max(...ls.map(l=>X.measureText(l).width))+24,bh=ls.length*lh+12;
+  const ax=p.x,ay=p.y-p.t*18;let bx=Math.max(8,Math.min(W-8-tw,ax-tw/2)),by=Math.max(SAFE_T()+58,ay-bh-10);const tx=Math.max(bx+16,Math.min(bx+tw-16,ax));X.globalAlpha=a;X.translate(tx,by+bh);X.scale(sc,sc);X.translate(-tx,-(by+bh));X.fillStyle='#fff';X.strokeStyle='#ff7eb6';X.lineWidth=3;X.beginPath();X.roundRect?X.roundRect(bx,by,tw,bh,16):X.rect(bx,by,tw,bh);X.fill();X.stroke();const fl=ax<tx-4?-1:ax>tx+4?1:(tx>W/2?-1:1);X.beginPath();X.moveTo(tx-7,by+bh-1);X.lineTo(tx+fl*10,by+bh+10);X.lineTo(tx+7,by+bh-1);X.fill();X.fillStyle='#8e44ec';X.textAlign='center';ls.forEach((l,j)=>X.fillText(l,bx+tw/2,by+6+fs+j*lh-2));X.restore();}
  RUN.pops=RUN.pops.filter(p=>p.t<2.2);
  // rhythm overlay
  if(R){rhythmTick();const now=nowA();
   if(!R.over&&now<R.cs[0].bt){const pulse=1+Math.sin(now*14)*.06;X.save();X.translate(W/2,H*.17);X.scale(pulse,pulse);X.textAlign='center';X.font='900 '+Math.round(W*.1)+'px '+FONT;X.lineWidth=8;X.strokeStyle='#fff';X.fillStyle='#ff3d8b';X.strokeText(T('posetap'),0,0);X.fillText(T('posetap'),0,0);X.restore();}
-  for(const c of R.cs){const ap=c.bt-now;const r0=W*.085;
+  {const gy=H*.88,gx0=W*.14,gw2=W*.72,bt=(now-R.t0)/R.beat;X.save();fillP(X,rrP(gx0-16,gy-20,gw2+32,40,20),'rgba(40,10,70,.7)','#b39dff',2);
+   for(let b=0;b<8;b++){const bx=gx0+gw2*b/7,hit=R.slots.indexOf(b),on=Math.floor(bt)===b,pu=on?1+(1-(bt%1))*.6:1;
+    if(hit>=0){const c=R.cs[hit];X.fillStyle=c.g==='perfect'?'#ffb020':c.g==='good'?'#22b35a':c.g==='miss'?'#8a8a9a':'#ff3d8b';X.fill(circP(bx,gy,10*pu));X.fillStyle='#fff';X.font='900 11px '+FONT;X.textAlign='center';X.fillText(hit+1,bx,gy+4);}
+    else{X.fillStyle=on?'#fff':'rgba(255,255,255,.45)';X.fill(circP(bx,gy,5*pu));}}
+   if(bt>=0&&bt<=7.5){const px=gx0+gw2*Math.min(bt,7)/7;X.fillStyle='#ffcc33';X.fillRect(px-2,gy-18,4,36);}X.restore();}
+  for(const c of R.cs){const ap=c.bt-now;const r0=R.r0;
    if(!c.g&&ap<R.app){const k2=Math.max(0,ap/R.app);X.save();X.globalAlpha=Math.min(1,(1-k2)*3);fillP(X,circP(c.x,c.y,r0),'rgba(255,61,139,.85)','#ff3d8b',4);X.strokeStyle='#fff';X.lineWidth=5;X.stroke(circP(c.x,c.y,r0));
-    X.fillStyle='#fff';X.font='900 '+Math.round(r0)+'px '+FONT;X.textAlign='center';X.fillText(c.n,c.x,c.y+r0*.35);X.strokeStyle=Math.abs(ap)<R.pw?'#ffcc33':'#fff';X.lineWidth=4;X.stroke(circP(c.x,c.y,r0*(1+k2*2.2)));X.restore();}
+    X.fillStyle='#fff';X.font='900 '+Math.round(r0)+'px '+FONT;X.textAlign='center';X.fillText(c.n,c.x,c.y+r0*.35);X.strokeStyle=Math.abs(ap)<R.pw?'#ffcc33':'#fff';X.lineWidth=4;X.stroke(circP(c.x,c.y,r0*(1+k2*2.2)));const bp=((now-R.t0)/R.beat)%1;X.globalAlpha=.5*(1-bp);X.strokeStyle='#ffcc33';X.lineWidth=3;X.stroke(circP(c.x,c.y,r0*(1.05+bp*.25)));X.restore();}
    if(c.g){const gt=now-c.gt;if(gt<.7){X.save();X.globalAlpha=1-gt/.7;X.textAlign='center';X.font='900 '+Math.round(W*.065)+'px '+FONT;X.lineWidth=6;X.strokeStyle='#fff';X.fillStyle=c.g==='perfect'?'#ffb020':c.g==='good'?'#22b35a':'#8a8a9a';const s2=T(c.g);X.strokeText(s2,c.x,c.y-gt*40);X.fillText(s2,c.x,c.y-gt*40);if(c.g!=='miss'){X.strokeStyle='#ffcc33';X.lineWidth=3;X.stroke(circP(c.x,c.y,r0*(1+gt*2)));}X.restore();}}}
   if(RUN.pose){const pt=now-RUN.poseT;X.save();X.textAlign='center';const sc=Math.min(1,pt*4)*(1+Math.sin(pt*8)*.03);X.translate(W/2,H*.16);X.scale(sc,sc);X.font='900 '+Math.round(W*.085)+'px '+FONT;X.lineWidth=8;X.strokeStyle='#fff';X.fillStyle='#ff3d8b';const nm=poseName(RUN.pose,vi);X.strokeText(nm,0,0,W*.94);X.fillText(nm,0,0,W*.94);
-   if(RESULT.bonus){X.font='900 '+Math.round(W*.055)+'px '+FONT;X.fillStyle='#8e44ec';X.strokeText(T('p_bonus',RESULT.bonus),0,W*.09);X.fillText(T('p_bonus',RESULT.bonus),0,W*.09);}
+   if(1){X.font='900 '+Math.round(W*.055)+'px '+FONT;X.fillStyle='#8e44ec';X.strokeText(T('p_bonus',RESULT.bonus),0,W*.09);X.fillText(T('p_bonus',RESULT.bonus),0,W*.09);}
    const pc=R.cs.filter(c=>c.g==='perfect').length,gc=R.cs.filter(c=>c.g==='good').length;X.font='800 '+Math.round(W*.04)+'px '+FONT;X.fillStyle='#fff';X.lineWidth=5;X.strokeStyle='#5d1fb0';const sm=T('perfect')+' '+pc+'  ·  '+T('good')+' '+gc;X.strokeText(sm,0,W*.16);X.fillText(sm,0,W*.16);X.restore();}}
  if(RUN.white>0){X.fillStyle='rgba(255,255,255,'+RUN.white+')';X.fillRect(0,0,W,H);RUN.white-=dt*2;}};
 cv.addEventListener('pointerdown',e=>{if(scene==='runway'&&RUN&&RUN.rh)hitCircle(e.clientX,e.clientY);});
@@ -1158,7 +1185,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a="skip"]'
 let TUTCB=null;function tutorial(h,lines,cb){$('tut-h').textContent=h;$('tut-b').innerHTML=lines.map(l=>'<p>'+l+'</p>').join('');$('tut').classList.add('on');TUTCB=cb;}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a="tutok"]');if(!b)return;$('tut').classList.remove('on');SFX.sparkle();const c=TUTCB;TUTCB=null;c&&c();});
 
-// ===== v2.0 story script (12 chapters). Beat: [speaker, English, 日本語, fx] =====
+// ===== v2.1 story script (12 chapters). Beat: [speaker, English, 日本語, fx] ; fx 'gift:id' unlocks a photo item =====
 const CH=[
  {v:0,th:'sweet',goal:6,title:['A Star in the Alley','路地裏のスター'],
   pre:{bg:'alley',cast:['pinco','party','leaf'],lines:[
@@ -1168,35 +1195,42 @@ const CH=[
    ['party',"Wear what you've got! The Plush Panel happened to be walking by — they'll judge!",'あるものを着ればいい！ちょうどぬいぐるみ審査団が通りかかったから、審査してもらおう！'],
    ['bean',"…we were going to a sad poetry night. But okay.",'…悲しい詩の夜に行くとこだったけど。まあいいよ。'],
    ['kermit',"I judge EVERYTHING. Even alleys. ESPECIALLY alleys.",'私はすべてを審査する。路地裏でもな。むしろ路地裏こそ。'],
-   ['pooh',"Is there honey at a fashion show? …No? Oh bother.",'ファッションショーにはちみつある？…ないの？やれやれ。']]},
-  post:{bg:'alley',cast:['pinco','party','holiday'],lines:[
-   ['party',"You were AMAZING! But a princess needs outfits. Outfits need coins. Coins need…",'すごかった！でもプリンセスには服がいる。服にはコイン。コインには…'],
-   ['holiday',"A JOB! Ho ho hooo! I'm Jolly Jingles, and my yakitori stand needs a helper!",'おしごと！ホッホッホー！ジョリー・ジングルだよ！やきとり屋台の手伝いを募集中！'],
-   ['pinco',"I'll do it! Skewers for sparkles!",'やる！串でキラキラをかせぐぞ！']]}},
+   ['pooh',"Is there a prize? Can I SELL the prize?",'しょうひんある？それ売っていい？']]},
+  post:{bg:'yaki',cast:['pinco','holiday','party'],lines:[
+   ['pinco',"I did it! …but I have, like, forty coins. I can't buy clothes with forty coins.",'できた！…でもコイン40枚しかない。これじゃ服が買えないよ。'],
+   ['holiday',"Ho ho HOOO! Did somebody say JOB? I'm Jolly Jingles, and my yakitori stand needs a helper!",'ホッホッホー！おしごとって言った？ジョリー・ジングルだよ！やきとり屋台の手伝い募集中！'],
+   ['holiday',"Grill, girl! See the bubbles over the customers? That's their order.",'焼くのだ、ガール！お客さんの上の吹き出し、それが注文だよ。'],
+   ['holiday',"Tap the food on the counter to load your tray — then tap the customer to serve!",'カウンターの料理をタップしてトレーにのせて — お客さんをタップして出す！'],
+   ['holiday',"Yakitori needs a second on the grill. Fast service means tips. Streaks mean COMBOS!",'やきとりは焼くのにちょっと時間がかかるよ。早いとチップ、連続でコンボ！'],
+   ['holiday',"But if they wait too long they get HUNGRY… and if they starve they turn into little ghosts! Ho ho… don't let that happen.",'でも待たせすぎるとおなかペコペコに…そして飢えるとちっちゃいおばけになっちゃう！ホッホー…気をつけてね。'],
+   ['pinco',"Skewers for sparkles! Let's go!",'串でキラキラをかせぐぞ！いくよ！']]}},
  {v:0,th:'beach',goal:7,title:['Sticks & Sparkles','串とキラキラ'],
   pre:{bg:'alley',cast:['pinco','tad','party'],lines:[
-   ['tad',"An alley show? With FOLDING chairs? How… quaint. Darling, I'm Madame Smugsworth.",'路地裏ショー？折りたたみイスで？なんて…素朴。わたくし、マダム・スマッグよ。'],
-   ['tad',"I've walked in the MALL. With real lights. Try to keep up, sweetie.",'わたくしはモールで歩いたことがあるの。本物のライトでね。ついてこられるかしら。'],
+   ['tad',"An alley show? With FOLDING chairs? How… quaint. I'm Mr Pooping. Yes, MISTER.",'路地裏ショー？折りたたみイスで？なんて…素朴なんだ。ぼくはミスター・プーピング。そう、ミスターだよ。'],
+   ['tad',"I've walked in the MALL. With real lights. Try to keep up, sweetie.",'ぼくはモールで歩いたことがあるのさ。本物のライトでね。ついてこられるかな。'],
    ['pinco',"Um… nice to meet you? I like your eyelids!",'えっと…よろしく？そのまぶた、ステキだね！'],
-   ['tad',"…Hmph. Flattery won't help you. Beach theme, today. Good luck.",'…ふん。おせじは通じないわ。今日のテーマはビーチ。せいぜいがんばって。']]},
+   ['tad',"…Hmph. Flattery won't help you. Beach theme, today. Good luck.",'…ふん。おせじは通じないよ。今日のテーマはビーチ。せいぜいがんばりな。']]},
   post:{bg:'alley',cast:['pinco','mole','party'],lines:[
    ['mole',"…h-hi. *pops up from the ground* …that was really pretty. …bye.",'…こ、こんにちは。*地面からぽこっ* …すごくきれいだった。…じゃあね。'],
    ['pinco',"Wait, who was that?!",'まって、今のだれ！？'],
-   ['party',"That's Mochi Mole. Super shy. If she popped up, you're doing GREAT. Next stop… the MALL!",'もぐもちだよ。すごく人見知り。顔を出したってことは、すごくいい感じってこと！次は…モールだ！']]}},
+   ['party',"That's Mogu Mogu. Super shy. If she popped up, you're doing GREAT. Next stop… the MALL!",'もぐもぐだよ。すごく人見知り。顔を出したってことは、すごくいい感じってこと！次は…モールだ！']]}},
  {v:1,th:'pop',goal:8,title:['Mall Pop-Up','モールのポップアップ'],
-  pre:{bg:'mall',cast:['pinco','party','tad'],lines:[
-   ['party',"I booked us a pop-up at the mall! Between the pretzel shop and the phone cases!",'モールのポップアップを予約したよ！プレッツェル屋とスマホケース屋のあいだ！'],
-   ['tad',"Oh look, it's the alley girl. The mall is MY runway, darling.",'あら、路地裏の子。モールはわたくしのランウェイよ。'],
+  pre:{bg:'mall',cast:['pinco','max','tad'],lines:[
+   ['max',"WELCOME TO THE MALL!!! I'm Max! I hold the door! I LOVE the door! Do you love the door?!",'モールへようこそーー！！ぼくマックス！ドアを開けるのがしごと！ドア大好き！きみもドア好き！？'],
+   ['pinco',"I… do now!",'…いま好きになった！'],
+   ['max',"You're the princess from the alley! I'm your stagehand now! I decided! Just now!",'路地裏のプリンセスだ！ぼく、きみの裏方になる！いま決めた！'],
+   ['tad',"Oh look, it's the alley girl. And a… dog. The mall is MY runway, kid.",'おや、路地裏の子。それと…犬。モールはぼくのランウェイだよ。'],
    ['pinco',"Then let's both make it sparkle!",'じゃあ、ふたりでキラキラにしよう！'],
-   ['tad',"…Why are you so NICE. It's very annoying.",'…なんでそんなにイイ子なの。すごくイライラする。']]},
-  post:{bg:'mall',cast:['pinco','party'],lines:[
+   ['tad',"…Why are you so NICE. It's very annoying.",'…なんでそんなにイイ子なんだ。すごくイライラする。']]},
+  post:{bg:'mall',cast:['pinco','party','max'],lines:[
    ['party',"The crowd LOVED you! I got you a new job too — at a SUSHI CART! Fancy!",'お客さん大喜び！新しいバイトも見つけたよ — おすし屋台！おしゃれ！'],
+   ['max',"I'll carry the rice! I LOVE rice! I love everything!",'ごはんはぼくが運ぶ！ごはん大好き！ぜんぶ大好き！'],
    ['pinco',"I've never rolled sushi… but I've rolled out of bed!",'おすしは巻いたことないけど…ベッドから転がり落ちたことはある！']]}},
  {v:1,th:'royal',goal:8,title:['Wardrobe Malfunction!','衣装トラブル！'],
-  pre:{bg:'backstage',cast:['pinco','leaf','party'],lines:[
+  pre:{bg:'backstage',cast:['pinco','leaf','max'],lines:[
    ['pinco',"Oh no oh no oh NO! My dress ripped! Five minutes to showtime!",'どうしよう！ドレスがやぶれた！本番まであと5分！','shake'],
    ['leaf',"Don't panic! I brought TAPE! Fashion is ninety percent tape!",'あわてないで！テープ持ってきた！ファッションの9割はテープだよ！'],
-   ['party',"And ten percent believing in yourself! …and maybe glue.",'のこり1割は自分を信じること！…あと、のりも。'],
+   ['max',"I brought… a stick! It's a good stick! It's not helping! I'm sorry!",'ぼくは…棒を持ってきた！いい棒だよ！役に立たない！ごめん！'],
    ['pinco',"Okay. Tape, courage, royal theme. I can do this!",'よし。テープと勇気とロイヤルテーマ。いける！']]},
   post:{bg:'mall',cast:['pinco','kermit','leaf'],lines:[
    ['kermit',"The visible tape. Was it… a statement? A critique of fast fashion?",'見えているテープ。あれは…主張か？ファストファッションへの批評か？'],
@@ -1208,30 +1242,32 @@ const CH=[
    ['baller',"I saw your mall walk. You've got GAME. Space theme tonight — shoot for the stars!",'モールのウォーク見たぜ。センスある！今夜は宇宙テーマ — 星までシュートだ！'],
    ['pinco',"A real celebrity?! Can I have your autograph? On my… paw?",'本物のセレブ！？サインください！…この手に？'],
    ['baller',"Only if I get yours after the show. Deal?",'ショーのあとで君のサインもくれるならな。決まり？']]},
-  post:{bg:'city',cast:['pinco','baller'],lines:[
-   ['baller',"That was a SLAM DUNK! Here's some advice: champions practise. Go work at the ramen shop — fast hands, fast feet!",'スラムダンクだったな！アドバイスだ：チャンピオンは練習する。ラーメン屋で働け — 速い手、速い足！'],
-   ['pinco',"Noodles = training. Got it!",'ラーメン＝トレーニング。わかった！']]}},
+  post:{bg:'city',cast:['pinco','baller','pooh'],lines:[
+   ['baller',"That was a SLAM DUNK! Here — my lucky mirror shades. A star needs shades.",'スラムダンクだったな！ほら — おれのラッキーミラーサングラス。スターにはサングラスだ。','gift:mirrorshades'],
+   ['pooh',"Ooh! Can I have them? I'm gonna sell them!",'わあ！それちょうだい！売るから！'],
+   ['pinco',"No! …Thank you, Slam Dunkle!",'だめ！…ありがとう、スラム・ダンクル！'],
+   ['baller',"Champions practise. Go work at the ramen shop — fast hands, fast feet!",'チャンピオンは練習する。ラーメン屋で働け — 速い手、速い足！']]}},
  {v:2,th:'spooky',goal:9,title:['The Fall','まさかの転倒'],
   pre:{bg:'city',cast:['pinco','tad','bean'],lines:[
-   ['tad',"Spooky night, darling. Don't trip in those shoes. It would be SO embarrassing.",'おばけの夜よ。そのくつで転ばないでね。とっても恥ずかしいもの。'],
+   ['tad',"Spooky night, kid. Don't trip in those shoes. It would be SO embarrassing.",'おばけの夜だね。そのくつで転ぶなよ。すごく恥ずかしいからね。'],
    ['bean',"Falling is just… flying, but sad.",'転ぶってさ…悲しい飛行なんだよ。'],
    ['pinco',"I won't fall. I won't fall. I won't fa—",'転ばない。転ばない。ころば—']]},
   post:{bg:'city',cast:['pinco','kermit','tad'],lines:[
    ['pinco',"I… I FELL. On the runway. In front of EVERYONE.",'わたし…転んだ。ランウェイで。みんなの前で。','shake'],
-   ['kermit',"And then you got up and POSED. Darling, that was the most honest moment in fashion this year.",'そして立ち上がってポーズした。あれは今年いちばん正直なファッションの瞬間だった。'],
-   ['tad',"…Fine. That was iconic. I hate it. Teach me how to fall like that.",'…いいわ。あれは伝説よ。くやしい。あの転び方、教えて。']]}},
+   ['kermit',"And then you got up and POSED. That was the most honest moment in fashion this year.",'そして立ち上がってポーズした。あれは今年いちばん正直なファッションの瞬間だった。'],
+   ['tad',"…Fine. That was iconic. I hate it. Teach me how to fall like that.",'…いいだろう。あれは伝説だ。くやしい。あの転び方、教えてくれ。']]}},
  {v:3,th:'honey',goal:10,title:['Tokyo Calling','トーキョー・コーリング'],
   pre:{bg:'tokyo',cast:['pinco','party','pooh'],lines:[
    ['party',"PINCO. We got invited to… TOKYO FASHION WEEK!!",'ピンコ。招待が来た…東京ファッションウィーク！！','shake'],
    ['pinco',"TOKYO?! Neon! Kawaii! Tiny desserts!",'東京！？ネオン！カワイイ！ちっちゃいスイーツ！'],
-   ['pooh',"The theme is HONEY PARTY. I may have… suggested it.",'テーマは「はちみつパーティー」。ぼくが…提案したかも。'],
+   ['pooh',"The theme is HONEY PARTY. Honey is gold. Gold is MONEY. I picked it!",'テーマは「はちみつパーティー」。はちみつは金。金はおかね！ぼくがえらんだの！'],
    ['pinco',"Suteki da ne~! Let's make it golden!",'素敵だね〜！金色にしよう！']]},
   post:{bg:'cafe',cast:['pinco','pooh','holiday'],lines:[
    ['holiday',"Ho ho! I opened a café in Tokyo! Want a shift? Lattes and cupcakes!",'ホッホー！東京にカフェを開いたよ！バイトする？ラテとカップケーキ！'],
-   ['pooh',"I will be your most loyal customer. Every five minutes.",'ぼく、いちばんの常連になるよ。5分おきに。']]}},
+   ['pooh',"I'll be your best customer! I'll pay you in… high fives!",'ぼく、いちばんのお客さんになる！おだいは…ハイタッチで！']]}},
  {v:3,th:'pea',goal:10,title:['Almost Quitting','もうやめたい'],
   pre:{bg:'night',cast:['pinco','leaf','mole','bean'],lines:[
-   ['pinco',"Smugsworth got a magazine cover. I got a cold. I miss my blanket… Maybe I'm not a princess.",'スマッグは雑誌の表紙。わたしは風邪。毛布が恋しい…わたし、プリンセスじゃないのかも。','rain'],
+   ['pinco',"Mr Pooping got a magazine cover. I got a cold. I miss my blanket… Maybe I'm not a princess.",'ミスター・プーピングは雑誌の表紙。わたしは風邪。毛布が恋しい…わたし、プリンセスじゃないのかも。','rain'],
    ['leaf',"Pinco… you're MY princess. Since the alley. Since the sign!",'ピンコ…きみはぼくのプリンセスだよ。路地裏のときから。看板のときから！'],
    ['mole',"*pop* …I knitted you a tiny blanket. It's very small. Like me.",'*ぽこっ* …ちっちゃい毛布、編んだの。すごく小さいの。わたしみたいに。'],
    ['bean',"Being sad is okay. Walking anyway… that's brave. I'll cry in the front row for you.",'悲しくてもいいんだよ。それでも歩くのが…勇気。最前列で泣いて応援するね。'],
@@ -1242,12 +1278,13 @@ const CH=[
  {v:4,th:'swamp',goal:11,title:['Bonjour, Paris','ボンジュール、パリ'],
   pre:{bg:'paris',cast:['pinco','kermit','tad'],lines:[
    ['kermit',"Welcome to MY event. The Paris Swamp Gala. Lily pads. Midnight. DRAMA.",'わたしのイベントへようこそ。パリ沼のガラ。スイレン。真夜中。ドラマ。'],
-   ['tad',"Pinco, darling… I saved you the good mirror backstage. Don't make it weird.",'ピンコ…楽屋のいい鏡、あなたにとっておいたわ。変な空気にしないで。'],
-   ['pinco',"Smugsworth! You're being NICE?",'スマッグ！やさしくしてくれるの？'],
-   ['tad',"I said don't make it weird!",'変な空気にしないでって言ったでしょ！']]},
-  post:{bg:'paris',cast:['pinco','party'],lines:[
-   ['party',"Paris loves you! Quick, a bistro needs help tonight. Crêpes, soup, baguettes!",'パリが君にメロメロ！今夜はビストロのお手伝い。クレープ、スープ、バゲット！'],
-   ['pinco',"Oui oui! …that's all the French I know.",'ウィウィ！…フランス語これしか知らない。']]}},
+   ['tad',"Pinco… I saved you the good mirror backstage. Don't make it weird.",'ピンコ…楽屋のいい鏡、きみにとっておいたよ。変な空気にするなよ。'],
+   ['pinco',"Mr Pooping! You're being NICE?",'ミスター・プーピング！やさしくしてくれるの？'],
+   ['tad',"I said don't make it weird!",'変な空気にするなって言っただろ！']]},
+  post:{bg:'paris',cast:['pinco','max','party'],lines:[
+   ['max',"PINCO! I followed you to Paris! On a boat! I made you a crown! It's paper! I only chewed it a little!",'ピンコ！パリまでついてきた！船で！王冠つくったよ！紙だよ！ちょっとだけかじった！','gift:papercrown'],
+   ['pinco',"Max… it's perfect. A Paper Crown!",'マックス…かんぺき。ペーパークラウンだ！'],
+   ['party',"Paris loves you! Quick, a bistro needs help tonight. Crêpes, soup, baguettes!",'パリが君にメロメロ！今夜はビストロのお手伝い。クレープ、スープ、バゲット！']]}},
  {v:4,th:'pop',goal:11,title:['The Blanket Thief','毛布どろぼう'],
   pre:{bg:'backstage',cast:['pinco','party','leaf'],lines:[
    ['pinco',"Wait. That curtain backstage. Pink. Fluffy. A little stain shaped like a heart…",'まって。楽屋のあのカーテン。ピンクで、ふわふわで、ハートの形のシミ…'],
@@ -1263,30 +1300,29 @@ const CH=[
    ['pinco',"Keep it as our curtain. For every show. It's lucky now.",'カーテンとして使って。毎回のショーで。もうラッキーアイテムだから。']]}},
  {v:5,th:'space',goal:11,title:['Road to London','ロンドンへの道'],
   pre:{bg:'london',cast:['pinco','tad','baller'],lines:[
-   ['tad',"Pinco. I have to tell you something. I was mean because… you scared me. You're GOOD.",'ピンコ。言わなきゃいけないことがあるの。意地悪したのは…こわかったから。あなた、すごいもの。'],
-   ['pinco',"You're good too! Let's be scary-good together!",'スマッグもすごいよ！いっしょに最強になろう！'],
+   ['tad',"Pinco. I have to tell you something. I was mean because… you scared me. You're GOOD.",'ピンコ。言わなきゃいけないことがある。意地悪したのは…こわかったからだ。きみ、すごいよ。'],
+   ['pinco',"You're good too! Let's be scary-good together!",'ミスター・プーピングもすごいよ！いっしょに最強になろう！'],
    ['baller',"Two rivals teaming up? That's championship energy. London semi-finals — space theme!",'ライバルがチームに？チャンピオンのエネルギーだ。ロンドン準決勝 — 宇宙テーマ！']]},
   post:{bg:'london',cast:['pinco','holiday','party'],lines:[
    ['holiday',"One last shift before the finale! A FINE DINING restaurant. Plating! Wine! Picky critics!",'決勝前の最後のバイト！高級レストラン。盛りつけ！ワイン！うるさい評論家！'],
    ['party',"Remember: garnish EVERYTHING. Critics love a little leaf on top.",'忘れずに：ぜんぶに飾りつけ。評論家は葉っぱがのってるのが好きなんだ。']]}},
  {v:5,th:'royal',goal:12,title:['LONDON FASHION WEEK','ロンドン・ファッションウィーク'],
-  pre:{bg:'london',cast:['pinco','party','leaf','mole','tad'],lines:[
+  pre:{bg:'london',cast:['pinco','party','max','mole','tad'],lines:[
    ['party',"This is it. London Fashion Week. The biggest runway in the world.",'ついにきた。ロンドン・ファッションウィーク。世界一のランウェイ。'],
-   ['leaf',"Everybody's here! Even Jolly Jingles closed the café!",'みんな来てる！ジョリー・ジングルもカフェを閉めて来たよ！'],
+   ['max',"I'm on CURTAIN DUTY! The lucky blanket curtain! Best job EVER!",'ぼく、カーテン係！ラッキー毛布のカーテン！さいこうのしごと！'],
    ['mole',"…I'm not even hiding. *stays up*",'…今日はかくれない。*ずっと顔を出してる*'],
-   ['tad',"Go get them, princess. I mean it.",'行ってらっしゃい、プリンセス。本気よ。'],
+   ['tad',"Go get them, princess. I mean it.",'行ってこい、プリンセス。本気だよ。'],
    ['pinco',"From a cold rainy night… to here. Let's GO!",'寒い雨の夜から…ここまで来た。いくよ！']]},
   post:{bg:'london',cast:['pinco','king','party'],lines:[
-   ['king',"By royal decree! I, King Pooh, have seen many princesses. None with a heart like yours.",'王の命令じゃ！わしキング・プーは、多くのプリンセスを見てきた。だが、そなたほどの心はない。'],
-   ['king',"Kneel, Pinco. …Actually, don't, the floor is sticky. I spilled honey.",'ひざまずくのじゃ、ピンコ。…いや、やめておけ、床がベタベタじゃ。はちみつこぼした。'],
-   ['king',"I crown you… a TRUE PRINCESS!",'そなたを…真のプリンセスに任命する！','crown'],
-   ['party',"*sobbing* I stole a blanket and found a PRINCESS!",'*号泣* 毛布をぬすんだら、プリンセスが見つかった！'],
+   ['king',"By royal decree! I, King Pooh, have seen many princesses. You're the best one. And the most PROFITABLE!",'王さまの命令だよ！キング・プーはプリンセスをいっぱい見てきた。キミがいちばん。いちばんもうかる！'],
+   ['king',"Kneel, Pinco. …Actually, don't, the floor is sticky. I spilled my lemonade-stand lemonade.",'ひざまずいて、ピンコ。…やっぱりいいや、床がベタベタ。レモネード屋さんのレモネードこぼしちゃった。'],
+   ['king',"I crown you… a TRUE PRINCESS! That'll be five coins. JUST KIDDING!",'キミを…真のプリンセスにする！おだい5コイン。うっそー！','crown'],
+   ['party',"*sobbing* I stole a blanket and found a PRINCESS! Here — my spare party cap. Every princess needs a party.",'*号泣* 毛布をぬすんだら、プリンセスが見つかった！ほら — ぼくの予備のパーティキャップ。プリンセスにはパーティが必要さ。','gift:partycap'],
    ['pinco',"Thank you, everyone. I'm home. 💖",'みんな、ありがとう。ここが、わたしのおうち。💖']]}}
 ];
 const STALL_FOR=ch=>['yaki','yaki','sushi','sushi','ramen','ramen','cafe','cafe','bistro','bistro','fine',null][ch];
-// intro "mobile ad" cut list: [duration, caption key, scene]
 const INTRO=[[1.7,['THIS IS PINCO 💖','これがピンコ 💖'],'home'],[1.6,['ONE NIGHT…','ある夜…'],'shadow'],[1.3,['NOOOO!! 😱','いやあああ！！😱'],'yank'],[1.9,['SHE LOST EVERYTHING','すべてを失った…'],'rain'],[0,['TAP TO HELP!','タップでたすけて！'],'help'],[1.4,['WAIT… WHO\'S THAT?!','まって…あれはだれ！？'],'spot'],[1.8,['A STAR IS BORN ✨','スター誕生 ✨'],'star']];
-const INTRO_D=[['party',"Whoa whoa WHOA. You there! In the rain!",'おっとっと！そこの君！雨の中の！'],['pinco',"M-me? I'm just… cold. Someone took my blanket.",'わ、わたし？…さむいだけ。だれかに毛布を取られたの。'],['party',"Forget the blanket! Look at you! You look like a PRINCESS! You should walk the runway!",'毛布なんていい！見てごらん！君はまるでプリンセスだ！ランウェイを歩くべきだよ！'],['party',"I'm Polka Pete — party hat, antler hands, big dreams. Come with me!",'ぼくはポルカ・ピート — パーティーハットに、つのの手、でっかい夢。ついておいで！'],['pinco',"A princess… me? …Okay!",'プリンセス…わたしが？…うん！']];
+const INTRO_D=[['party',"Whoa whoa WHOA. You there! In the rain!",'おっとっと！そこの君！雨の中の！'],['pinco',"M-me? I'm just… cold. Someone took my blanket.",'わ、わたし？…さむいだけ。だれかに毛布を取られたの。'],['party',"Forget the blanket! Look at you! You look like a PRINCESS! You should walk the runway!",'毛布なんていい！見てごらん！君はまるでプリンセスだ！ランウェイを歩くべきだよ！'],['party',"Everybody calls me Party Hat Guy — party hat, antler hands, big dreams. Come with me!",'みんなはぼくをパーティハット君って呼ぶ — パーティハットに、つのの手、でっかい夢。ついておいで！'],['pinco',"A princess… me? …Okay!",'プリンセス…わたしが？…うん！']];
 
 // ===== v2.0 story engine: menu, intro ad, dialogue, chapter loop, gifts =====
 const L2=(e,j)=>LANG()==='ja'?j:e;
@@ -1313,15 +1349,17 @@ function afterScore(R,tot){const free=!ST.on;$('sc-free').style.display=free?'':
   $('sc-unl').textContent=ok?T('pass'):T('fail');$('sc-tip').textContent=ok?R.tip:T('failmsg',g,tot)+' '+R.tip;
   $('sc-story').innerHTML=ok?'<button class="big ghost" data-a="photo">'+T('photo')+'</button><button class="big" data-a="spass">'+T('continue')+'</button>':'<button class="big ghost" data-a="sshift">'+T('toshift')+'</button><button class="big" data-a="sretry">'+T('retry')+'</button>';}
  if(RUN&&RUN.cameo&&!RUN.giftDone){RUN.giftDone=1;if(cameoLikes(RUN.cameo,O,theme,tot))setTimeout(()=>giftEvent(RUN.cameo),700);}}
-function giftEvent(c){const it=IT[c.id];S.owned[c.id]=1;S.story.owned[c.id]=1;S.gifts.push({id:c.id,who:c.who,d:Date.now()});save();
- $('gift-h').textContent=T('giftnew');$('gift-who').src=CAST[c.who].img;$('gift-say').textContent=CN(c.who)+L2(': ','：')+T('giftsay',IN(it));$('gift-it').src=thumb(c.id);$('gift-n').textContent=IN(it);
+function storyItemGift(id){const b=DLG&&DLG.d.lines[DLG.i];const who=b?b[0]:'party';if(S.story.owned[id]&&S.owned[id])return;giftEvent({id,who},1);}
+function giftEvent(c,story){const it=IT[c.id];S.owned[c.id]=1;S.story.owned[c.id]=1;S.gifts.push({id:c.id,who:c.who,d:Date.now()});save();
+ $('gift-h').textContent=story?T('giftstory'):T('giftnew');$('gift-who').src=CAST[c.who].img;$('gift-say').textContent=CN(c.who)+L2(': ','：')+(story?T('giftstory2',IN(it)):T('giftsay',IN(it)));$('gift-it').src=thumb(c.id);$('gift-n').textContent=IN(it);
  $('gift').classList.add('on');SFX.fan();setTimeout(()=>SFX.sparkle(),400);burst(W/2,H*.5,60,['#ffcc33','#fff','#ff7eb6'],260);}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a,ss=S.story;
  if(a==='giftok'){$('gift').classList.remove('on');SFX.tap();}
  else if(a==='story'){SFX.tap();openSMenu();}else if(a==='gohome2'){SFX.tap();goTitle();}
  else if(a==='snew'){SFX.sparkle();const keep=S.story.tutServe;S.story=defStory();S.story.tutServe=keep;save();storyStart();}
  else if(a==='scont'){SFX.sparkle();storyStart();}
- else if(a==='sdebug'){SFX.tap();ss.ch=CH.length-1;ss.stage='pre';ss.done=0;ss.coins+=1500;ITEMS.filter(i=>i.tags.includes('royal')).forEach(i=>ss.owned[i.id]=1);save();storyStart();}
+ else if(a==='snext'){SFX.tap();const c0=ss.ch;for(const d of [CH[c0].pre,CH[c0].post])d.lines.forEach(b=>{if(b[3]&&b[3].startsWith('gift:')){const id=b[3].slice(5);ss.owned[id]=1;S.owned[id]=1;}});ss.ch=Math.min(CH.length-1,c0+1);ss.stage='pre';ss.done=0;ss.coins+=300;save();storyStart();}
+ else if(a==='sdebug'){SFX.tap();ss.ch=CH.length-1;ss.stage='pre';ss.done=0;ss.coins+=1500;ITEMS.filter(i=>i.tags.includes('royal')&&!i.gift).forEach(i=>ss.owned[i.id]=1);save();storyStart();}
  else if(a==='spass'){SFX.tap();ss.stage='post';storyGo();}
  else if(a==='sretry'){SFX.tap();ss.retry=1;ss.stage='show';storyGo();}
  else if(a==='sshift'){SFX.tap();ss.retry=1;ss.stage='shift';ST.retryAfter=1;storyGo();}
@@ -1333,13 +1371,13 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
 let DLG=null;
 function playDialog(d,cb,head){scene='story';st=0;show('s-story');DLG={d,i:0,cb,head,t0:0};if(head)toast('📖 '+head,2200);playSong(d.bg==='night'||d.bg==='rain'?'title':'title');showBeat();}
 function showBeat(){const b=DLG.d.lines[DLG.i];const who=b[0];$('dlg-n').textContent=CN(who);$('dlg-t').textContent=L2(b[1],b[2]);$('dlg-p').src=CAST[who].img||'';$('dlg').classList.toggle('right',who!=='pinco');
- DLG.t0=st;DLG.fx=b[3];if(b[3]==='shake'){SFX.gasp();buzz(40);}if(b[3]==='crown'){SFX.cheer();burst(W/2,H*.3,80,['#ffcc33','#fff','#ff7eb6'],300);}if(b[3]==='rain')SFX.thunder();SFX.tap();}
+ DLG.t0=st;DLG.fx=b[3];if(b[3]==='shake'){SFX.gasp();buzz(40);}if(b[3]==='crown'){SFX.cheer();burst(W/2,H*.3,80,['#ffcc33','#fff','#ff7eb6'],300);}if(b[3]==='rain')SFX.thunder();if(b[3]&&b[3].startsWith('gift:'))storyItemGift(b[3].slice(5));SFX.tap();}
 function nextBeat(){if(!DLG)return;if(st-DLG.t0<.25)return;DLG.i++;if(DLG.i>=DLG.d.lines.length){const cb=DLG.cb;DLG=null;cb();return;}showBeat();}
 document.addEventListener('pointerup',e=>{if(scene!=='story'||!DLG)return;if(e.target.closest('button'))return;nextBeat();});
 function storyBG(x,bg,t){const hz=H*.62;
  if(bg==='alley'||bg==='night'){venueBG(0,t,hz);if(bg==='night'){x.fillStyle='rgba(10,10,40,.55)';x.fillRect(0,0,W,H);rain(x,t);}return;}
  if(bg==='mall')return venueBG(1,t,hz);if(bg==='city')return venueBG(2,t,hz);if(bg==='tokyo')return venueBG(3,t,hz);if(bg==='paris')return venueBG(4,t,hz);if(bg==='london')return venueBG(5,t,hz);
- if(bg==='cafe')return stallBG('cafe',t);
+ if(bg==='cafe'||bg==='yaki')return stallBG(bg,t);
  if(bg==='backstage'){x.fillStyle='#3a2050';x.fillRect(0,0,W,H);for(let i=0;i<3;i++){fillP(x,rrP(W*(.06+i*.32),H*.12,W*.26,H*.3,12),'#fff6e0','#c48a00',4);for(let k=0;k<6;k++){x.fillStyle='#ffe58a';x.fill(circP(W*(.06+i*.32)+k*W*.05+6,H*.12,5));}}x.fillStyle='#2a1838';x.fillRect(0,hz,W,H-hz);
   x.strokeStyle='#8a8f99';x.lineWidth=3;x.beginPath();x.moveTo(0,H*.5);x.lineTo(W,H*.5);x.stroke();for(let i=0;i<5;i++){fillP(x,rrP(W*(.1+i*.18),H*.5,W*.1,H*.12,8),['#ff7eb6','#b39dff','#7ee8c6','#ffcc33','#4fd8ff'][i],'#5a2a6a',3);}return;}
  drawBG(x,'bedroom',W,H,'#ff7eb6',t);}
@@ -1374,6 +1412,10 @@ function ending(){scene='end';st=0;show('s-intro');document.querySelector('#s-in
 SC3.end=function(t){drawBG(X,'ballroom',W,H,'#ffcc33',t);drawCut(X,'pinco',W/2,H*.97,H*.62,t,{outfit:Object.assign({},PINO(),{hat:'crown'}),opt:{arm:poseArm('princess',t)}});if(Math.random()<.6)burst(Math.random()*W,0,3,['#ffcc33','#ff7eb6','#fff','#b39dff'],80);
  X.save();X.textAlign='center';X.fillStyle='#fff';X.font='800 15px '+FONT;X.fillText(T('o_by'),W/2,H*.93);X.restore();if(t>7&&!SC3.endT){SC3.endT=1;}};
 document.addEventListener('pointerup',e=>{if(scene==='end'&&st>2.5&&!e.target.closest('button')){SC3.endT=0;goTitle();}});
+
+// v2.1: debug tools hidden unless ?debug=1 or 5 quick taps on the story title
+if(/[?&]debug=1/.test(location.search))document.body.classList.add('dbgon');
+{let n=0,t0=0;document.addEventListener('click',e=>{if(!e.target.closest('#s-smenu .logo'))return;const now=Date.now();n=now-t0<600?n+1:1;t0=now;if(n>=5){document.body.classList.toggle('dbgon');n=0;SFX.sparkle();}});}
 
 // ===== v2.0 SERVING MINI GAME =====
 const FOODS={
@@ -1450,23 +1492,28 @@ function updSV(){$('sv-time').textContent=Math.ceil(Math.max(0,SV.left))+'s';$('
 function makeOrder(){const lv=SV.lv,fs=SV.foods.filter(f=>f!=='garnish');const n=1+Math.floor(Math.random()*Math.min(SV.maxN,1+lv*.6+st/40));const o={};
  for(let i=0;i<n;i++){const f=pk(fs);o[f]=(o[f]||0)+1;}if(SV.k==='fine'){const mains=Object.keys(o).filter(f=>f==='fish'||f==='steak'||f==='dessert').reduce((a,f)=>a+o[f],0);if(mains)o.garnish=Math.min(2,mains);}return o;}
 function spawnCust(){const free=SV.cust.map((c,i)=>c?null:i).filter(i=>i!==null);if(!free.length)return;const i=pk(free);const critic=SV.k==='fine'&&Math.random()<.35;
- const cast=Math.random()<.12?pk(['party','holiday','baller','mole','tad','leaf','bean','pooh']):null;
+ const cast=Math.random()<.3?pk(['party','holiday','baller','mole','tad','leaf','bean','pooh','max']):null;
  SV.cust[i]={o:makeOrder(),pat:SV.pat*(critic?.75:1)*(SV.tut&&SV.served===0?2.5:1),p0:0,t:0,col:pk(CUST_COL),ears:Math.floor(Math.random()*3),cast,critic,leave:0};SV.cust[i].p0=SV.cust[i].pat;}
 function custRect(i){const w=W/3;return{x:i*w+4,y:H*.17,w:w-8,h:H*.36};}
 SC3.serve=function(t,dt){if(!SV)return;stallBG(SV.k,t);const run=!PAUSED&&!SV.done;
  if(run){SV.left-=dt;SV.next-=dt;if(SV.next<=0&&SV.left>4){spawnCust();SV.next=SV.gap*(.7+Math.random()*.6);}
   for(const f in SV.cook){SV.cook[f]-=dt;const b=document.querySelector('[data-food="'+f+'"]');if(b){b.classList.add('cook');b.querySelector('i').style.width=Math.max(0,100-SV.cook[f]/FOODS[f][2]*100)+'%';}if(SV.cook[f]<=0){delete SV.cook[f];if(b){b.classList.remove('cook');b.querySelector('i').style.width='0';}addTray(f,1);}}
   updSV();if(SV.left<=0)endShift();}
- for(let i=0;i<3;i++){const c=SV.cust[i];if(!c)continue;if(run&&!c.leave){c.pat-=dt;if(c.pat<=0){c.leave=-1;SV.angry++;SV.combo=0;SFX.angry();svPop(i,T('hmph'),'#e23b3b');}}c.t+=dt;if(c.leave){c.lt=(c.lt||0)+dt;if(c.lt>.7){SV.cust[i]=null;continue;}}
+ for(let i=0;i<3;i++){const c=SV.cust[i];if(!c)continue;if(run&&!c.leave){c.pat-=dt;if(c.pat/c.p0<.3&&!c.growl){c.growl=1;SFX.growl();svPop(i,T('growl'),'#b06a00');}if(c.pat<=0){c.leave=-1;SV.angry++;SV.combo=0;SFX.ghost();svPop(i,T('hmph'),'#8e44ec');}}c.t+=dt;if(c.leave){c.lt=(c.lt||0)+dt;if(c.lt>(c.leave<0?1.8:.7)){SV.cust[i]=null;continue;}}
   drawCust(c,custRect(i),t);}
  for(const p of SV.pops){p.t+=dt;X.save();X.globalAlpha=Math.max(0,1-p.t/1.2);X.font='900 '+Math.round(W*.05)+'px '+FONT;X.textAlign='center';X.lineWidth=5;X.strokeStyle='#fff';X.fillStyle=p.c;X.strokeText(p.s,p.x,p.y-p.t*40);X.fillText(p.s,p.x,p.y-p.t*40);X.restore();}SV.pops=SV.pops.filter(p=>p.t<1.2);
  if(SV.combo>=2){X.save();X.textAlign='center';X.font='900 '+Math.round(W*.06)+'px '+FONT;X.fillStyle='#ff3d8b';X.strokeStyle='#fff';X.lineWidth=6;const s=T('combo',SV.combo);X.strokeText(s,W/2,H*.18);X.fillText(s,W/2,H*.18);X.restore();}};
-function drawCust(c,r,t){const x=X,cx=r.x+r.w/2,lv=c.leave?Math.min(1,c.lt/.7):0,ent=Math.min(1,c.t*3),by=r.y+r.h+(1-ent)*60+lv*80;x.save();x.globalAlpha=ent*(1-lv);
+function drawGhost(c,r,t){const x=X,k=Math.min(1,c.lt/1.8),cx=r.x+r.w/2+Math.sin(c.lt*5)*14,cy=r.y+r.h*.55-k*r.h*.9,s=r.w*.3;x.save();x.globalAlpha=1-k*k;
+ const p=new Path2D();p.moveTo(cx-s,cy+s);p.lineTo(cx-s,cy);p.arc(cx,cy,s,Math.PI,0);p.lineTo(cx+s,cy+s);for(let i=0;i<4;i++){const xx=cx+s-(i+.5)*s/2;p.quadraticCurveTo(xx+s/8,cy+s*(i%2?1.25:.85),xx-s/4,cy+s);}p.closePath();
+ x.lineWidth=6;x.strokeStyle='#fff';x.stroke(p);fillP(x,p,'#f4f0ff','#b39dff',3);x.fillStyle='#2b2233';x.beginPath();x.ellipse(cx-s*.35,cy-s*.05,s*.13,s*.2,0,0,7);x.ellipse(cx+s*.35,cy-s*.05,s*.13,s*.2,0,0,7);x.fill();
+ x.beginPath();x.ellipse(cx,cy+s*.4,s*.16,s*.12,0,0,7);x.fill();x.fillStyle='rgba(255,110,160,.5)';x.fill(circP(cx-s*.6,cy+s*.25,s*.12));x.fill(circP(cx+s*.6,cy+s*.25,s*.12));
+ x.font='900 '+Math.round(s*.45)+'px '+FONT;x.textAlign='center';x.fillStyle='#8e44ec';x.fillText('~',cx+s*1.1,cy-s*.6);x.restore();}
+function drawCust(c,r,t){if(c.leave<0)return drawGhost(c,r,t);const x=X,cx=r.x+r.w/2,lv=c.leave?Math.min(1,c.lt/.7):0,ent=Math.min(1,c.t*3),by=r.y+r.h+(1-ent)*60+lv*80;x.save();x.globalAlpha=ent*(1-lv);
  const angry=c.pat/c.p0<.3,hop=Math.abs(Math.sin(t*(angry?14:4)))*(angry?6:3);
- if(c.cast){drawCut(x,c.cast,cx,by-hop,r.h*.7,t);}else{const hr=r.w*.27,hy=by-r.h*.42-hop;x.fillStyle=c.col;x.beginPath();x.ellipse(cx,by-r.h*.02,r.w*.36,r.h*.26,0,Math.PI,0);x.fill();
+ if(c.cast){drawCut(x,c.cast,cx,by-hop,r.h*.7,t);if(angry){x.font='900 '+Math.round(r.w*.12)+'px '+FONT;x.textAlign='center';x.fillStyle='#b06a00';x.strokeStyle='#fff';x.lineWidth=4;const g=L2('grrr~ 🤤','ぐ〜 🤤');x.strokeText(g,cx,by-r.h*.1);x.fillText(g,cx,by-r.h*.1);}}else{const hr=r.w*.27,hy=by-r.h*.42-hop;x.fillStyle=c.col;x.beginPath();x.ellipse(cx,by-r.h*.02,r.w*.36,r.h*.26,0,Math.PI,0);x.fill();
   if(c.ears===0){x.fill(circP(cx-hr*.75,hy-hr*.8,hr*.35));x.fill(circP(cx+hr*.75,hy-hr*.8,hr*.35));}else if(c.ears===1){x.beginPath();x.ellipse(cx-hr*.45,hy-hr*1.2,hr*.2,hr*.6,-.2,0,7);x.ellipse(cx+hr*.45,hy-hr*1.2,hr*.2,hr*.6,.2,0,7);x.fill();}else{x.beginPath();x.moveTo(cx-hr*.9,hy-hr*.3);x.lineTo(cx-hr*.6,hy-hr*1.3);x.lineTo(cx-hr*.1,hy-hr*.7);x.moveTo(cx+hr*.9,hy-hr*.3);x.lineTo(cx+hr*.6,hy-hr*1.3);x.lineTo(cx+hr*.1,hy-hr*.7);x.fill();}
-  fillP(x,circP(cx,hy,hr),c.col,c.col,3);x.fillStyle='#2b2233';x.fill(circP(cx-hr*.35,hy-hr*.05,hr*.12));x.fill(circP(cx+hr*.35,hy-hr*.05,hr*.12));x.strokeStyle='#2b2233';x.lineWidth=3;x.beginPath();if(angry)x.arc(cx,hy+hr*.5,hr*.22,Math.PI+.3,-.3);else x.arc(cx,hy+hr*.25,hr*.22,.3,Math.PI-.3);x.stroke();
-  if(angry){x.beginPath();x.moveTo(cx-hr*.55,hy-hr*.4);x.lineTo(cx-hr*.15,hy-hr*.25);x.moveTo(cx+hr*.55,hy-hr*.4);x.lineTo(cx+hr*.15,hy-hr*.25);x.stroke();}
+  x.lineWidth=7;x.strokeStyle='#fff';x.stroke(circP(cx,hy,hr));fillP(x,circP(cx,hy,hr),c.col,c.col,3);x.fillStyle='#2b2233';x.fill(circP(cx-hr*.35,hy-hr*.05,hr*.12));x.fill(circP(cx+hr*.35,hy-hr*.05,hr*.12));x.strokeStyle='#2b2233';x.lineWidth=3;x.beginPath();if(angry){x.stroke();x.fillStyle='#7a2a3a';x.beginPath();x.ellipse(cx,hy+hr*.38,hr*.2,hr*.16+Math.abs(Math.sin(t*6))*hr*.06,0,0,7);x.fill();x.fillStyle='#8fd8ff';const dl=(t*1.2)%1;x.beginPath();x.ellipse(cx+hr*.14,hy+hr*(.55+dl*.35),hr*.06,hr*.1,0,0,7);x.fill();}else{x.arc(cx,hy+hr*.25,hr*.22,.3,Math.PI-.3);x.stroke();}
+  if(angry){x.beginPath();x.moveTo(cx-hr*.55,hy-hr*.3);x.lineTo(cx-hr*.15,hy-hr*.42);x.moveTo(cx+hr*.55,hy-hr*.3);x.lineTo(cx+hr*.15,hy-hr*.42);x.stroke();x.font='900 '+Math.round(hr*.5)+'px '+FONT;x.textAlign='center';x.fillStyle='#b06a00';x.fillText(L2('grrr~','ぐ〜'),cx+hr*1.05,by-r.h*.12+Math.sin(t*8)*3);}
   x.fillStyle='rgba(255,110,160,.5)';x.fill(circP(cx-hr*.6,hy+hr*.25,hr*.15));x.fill(circP(cx+hr*.6,hy+hr*.25,hr*.15));
   if(c.critic){x.strokeStyle='#ffcc33';x.lineWidth=3;x.stroke(circP(cx+hr*.35,hy-hr*.05,hr*.25));x.beginPath();x.moveTo(cx+hr*.6,hy);x.lineTo(cx+hr*.7,hy+hr*.8);x.stroke();fillP(x,rrP(cx-hr*.7,hy-hr*1.35,hr*1.4,hr*.3,4),'#2b2233','#2b2233',2);fillP(x,rrP(cx-hr*.45,hy-hr*1.9,hr*.9,hr*.6,4),'#2b2233','#2b2233',2);}}
  // order bubble
@@ -1481,11 +1528,17 @@ function serveTo(i){const c=SV.cust[i];if(!c||c.leave)return;if(!SV.tray.length)
  if(!ok){SFX.bad();buzz(30);svPop(i,T('wrong'),'#e23b3b');SV.combo=0;c.pat-=2;SV.tray=[];renderTray();return;}
  const n=SV.tray.length,pf=c.pat/c.p0;SV.combo++;SV.best=Math.max(SV.best,SV.combo);const tip=Math.round(pf*5*(c.critic?2:1));const cb=SV.combo>=3?Math.min(8,SV.combo):0;const earn=2*n+tip+cb;
  SV.coins+=earn;SV.tips+=tip;SV.served++;c.leave=1;SV.tray=[];renderTray();SFX.coin();SFX.buy();buzz(12);const r=custRect(i);burst(r.x+r.w/2,r.y+r.h*.5,16,['#ffcc33','#fff'],140);svPop(i,'+'+earn+(SV.combo>=3?' 🔥':''),'#22b35a');if(SV.combo>=3)SFX.sparkle();updSV();}
-function endShift(){SV.done=1;stopSong();SFX.fan();S.story.coins+=SV.coins;save();setSCoins();
+function svSkip(){if(!SV||SV.done)return;PAUSED=true;$('svc-b').textContent=T('svskipq',SV.coins);$('svc').classList.add('on');}
+function endShift(){if(SV.done)return;SV.done=1;stopSong();SFX.fan();S.story.coins+=SV.coins;save();setSCoins();
  tutorial(T('shiftover'),['🍽️ '+T('served',SV.served),'😤 '+T('angry',SV.angry),'💁 '+T('tips',SV.tips),'🔥 '+T('combo',SV.best),'<b style="font-size:20px;color:#c48a00">🪙 '+T('earned',SV.coins)+'</b>'],()=>{SV=null;S.story.stage='shop';storyGo();});}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-food]');if(b&&SV&&!SV.done&&!PAUSED){const f=b.dataset.food;if(FOODS[f][2]){if(SV.cook[f]!=null){toast(T('cooking'));return;}SV.cook[f]=FOODS[f][2];SFX.stamp();}else addTray(f);return;}
  const t2=e.target.closest('[data-a="svtrash"]');if(t2&&SV){SV.tray=[];renderTray();SFX.tap();}});
 cv.addEventListener('pointerdown',e=>{if(scene!=='serve'||!SV||SV.done||PAUSED)return;for(let i=0;i<3;i++){const r=custRect(i);if(e.clientX>r.x&&e.clientX<r.x+r.w&&e.clientY>r.y-10&&e.clientY<r.y+r.h+20){serveTo(i);return;}}});
+
+SFX.growl=function(){if(!AC)return;const t=AC.currentTime;for(let i=0;i<3;i++){const o=AC.createOscillator(),g=AC.createGain();o.type='sawtooth';o.frequency.setValueAtTime(70+i*9,t+i*.12);o.frequency.linearRampToValueAtTime(52,t+i*.12+.25);g.gain.setValueAtTime(0,t+i*.12);g.gain.linearRampToValueAtTime(.12,t+i*.12+.04);g.gain.exponentialRampToValueAtTime(.001,t+i*.12+.3);o.connect(g);g.connect(SG||AC.destination);o.start(t+i*.12);o.stop(t+i*.12+.35);}};
+SFX.ghost=function(){if(!AC)return;const t=AC.currentTime,o=AC.createOscillator(),g=AC.createGain();o.type='sine';o.frequency.setValueAtTime(700,t);o.frequency.exponentialRampToValueAtTime(260,t+.9);const l=AC.createOscillator(),lg2=AC.createGain();l.frequency.value=7;lg2.gain.value=30;l.connect(lg2);lg2.connect(o.frequency);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.14,t+.1);g.gain.exponentialRampToValueAtTime(.001,t+1);o.connect(g);g.connect(SG||AC.destination);o.start(t);l.start(t);o.stop(t+1.05);l.stop(t+1.05);};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
+ if(a==='svskip'){SFX.tap();svSkip();}else if(a==='svc-no'){SFX.tap();$('svc').classList.remove('on');PAUSED=false;}else if(a==='svc-yes'){SFX.tap();$('svc').classList.remove('on');PAUSED=false;SV.left=0;endShift();}});
 
 // ===== v2.0 boutique, closet gifts, boot =====
 const SPRICE=it=>Math.max(15,it.p);let SHOPCAT='top';
@@ -1493,7 +1546,7 @@ function openShop(){scene='shop';st=0;show('s-shop');playSong('title');renderSho
 function renderShop(){const ss=S.story,nxt=CH[Math.min(CH.length-1,ss.retry?ss.ch:ss.ch+1)],nt=THEMES.find(t=>t.id===nxt.th);setSCoins();
  $('sh-note').textContent=T('shopnote',nt.e+' '+THN(nt));
  $('sh-tabs').innerHTML=CATS.map(([k,n,e])=>'<button class="tab'+(SHOPCAT===k?' on':'')+'" data-sc="'+k+'"><b>'+e+'</b><span>'+CATN(k)+'</span></button>').join('');
- const L=ITEMS.filter(i=>i.c===SHOPCAT).sort((a,b)=>(b.tags.includes(nt.id)-a.tags.includes(nt.id))||SPRICE(a)-SPRICE(b));
+ const L=ITEMS.filter(i=>i.c===SHOPCAT&&!i.gift).sort((a,b)=>(b.tags.includes(nt.id)-a.tags.includes(nt.id))||SPRICE(a)-SPRICE(b));
  $('sh-grid').innerHTML=L.map(it=>{const own=ss.owned[it.id],pr=SPRICE(it);return'<div class="shopc'+(own?' own':pr>ss.coins?' poor':'')+'">'+(it.tags.includes(nt.id)?'<em>✨</em>':'')+'<img src="'+thumb(it.id)+'" alt=""><div>'+IN(it)+'</div><button data-sbuy="'+it.id+'">'+(own?'✓ '+T('owned'):'🪙 '+pr)+'</button></div>';}).join('');}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-sc]');if(t){SHOPCAT=t.dataset.sc;SFX.tap();renderShop();$('sh-grid').scrollTop=0;return;}
  const b=e.target.closest('[data-sbuy]');if(b){const it=IT[b.dataset.sbuy],ss=S.story,pr=SPRICE(it);if(ss.owned[it.id])return;if(ss.coins<pr){SFX.bad();toast(T('needmore',pr-ss.coins,IN(it)));return;}
@@ -1511,6 +1564,7 @@ const _goTitle=goTitle;goTitle=function(){$('opts').classList.remove('on');_goTi
 // ---- boot ----
 applyLang();requestAnimationFrame(frame);setMute(S.mute);goTitle();
 window.PG=Object.defineProperties(window.PG||{},Object.getOwnPropertyDescriptors({get SV(){return SV},get RUN(){return RUN},get RESULT(){return RESULT},get DLG(){return DLG},get INT(){return INT},nowA,storyGo,openShop,setLang,CH,get st(){return st},set st(v){st=v},get theme(){return theme}}));
+ITEMS.filter(i=>i.ph).forEach(phImg);
 
 </script>
 <script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
