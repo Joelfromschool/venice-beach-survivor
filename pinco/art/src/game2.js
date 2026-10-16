@@ -24,11 +24,20 @@ function waltzTick(T){const s=T.s,sp=60/s.bpm/2,now=AC.currentTime;while(T.nextT
 // first tap starts the title song (iOS needs a gesture)
 addEventListener('pointerdown',()=>{const first=!AC;audio();if(AC&&AC.state==='suspended')AC.resume();if((scene==='title'||scene==='theme'||scene==='bank')&&!TR.some(t=>!t.dead))playSong(scene==='bank'?'title':'title');},{capture:true});
 // ---------- photo judges ----------
-const JIMG={};['bean','kermit','pooh','king'].forEach(n=>{const i=new Image();i.src='art/j_'+n+'.png';JIMG[n]=i;});
+const JIMG={};['bean','kermit','pooh','king'].forEach(n=>{const i=new Image();i.src='art/j_'+n+'.png?v2';JIMG[n]=i;});
 JUDGES.length=0;JUDGES.push(
- {n:'Bean',img:'bean',r:'Vibes',c:'#8fd14f',h:150,lines:[["Aww, it's okay, buddy","Chill… we'll get there"],['Kinda cozy, I guess','Good try, friend'],['Nice vibes!','Pretty chill look'],['So pretty, wow','Love this energy'],['Peas and love!! 💚','Perfect vibes ✨']]},
- {n:'Dark Kermit',img:'kermit',r:'Critique',c:'#2b2233',h:150,lines:[['A TRAGEDY.','I must lie down.','Hideous. Next!'],['Mediocre. Ugh.','The swamp weeps.'],['Acceptable… barely.','Hmph. Fine.'],['I am… almost moved.','Not terrible. Shocking.'],['MAGNIFICENT! *faints*','I take back every word!']]},
- {n:'Pooh',img:'pooh',r:'Yum Factor',c:'#ffcc33',h:160,lines:[['Oh bother… is it lunch?','I like it! …I think?'],['Pretty! Got any honey?','Ooh, sparkly…'],['Yummy outfit!','Lovely! Like honey!'],['Oh my! Delicious!','Hunny-licious!'],['BEST THING EVER!!','Sweeter than hunny! 🍯']]});
+ {n:'Emo Bean',nj:'エモ・ビーン',img:'bean',r:'Vibes',rj:'バイブス',c:'#8fd14f',h:150,
+  lines:[["It's okay… the void hugs us both","My heart is a rainy pod… but I believe in you"],["Kinda dark… kinda cute… like me","It hurts, but softly. Good try"],["This look gets my sad little soul","Nice vibes… I'm almost not sad"],["I wrote a sad poem about it. It's beautiful","Ugh. I'm crying. In a good way"],["You healed my emo heart 🖤💚","Perfect vibes… even my bangs are happy"]],
+  lj:[['だいじょうぶ…闇がふたりを包むよ','心は雨のさや…でも信じてる'],['ちょっと暗い…ちょっとかわいい…ぼくみたい','痛いけど、やさしい。がんばったね'],['このコーデ、ぼくの悲しい魂にひびく','いいバイブス…ちょっと元気出た'],['悲しい詩を書いたよ。美しいんだ','うっ…泣いてる。いい意味で'],['エモい心が癒された 🖤💚','完璧なバイブス…前髪までうれしい']]},
+ {n:'Dark Kermit',nj:'ダーク・カーミット',img:'kermit',r:'Critique',rj:'辛口',c:'#2b2233',h:150,
+  lines:[['A TRAGEDY.','I must lie down.','Hideous. Next!'],['Mediocre. Ugh.','The swamp weeps.'],['Acceptable… barely.','Hmph. Fine.'],['I am… almost moved.','Not terrible. Shocking.'],['MAGNIFICENT! *faints*','I take back every word!']],
+  lj:[['悲劇だ。','横にならせてくれ…','ひどい。次！'],['平凡。うぅ。','沼が泣いている。'],['まあ…ギリ合格。','ふん。いいだろう。'],['私が…感動しかけた。','悪くない。おどろいた。'],['すばらしい！*気絶*','前言撤回だ！']]},
+ {n:'Pooh',nj:'プーさん',img:'pooh',r:'Yum Factor',rj:'おいしさ',c:'#ffcc33',h:160,
+  lines:[['Oh bother… is it lunch?','I like it! …I think?'],['Pretty! Got any honey?','Ooh, sparkly…'],['Yummy outfit!','Lovely! Like honey!'],['Oh my! Delicious!','Hunny-licious!'],['BEST THING EVER!!','Sweeter than hunny! 🍯']],
+  lj:[['やれやれ…お昼ごはん？','好き！…たぶん？'],['かわいい！はちみつある？','わあ、キラキラ…'],['おいしそうなコーデ！','すてき！はちみつみたい！'],['わあ！おいしそう！','はちみつ級！'],['さいこう！！','はちみつよりあまい！🍯']]});
+const BUNDLES_JA=['おためし壺','はちみつびん','人気No.1','いちばんお得','メガ巣箱','王家の宝物庫'];
+const KING_LINES_JA=['王家のファッションには王家のコインを！','王の命令じゃ：タダである！','プリンセスたるもの、コイン切れはならぬ。','持っていきなさい、宝物庫は底なしじゃ！','はちみつもコインも？ なんという王国！','かしこく使うのじゃ…いや、使っちゃえ！ホッホー！'];
+const KL=()=>LANG()==='ja'?KING_LINES_JA:KING_LINES;
 const pk=a=>a[Math.floor(Math.random()*a.length)];
 score=function(o,t){const worn=CATS.map(c=>o[c[0]]).filter(Boolean);let match=0;
  for(const id of worn){const it=IT[id];const w=it.c==='bg'?2:1;if(it.tags.includes(t.id))match+=w;else if(it.tags.includes('sparkle')&&['royal','pop','space','swamp'].includes(t.id))match+=.4*w;}
@@ -42,27 +51,27 @@ score=function(o,t){const worn=CATS.map(c=>o[c[0]]).filter(Boolean);let match=0;
  const base=[.7,-.45,.8],mul=[4.4,4.8,4.2];
  const stars=raw.map((v,i)=>Math.max(1,Math.min(5,Math.round(base[i]+v*mul[i]+(Math.random()-.5)*.3))));
  const tot=stars[0]+stars[1]+stars[2];const coins=5+tot*2+(tot>=13?10:0);
- const low=Math.min(themeS,colorS,creS);const tip=low===themeS?'Tip: wear more ✨ items for "'+t.n+'" — the Places tab counts double!':low===colorS?'Tip: Dark Kermit wants theme colours — tint items with the swatches on the theme card.':'Tip: Dark Kermit wants originality — tint your items and stamp the dress (✏️).';
- const say=stars.map((s,i)=>pk(JUDGES[i].lines[s-1]));
+ const low=Math.min(themeS,colorS,creS);const tip=low===themeS?T('tiptheme',THN(t)):low===colorS?T('tipcol'):T('tipcre');
+ const say=stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[s-1]));
  return{stars,coins,tip,say,themeS,colorS,creS};};
 drawJudge=function(x,j,cx,cy,s,t,stars,shown,say,idx){const im=JIMG[j.img];const H0=j.h*s,ratio=im.naturalWidth?im.naturalWidth/im.naturalHeight:.7,W0=H0*ratio;
  const rev=RUN&&RUN.jt&&RUN.jt[idx]?Math.max(0,1-(t-RUN.jt[idx])*3):0;
  const harsh=idx===1&&stars&&shown>.9&&stars<=2;const jit=harsh?Math.sin(t*40)*3:0;
  const bob=Math.abs(Math.sin(t*(idx===2?5:3.2)+idx))*6*s;const sq=1+rev*.12;
  x.save();x.translate(cx+jit,cy+70*s);
- x.fillStyle='rgba(0,0,0,.18)';x.beginPath();x.ellipse(0,4,W0*.42,9*s,0,0,7);x.fill();
+ 
  // paddle rises from behind the judge
  if(stars){const up=Math.min(1,shown*2.2),e=1-Math.pow(1-up,3);const py=-H0-30*s-e*40*s+(1-e)*H0*.8;x.save();x.strokeStyle='#8a5a3c';x.lineWidth=6*s;x.beginPath();x.moveTo(W0*.3,-H0*.35);x.lineTo(0,py+70*s);x.stroke();
-  x.translate(0,py);x.rotate(Math.sin(t*3+idx)*.04);x.scale(s,s);fillP(x,rrP(-58,0,116,70,16),'#fff',j.c==='#2b2233'?'#5a2a6a':j.c,4);x.fillStyle=idx===1?'#2b2233':'#ff3d8b';x.font='800 15px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillText(j.r.toUpperCase(),0,20);
+  x.translate(0,py);x.rotate(Math.sin(t*3+idx)*.04);x.scale(s,s);fillP(x,rrP(-58,0,116,70,16),'#fff',j.c==='#2b2233'?'#5a2a6a':j.c,4);x.fillStyle=idx===1?'#2b2233':'#ff3d8b';x.font='800 15px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillText(LANG()==='ja'?j.rj:j.r.toUpperCase(),0,20);
   for(let i=0;i<5;i++){const on=i<Math.min(stars,Math.floor(shown*6));x.fillStyle=on?'#ffcc33':'#eee';x.fill(starP(-40+i*20,46,10));x.strokeStyle=on?'#c48a00':'#ccc';x.lineWidth=2;x.stroke(starP(-40+i*20,46,10));}x.restore();}
  x.translate(0,-bob);x.scale(1/sq*(1+rev*.05),sq);x.rotate(Math.sin(t*2+idx*2)*.03);
  if(im.naturalWidth)x.drawImage(im,-W0/2,-H0,W0,H0);x.restore();
- x.save();x.font='800 '+Math.round(11.5*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillStyle=idx===1?'#2b2233':'#5a2a6a';x.fillText(j.n,cx,cy+90*s);x.restore();
+ x.save();x.font='800 '+Math.round(11.5*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillStyle=idx===1?'#2b2233':'#5a2a6a';x.fillText(LANG()==='ja'?j.nj:j.n,cx,cy+90*s);x.restore();
  if(say){x.save();x.font='800 '+Math.round(12*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';let fs=Math.round(12*s/.85);x.font='800 '+fs+'px ui-rounded,system-ui';while(x.measureText(say).width+14>W/3-4&&fs>8){fs--;x.font='800 '+fs+'px ui-rounded,system-ui';}const tw=x.measureText(say).width+14,bx=Math.max(4,Math.min(W-tw-4,cx-tw/2)),by=cy+96*s;x.fillStyle=idx===1?'#2b2233':'#fff';x.strokeStyle=idx===1?'#8fd14f':'#ff7eb6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,by,tw,24,12):x.rect(bx,by,tw,24);x.fill();x.stroke();x.fillStyle=idx===1?'#8fd14f':'#8e44ec';x.textAlign='center';x.fillText(say,bx+tw/2,by+17);x.restore();}};
 judging=function(t){bgDraw(X,O,W,H,t);X.fillStyle='rgba(30,0,50,.35)';X.fillRect(0,0,W,H);
  const pl=place(W*.2,H*.05,W*.6,H*.44);X.save();X.translate(pl.ox,pl.oy);X.scale(pl.s,pl.s);drawPinco(X,O);X.restore();
  X.fillStyle='rgba(255,255,255,.92)';X.beginPath();X.roundRect?X.roundRect(8,H*.5,W-16,H*.47,24):X.rect(8,H*.5,W-16,H*.47);X.fill();
- X.textAlign='center';X.fillStyle='#8e44ec';X.font='800 '+Math.round(W*.055)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';X.fillText('The judges say…',W/2,H*.5+W*.075);
+ X.textAlign='center';X.fillStyle='#8e44ec';X.font='800 '+Math.round(W*.055)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';X.fillText(T('judgessay'),W/2,H*.5+W*.075);
  const s=Math.min(W/3/140,H*.3/230);RUN.jt=RUN.jt||[];for(let i=0;i<3;i++){const jt=t-.6-i*1.1,shown=Math.max(0,jt);const st=RESULT.stars[i];
   const prev=RUN.jn[i]||0,nowN=Math.min(st,Math.floor(shown*6));if(nowN>prev){for(let q=prev;q<nowN;q++)SFX.judge(q);RUN.jn[i]=nowN;if(nowN===st){RUN.jt[i]=t;burst(W*(i+.5)/3,H*.66,st*4,i===1?['#8fd14f','#2b2233']:['#ffcc33','#fff'],120);buzz(10);if(i===1&&st<=2)SFX.boo();}}
   drawJudge(X,JUDGES[i],W*(i+.5)/3,H*.74,s,t,jt>0?st:0,shown,jt>1?RESULT.say[i]:null,i);}};
@@ -81,12 +90,12 @@ function coinArt(n){const c=document.createElement('canvas');c.width=180;c.heigh
  const stacks=n,cx0=90-(stacks-1)*15;for(let s=0;s<stacks;s++){const h=3+s*2+(s%2)*2,bx=cx0+s*30;for(let i=0;i<h;i++){const y=96-i*7;x.fillStyle='#c48a00';x.beginPath();x.ellipse(bx,y+3,15,6,0,0,7);x.fill();x.fillStyle=rg(x,bx,y,15,'#ffcc33');x.beginPath();x.ellipse(bx,y,15,6,0,0,7);x.fill();}}
  spark(x,150,20,9);spark(x,28,40,6);return c.toDataURL();}
 function openBank(){scene='bank';st=0;show('s-bank');setCoins();if(AC)playSong('title');
- $('bank-grid').innerHTML=BUNDLES.map(([n,l,k],i)=>'<div class="bcard'+(k>=3?' hot':'')+(k===6?' royal':'')+'"><b class="rib">'+l+'</b><img src="'+coinArt(k)+'" alt=""><div class="amt">'+n.toLocaleString('en-US')+'</div><div class="lbl">coins</div><button class="free" data-buy="'+i+'">FREE!</button></div>').join('');
- kingSay(KING_LINES[0]);}
+ $('bank-grid').innerHTML=BUNDLES.map(([n,l,k],i)=>'<div class="bcard'+(k>=3?' hot':'')+(k===6?' royal':'')+'"><b class="rib">'+(LANG()==='ja'?BUNDLES_JA[i]:l)+'</b><img src="'+coinArt(k)+'" alt=""><div class="amt">'+n.toLocaleString('en-US')+'</div><div class="lbl">'+T('coins')+'</div><button class="free" data-buy="'+i+'">'+T('freebtn')+'</button></div>').join('');
+ kingSay(KL()[0]);}
 function kingSay(t){const d=$('bank-say');d.textContent=t;d.classList.remove('pop');void d.offsetWidth;d.classList.add('pop');}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-buy]');if(!b)return;const now=performance.now();if(now<bankCD){SFX.bad();return;}bankCD=now+1000;
  document.querySelectorAll('.free').forEach(f=>{f.classList.add('cd');});setTimeout(()=>document.querySelectorAll('.free').forEach(f=>f.classList.remove('cd')),1000);
- const [n]=BUNDLES[+b.dataset.buy];S.coins+=n;save();coinFly(b,Math.min(26,6+(+b.dataset.buy)*4));kingSay(pk(KING_LINES));buzz(15);
+ const [n]=BUNDLES[+b.dataset.buy];S.coins+=n;save();coinFly(b,Math.min(26,6+(+b.dataset.buy)*4));kingSay(pk(KL()));buzz(15);
  if(AC){const t0=AC.currentTime;for(let i=0;i<10;i++)tone(mf(88+[0,4,7,12][i%4]),t0+i*.05,.25,'triangle',.12);noise(t0,.5,.12,9000,null,'highpass');}
  let shown=S.coins-n;const step=Math.max(1,Math.ceil(n/30));const iv=setInterval(()=>{shown=Math.min(S.coins,shown+step);document.querySelectorAll('.coins').forEach(e=>e.textContent=shown);if(shown>=S.coins)clearInterval(iv);},25);});
 function coinFly(from,k){const r=from.getBoundingClientRect(),tg=$('bank-bal').getBoundingClientRect();for(let i=0;i<k;i++){const c=document.createElement('i');c.className='coinic fly';document.body.appendChild(c);

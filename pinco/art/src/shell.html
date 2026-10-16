@@ -101,36 +101,92 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 .free:active{transform:translateY(3px);box-shadow:0 1px 0 #167a3c}.free.cd{filter:grayscale(.7) brightness(.95);animation:none}
 @keyframes wig{0%,90%,100%{transform:none}93%{transform:rotate(-3deg) scale(1.04)}96%{transform:rotate(3deg) scale(1.04)}}
 .coinic.fly{position:fixed;left:0;top:0;z-index:60;pointer-events:none;width:22px;height:22px}
+:root{--F:ui-rounded,"SF Pro Rounded","Hiragino Maru Gothic ProN","Hiragino Sans","Arial Rounded MT Bold","Nunito","Noto Sans JP","Yu Gothic",system-ui,sans-serif}
+.trow{display:flex;gap:10px;width:min(78vw,320px)}.trow .big{flex:1;width:auto;padding:0 6px;font-size:16px}
+.big.sm{min-height:44px;font-size:16px}.big.pink2{background:linear-gradient(#ff9fca,#ff6fae);box-shadow:0 5px 0 #d43c84}
+#opts,#rconfirm,#tut,#gift{position:fixed;inset:0;z-index:55;background:#2a0b3dcc;display:none;align-items:center;justify-content:center}#opts.on,#rconfirm.on,#tut.on,#gift.on{display:flex}#rconfirm{z-index:56}
+.obox{text-align:left;display:flex;flex-direction:column;gap:10px}.obox h3{text-align:center}
+.orow{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:900;font-size:15px}.orow input{flex:1;max-width:52%;accent-color:#ff3d8b}
+.seg{display:flex;border-radius:16px;overflow:hidden;box-shadow:0 0 0 2px #ff7eb6}.seg button{padding:7px 10px;font-weight:900;background:#fff;font-size:14px}.seg button.on{background:#ff3d8b;color:#fff}
+.tog{min-width:62px;height:34px;border-radius:17px;background:#eee;font-weight:900}.tog.on{background:#7ee8c6}
+.cred{text-align:center;background:#fff4fa;border-radius:16px;padding:8px;font-size:13px;font-weight:800;color:#8e44ec}.cred b{display:block;color:#ff3d8b}
+#in-cap{position:fixed;left:0;right:0;top:12%;text-align:center;font-size:min(11vw,46px);font-weight:900;color:#fff;-webkit-text-stroke:2px #2b2233;text-shadow:0 5px 0 #2b2233;padding:0 14px;line-height:1.05;pointer-events:none}
+#in-cap.pop{animation:pop .35s cubic-bezier(.2,1.6,.4,1)}
+#in-help{position:fixed;left:50%;bottom:16%;transform:translateX(-50%);display:none;min-height:70px;padding:0 30px;border-radius:35px;font-size:26px;font-weight:900;color:#fff;background:linear-gradient(#5be38c,#22b35a);box-shadow:0 6px 0 #167a3c;animation:pulse .7s ease-in-out infinite}
+#in-help.on{display:block}@keyframes pulse{50%{transform:translateX(-50%) scale(1.1)}}
+#dlg{margin-top:auto;display:flex;align-items:flex-end;gap:8px;padding:0 10px calc(var(--sab) + 14px)}
+#dlg-p{width:92px;height:110px;object-fit:contain;flex:none;filter:drop-shadow(0 3px 0 #fff)}
+#dlg-b{flex:1;background:#fff;border-radius:20px;padding:10px 14px 8px;box-shadow:0 6px 0 #ff9fca,0 10px 30px #0004;min-height:96px;position:relative}
+#dlg-n{display:inline-block;background:var(--pk);color:#fff;border-radius:10px;padding:2px 10px;font-size:14px;margin-top:-22px;position:relative;top:-6px}
+#dlg-t{font-weight:800;font-size:17px;line-height:1.3}#dlg-b small{position:absolute;right:12px;bottom:6px;font-weight:900;color:#d0a0d8;font-size:11px;animation:blink .6s infinite alternate}
+#dlg.right{flex-direction:row-reverse}
+#sv-top{padding:calc(var(--sat) + 8px) 10px 6px;display:flex;gap:8px;align-items:center}#sv-name{flex:1;min-width:0;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sv-bar{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#ffcc33,#ff9a2e)}#sv-time{position:relative;display:block;text-align:center;line-height:34px;font-weight:900;font-size:17px}
+#sv-panel{margin-top:auto;background:linear-gradient(#fffffff0,#fff4fa);border-radius:26px 26px 0 0;box-shadow:0 -6px 24px #8e44ec33;padding:8px 10px calc(var(--sab) + 10px)}
+#sv-tray{display:flex;gap:6px;align-items:center;min-height:52px;background:#f7ecfb;border-radius:16px;padding:4px 8px;margin-bottom:8px}#sv-tray img{width:44px;height:44px}#sv-tray .lbl0{font-weight:900;color:#b07ac0;font-size:13px;margin-right:auto}
+#sv-tray .trash{margin-left:auto;width:44px;height:44px;border-radius:14px;background:#fff;font-size:20px;flex:none}
+#sv-foods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.food{position:relative;height:84px;border-radius:18px;background:#fff;box-shadow:0 4px 0 #ecd6f5;display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:900;font-size:12px;overflow:hidden}
+.food img{width:54px;height:54px}.food:active{transform:scale(.94)}.food i{position:absolute;left:0;bottom:0;height:6px;background:#ff9a2e;width:0}
+.food.cook{background:#fff3d6}
+#s-shop{background:linear-gradient(#fff0f7,#ffd6ea)}#s-shop h2{margin:0;font-size:24px;color:var(--pk);font-weight:900}#sh-note{padding:4px 14px;font-weight:800;color:#8e44ec;font-size:13px}
+#sh-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:8px 12px;align-content:start}.shopc{position:relative;background:#fff;border-radius:16px;padding:6px 4px;box-shadow:0 3px 0 #ecd6f5;text-align:center;font-weight:900;font-size:11.5px}
+.shopc img{width:64px;height:64px}.shopc button{display:block;width:100%;margin-top:4px;min-height:32px;border-radius:12px;background:linear-gradient(#ffd34d,#ffb020);color:#6a3a00;font-weight:900;font-size:13px}.shopc.own button{background:#e8f8ef;color:#22b35a}.shopc.poor button{opacity:.55}
+.shopc em{position:absolute;top:4px;left:6px;font-style:normal}.shbar{padding:8px 12px calc(var(--sab) + 12px);display:flex}.shbar .big{flex:1}
+#sh-tabs .tab{height:44px}
+.cltabs{display:flex;gap:8px;padding:8px 12px 0}.ctab{flex:1;height:38px;border-radius:19px;background:#fff;font-weight:900;color:#8e44ec}.ctab.on{background:var(--pk);color:#fff}
+.gift{background:#fff;border-radius:16px;padding:6px;box-shadow:0 3px 0 #ecd6f5;text-align:center;font-weight:900;font-size:12px}.gift img{width:64px;height:64px}.gift small{display:block;color:#b07ac0}
+.gbox #gift-h{font-size:22px;font-weight:900;color:var(--pk)}.gbox #gift-who{height:110px;animation:bob 1.4s ease-in-out infinite}.gbox #gift-it{width:110px;height:110px;animation:reveal 1.2s cubic-bezier(.2,1.6,.4,1);filter:drop-shadow(0 0 16px #ffcc33)}
+@keyframes reveal{0%{transform:scale(0) rotate(-180deg);opacity:0}60%{transform:scale(1.3) rotate(10deg);opacity:1}100%{transform:none}}#gift-n{display:block;margin-bottom:12px;color:#8e44ec;font-size:18px}
+#tut-b{text-align:left;font-weight:800;font-size:15px;line-height:1.45;margin-bottom:14px}#tut-b p{margin:4px 0}
+.sc-goal{font-weight:900;color:#8e44ec;margin:2px 0 6px}
 </style></head><body>
 <canvas id="c"></canvas>
 <div class="scr" id="s-title">
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
- <div class="logo"><b>Pinco</b><i>Pretty Princess</i></div>
- <div class="tbtns"><span id="t-best"></span><button class="big" data-a="play">▶ PLAY</button><button class="big alt" data-a="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank">🍯 POOH BANK</button></div>
+ <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
+ <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ FREE STYLE</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
  <div class="ver">%BUILD%</div>
 </div>
-<div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small>TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
- <div class="rule">90 seconds to style Pinco · ✨ = on-theme item</div><button class="big" data-a="start" style="width:100%">LET'S STYLE! 💖</button></div></div>
+<div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
+ <div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
 <div class="scr" id="s-dress">
  <div id="d-top"><button class="hm" data-a="gohome" aria-label="Main menu">🏠</button><span class="pill" id="d-theme"></span><div class="timer"><div id="d-bar"></div><span id="d-time">90s</span></div><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div id="d-panel">
-  <div id="tools"><button id="stampbtn" data-a="stamp">✏️ Stamp</button><div class="row" id="sw"></div></div>
-  <div id="stampbar"><button class="stp" data-t="star">⭐</button><button class="stp" data-t="heart">💖</button><button class="stp" data-t="dot">⚪</button><button class="stp" data-a="clrst" style="width:auto;padding:0 12px;font-size:14px;font-weight:900">Clear</button></div>
+  <div id="tools"><button id="stampbtn" data-a="stamp" data-i18n="stamp">✏️ Stamp</button><div class="row" id="sw"></div></div>
+  <div id="stampbar"><button class="stp" data-t="star">⭐</button><button class="stp" data-t="heart">💖</button><button class="stp" data-t="dot">⚪</button><button class="stp" data-a="clrst" style="width:auto;padding:0 12px;font-size:14px;font-weight:900" data-i18n="clear">Clear</button></div>
   <div id="hint"></div>
   <div class="row" id="tabs"></div>
   <div class="row" id="items" style="padding-top:6px"></div>
-  <div id="donebar"><button class="big" data-a="done">✨ TO THE RUNWAY!</button></div>
+  <div id="donebar"><button class="big" data-a="done" data-i18n="torunway"></button></div>
  </div>
 </div>
-<div class="scr" id="s-run"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip">Skip ⏩</button></div>
-<div class="scr" id="s-judge"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip">Skip ⏩</button></div>
-<div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> coins</div><div id="sc-unl"></div><div id="sc-tip"></div>
- <div class="btn2"><button class="big ghost" data-a="photo">📸 Photo</button><button class="big ghost" data-a="closet">👗 Closet</button><button class="big alt" data-a="home">🏠 Home</button><button class="big" data-a="next">▶ Next</button></div></div></div>
-<div class="scr" id="s-closet"><div class="topbar"><h2>👗 My Closet</h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px">Back</button></div><div id="cl-grid"></div></div>
-<div id="look"><div id="look-t"></div><img id="look-img" alt=""><div style="display:flex;gap:10px"><button class="big" id="look-photo">📸 Save PNG</button><button class="big alt" id="look-del">🗑</button><button class="big ghost" data-a="lookx">Close</button></div></div>
+<div class="scr" id="s-run"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip" data-i18n="skip"></button></div>
+<div class="scr" id="s-judge"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip" data-i18n="skip"></button></div>
+<div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> <span data-i18n="coins"></span></div><div id="sc-unl"></div><div id="sc-tip"></div>
+ <div class="btn2" id="sc-free"><button class="big ghost" data-a="photo" data-i18n="photo"></button><button class="big ghost" data-a="closet" data-i18n="closet2"></button><button class="big alt" data-a="home" data-i18n="home"></button><button class="big" data-a="next" data-i18n="next"></button></div><div class="btn2" id="sc-story"></div></div></div>
+<div class="scr" id="s-closet"><div class="topbar"><h2 data-i18n="mycloset"></h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px" data-i18n="back"></button></div><div class="cltabs"><button class="ctab on" data-ct="looks" data-i18n="looks"></button><button class="ctab" data-ct="gifts" data-i18n="gifts"></button></div><div id="cl-grid"></div></div>
+<div id="look"><div id="look-t"></div><img id="look-img" alt=""><div style="display:flex;gap:10px"><button class="big" id="look-photo" data-i18n="savepng"></button><button class="big alt" id="look-del">🗑</button><button class="big ghost" data-a="lookx" data-i18n="close"></button></div></div>
 <div class="scr" id="s-bank"><div class="topbar"><button class="hm" data-a="bankx" aria-label="Main menu">🏠</button><span class="pill big-pill" id="bank-bal"><i class="coinic"></i><span class="coins">0</span></span><span style="width:44px"></span></div>
- <div class="bank-title">🍯 POOH BANK</div><div id="bank-host"><div id="bank-say"></div></div><div id="bank-grid"></div></div>
-<div id="confirm"><div class="cbox"><div class="ce">🏠</div><h3>Leave this round?</h3><p>Your look won't be judged and the timer stops.</p><div class="btn2"><button class="big ghost" data-a="stay">Keep styling</button><button class="big" data-a="leave">Leave</button></div></div></div>
+ <div class="bank-title" data-i18n="bank"></div><div id="bank-host"><div id="bank-say"></div></div><div id="bank-grid"></div></div>
+<div id="confirm"><div class="cbox"><div class="ce">⏸</div><h3 data-i18n="paused"></h3><p data-i18n="pausemsg"></p><div class="btn2"><button class="big ghost" data-a="stay" data-i18n="keep"></button><button class="big" data-a="leave" data-i18n="leave"></button></div><button class="big alt sm" data-a="opts" data-i18n="options" style="margin-top:10px;width:100%"></button></div></div>
+<div id="opts"><div class="cbox obox"><h3 data-i18n="o_title"></h3>
+ <label class="orow"><span data-i18n="o_music"></span><input type="range" min="0" max="100" id="o-mv"></label>
+ <label class="orow"><span data-i18n="o_sfx"></span><input type="range" min="0" max="100" id="o-sv"></label>
+ <div class="orow"><span data-i18n="o_lang"></span><span class="seg"><button data-lang="en">English</button><button data-lang="ja">日本語</button></span></div>
+ <div class="orow"><span data-i18n="o_easy"></span><button class="tog" id="o-easy" data-a="easy"></button></div>
+ <button class="big ghost sm" data-a="reset" data-i18n="o_reset" style="width:100%"></button>
+ <div class="cred"><b data-i18n="o_credits"></b><div data-i18n="o_by"></div><small data-i18n="o_thanks"></small></div>
+ <button class="big sm" data-a="optsx" data-i18n="close" style="width:100%"></button></div></div>
+<div id="rconfirm"><div class="cbox"><div class="ce">🗑</div><p data-i18n="o_resetq"></p><div class="btn2"><button class="big ghost" data-a="rno" data-i18n="no"></button><button class="big" data-a="ryes" data-i18n="yes"></button></div></div></div>
+<div class="scr" id="s-smenu"><div class="topbar" style="width:100%"><button class="hm" data-a="gohome2">🏠</button><span class="pill"><i class="coinic"></i><span class="scoins">0</span></span></div>
+ <div class="logo"><b style="font-size:min(12vw,50px)" data-i18n="storytitle"></b></div><div class="tbtns"><button class="big" data-a="scont" id="sm-cont"></button><button class="big alt" data-a="snew" data-i18n="newgame"></button><button class="big ghost sm" data-a="sdebug" data-i18n="debug"></button></div></div>
+<div class="scr" id="s-intro"><button class="skip" data-a="introskip" data-i18n="intro_skip"></button><div id="in-cap"></div><button id="in-help" data-a="inhelp"></button></div>
+<div class="scr" id="s-story"><button class="skip" data-a="dskip" data-i18n="skipall"></button><div id="dlg"><img id="dlg-p" alt=""><div id="dlg-b"><b id="dlg-n"></b><div id="dlg-t"></div><small data-i18n="tap"></small></div></div></div>
+<div class="scr" id="s-serve"><div id="sv-top"><button class="hm" data-a="gohome">🏠</button><span class="pill" id="sv-name"></span><div class="timer"><div id="sv-bar"></div><span id="sv-time"></span></div><span class="pill"><i class="coinic"></i><span id="sv-coins">0</span></span></div>
+ <div id="sv-panel"><div id="sv-tray"></div><div id="sv-foods"></div></div></div>
+<div class="scr" id="s-shop"><div class="topbar"><h2 data-i18n="shop"></h2><span class="pill big-pill"><i class="coinic"></i><span class="scoins">0</span></span></div><div id="sh-note"></div><div class="row" id="sh-tabs"></div><div id="sh-grid"></div><div class="shbar"><button class="big" data-a="shopnext" data-i18n="shopnext"></button></div></div>
+<div id="tut"><div class="cbox"><h3 id="tut-h"></h3><div id="tut-b"></div><button class="big" data-a="tutok" data-i18n="gotit" style="width:100%"></button></div></div>
+<div id="gift"><div class="cbox gbox"><div id="gift-h"></div><img id="gift-who" alt=""><p id="gift-say"></p><img id="gift-it" alt=""><b id="gift-n"></b><button class="big" data-a="giftok" data-i18n="yay" style="width:100%"></button></div></div>
 <div id="toast"></div><div id="flash"></div>
 <script>
 %ITEMS%
