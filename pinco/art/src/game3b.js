@@ -108,9 +108,9 @@ runway=function(t,dt){const vi=RUN.vi,hz=H*.36;RUNI=vi;if(!RUN.hearts)RUN.hearts
  const sp=crowdSpots(vi,hz);const cam=RUN.cameo;let camDrawn=false;
  for(let i=0;i<sp.length;i++){const p=sp[i];if(p.chair){drawFolding(X,p.x,p.y+40,1.1);const who=['party','leaf','mole'][i];if(!(cam&&i===2))drawCut(X,who,p.x,p.y+6,who==='mole'?60:who==='leaf'?72:100,t,{rot:Math.sin(t*3+i)*.05});continue;}
   drawCrowdP(X,p,t);if(Math.random()<dt*(.4+vi*.25))RUN.fl.push({x:p.x,y:p.y-p.r*.4,t:0,r:p.r});}
- if(cam){const p=vi===0?sp[2]:sp.filter(q=>(q.x>W/2)===!!cam.side).slice(-2)[0]||sp[sp.length-1];drawCameo(X,cam,p.x,p.y+(vi===0?8:p.r),Math.max(64,p.r*4.2),t);if(!RUN.camToast&&t>1.2){RUN.camToast=1;toast(T('incrowd',CN(cam.who)),1800);SFX.sparkle();}}
+ if(cam){const p=vi===0?sp[2]:sp.filter(q=>(q.x>W/2)===!!cam.side).slice(-1)[0]||sp[sp.length-1];drawCameo(X,cam,Math.max(W*.12,Math.min(W*.88,p.x)),p.y+(vi===0?8:p.r),Math.max(64,p.r*4.2)*(vi>=2?1.4:1),t);if(!RUN.camToast&&t>1.2){RUN.camToast=1;toast(T('incrowd',CN(cam.who)),1800);SFX.sparkle();}}
  // walk
- const walkT=Math.min(1,t/5.2),k=1-Math.pow(1-walkT,1.6),atEnd=t>=5.2;const s0=place(0,0,W,H*.9).s,s=s0*(.28+.6*k)*(RUN.rh?.82:1);const fy=hz+(H*.94-hz)*k;const ph=atEnd?0:t*7.5;const bob=atEnd?0:Math.abs(Math.sin(ph))*12*s;
+ const walkT=Math.min(1,t/5.2),k=1-Math.pow(1-walkT,1.6),atEnd=t>=5.2;const s0=place(0,0,W,H*.9).s;const fy=hz+(H*.94-hz)*k;const topSafe=SAFE_T()+70;const s=Math.min(s0*(.28+.6*k)*(RUN.rh?.82:1),(fy-topSafe)/1150);const ph=atEnd?0:t*7.5;const bob=atEnd?0:Math.abs(Math.sin(ph))*12*s;
  // reactions
  if(!RUN.react){const tot=RESULT.stars.reduce((a,b)=>a+b,0);RUN.react=pickReacts(tot,vi,theme.id).map((s2,i,a)=>({s:s2,at:1+(i+.3+Math.random()*.4)*(3.8/a.length)}));}
  for(const r of RUN.react){if(!r.p&&t>=r.at){r.p=1;const q=pk(sp);RUN.pops.push({s:r.s,x:Math.max(80,Math.min(W-80,q.x)),y:Math.max(H*.2,q.y-q.r*2-20),t:0});SFX.ooh(.8);SFX.clap(10+vi*4,1);}}
