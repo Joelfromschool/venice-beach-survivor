@@ -1,4 +1,4 @@
-const p=require('puppeteer-core');const O='/tmp/pin2/';require('fs').mkdirSync(O,{recursive:true});const sl=ms=>new Promise(r=>setTimeout(r,ms));
+const p=require('puppeteer-core');const O='/tmp/pin4/';require('fs').mkdirSync(O,{recursive:true});const sl=ms=>new Promise(r=>setTimeout(r,ms));
 const ARG=process.argv[2]||'all';
 (async()=>{const b=await p.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox','--autoplay-policy=no-user-gesture-required']});const pg=await b.newPage();
 await pg.setViewport({width:390,height:844,deviceScaleFactor:2,isMobile:true,hasTouch:true});const errs=[];pg.on('pageerror',e=>errs.push(e.message));pg.on('console',m=>{if(m.type()==='error')errs.push(m.text())});
@@ -48,7 +48,7 @@ if(ARG==='all'||ARG==='story'){
  for(let i=0;i<60;i++){if(await ev(()=>document.getElementById('in-help').classList.contains('on'))){await sl(300);await sh('01b_intro_taptohelp');await tap('#in-help');break;}await sl(150);}
  await waitScene('story',15000);await sl(600);
  await chapter(1,{rtag:'ch1',stag:'ch1',dressShot:'ch1_dress',q:.85});
- await chapter(2,{rtag:'ch2',q:.9});
+ await chapter(2,{rtag:'ch2',q:.4});
  await chapter(3,{rtag:'ch3',stag:'ch3',cameo:1,shopShot:'ch3_shop'});
  await chapter(4,{rtag:'ch4',stag:'ch4',cameo:1});
  console.log('story state',await ev(()=>JSON.stringify({ch:PG.S.story.ch,stage:PG.S.story.stage,coins:PG.S.story.coins,owned:Object.keys(PG.S.story.owned).length,gifts:PG.S.gifts})));

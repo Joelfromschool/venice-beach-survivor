@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.0-beta"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.0"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -145,7 +145,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
  <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ FREE STYLE</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
- <div class="ver">v2.0-beta</div>
+ <div class="ver">v2.0</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
@@ -1026,7 +1026,7 @@ const REACT={
   rare:'Marvelous!'}};
 function pickReacts(tot,vi,tid){const L=REACT[LANG()]||REACT.en;let n=1+(tot>=9?1:0)+(tot>=12?1:0);n=Math.round(n*[.6,.8,1,1.1,1.25,1.4][vi]);n=Math.max(1,Math.min(3,n));
  let pool=tot<=6?[...L.low,...L.low,...L.gen.slice(0,4)]:tot>=11?[...L.high,...L.gen,...L.fun]:[...L.gen,...L.fun];if(tot>6&&L.th[tid])pool.push(L.th[tid],L.th[tid]);
- const out=[];const used=new Set();while(out.length<n&&used.size<pool.length){let s=Math.random()<.04?(LANG()==='ja'?L.rare:REACT.en.rare):pk(pool);if(used.has(s))continue;used.add(s);out.push(s);}
+ const out=[];const used=new Set();while(out.length<n&&used.size<pool.length){let s=Math.random()<.025?(LANG()==='ja'?L.rare:REACT.en.rare):pk(pool);if(used.has(s))continue;used.add(s);out.push(s);}
  if(LANG()==='ja'&&Math.random()<.03)out[out.length-1]=REACT.ja.rare;return out;}
 // ---- secret cameo (≈15% of shows) ----
 const CAMEO_CATS=['hat','bow','acc','wand'];

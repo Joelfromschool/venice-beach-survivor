@@ -16,7 +16,7 @@ const REACT={
   rare:'Marvelous!'}};
 function pickReacts(tot,vi,tid){const L=REACT[LANG()]||REACT.en;let n=1+(tot>=9?1:0)+(tot>=12?1:0);n=Math.round(n*[.6,.8,1,1.1,1.25,1.4][vi]);n=Math.max(1,Math.min(3,n));
  let pool=tot<=6?[...L.low,...L.low,...L.gen.slice(0,4)]:tot>=11?[...L.high,...L.gen,...L.fun]:[...L.gen,...L.fun];if(tot>6&&L.th[tid])pool.push(L.th[tid],L.th[tid]);
- const out=[];const used=new Set();while(out.length<n&&used.size<pool.length){let s=Math.random()<.04?(LANG()==='ja'?L.rare:REACT.en.rare):pk(pool);if(used.has(s))continue;used.add(s);out.push(s);}
+ const out=[];const used=new Set();while(out.length<n&&used.size<pool.length){let s=Math.random()<.025?(LANG()==='ja'?L.rare:REACT.en.rare):pk(pool);if(used.has(s))continue;used.add(s);out.push(s);}
  if(LANG()==='ja'&&Math.random()<.03)out[out.length-1]=REACT.ja.rare;return out;}
 // ---- secret cameo (≈15% of shows) ----
 const CAMEO_CATS=['hat','bow','acc','wand'];
