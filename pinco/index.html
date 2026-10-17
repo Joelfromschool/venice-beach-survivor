@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.3"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.4"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -1585,7 +1585,7 @@ const _goTitle=goTitle;goTitle=function(){$('opts').classList.remove('on');_goTi
 const MODELS={
  pinco:{n:'Pinco',nj:'ピンコ',e:'🎀'},
  pooh:{n:'Pooh',nj:'プーさん',e:'🍯',src:'art/m_pooh.png?v23',r:[-43,-31,450,531],
-  T:{head:[0,6,1.08],torso:[0,-8,1.02],hips:[0,-30,1],feet:[0,0,1],hand:[-62,-218,.9]}},
+  T:{head:[0,6,1.08],torso:[0,-8,1.02],hips:[0,-90,.72],feet:[0,-352,.95],hand:[-62,-218,.9]}},
  bean:{n:'Mr Bean',nj:'ミスター・ビーン',e:'🫛',src:'art/m_bean.png?v23',r:[-16,20,484,880],
   T:{head:[0,138,1.0],torso:[0,160,1.0],hips:[0,180,.96],feet:[0,0,1],hand:[-112,200,1]}}};
 for(const k in MODELS)if(MODELS[k].src){const i=new Image();i.src=MODELS[k].src;MODELS[k].im=i;}
@@ -1616,7 +1616,7 @@ function joint(x,cx,cy,r,c){fillP(x,circP(cx,cy,r),rg(x,cx,cy,r,sh(c,-.15)),c,4)
 function wire(x,pts,c){x.strokeStyle=c;x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(pts[0],pts[1]);for(let i=2;i<pts.length;i+=4)x.quadraticCurveTo(pts[i],pts[i+1],pts[i+2],pts[i+3]);x.stroke();}
 function claw(x,cx,cy,a,c){x.save();x.translate(cx,cy);x.rotate(a);x.scale(1.4,1.4);fillP(x,rrP(-20,-14,40,28,8),lg(x,-14,14,c),c,4);
  for(const s of[-1,0,1]){const p=new Path2D();p.moveTo(s*12-5,12);p.lineTo(s*16,44);p.lineTo(s*12+6,12);p.closePath();fillP(x,p,'#cfd6dd',c,3);}x.restore();}
-function drawMechArms(x,B,c,tt){const sw=Math.sin(tt*2)*.08;for(const s of[-1,1]){const sx=B.cx+s*B.hw*1.15,sy=B.sh+30;
+function drawMechArms(x,B,c,tt){if(DRW.pose)tt*=4;const sw=Math.sin(tt*2)*.08;for(const s of[-1,1]){const sx=B.cx+s*B.hw*1.15,sy=B.sh+30;
   const ex=sx+s*120,ey=sy+80+Math.sin(tt*2+s)*8,hx=ex+s*50,hy=ey+140;
   wire(x,[sx,sy-10,sx+s*60,sy-40,ex,ey-14],'#e23b3b');metal(x,sx,sy,ex,ey,48,c);metal(x,ex,ey,hx,hy,40,c);wire(x,[sx,sy+8,ex-s*20,ey+50,hx-s*6,hy-20],'#2c7fd6');
   joint(x,sx,sy,34,c);joint(x,ex,ey,30,c);claw(x,hx,hy+10,-s*(.25+sw),c);
@@ -1663,22 +1663,22 @@ function drawHair(x,k,c,B){const cx=B.cx,ty=B.top+22,w=B.hw*1.22;x.save();const 
 function beanGeo(lift){return{cx:198,top:150-lift,hw:108,sh:362-lift,bot:800-lift};}
 // --- model renderer: wraps every Pinco drawing (runway, closet, photo, thumbs) ---
 const _drawPinco=drawPinco;
-function withT(x,cat,M,lift,fn){const t=M.T[CATANC[cat]];if(!t){fn();return;}const [ax,ay]=ANC[CATANC[cat]],l=CATANC[cat]==='feet'?0:lift;x.save();x.translate(ax+t[0],ay+t[1]-l);x.scale(t[2],t[2]);x.translate(-ax,-ay);fn();x.restore();}
+const DRW={};const HAIRUP={mohawk:120,beehive:300,afro:110,spiky:80,curly:50,bun:95,pomp:70,pig:20,emo:25,mullet:25,bob:25,bald:15};
+function withT(x,cat,M,lift,fn){const t=M.T[CATANC[cat]];if(!t){fn();return;}const [ax,ay]=ANC[CATANC[cat]],l=CATANC[cat]==='feet'?0:lift;const up=(cat==='hat'&&DRW.hair?HAIRUP[DRW.hair]||0:0),fb=(M===MODELS.pooh&&cat==='shoe')?Math.sin(performance.now()/1000*3)*8:0;x.save();x.translate(ax+t[0],ay+t[1]-l-up+fb);x.scale(t[2],t[2]);x.translate(-ax,-ay);fn();x.restore();}
 function softLegs(x,ph,c,y0){const sw=Math.sin(ph||0);for(const s of[0,1]){const hx=s?240:156;x.save();x.translate(hx,y0);x.rotate((s?-1:1)*sw*.09);x.translate(-hx,-y0);const fx=legX(s,900),p=new Path2D();
  p.moveTo(hx-44,y0);p.quadraticCurveTo(hx-36+(fx-hx)*.5,720,fx-26,890);p.lineTo(fx+26,890);p.quadraticCurveTo(hx+36+(fx-hx)*.5,720,hx+44,y0);p.closePath();const g=x.createLinearGradient(hx-30,0,hx+30,0);g.addColorStop(0,sh(c,-.25));g.addColorStop(.45,sh(c,.15));g.addColorStop(1,sh(c,-.3));
  x.fillStyle=g;x.fill(p);x.strokeStyle='rgba(90,60,20,.4)';x.lineWidth=3;x.stroke(p);const f=new Path2D();f.ellipse(fx+(s?8:-8),900,34,18,0,0,7);x.fillStyle=rg(x,fx,895,34,c);x.fill(f);x.stroke(f);x.restore();}}
-drawPinco=function(x,o,opt){const w=WHO(o);if(w==='pinco')return _drawPinco(x,o,opt);opt=opt||{};const M=MODELS[w];const tt=performance.now()/1000;
+drawPinco=function(x,o,opt){const w=WHO(o);if(w==='pinco')return _drawPinco(x,o,opt);opt=opt||{};const M=MODELS[w];const tt=performance.now()/1000;x.save();if(w==='pooh')x.translate(0,180);if(opt.arm){x.translate(198,900);x.rotate(Math.sin(tt*7)*.07);x.translate(-198,-900-Math.abs(Math.sin(tt*9))*34);}DRW.pose=!!opt.arm;DRW.hair=w==='bean'&&o.hair?IT[o.hair].k:null;
  const mech=w==='bean'&&o.mech?IT[o.mech].k:null,legsOn=mech==='legs'||mech==='full',armsOn=mech==='arms'||mech==='full',lift=legsOn?210:0,B=beanGeo(lift);
  if(o.acc&&!IT[o.acc].ph&&!SHEETS.acc)withT(x,'acc',M,lift,()=>drawAcc(x,IT[o.acc],col(o,o.acc),true));
- if(w==='pooh')softLegs(x,opt.ph,'#d6a23a',440);
- if(legsOn)drawMechLegs(x,B,col(o,o.mech),tt,opt.ph);
+  if(legsOn)drawMechLegs(x,B,col(o,o.mech),tt,opt.ph);
   if(M.im&&M.im.naturalWidth){const [rx,ry,rw,rh]=M.r;const bob=w==='bean'&&!legsOn?Math.sin(tt*3)*6:0;x.drawImage(M.im,rx,ry-lift+bob,rw,rh);}
  if(w==='bean'&&o.body){const it=IT[o.body];drawBuff(x,B,col(o,o.body),it.k==='tank',!armsOn);}
  if(armsOn)drawMechArms(x,B,col(o,o.mech),tt);
  if(w==='bean'&&o.hair)drawHair(x,IT[o.hair].k,col(o,o.hair),B);
  for(const c of['bot','shoe','top']){if(!o[c])continue;if(c==='shoe'&&w==='bean'&&!legsOn){withT(x,c,M,lift,()=>itemDraw(x,o[c],o));continue;}withT(x,c,M,lift,()=>itemDraw(x,o[c],o));}
  if(o.stamps.length){withT(x,'top',M,lift,()=>{x.save();x.clip(stampClip(o));for(const s of o.stamps){x.fillStyle=s.c;x.strokeStyle='rgba(0,0,0,.25)';STAMPS[s.t](x,s);}x.restore();});}
- for(const c of['acc','bow','hat','wand'])if(o[c])withT(x,c,M,lift,()=>itemDraw(x,o[c],o,false));};
+ for(const c of['acc','bow','hat','wand'])if(o[c])withT(x,c,M,lift,()=>itemDraw(x,o[c],o,false));x.restore();};
 // stamping maps through the torso transform for non-Pinco models
 const _stampClip=stampClip;
 // Bean-only item thumbnails = a mini Mr Bean wearing just that part
