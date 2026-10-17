@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.4"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.5"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -1607,7 +1607,7 @@ const BEANIT=[
 BEANIT.forEach(i=>{ITEMS.push(i);IT[i.id]=i;S.owned[i.id]=1;});
 const BEANCATS=['mech','body','hair'];
 const _newOutfit=newOutfit;newOutfit=function(){const o=_newOutfit();o.mech=null;o.body=null;o.hair=null;o.who='pinco';return o;};
-const catsFor=w=>w==='bean'?[...CATS.filter(c=>BEANCATS.includes(c[0])),...CATS.filter(c=>!BEANCATS.includes(c[0]))]:CATS.filter(c=>!BEANCATS.includes(c[0]));
+const catsFor=w=>catsFor0(w).filter(c=>c[0]!=='suit'||!ST.on);const catsFor0=w=>w==='bean'?[...CATS.filter(c=>BEANCATS.includes(c[0])),...CATS.filter(c=>!BEANCATS.includes(c[0]))]:CATS.filter(c=>!BEANCATS.includes(c[0]));
 // --- drawing helpers ---
 function metal(x,x0,y0,x1,y1,w,c){x.lineCap='round';x.strokeStyle=sh(c,-.55);x.lineWidth=w+6;x.beginPath();x.moveTo(x0,y0);x.lineTo(x1,y1);x.stroke();
  const g=x.createLinearGradient(x0-w,y0,x0+w,y0);x.strokeStyle=c;x.lineWidth=w;x.stroke();x.strokeStyle='rgba(255,255,255,.45)';x.lineWidth=w*.22;x.beginPath();x.moveTo(x0-w*.2,y0);x.lineTo(x1-w*.2,y1);x.stroke();
@@ -1647,7 +1647,7 @@ function drawBuff(x,B,c,tank,armsOn){x.save();x.translate(B.cx,B.sh+85);x.scale(
 function drawHair(x,k,c,B){const cx=B.cx,ty=B.top+22,w=B.hw*1.22;x.save();const F=(p)=>{fillP(x,p,lg(x,ty-160,ty+200,c),c,5);gloss(x,p,ty-160,ty+60);};let p=new Path2D();
  switch(k){
  case'mohawk':for(let i=0;i<7;i++){const a=-1.2+i*.4,bx=cx+Math.sin(a)*w*.55,by=ty+20-Math.cos(a)*30;p.moveTo(bx-18,by+30);p.lineTo(cx+Math.sin(a)*w*.9,by-120-Math.cos(a)*30);p.lineTo(bx+18,by+30);}F(p);break;
- case'afro':for(let i=0;i<16;i++){const a=i/16*Math.PI*2;p.addPath(circP(cx+Math.cos(a)*w*1.05,ty-60+Math.sin(a)*w*.8,w*.42));}p.addPath(circP(cx,ty-60,w*1.05));F(p);break;
+ case'afro':for(let i=0;i<16;i++){const a=i/16*Math.PI*2;p.addPath(circP(cx+Math.cos(a)*w*1.05,ty-95+Math.sin(a)*w*.75,w*.42));}p.addPath(circP(cx,ty-95,w*1.0));F(p);break;
  case'pomp':p.moveTo(cx-w,ty+70);p.quadraticCurveTo(cx-w*1.1,ty-60,cx-w*.2,ty-90);p.quadraticCurveTo(cx+w*1.3,ty-150,cx+w*1.25,ty-40);p.quadraticCurveTo(cx+w*.5,ty-60,cx+w*.6,ty+10);p.quadraticCurveTo(cx+w*1.05,ty+10,cx+w,ty+70);p.quadraticCurveTo(cx,ty-10,cx-w,ty+70);p.closePath();F(p);break;
  case'emo':p.moveTo(cx+w*1.05,ty+90);p.quadraticCurveTo(cx+w*1.15,ty-70,cx,ty-60);p.quadraticCurveTo(cx-w*1.2,ty-50,cx-w*1.12,ty+120);p.lineTo(cx-w*1.1,ty+330);p.lineTo(cx-w*.8,ty+260);p.lineTo(cx-w*.7,ty+340);p.quadraticCurveTo(cx-w*.5,ty+160,cx-w*.1,ty+140);p.quadraticCurveTo(cx+w*.6,ty+40,cx+w*1.05,ty+90);p.closePath();F(p);break;
  case'pig':p.moveTo(cx-w,ty+60);p.quadraticCurveTo(cx-w,ty-50,cx,ty-50);p.quadraticCurveTo(cx+w,ty-50,cx+w,ty+60);p.quadraticCurveTo(cx,ty+10,cx-w,ty+60);F(p);
@@ -1723,6 +1723,37 @@ cv.addEventListener('pointerdown',e=>{if(scene!=='dress'||!UI.stamp)return;const
  if(!hitX.isPointInPath(stampClip(O),ux,uy)){toast(O.top?T('stampdress'):T('stampbody'));SFX.bad();return;}
  if(O.stamps.length>=60)O.stamps.shift();O.stamps.push({x:ux,y:uy,t:UI.stampT,c:UI.sw});SFX.stamp();buzz(6);burst(e.clientX,e.clientY,6,[UI.sw,'#fff'],70);},true);
 window.PG=Object.assign(window.PG||{},{MODELS,setModel:k=>{S.model=k;save();}});
+
+// ===== v2.5 COSTUME: Muscle Board (face-in-hole photo board, works on every model) =====
+CATS.push(['suit','Costume','🏋️']);BOX.suit=[-100,120,600,820];
+const SUITIT={id:'muscleboard',c:'suit',n:'Muscle Board',k:'board',col:'#d9952e',tags:['pop','beach','sparkle','royal'],p:0,suit:1,src:'art/s_muscle.png?v25'};
+ITEMS.push(SUITIT);IT.muscleboard=SUITIT;S.owned.muscleboard=1;
+const SUITIMG=new Image();SUITIMG.src=SUITIT.src;const SB={w:700,h:1019,nx:369,ny:35};
+const SUITGEO={pinco:{neck:[184,160],head:[180,80,150,115],floor:905},pooh:{neck:[180,196],head:[180,82,132,122],floor:722},bean:{neck:[198,332],head:[205,190,170,170],floor:905}};
+function drawBoard(x,g){if(!SUITIMG.naturalWidth)return;const [nx,ny]=g.neck,s=(g.floor-ny)/(SB.h-SB.ny);x.drawImage(SUITIMG,nx-SB.nx*s,ny-SB.ny*s,SB.w*s,SB.h*s);}
+function suitDraw(x,o,opt,w){const tt=performance.now()/1000,M=MODELS[w],g=SUITGEO[w];x.save();if(w==='pooh')x.translate(0,180);
+ if(opt.arm){x.translate(198,900);x.rotate(Math.sin(tt*7)*.06);x.translate(-198,-900-Math.abs(Math.sin(tt*9))*30);}
+ DRW.pose=!!opt.arm;DRW.hair=w==='bean'&&o.hair?IT[o.hair].k:null;
+ // head peeks through the board's neck: draw head (clipped above the cut), then the board over the cut line
+ x.save();x.beginPath();const E=g.head;x.ellipse(E[0],E[1],E[2],E[3],0,0,7);x.rect(-400,-800,1300,Math.max(0,E[1]-200+800));x.clip();
+ if(w==='pinco'){if(PIN.naturalWidth)x.drawImage(PIN,0,0,466,560);}else if(M.im&&M.im.naturalWidth){const [rx,ry,rw,rh]=M.r;x.drawImage(M.im,rx,ry,rw,rh);}x.restore();
+ drawBoard(x,g);
+ // keep hair / hats / bows / glasses (acc) working; top, bottom, shoes, wand and Mr Bean body parts are hidden by the board
+ const Mx=w==='pinco'?{T:{}}:M;
+ if(w==='bean'&&o.hair)drawHair(x,IT[o.hair].k,col(o,o.hair),beanGeo(0));
+ for(const c of['acc','bow','hat'])if(o[c]){const it=IT[c==='acc'?o.acc:o[c]];if(c==='acc'&&!it.ph&&!['shades','glasses','starshades'].includes(it.k)&&!/shade|glass|goggle/i.test(it.id))continue;withT(x,c,Mx,0,()=>itemDraw(x,o[c],o,false));}
+ x.restore();}
+const _drawPinco25=drawPinco;drawPinco=function(x,o,opt){if(o&&o.suit&&!ST.on){return suitDraw(x,o,opt||{},WHO(o));}return _drawPinco25(x,o,opt);};
+const _newOutfit25=newOutfit;newOutfit=function(){const o=_newOutfit25();o.suit=null;return o;};
+const _thumb25=thumb;thumb=function(id){const it=IT[id];if(!it.suit)return _thumb25(id);if(THUMBS[id])return THUMBS[id];const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+ if(!SUITIMG.naturalWidth)return c.toDataURL();const s=120/SB.h;x.drawImage(SUITIMG,64-SB.w*s/2,4,SB.w*s,SB.h*s);return THUMBS[id]=c.toDataURL();};
+SUITIMG.addEventListener('load',()=>{delete THUMBS.muscleboard;if(scene==='dress')renderItems();});
+// friendly note when picking a hidden slot while the board is on
+const _equip25=equip;equip=function(id){_equip25(id);if(O.suit&&['top','bot','shoe','wand'].includes(UI.cat)&&id)toast(LANG()==='ja'?'マッスルボードの下にかくれてるよ！':'Hidden under the Muscle Board!');};
+Object.assign(JA_CAT,{suit:'コスチューム'});Object.assign(JA_ITEM,{muscleboard:'マッスルボード'});
+MSAY.suit={en:[["Muscles on the outside… feelings on the inside","Even cardboard is stronger than my heart"],["CARDBOARD?! …Fine. It's iconic.","Is that a person or a gym poster? Bravo."],["Ooh! I'd charge one coin per photo with that board!","Those muscles look EXPENSIVE! Are they for sale?!"]],
+ ja:[["外はムキムキ…中は気持ち","ダンボールのほうがぼくの心より強い"],["ダンボール！？…いいだろう。アイコニックだ。","人間か？ジムのポスターか？ブラボー。"],["わあ！あのボードと写真1枚1コインでとるよ！","その筋肉、高そう！売ってくれる！？"]]};
+const _modelSay25=modelSay;modelSay=function(R,o){_modelSay25(R,o);if(!o||!o.suit||ST.on||!R||!R.say)return;const L=LANG()==='ja'?'ja':'en';const i=Math.floor(Math.random()*3);R.say[i]=pk(MSAY.suit[L][i]);if(Math.random()<.6){const j=2;R.say[j]=pk(MSAY.suit[L][j]);}};
 
 // ---- boot ----
 applyLang();requestAnimationFrame(frame);setMute(S.mute);goTitle();
