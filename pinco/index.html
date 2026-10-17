@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.2"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.3"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -29,6 +29,11 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 .tbtns .big{width:min(78vw,320px)}#t-best{font-weight:800;color:#8e44ec;background:#fffc;border-radius:12px;padding:3px 10px;min-height:1px}#t-best:empty{display:none}
 .ver{position:fixed;right:10px;bottom:calc(var(--sab) + 6px);font-size:11px;font-weight:800;color:#a06aa8;opacity:.8}
 /* theme */
+#th-who{margin:2px 0 10px}#th-who small{display:block;margin-bottom:6px}.whos{display:flex;gap:8px;justify-content:center}
+.who{flex:1;min-height:132px;border:4px solid #f3c6dc;background:#fff;border-radius:18px;padding:4px 2px 6px;display:flex;flex-direction:column;align-items:center;font-weight:900;font-size:15px;color:#8e44ec;cursor:pointer}
+.who img{width:100%;max-width:92px;height:96px;object-fit:contain}.who.on{border-color:#ff3d8b;background:#ffe3f0;box-shadow:0 4px 0 #ff9fca;transform:translateY(-2px)}
+#s-theme .card0 .e{font-size:56px;margin:2px 0}#s-theme .card0 p{margin:4px 0 8px}.tab.bean{background:#e9fbd9}
+
 #s-theme{align-items:center;justify-content:center;background:#2a0b3d99;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 .card0{width:min(86vw,360px);background:linear-gradient(#fff,#ffeaf5);border-radius:28px;padding:26px 20px;text-align:center;box-shadow:0 10px 0 #ff9fca,0 20px 40px #0005;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.4) rotate(-8deg);opacity:0}100%{transform:none;opacity:1}}
@@ -148,7 +153,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <div class="ver">v2.2</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
- <div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
+ <div id="th-who"></div><div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
 <div class="scr" id="s-dress">
  <div id="d-top"><button class="hm" data-a="gohome" aria-label="Main menu">🏠</button><span class="pill" id="d-theme"></span><div class="timer"><div id="d-bar"></div><span id="d-time">90s</span></div><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div id="d-panel">
@@ -1576,6 +1581,149 @@ openCloset=function(){_openCloset();document.querySelectorAll('.ctab').forEach(b
 document.addEventListener('click',e=>{const b=e.target.closest('[data-ct]');if(!b)return;CLT=b.dataset.ct;SFX.tap();openCloset();});
 // title refresh
 const _goTitle=goTitle;goTitle=function(){$('opts').classList.remove('on');_goTitle();applyLang();$('th-rule').textContent=T('rule');};
+// ===== v2.3 MODELS: pick who walks the RUNWAY (Pinco / Pooh / Mr Bean) + Mr Bean-only parts =====
+const MODELS={
+ pinco:{n:'Pinco',nj:'ピンコ',e:'🎀'},
+ pooh:{n:'Pooh',nj:'プーさん',e:'🍯',src:'art/m_pooh.png?v23',r:[-43,-31,450,531],
+  T:{head:[0,6,1.08],torso:[0,-8,1.02],hips:[0,-30,1],feet:[0,0,1],hand:[-62,-218,.9]}},
+ bean:{n:'Mr Bean',nj:'ミスター・ビーン',e:'🫛',src:'art/m_bean.png?v23',r:[-16,20,484,880],
+  T:{head:[0,138,1.0],torso:[0,160,1.0],hips:[0,180,.96],feet:[0,0,1],hand:[-112,200,1]}}};
+for(const k in MODELS)if(MODELS[k].src){const i=new Image();i.src=MODELS[k].src;MODELS[k].im=i;}
+const ANC={head:[180,60],torso:[198,380],hips:[198,560],feet:[198,900],hand:[446,452]};
+const CATANC={top:'torso',acc:'torso',bot:'hips',shoe:'feet',hat:'head',bow:'head',wand:'hand'};
+const MN=k=>LANG()==='ja'?MODELS[k].nj:MODELS[k].n;
+const WHO=o=>(!ST.on&&o&&MODELS[o.who])?o.who:'pinco';
+// --- Mr Bean-only categories ---
+CATS.push(['mech','Rat-Mech','🦾'],['body','Buff Bod','💪'],['hair','Hair','💇']);
+BOX.mech=[-60,100,520,820];BOX.body=[-40,0,480,700];BOX.hair=[20,-120,360,360];
+const HAIRS=[['mohawk','Mohawk','#ff3d8b'],['afro','Afro','#2b2233'],['pomp','Pompadour','#2b2233'],['emo','Long Emo','#2b2233'],['pig','Pigtails','#ff9a2e'],['mullet','Mullet','#8a5a3c'],['spiky','Spiky Anime','#ffcc33'],['bob','Bob','#8e44ec'],['beehive','Beehive','#4fd8ff'],['curly','Curly Mop','#c0392b'],['bun','Top Bun','#8a5a3c'],['bald','Shiny Wig Cap','#d6dbe6']];
+const BEANIT=[
+ {id:'mecharms',c:'mech',n:'Rat-Mech Arms',k:'arms',col:'#9aa3ad',tags:['space','spooky','pop'],p:0,bean:1},
+ {id:'mechlegs',c:'mech',n:'Rat-Mech Legs',k:'legs',col:'#9aa3ad',tags:['space','spooky','pop'],p:0,bean:1},
+ {id:'mechfull',c:'mech',n:'Full Rat-Mech',k:'full',col:'#9aa3ad',tags:['space','spooky','pop','sparkle'],p:0,bean:1},
+ {id:'buff',c:'body',n:'Buff Bod',k:'buff',col:'#e9a066',tags:['beach','pop','royal'],p:0,bean:1},
+ {id:'bufftank',c:'body',n:'Buff Bod + Tank',k:'tank',col:'#e9a066',tags:['beach','pop','sweet'],p:0,bean:1},
+ ...HAIRS.map(([k,n,c])=>({id:'h_'+k,c:'hair',n,k,col:c,tags:{mohawk:['pop','spooky'],afro:['pop','beach'],pomp:['royal','pop'],emo:['spooky'],pig:['sweet'],mullet:['beach'],spiky:['space','pop'],bob:['sweet','royal'],beehive:['royal','sweet'],curly:['beach','sweet'],bun:['royal'],bald:['space']}[k],p:0,bean:1}))];
+BEANIT.forEach(i=>{ITEMS.push(i);IT[i.id]=i;S.owned[i.id]=1;});
+const BEANCATS=['mech','body','hair'];
+const _newOutfit=newOutfit;newOutfit=function(){const o=_newOutfit();o.mech=null;o.body=null;o.hair=null;o.who='pinco';return o;};
+const catsFor=w=>w==='bean'?[...CATS.filter(c=>BEANCATS.includes(c[0])),...CATS.filter(c=>!BEANCATS.includes(c[0]))]:CATS.filter(c=>!BEANCATS.includes(c[0]));
+// --- drawing helpers ---
+function metal(x,x0,y0,x1,y1,w,c){x.lineCap='round';x.strokeStyle=sh(c,-.55);x.lineWidth=w+6;x.beginPath();x.moveTo(x0,y0);x.lineTo(x1,y1);x.stroke();
+ const g=x.createLinearGradient(x0-w,y0,x0+w,y0);x.strokeStyle=c;x.lineWidth=w;x.stroke();x.strokeStyle='rgba(255,255,255,.45)';x.lineWidth=w*.22;x.beginPath();x.moveTo(x0-w*.2,y0);x.lineTo(x1-w*.2,y1);x.stroke();
+ for(const f of[.2,.8]){const bx=x0+(x1-x0)*f,by=y0+(y1-y0)*f;fillP(x,circP(bx,by,w*.16),'#d9b44a','#7a5c12',2);}}
+function joint(x,cx,cy,r,c){fillP(x,circP(cx,cy,r),rg(x,cx,cy,r,sh(c,-.15)),c,4);fillP(x,circP(cx,cy,r*.38),'#d9b44a','#7a5c12',2);}
+function wire(x,pts,c){x.strokeStyle=c;x.lineWidth=5;x.lineCap='round';x.beginPath();x.moveTo(pts[0],pts[1]);for(let i=2;i<pts.length;i+=4)x.quadraticCurveTo(pts[i],pts[i+1],pts[i+2],pts[i+3]);x.stroke();}
+function claw(x,cx,cy,a,c){x.save();x.translate(cx,cy);x.rotate(a);x.scale(1.4,1.4);fillP(x,rrP(-20,-14,40,28,8),lg(x,-14,14,c),c,4);
+ for(const s of[-1,0,1]){const p=new Path2D();p.moveTo(s*12-5,12);p.lineTo(s*16,44);p.lineTo(s*12+6,12);p.closePath();fillP(x,p,'#cfd6dd',c,3);}x.restore();}
+function drawMechArms(x,B,c,tt){const sw=Math.sin(tt*2)*.08;for(const s of[-1,1]){const sx=B.cx+s*B.hw*1.15,sy=B.sh+30;
+  const ex=sx+s*120,ey=sy+80+Math.sin(tt*2+s)*8,hx=ex+s*50,hy=ey+140;
+  wire(x,[sx,sy-10,sx+s*60,sy-40,ex,ey-14],'#e23b3b');metal(x,sx,sy,ex,ey,48,c);metal(x,ex,ey,hx,hy,40,c);wire(x,[sx,sy+8,ex-s*20,ey+50,hx-s*6,hy-20],'#2c7fd6');
+  joint(x,sx,sy,34,c);joint(x,ex,ey,30,c);claw(x,hx,hy+10,-s*(.25+sw),c);
+  // tiny mouse-ear cap on the shoulder: the "rat" in rat-mech
+  fillP(x,circP(sx+s*8,sy-30,13),'#c9a0a8',c,3);}}
+function drawMechLegs(x,B,c,tt,ph){const sw=Math.sin(ph||0);for(const s of[0,1]){const hx=s?B.cx+52:B.cx-52,hy=B.bot-30,fx=legX(s,900),fy=890;
+  const kx=(hx+fx)/2+(s?40:-40)+sw*(s?-12:12),ky=(hy+fy)/2-10;metal(x,hx,hy,kx,ky,50,c);metal(x,kx,ky,fx,fy-20,42,c);
+  // spring on the shin
+  x.strokeStyle='#d9b44a';x.lineWidth=4;x.beginPath();for(let i=0;i<=8;i++){const f=i/8,px=kx+(fx-kx)*f*.7,py=ky+(fy-20-ky)*f*.7;x.lineTo(px+(i%2?12:-12),py);}x.stroke();
+  joint(x,hx,hy,36,c);joint(x,kx,ky,32,c);fillP(x,rrP(fx-38,fy-26,76,34,14),lg(x,fy-26,fy+8,'#5a6470'),'#5a6470',4);fillP(x,rrP(fx-34,fy+2,68,10,4),'#2b2233','#2b2233',1);
+  // mouse tail cable off the back leg
+  if(s===0)wire(x,[hx-10,hy+20,hx-90,hy+60,hx-70,hy+140,hx-50,hy+220,hx-110,hy+250],'#c9a0a8');}}
+function drawBuff(x,B,c,tank,armsOn){x.save();x.translate(B.cx,B.sh+85);x.scale(1.22,1.22);x.translate(-B.cx,-B.sh-60);const sy=B.sh,wy=B.bot-60,L=B.cx-150,R=B.cx+150;
+ if(armsOn)for(const s of[-1,1]){const shx=B.cx+s*140,shy=sy+40,elx=B.cx+s*235,ely=sy-20,fx=B.cx+s*175,fy=sy-150;
+  const up=new Path2D();up.moveTo(shx,shy-30);up.quadraticCurveTo(elx+s*10,shy-40,elx+s*18,ely+10);up.lineTo(elx-s*20,ely+38);up.quadraticCurveTo(shx+s*30,shy+40,shx-s*6,shy+34);up.closePath();fillP(x,up,lg(x,ely,shy+40,c),c,5);
+  fillP(x,new Path2D(`M${elx-s*40} ${ely-10} Q${elx-s*70} ${ely-80} ${elx-s*20} ${ely-70} Q${elx+s*10} ${ely-40} ${elx-s*10} ${ely+6} Z`),rg(x,elx-s*30,ely-40,50,c),c,4);
+  const fa=new Path2D();fa.moveTo(elx-s*14,ely+20);fa.quadraticCurveTo(elx+s*26,ely-60,fx+s*24,fy+20);fa.lineTo(fx-s*20,fy+30);fa.quadraticCurveTo(elx-s*40,ely-30,elx-s*36,ely+10);fa.closePath();fillP(x,fa,lg(x,fy,ely,c),c,5);
+  fillP(x,circP(fx,fy+8,30),rg(x,fx,fy,30,c),c,5);x.strokeStyle=sh(c,-.45);x.lineWidth=3;x.beginPath();for(const k of[-12,0,12]){x.moveTo(fx-s*24,fy+k);x.lineTo(fx+s*6,fy+k);}x.stroke();}
+ const p=new Path2D();p.moveTo(L-20,sy+30);p.quadraticCurveTo(B.cx,sy-10,R+20,sy+30);p.quadraticCurveTo(R+40,sy+120,R-10,sy+200);p.quadraticCurveTo(B.cx+90,wy-60,B.cx+80,wy);p.lineTo(B.cx-80,wy);p.quadraticCurveTo(B.cx-90,wy-60,L+10,sy+200);p.quadraticCurveTo(L-40,sy+120,L-20,sy+30);p.closePath();
+ fillP(x,p,lg(x,sy,wy,c),c,5);
+ for(const s of[-1,1]){fillP(x,circP(B.cx+s*150,sy+50,46),rg(x,B.cx+s*150,sy+40,46,c),c,4);
+  const pec=new Path2D();pec.moveTo(B.cx,sy+40);pec.quadraticCurveTo(B.cx+s*120,sy+20,B.cx+s*128,sy+90);pec.quadraticCurveTo(B.cx+s*100,sy+165,B.cx,sy+150);pec.closePath();fillP(x,pec,rg(x,B.cx+s*60,sy+80,90,c),c,3);
+  fillP(x,circP(B.cx+s*78,sy+110,6),sh(c,-.35),c,1);}
+ for(let r=0;r<3;r++)for(const s of[-1,1])fillP(x,rrP(B.cx+(s<0?-60:6),sy+170+r*62,54,52,18),rg(x,B.cx+s*30,sy+185+r*62,40,c),c,3);
+ x.strokeStyle=sh(c,-.4);x.lineWidth=3;x.beginPath();x.moveTo(B.cx,sy+150);x.lineTo(B.cx,wy);x.stroke();
+ if(tank){x.save();x.globalAlpha=.92;const tk=new Path2D();tk.moveTo(B.cx-95,sy+20);tk.lineTo(B.cx-70,sy+20);tk.quadraticCurveTo(B.cx,sy+110,B.cx+70,sy+20);tk.lineTo(B.cx+95,sy+20);tk.quadraticCurveTo(B.cx+110,sy+140,B.cx+82,wy);tk.lineTo(B.cx-82,wy);tk.quadraticCurveTo(B.cx-110,sy+140,B.cx-95,sy+20);tk.closePath();
+  x.clip(p);fillP(x,tk,lg(x,sy,wy,'#fffafc'),'#9aa0a6',4);x.restore();fillP(x,starP(B.cx,sy+250,30),'#ff3d8b','#ff3d8b',2);}x.restore();}
+function drawHair(x,k,c,B){const cx=B.cx,ty=B.top+22,w=B.hw*1.22;x.save();const F=(p)=>{fillP(x,p,lg(x,ty-160,ty+200,c),c,5);gloss(x,p,ty-160,ty+60);};let p=new Path2D();
+ switch(k){
+ case'mohawk':for(let i=0;i<7;i++){const a=-1.2+i*.4,bx=cx+Math.sin(a)*w*.55,by=ty+20-Math.cos(a)*30;p.moveTo(bx-18,by+30);p.lineTo(cx+Math.sin(a)*w*.9,by-120-Math.cos(a)*30);p.lineTo(bx+18,by+30);}F(p);break;
+ case'afro':for(let i=0;i<16;i++){const a=i/16*Math.PI*2;p.addPath(circP(cx+Math.cos(a)*w*1.05,ty-60+Math.sin(a)*w*.8,w*.42));}p.addPath(circP(cx,ty-60,w*1.05));F(p);break;
+ case'pomp':p.moveTo(cx-w,ty+70);p.quadraticCurveTo(cx-w*1.1,ty-60,cx-w*.2,ty-90);p.quadraticCurveTo(cx+w*1.3,ty-150,cx+w*1.25,ty-40);p.quadraticCurveTo(cx+w*.5,ty-60,cx+w*.6,ty+10);p.quadraticCurveTo(cx+w*1.05,ty+10,cx+w,ty+70);p.quadraticCurveTo(cx,ty-10,cx-w,ty+70);p.closePath();F(p);break;
+ case'emo':p.moveTo(cx+w*1.05,ty+90);p.quadraticCurveTo(cx+w*1.15,ty-70,cx,ty-60);p.quadraticCurveTo(cx-w*1.2,ty-50,cx-w*1.12,ty+120);p.lineTo(cx-w*1.1,ty+330);p.lineTo(cx-w*.8,ty+260);p.lineTo(cx-w*.7,ty+340);p.quadraticCurveTo(cx-w*.5,ty+160,cx-w*.1,ty+140);p.quadraticCurveTo(cx+w*.6,ty+40,cx+w*1.05,ty+90);p.closePath();F(p);break;
+ case'pig':p.moveTo(cx-w,ty+60);p.quadraticCurveTo(cx-w,ty-50,cx,ty-50);p.quadraticCurveTo(cx+w,ty-50,cx+w,ty+60);p.quadraticCurveTo(cx,ty+10,cx-w,ty+60);F(p);
+  for(const s of[-1,1]){const q=new Path2D();q.moveTo(cx+s*w*.95,ty+10);q.quadraticCurveTo(cx+s*w*1.9,ty+20,cx+s*w*1.7,ty+200);q.quadraticCurveTo(cx+s*w*1.5,ty+80,cx+s*w*.95,ty+60);q.closePath();F(q);fillP(x,heartP(cx+s*w*1.05,ty+20,22),'#ff3d8b','#ff3d8b',2);}break;
+ case'mullet':p.moveTo(cx-w*1.02,ty+80);p.quadraticCurveTo(cx-w,ty-50,cx,ty-46);p.quadraticCurveTo(cx+w,ty-50,cx+w*1.02,ty+80);p.lineTo(cx+w*1.25,ty+300);p.lineTo(cx+w*.95,ty+250);p.lineTo(cx+w*.85,ty+120);p.quadraticCurveTo(cx,ty+20,cx-w*.85,ty+120);p.lineTo(cx-w*.95,ty+250);p.lineTo(cx-w*1.25,ty+300);p.closePath();F(p);break;
+ case'spiky':{const n=9;p.moveTo(cx-w*1.05,ty+90);for(let i=0;i<=n;i++){const a=Math.PI+i/n*Math.PI,r1=w*(i%2?1.0:1.0);const ox=cx+Math.cos(a)*w*1.05,oy=ty+40+Math.sin(a)*w*.8;const sx=cx+Math.cos(a)*w*1.9,sy2=ty+40+Math.sin(a)*w*1.6;if(i)p.lineTo(sx,sy2);p.lineTo(ox,oy);}p.lineTo(cx+w*.6,ty+60);p.lineTo(cx+w*.2,ty+120);p.lineTo(cx,ty+50);p.lineTo(cx-w*.4,ty+130);p.lineTo(cx-w*.6,ty+50);p.closePath();F(p);break;}
+ case'bob':p.moveTo(cx-w*1.15,ty+210);p.quadraticCurveTo(cx-w*1.2,ty-60,cx,ty-56);p.quadraticCurveTo(cx+w*1.2,ty-60,cx+w*1.15,ty+210);p.lineTo(cx+w*.85,ty+210);p.lineTo(cx+w*.8,ty+50);p.lineTo(cx-w*.8,ty+50);p.lineTo(cx-w*.85,ty+210);p.closePath();F(p);break;
+ case'beehive':p.moveTo(cx-w*.95,ty+70);p.bezierCurveTo(cx-w*1.3,ty-120,cx-w*.6,ty-330,cx,ty-330);p.bezierCurveTo(cx+w*.6,ty-330,cx+w*1.3,ty-120,cx+w*.95,ty+70);p.quadraticCurveTo(cx,ty+10,cx-w*.95,ty+70);F(p);x.strokeStyle=sh(c,-.4);x.lineWidth=3;for(let i=0;i<4;i++){x.beginPath();x.arc(cx,ty-120-i*50,w*(.7-i*.12),3.6,5.8);x.stroke();}break;
+ case'curly':for(let i=0;i<22;i++){const a=Math.PI*.9+i/21*Math.PI*1.2,r=w*(1+.1*(i%2));p.addPath(circP(cx+Math.cos(a)*r,ty+10+Math.sin(a)*r*.75,w*.3));}p.addPath(circP(cx,ty-30,w*.85));F(p);break;
+ case'bun':p.moveTo(cx-w,ty+70);p.quadraticCurveTo(cx-w,ty-50,cx,ty-50);p.quadraticCurveTo(cx+w,ty-50,cx+w,ty+70);p.quadraticCurveTo(cx,ty+10,cx-w,ty+70);F(p);const b2=circP(cx,ty-90,w*.5);F(b2);break;
+ case'bald':p.moveTo(cx-w*1.02,ty+70);p.quadraticCurveTo(cx-w,ty-60,cx,ty-60);p.quadraticCurveTo(cx+w,ty-60,cx+w*1.02,ty+70);p.quadraticCurveTo(cx,ty+30,cx-w*1.02,ty+70);F(p);spark(x,cx-w*.4,ty-20,22);break;}
+ x.restore();}
+function beanGeo(lift){return{cx:198,top:150-lift,hw:108,sh:362-lift,bot:800-lift};}
+// --- model renderer: wraps every Pinco drawing (runway, closet, photo, thumbs) ---
+const _drawPinco=drawPinco;
+function withT(x,cat,M,lift,fn){const t=M.T[CATANC[cat]];if(!t){fn();return;}const [ax,ay]=ANC[CATANC[cat]],l=CATANC[cat]==='feet'?0:lift;x.save();x.translate(ax+t[0],ay+t[1]-l);x.scale(t[2],t[2]);x.translate(-ax,-ay);fn();x.restore();}
+function softLegs(x,ph,c,y0){const sw=Math.sin(ph||0);for(const s of[0,1]){const hx=s?240:156;x.save();x.translate(hx,y0);x.rotate((s?-1:1)*sw*.09);x.translate(-hx,-y0);const fx=legX(s,900),p=new Path2D();
+ p.moveTo(hx-44,y0);p.quadraticCurveTo(hx-36+(fx-hx)*.5,720,fx-26,890);p.lineTo(fx+26,890);p.quadraticCurveTo(hx+36+(fx-hx)*.5,720,hx+44,y0);p.closePath();const g=x.createLinearGradient(hx-30,0,hx+30,0);g.addColorStop(0,sh(c,-.25));g.addColorStop(.45,sh(c,.15));g.addColorStop(1,sh(c,-.3));
+ x.fillStyle=g;x.fill(p);x.strokeStyle='rgba(90,60,20,.4)';x.lineWidth=3;x.stroke(p);const f=new Path2D();f.ellipse(fx+(s?8:-8),900,34,18,0,0,7);x.fillStyle=rg(x,fx,895,34,c);x.fill(f);x.stroke(f);x.restore();}}
+drawPinco=function(x,o,opt){const w=WHO(o);if(w==='pinco')return _drawPinco(x,o,opt);opt=opt||{};const M=MODELS[w];const tt=performance.now()/1000;
+ const mech=w==='bean'&&o.mech?IT[o.mech].k:null,legsOn=mech==='legs'||mech==='full',armsOn=mech==='arms'||mech==='full',lift=legsOn?210:0,B=beanGeo(lift);
+ if(o.acc&&!IT[o.acc].ph&&!SHEETS.acc)withT(x,'acc',M,lift,()=>drawAcc(x,IT[o.acc],col(o,o.acc),true));
+ if(w==='pooh')softLegs(x,opt.ph,'#d6a23a',440);
+ if(legsOn)drawMechLegs(x,B,col(o,o.mech),tt,opt.ph);
+  if(M.im&&M.im.naturalWidth){const [rx,ry,rw,rh]=M.r;const bob=w==='bean'&&!legsOn?Math.sin(tt*3)*6:0;x.drawImage(M.im,rx,ry-lift+bob,rw,rh);}
+ if(w==='bean'&&o.body){const it=IT[o.body];drawBuff(x,B,col(o,o.body),it.k==='tank',!armsOn);}
+ if(armsOn)drawMechArms(x,B,col(o,o.mech),tt);
+ if(w==='bean'&&o.hair)drawHair(x,IT[o.hair].k,col(o,o.hair),B);
+ for(const c of['bot','shoe','top']){if(!o[c])continue;if(c==='shoe'&&w==='bean'&&!legsOn){withT(x,c,M,lift,()=>itemDraw(x,o[c],o));continue;}withT(x,c,M,lift,()=>itemDraw(x,o[c],o));}
+ if(o.stamps.length){withT(x,'top',M,lift,()=>{x.save();x.clip(stampClip(o));for(const s of o.stamps){x.fillStyle=s.c;x.strokeStyle='rgba(0,0,0,.25)';STAMPS[s.t](x,s);}x.restore();});}
+ for(const c of['acc','bow','hat','wand'])if(o[c])withT(x,c,M,lift,()=>itemDraw(x,o[c],o,false));};
+// stamping maps through the torso transform for non-Pinco models
+const _stampClip=stampClip;
+// Bean-only item thumbnails = a mini Mr Bean wearing just that part
+const _thumb=thumb;thumb=function(id){const it=IT[id];if(!it.bean)return _thumb(id);if(THUMBS[id])return THUMBS[id];const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+ const o=newOutfit();o.who='bean';o[it.c]=id;const s=it.c==='hair'?.26:.115,oy=it.c==='hair'?(it.k==='beehive'?118:90):18;x.translate(64-198*s,oy-(it.c==='hair'?140:-120)*s);x.scale(s,s);const sv=ST.on;ST.on=false;drawPinco(x,o);ST.on=sv;
+ if(!(MODELS.bean.im&&MODELS.bean.im.naturalWidth))return c.toDataURL();return THUMBS[id]=c.toDataURL();};
+MODELS.bean.im.addEventListener('load',()=>{for(const k in THUMBS)if(IT[k]&&IT[k].bean)delete THUMBS[k];if(scene==='dress')renderItems();});
+renderTabs=function(){const w=O.who||'pinco';$('tabs').innerHTML=catsFor(w).map(([k,n,e])=>'<button class="tab'+(UI.cat===k?' on':'')+(O[k]?' has':'')+(BEANCATS.includes(k)?' bean':'')+'" data-c="'+k+'"><b>'+e+'</b><span>'+CATN(k)+'</span></button>').join('');};
+// equip burst for new cats + model-aware sparkle position
+const _equip=equip;equip=function(id){_equip(id);};
+// --- choose model on the theme card (RUNWAY only) ---
+S.model=MODELS[S.model]?S.model:'pinco';
+function renderPick(){const el=$('th-who');if(!el)return;el.style.display=ST.on?'none':'';el.innerHTML='<small>'+(LANG()==='ja'?'モデルをえらぶ':'CHOOSE YOUR MODEL')+'</small><div class="whos">'+Object.keys(MODELS).map(k=>'<button class="who'+(S.model===k?' on':'')+'" data-who="'+k+'"><img src="'+modelThumb(k)+'" alt=""><span>'+MN(k)+'</span></button>').join('')+'</div>';}
+const MTH={};function modelThumb(k){if(MTH[k])return MTH[k];const c=document.createElement('canvas');c.width=120;c.height=150;const x=c.getContext('2d');const o=newOutfit();o.who=k;const pl=place(0,4,120,146);x.translate(pl.ox,pl.oy);x.scale(pl.s,pl.s);const sv=ST.on;ST.on=false;drawPinco(x,o);ST.on=sv;
+ const im=k==='pinco'?PIN:MODELS[k].im;if(im&&im.naturalWidth)MTH[k]=c.toDataURL();return c.toDataURL();}
+[PIN,MODELS.pooh.im,MODELS.bean.im].forEach(i=>i.addEventListener('load',()=>{if(scene==='theme')renderPick();}));
+document.addEventListener('click',e=>{const b=e.target.closest('[data-who]');if(!b)return;S.model=b.dataset.who;save();SFX.equip();buzz(10);renderPick();toast(MN(S.model)+(LANG()==='ja'?' がランウェイへ！':' is on the runway!'));},true);
+const _goTheme2=goTheme;goTheme=function(){_goTheme2();renderPick();};
+const _storyTheme=storyTheme;storyTheme=function(){_storyTheme();renderPick();};
+const _goDress2=goDress;goDress=function(){_goDress2();if(!O.who||ST.on)O.who=ST.on?'pinco':S.model;if(!ST.on)O.who=S.model;if(O.who!=='bean')BEANCATS.forEach(c=>O[c]=null);if(O.who==='bean'&&!ST.on)UI.cat='mech';renderTabs();renderItems();renderTools();};
+// --- judges talk about the model ---
+const MSAY={
+ pooh:{en:[["Hey, that's ME up there! I want royalties!","Pooh on the runway? I'm charging for tickets!"],["A Pooh in a dress? That's worth DOUBLE coins!","Honey-bear chic! Can I sell your autograph?"],["The bear looks rich! I like rich!","Ooh, is that bear made of gold? Can I check?"]],
+  ja:[["あれ、ぼくじゃん！ギャラちょうだい！","プーがランウェイ？チケット代とるよ！"],["ドレスのプー？コイン2倍の価値！","はちみつクマ・シック！サイン売っていい？"],["あのクマお金持ちっぽい！お金持ち好き！","あのクマ金でできてる？しらべていい？"]]},
+ bean:{en:[["Mr Bean… you look how I feel. Beautiful.","A pod in fashion… my tears are green"],["Mr Bean wearing hair? Bold. Very bold.","Mr Bean walked? With what legs?! ...oh."],["Mr Bean! I'll pay you five coins to wear it to MY party!","Mr Bean is a bean. Beans are worth money, right?!"]],
+  ja:[["ミスター・ビーン…ぼくの気持ちそのもの。きれい","おしゃれなさや…なみだが緑色"],["ミスター・ビーンが髪の毛？大胆だ。","ミスター・ビーンが歩いた？足は！？…ああ。"],["ミスター・ビーン！ぼくのパーティーで着てくれたら5コインあげる！","ミスター・ビーンって豆でしょ？豆ってお金になる？"]]},
+ mech:{en:["Rat-mech limbs! Mr Bean built those from junk? Respect.","Arms made of scrap… that's the most Mr Bean thing ever","If I sold those robot legs I'd be a MILLIONAIRE!"],ja:["ネズミメカの手足！ミスター・ビーンがガラクタで作ったの？尊敬。","スクラップの腕…いちばんミスター・ビーンらしい","あのロボ足売ったら大金持ち！"]},
+ buff:{en:["Those muscles… even my sadness is lifting weights","SUCH ABS. The swamp is speechless.","Muscles are like money for your body! He's RICH!"],ja:["その筋肉…ぼくの悲しみも筋トレしてる","すごい腹筋。沼が言葉を失った。","筋肉はからだのお金！お金持ちだ！"]},
+ hair:{en:["That hair hides my feelings perfectly","Hair. On a bean. I have… questions.","Can I buy that hair? I'll rent it out!"],ja:["その髪、ぼくの気持ちをかくしてくれる","髪。豆に。…質問がある。","その髪買える？レンタルするから！"]}};
+function modelSay(R,o){const w=WHO(o);if(w==='pinco'||!R||!R.say)return;const L=LANG()==='ja'?'ja':'en';const tot=R.stars.reduce((a,b)=>a+b,0);
+ const extra=[];if(w==='bean'){if(o.mech)extra.push('mech');if(o.body)extra.push('buff');if(o.hair)extra.push('hair');}
+ const i=Math.floor(Math.random()*3);R.say[i]=pk(MSAY[w][L][i]);
+ if(extra.length){const e=pk(extra),j=(i+1+Math.floor(Math.random()*2))%3;R.say[j]=MSAY[e][L][j];}}
+const _rt=rhythmTick;rhythmTick=function(){const was=RUN&&RUN.rh&&RUN.rh.over;_rt();if(RUN&&RUN.rh&&RUN.rh.over&&!was)modelSay(RESULT,O);};
+const _score=score;score=function(o,t){const R=_score(o,t);modelSay(R,o);return R;};
+Object.assign(JA_CAT,{mech:'ネズミメカ',body:'ムキムキ',hair:'ヘア'});
+Object.assign(JA_ITEM,{mecharms:'ネズミメカうで',mechlegs:'ネズミメカあし',mechfull:'フルネズミメカ',buff:'ムキムキボディ',bufftank:'ムキムキ＋タンク',h_mohawk:'モヒカン',h_afro:'アフロ',h_pomp:'リーゼント',h_emo:'ロングエモ',h_pig:'ツインテール',h_mullet:'マレット',h_spiky:'アニメツンツン',h_bob:'ボブ',h_beehive:'ビーハイブ',h_curly:'くるくるモップ',h_bun:'おだんご',h_bald:'ピカピカ帽'});
+// stamping on Pooh / Mr Bean: map the tap back through the torso transform
+cv.addEventListener('pointerdown',e=>{if(scene!=='dress'||!UI.stamp)return;const w=WHO(O);if(w==='pinco')return;e.stopImmediatePropagation();audio();
+ const pr=stageRect(),pl=place(pr.x,pr.y,pr.w,pr.h);let ux=(e.clientX-pl.ox)/pl.s,uy=(e.clientY-pl.oy)/pl.s;const M=MODELS[w],t=M.T.torso,[ax,ay]=ANC.torso,lift=w==='bean'&&O.mech&&IT[O.mech].k!=='arms'?210:0;
+ ux=(ux-ax-t[0])/t[2]+ax;uy=(uy-ay-t[1]+lift)/t[2]+ay;
+ if(!hitX.isPointInPath(stampClip(O),ux,uy)){toast(O.top?T('stampdress'):T('stampbody'));SFX.bad();return;}
+ if(O.stamps.length>=60)O.stamps.shift();O.stamps.push({x:ux,y:uy,t:UI.stampT,c:UI.sw});SFX.stamp();buzz(6);burst(e.clientX,e.clientY,6,[UI.sw,'#fff'],70);},true);
+window.PG=Object.assign(window.PG||{},{MODELS,setModel:k=>{S.model=k;save();}});
+
 // ---- boot ----
 applyLang();requestAnimationFrame(frame);setMute(S.mute);goTitle();
 window.PG=Object.defineProperties(window.PG||{},Object.getOwnPropertyDescriptors({get SV(){return SV},get RUN(){return RUN},get RESULT(){return RESULT},get DLG(){return DLG},get INT(){return INT},nowA,storyGo,openShop,setLang,CH,get st(){return st},set st(v){st=v},get theme(){return theme}}));
