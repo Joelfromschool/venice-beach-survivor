@@ -957,6 +957,7 @@ function placeCam(){const d=camDist();R.cam.position.copy(F.camT).addScaledVecto
  if(F.sun){F.sun.position.set(F.camT.x-8,F.camT.y+22,F.camT.z+10);F.sun.target.position.copy(F.camT);}}
 function updCam(dt){const P=F.P;if(P&&!F.camFree){F.camT.x=lerp(F.camT.x,P.x,Math.min(1,dt*5));F.camT.z=lerp(F.camT.z,P.z,Math.min(1,dt*5));F.camT.y=lerp(F.camT.y,P.y*.7,Math.min(1,dt*3));clampCam();}placeCam();}
 
+const gnow=()=>(R.gt||0)+Math.min(.05,Math.max(0,now()-(R.lr||now())));
 // ================= BATTLE =================
 let BT={on:false};
 const BPOS={p:[[2.3,0,.2],[3.3,0,-1.9],[3.3,0,2.2]],e:[[-2.4,0,0],[-2.7,0,-2.2],[-2.7,0,2.2],[-3.9,0,0],[-3.8,0,-1.8],[-3.8,0,1.8]]};
@@ -1076,12 +1077,12 @@ function frontOf(t,a,dist){const dir=new THREE.Vector3().subVectors(a.home,t.hom
 // timing window: returns 0 miss, 1 good, 2 perfect
 function timingWindow(t0,kind){const w=hasAnyShades()?1.5:1;return new Promise(res=>{BT.tim={t0,start:t0-.45,good:[.17*w,.06*w],perf:[.065*w,.035*w],res,pressed:null,kind};});}
 function hasAnyShades(){return BT.cur&&BT.cur.side==='p'?!!hasEq(BT.cur.id,'timing'):false;}
-function timCheck(){const T=BT.tim;if(!T)return;const n=now();if(DEBUG&&window.AUTOT&&T.pressed==null&&n>=T.t0-.012){T.pressed=n;BT.autoN=(BT.autoN||0)+1;}
- if(T.pressed==null){for(const b of['A','B','X','Y']){if(In.hit[b]&&In.t[b]>=T.start){T.pressed=In.t[b];In.hit[b]=false;break;}}}
+function timCheck(){const T=BT.tim;if(!T)return;const n=gnow();if(DEBUG&&window.AUTOT&&T.pressed==null&&n>=T.t0-.012){T.pressed=n;BT.autoN=(BT.autoN||0)+1;}
+ if(T.pressed==null){for(const b of['A','B','X','Y']){const gp=R.gt-Math.max(0,R.lr-In.t[b]);if(In.hit[b]&&gp>=T.start){T.pressed=gp;In.hit[b]=false;break;}}}
  if(n>=T.t0+T.good[1]||(T.pressed!=null&&n>=T.t0-.02&&T.pressed<T.t0-T.good[0])){let r=0;if(T.pressed!=null){const d=T.pressed-T.t0;if(d>=-T.perf[0]&&d<=T.perf[1])r=2;else if(d>=-T.good[0]&&d<=T.good[1])r=1;}BT.tim=null;hideRing();T.res(r);}}
 function ringAt(p,t0,col){if(!SET.hints)return;const el=$('tring');BT.ring={p,t0,col};el.style.display='block';}
 function hideRing(){$('tring').style.display='none';BT.ring=null;}
-function updRing(){const r=BT.ring;if(!r)return;const el=$('tring');const s=toScreen(r.p);const k=clamp((r.t0-now())/.5,0,1);const sz=40+k*120;el.style.left=s.x+'px';el.style.top=s.y+'px';el.style.width=el.style.height=sz+'px';el.style.opacity=k>0?.95:0;el.style.borderColor=k<.25?'#ffe14a':(r.col||'#fff');}
+function updRing(){const r=BT.ring;if(!r)return;const el=$('tring');const s=toScreen(r.p);const k=clamp((r.t0-gnow())/.5,0,1);const sz=40+k*120;el.style.left=s.x+'px';el.style.top=s.y+'px';el.style.width=el.style.height=sz+'px';el.style.opacity=k>0?.95:0;el.style.borderColor=k<.25?'#ffe14a':(r.col||'#fff');}
 function timePopup(r,a,guard){const p=headPos(a);if(guard){if(r===2){popText(p,'PERFECT GUARD!','tm perf',-30);SFX.guard(1);}else if(r===1){popText(p,'GUARD!','tm good',-30);SFX.guard(0);}return;}
  if(r===2){popText(p,'EXCELLENT!','tm perf',-30);SFX.nice(2);BT.perfects++;}else if(r===1){popText(p,'NICE!','tm good',-30);SFX.nice(1);}}
 function physDmg(att,tgt,mult){const ab=att.buf.atk?1.5:1,fb=att.st.fear?.7:1,db=(tgt.buf.def?1.5:1)*(tgt.st.fear?.7:1)*(tgt.defending?1.6:1);const raw=att.atk*ab*fb*rnd(.92,1.08)-tgt.def*db*.6;return Math.max(1,Math.round(raw*mult));}
@@ -1105,7 +1106,7 @@ async function attack(a,t){t=retarget(t);if(!t)return;banner(CH[a.id].atkName);c
  await moveTo(a,front,.34,a.id==='bean'?1.2:a.id==='pooh'?.5:0);
  // windup
  const base=a.mesh.position.clone();await tween(.14,k=>{a.mesh.position.y=base.y+Math.sin(k*Math.PI*.5)*.35;a.spr.rotation.z=-k*.25*(a.side==='p'?-1:1);});
- const t0=now()+.13;ringAt(midPos(t),t0);const tw=tween(.13,k=>{a.mesh.position.lerpVectors(base,t.mesh.position.clone().setY(base.y+.2),k*.55);a.spr.rotation.z=.25-k*.5;});
+ const t0=gnow()+.13;ringAt(midPos(t),t0);const tw=tween(.13,k=>{a.mesh.position.lerpVectors(base,t.mesh.position.clone().setY(base.y+.2),k*.55);a.spr.rotation.z=.25-k*.5;});
  const r=await timingWindow(t0);await tw;a.spr.rotation.z=0;
  let mult=1;if(r===2){mult=1.6+Math.min(.5,BT.chain*.05);BT.chain++;}else if(r===1){mult=1.4;BT.chain=Math.max(0,BT.chain);}else BT.chain=0;
  timePopup(r,a);SFX.hit(r>0);FX.burst(midPos(t),r?14:6,{star:r>0,col:r===2?[0xffe060,0xff8ad8,0x8ae8ff]:0xffffff,sp:3,up:3,size:r?.3:.2});
@@ -1127,13 +1128,13 @@ async function enemyTurn(a){const E=a.E;let opts=E.atks.filter(k=>!EA[k].p2||a.p
    if(A.dig){await tween(.4,k=>{a.mesh.position.y=-k*a.h;});a.mesh.position.set(front.x,-a.h,front.z);await wait(.3);}
    else if(h===0)await moveTo(a,front,.36,E.fly?.3:.6);
    const base=a.mesh.position.clone();await tween(.16,k=>{a.mesh.position.x=base.x-k*.3;a.mesh.scale.set(1,1+k*.1,1);});
-   t0=now()+(A.dig?.2:.14);ringAt(midPos(t),t0,'#ff8a8a');
+   t0=gnow()+(A.dig?.2:.14);ringAt(midPos(t),t0,'#ff8a8a');
    const tw=A.dig?tween(.2,k=>{a.mesh.position.y=-a.h*(1-ease.out(k));}):tween(.14,k=>{a.mesh.position.x=base.x-.3+k*.7;a.mesh.scale.set(1,1.1-k*.1,1);});
    const r=await timingWindow(t0,'guard');await tw;a.mesh.scale.set(1,1,1);
    await hitParty(a,t,A,r);if(A.dig||h===hits-1){await wait(.1);await moveTo(a,a.home,.34,.4);a.mesh.position.copy(a.home);}}
   else{// projectile/aoe
    await tween(.2,k=>{a.mesh.position.y=Math.sin(k*Math.PI)*.4;});SFX.magic();
-   const fly=.5;t0=now()+fly;for(const t of tg)projectile(a,t,A.fx||'bolt',fly);ringAt(midPos(tg[0]),t0,'#ff8a8a');const r=await timingWindow(t0,'guard');
+   const fly=.5;t0=gnow()+fly;for(const t of tg)projectile(a,t,A.fx||'bolt',fly);ringAt(midPos(tg[0]),t0,'#ff8a8a');const r=await timingWindow(t0,'guard');
    if(A.all)shake(.15);for(const t of tg){await hitParty(a,t,A,r);}}
   await wait(.15);}
  if(A.self&&a.alive){await dmgFx(a,a.hp,'crit');}}
@@ -1192,25 +1193,25 @@ async function podHop(a,t){if(!t)return;const front=t.home.clone();let dmg=physD
  await moveTo(a,top(),.5,2.2);
  while(true){const p=top();a.mesh.position.copy(p);SFX.hit(true);FX.burst(p,8,{star:1,col:0x9aff6a,sp:2,up:2});a.sq=.2;
   const d=Math.max(1,Math.round(dmg*Math.max(.4,1-n*.12)));await dmgFx(t,d,n>0?'crit':null);n++;if(!t.alive||n>=max)break;
-  const dur=Math.max(.42,.62-n*.03);const t0=now()+dur;ringAt(p,t0,'#9aff6a');const tw=tween(dur,k=>{a.mesh.position.set(p.x,p.y+Math.sin(k*Math.PI)*1.6,p.z);});const r=await timingWindow(t0);await tw;
+  const dur=Math.max(.42,.62-n*.03);const t0=gnow()+dur;ringAt(p,t0,'#9aff6a');const tw=tween(dur,k=>{a.mesh.position.set(p.x,p.y+Math.sin(k*Math.PI)*1.6,p.z);});const r=await timingWindow(t0);await tw;
   if(!r){popText(headPos(a),'Missed the bounce!','st');break;}timePopup(r,a);if(r===2)BT.perfects++;}
  if(n>1)popText(headPos(t),n+' HOPS!','tm good',-60);await moveTo(a,a.home,.45,1.2);}
 // minigame overlay: returns quality 0.5..1.6
 function minigame(kind,S,a){return new Promise(res=>{const el=$('mg');el.className='on '+kind;const lab={hold:'HOLD A, release in the GOLD zone!',mash:'MASH A!',spin:'SPIN the stick in circles! (or roll the arrow keys)',rhythm:'Press A when each star hits the ring!'}[kind];
  el.innerHTML='<div class="mgt">'+esc(S.n)+'</div><div class="mgl">'+lab+'</div><div class="mgb"><div class="mgf"></div><div class="mgz"></div></div><div class="mgc"></div><div class="mgr"></div><div class="mgtimer"></div>';
  const fill=el.querySelector('.mgf'),cnt=el.querySelector('.mgc'),rr=el.querySelector('.mgr'),tm=el.querySelector('.mgtimer');In.clear();In.spin=0;In.lastAng=null;
- const st=now();let M={k:kind,st,v:0,done:false,cnt:0,held:false,peak:0,over:0};BT.mg=M;
+ const st=gnow();let M={k:kind,st,v:0,done:false,cnt:0,held:false,peak:0,over:0};BT.mg=M;
  const finish=q=>{if(M.done)return;M.done=true;BT.mg=null;el.querySelector('.mgl').textContent=q>=1.4?'PERFECT!':q>=1.1?'GREAT!':q>=.8?'OK!':'Weak...';SFX.nice(q>=1.4?2:1);setTimeout(()=>{el.className='';res(q);},450);};
  if(kind==='rhythm'){const N=5,iv=.55,t1=st+1.1;M.beats=[];for(let i=0;i<N;i++)M.beats.push({t:t1+i*iv,hit:0});rr.innerHTML='<div class="rtrack"><div class="rring"></div>'+M.beats.map((b,i)=>'<div class="rstar" id="rs'+i+'">★</div>').join('')+'</div>';}
- M.tick=()=>{const T=now()-st;
-  if(kind==='hold'){const down=isDown('A')||In.mgHold;if(!M.started){tm.textContent='Hold A to start charging';if(down){M.started=true;M.t0=now();}if(T>4){finish(.6);}return;}
-   const k=(now()-M.t0)/1.3;M.v=Math.min(1.25,k);fill.style.width=Math.min(100,M.v*100)+'%';fill.classList.toggle('gold',M.v>=.82&&M.v<=1.05);fill.classList.toggle('over',M.v>1.05);if(Math.random()<.3)SFX.charge(M.v);
+ M.tick=()=>{const T=gnow()-st;
+  if(kind==='hold'){const down=isDown('A')||In.mgHold;if(!M.started){tm.textContent='Hold A to start charging';if(down){M.started=true;M.t0=gnow();}if(T>4){finish(.6);}return;}
+   const k=(gnow()-M.t0)/1.3;M.v=Math.min(1.25,k);fill.style.width=Math.min(100,M.v*100)+'%';fill.classList.toggle('gold',M.v>=.82&&M.v<=1.05);fill.classList.toggle('over',M.v>1.05);if(Math.random()<.3)SFX.charge(M.v);
    if(!down){const v=M.v;finish(v>=.82&&v<=1.05?1.6:v>1.05?.7:.5+v*.6);}else if(M.v>=1.25)finish(.6);}
   else if(kind==='mash'){const left=2.6-T;tm.textContent=left>0?left.toFixed(1)+'s':'';if(In.consume('A')||In.consume('B')){M.cnt++;SFX.mash();cnt.textContent=M.cnt+'!';cnt.style.transform='scale('+(1.3+Math.random()*.2)+')';setTimeout(()=>cnt.style.transform='',60);if(a)a.sq=.15;}
    fill.style.width=Math.min(100,M.cnt/20*100)+'%';fill.classList.toggle('gold',M.cnt>=20);if(left<=0)finish(.5+Math.min(1.1,M.cnt/20*1.1));}
   else if(kind==='spin'){In.tickSpin();const left=3-T;tm.textContent=left>0?left.toFixed(1)+'s':'';const rot=In.spin/(Math.PI*2);cnt.textContent=rot.toFixed(1)+' spins';fill.style.width=Math.min(100,rot/6*100)+'%';fill.classList.toggle('gold',rot>=6);if(a)a.spr.rotation.y=In.spin;
    if(left<=0){if(a)a.spr.rotation.y=0;finish(.5+Math.min(1.1,rot/6*1.1));}}
-  else if(kind==='rhythm'){const n=now();let all=true;M.beats.forEach((b,i)=>{const e=$('rs'+i);if(!e)return;const k=(b.t-n)/1.1;e.style.left=(12+k*80)+'%';e.style.opacity=b.hit?0:k<-.15?.3:1;if(!b.hit&&n<b.t+.2)all=false;});
+  else if(kind==='rhythm'){const n=gnow();let all=true;M.beats.forEach((b,i)=>{const e=$('rs'+i);if(!e)return;const k=(b.t-n)/1.1;e.style.left=(12+k*80)+'%';e.style.opacity=b.hit?0:k<-.15?.3:1;if(!b.hit&&n<b.t+.2)all=false;});
    if(In.consume('A')||In.consume('B')){const tn=In.t.A||n;let best=null,bd=1;for(const b of M.beats){if(b.hit)continue;const d=Math.abs(n-b.t);if(d<bd){bd=d;best=b;}}
     if(best&&bd<.13){best.hit=bd<.06?2:1;SFX.beat(true);cnt.textContent=best.hit===2?'PERFECT!':'GOOD!';if(a)a.sq=.2;FX.burst(a?headPos(a):new THREE.Vector3(),5,{star:1,col:0xffe060});}else{SFX.beat(false);cnt.textContent='Miss';}}
    const h=M.beats.filter(b=>b.hit).length;fill.style.width=(h/M.beats.length*100)+'%';if(all){const p=M.beats.filter(b=>b.hit===2).length;finish(.5+h/M.beats.length*.95+p*.03);}}};});}
@@ -1644,22 +1645,22 @@ async function newGame(){G=newState();for(const id of PARTY_ORDER)G.ch[id].hp=ma
 async function loadGame(){const s=readSave();if(!s){newGame();return;}G=fixState(s);GM.mode='field';const sp=G.savePos;if(sp&&ROOMS[sp.room])await goRoom(sp.room,'__save');else await goRoom('town','def');toastQ('Welcome back! ⭐ '+G.stars.filter(Boolean).length+'/7');}
 const _write=writeSave;writeSave=function(){if(G&&F.P&&GM.mode==='field')G.savePos={room:F.room,x:F.P.x,z:F.P.z};_write();};
 // ---------- intro ----------
-async function intro(){GM.mode='field';F.lock++;await fade(1,.01);$('sTitle').classList.remove('on');buildRoom('town');spawnPlayer(13.5,13,1);G.room='town';F.camFree=true;F.camT.set(13.5,2.2,8);placeCam();showHUD(false);$('tc').classList.remove('on');
+async function intro(){GM.mode='field';F.lock++;await fade(1,.01);$('sTitle').classList.remove('on');buildRoom('town');spawnPlayer(13.5,13,1);G.room='town';F.camFree=true;F.camT.set(12.5,3.2,7);placeCam();showHUD(false);$('tc').classList.remove('on');
  Music.play('town');const sc=F.scene;
  // runway in the sky
- const run=new THREE.Group();sc.add(run);const pts=[];for(let i=0;i<60;i++){const k=i/59;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:R.starTex,color:pick([0xffe060,0xffffff,0xff9ad8]),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));sp.position.set(2+k*24,7.5+Math.sin(k*Math.PI)*3.2,1.5+k*2);sp.scale.setScalar(.35);run.add(sp);pts.push(sp);}
- const stars=[];for(let i=0;i<7;i++){const s=PROP.star3(.45,STARCOL[i]);const k=(i+.5)/7;s.position.set(2+k*24,7.9+Math.sin(k*Math.PI)*3.2,1.5+k*2);run.add(s);stars.push(s);}
+ const run=new THREE.Group();sc.add(run);const pts=[];for(let i=0;i<60;i++){const k=i/59;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:R.starTex,color:pick([0xffe060,0xffffff,0xff9ad8]),transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));sp.position.set(3+k*20,5.2+Math.sin(k*Math.PI)*2.2,1+k*4);sp.scale.setScalar(.35);run.add(sp);pts.push(sp);}
+ const stars=[];for(let i=0;i<7;i++){const s=PROP.star3(.45,STARCOL[i]);const k=(i+.5)/7;s.position.set(3+k*20,5.6+Math.sin(k*Math.PI)*2.2,1+k*4);run.add(s);stars.push(s);}
  const spin=()=>{stars.forEach((s,i)=>s.rotation.y+=.03);pts.forEach((p,i)=>p.material.opacity=.6+Math.sin(F.t*4+i)*.4);};F.ents.push({kind:'deco',upd:spin});
  const pinco=F.scene&&B_npc(sc,15.5,9.6,'pinco',1.2);
  await fade(0,1.2);await wait(.4);
  await say([[null,'Every night, the seven Bean Stars walk the Star Runway across the sky above Pinkington, granting the wishes of everyone below.','Long ago...'],
   ['pinco','Welcome, everyone, to the PINCO PRETTY PRINCESS FESTIVAL! Tonight the Star Runway will grant all of our wishes!'],['p_j_king','Mr Bean! Our guest of honour! Make a wish, make a wish!','King Pooh'],[null,'Mr Bean wishes very hard. (You can tell, because he is vibrating.)','']]);
  // Mr Pooping arrives
- const th=PROP.throne(new THREE.Vector3(0,0,0));th.scale.setScalar(.9);const mp=bill(spriteOf('p_c_tad'),1.6);mp.position.set(0,.7,.1);th.add(mp);sc.add(th);th.position.set(-14,16,-6);F.ents.push({kind:'deco',upd(){mp.quaternion.copy(R.cam.quaternion);th.rotation.y=-.6;}});
- shake(.2);SFX.heavy();await tween(2,k=>{th.position.set(lerp(-14,4,ease.out(k)),lerp(16,9.5,ease.out(k)),lerp(-6,2,k));});
+ const th=PROP.throne(new THREE.Vector3(0,0,0));th.scale.setScalar(.9);const mp=bill(spriteOf('p_c_tad'),1.9);mp.position.set(0,.95,.35);th.add(mp);sc.add(th);window._th=th;th.position.set(-6,14,-4);F.ents.push({kind:'deco',upd(){mp.quaternion.copy(R.cam.quaternion);th.rotation.y=Math.PI/4;}});
+ shake(.2);SFX.heavy();await tween(2,k=>{th.position.set(lerp(-6,11.5,ease.out(k)),lerp(14,4.4,ease.out(k)),lerp(-4,9.5,k));});
  Music.play('boss');await say([['p_c_tad','It\'s MISTER Pooping! Every year I enter your silly festival, and every year I LOSE!','Mr Pooping'],['p_c_tad','So this year... if I can\'t win, NOBODY gets a wish! HAHAHA!','Mr Pooping']]);
- SFX.swoosh();await tween(.6,k=>{th.position.set(lerp(4,14,k),lerp(9.5,10.6,k),lerp(2,2.8,k));});SFX.boom();shake(.8);FX.burst(th.position.clone(),60,{star:1,col:[0xffe060,0xffffff,0xff9ad8,0x8ae8ff],sp:6,up:5,size:.5,life:1.4});
- await Promise.all([tween(1.4,k=>{pts.forEach((p,i)=>{p.position.y-=.05*(i%3+1);p.material.opacity=1-k;});}),...stars.map((s,i)=>{const a=i/7*Math.PI*2,p0=s.position.clone();return tween(1.6,k=>{s.position.set(p0.x+Math.cos(a)*18*k,p0.y+Math.sin(k*Math.PI)*5-k*4,p0.z+Math.sin(a)*14*k);s.rotation.y+=.3;});}),tween(1.6,k=>{th.position.set(lerp(14,40,k),lerp(10.6,20,k),lerp(2.8,-10,k));})]);
+ SFX.swoosh();await tween(.6,k=>{th.position.set(lerp(11.5,13,k),lerp(4.4,7.4,k),lerp(9.5,3,k));});SFX.boom();shake(.8);FX.burst(th.position.clone(),60,{star:1,col:[0xffe060,0xffffff,0xff9ad8,0x8ae8ff],sp:6,up:5,size:.5,life:1.4});
+ await Promise.all([tween(1.4,k=>{pts.forEach((p,i)=>{p.position.y-=.05*(i%3+1);p.material.opacity=1-k;});}),...stars.map((s,i)=>{const a=i/7*Math.PI*2,p0=s.position.clone();return tween(1.6,k=>{s.position.set(p0.x+Math.cos(a)*18*k,p0.y+Math.sin(k*Math.PI)*5-k*4,p0.z+Math.sin(a)*14*k);s.rotation.y+=.3;});}),tween(1.6,k=>{th.position.set(lerp(13,40,k),lerp(7.4,20,k),lerp(4,-10,k));})]);
  sc.remove(run);sc.remove(th);Music.play('town');
  await say([['p_j_king','The Star Runway! SHATTERED! Without the seven Bean Stars, no wish will ever come true again!','King Pooh'],['pinco','Mr Bean! We have to find the Bean Stars and fix the runway!'],['pinco','I\'m coming with you. NOBODY ruins MY festival.'],[null,'Mr Bean nods with great determination. (He has no arms, so nodding is a full-body event.)',''],
   ['p_j_king','Take these coins and snacks. The first star fell toward Sprout Meadow. Leave town from the bottom to reach the World Map!','King Pooh']]);
@@ -1701,7 +1702,7 @@ function credits(){return new Promise(async res=>{GM.mode='end';showHUD(false);c
 function buildTitleScene(){const sv=G;G=G||newState();buildRoom('map');G=sv;F.P=null;F.camT.set(21,1,18);}
 // ---------- main loop ----------
 let last=performance.now()/1000;
-function loop(){requestAnimationFrame(loop);const t=performance.now()/1000;const dt=Math.min(.05,t-last);last=t;R.t+=dt;F.t+=dt;
+function loop(){requestAnimationFrame(loop);const t=performance.now()/1000;const dt=Math.min(.05,t-last);last=t;R.t+=dt;F.t+=dt;R.gt=(R.gt||0)+dt;R.lr=t;
  try{
  if(G&&(GM.mode==='field'||GM.mode==='battle'||GM.mode==='map'))G.time+=dt;
  const paused=GM.mode==='battle'&&$('sMenu').classList.contains('on');
