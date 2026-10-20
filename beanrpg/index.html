@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mr Bean RPG">
 <meta name="theme-color" content="#2a1a5a"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Mr Bean RPG</title><script>window.__BUILD__="v1.1"</script>
+<title>Mr Bean RPG</title><script>window.__BUILD__="v1.2"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);--F:"Trebuchet MS","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,sans-serif;--pa:linear-gradient(180deg,#3d56c8 0%,#2a3c9e 55%,#1e2b78 100%);--bd:#fff6d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -180,9 +180,16 @@ input.code{font-size:20px;padding:10px;border-radius:12px;border:3px solid #fff;
 #bcard.out{transition:opacity .35s;opacity:0}
 @keyframes bcbar{to{transform:skewY(-4deg) scaleX(1)}}@keyframes bcin{to{transform:none}}@keyframes bcvs{to{transform:scale(1) rotate(-12deg);opacity:1}}
 .row.goal{background:linear-gradient(90deg,#ffe14a33,transparent)}
+#helpBtn{position:fixed;top:calc(var(--sat) + 70px);right:calc(var(--sar) + 10px);z-index:12;display:none;height:56px;min-width:56px;padding:0 16px;border-radius:18px;font:900 19px var(--F);color:#fff;background:linear-gradient(180deg,#3ad8a0,#18a878);border:3px solid #fff;box-shadow:0 4px 0 #0a6a4a,0 6px 14px #0006;cursor:pointer;touch-action:none;animation:hbp 3s ease-in-out infinite}
+#helpBtn.on{display:flex;align-items:center;gap:6px}#helpBtn:active{transform:translateY(3px);box-shadow:0 1px 0 #0a6a4a}@keyframes hbp{0%,85%,100%{transform:none}90%{transform:scale(1.08) rotate(-3deg)}95%{transform:scale(1.08) rotate(3deg)}}
+@media (max-width:420px){#helpBtn{height:54px;padding:0 12px;font-size:17px}}
+#tipbox{position:fixed;left:50%;top:calc(var(--sat) + 132px);transform:translate(-50%,-20px);opacity:0;z-index:30;width:min(560px,92vw);padding:12px 16px 10px;border-radius:16px;background:rgba(20,16,60,.92);border:3px solid #ffe14a;color:#fff;font:700 16px/1.35 var(--F);box-shadow:0 6px 20px #0008;pointer-events:none;transition:.3s}
+#tipbox.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}#tipbox b:first-child{color:#ffe14a;margin-right:4px}#tipbox small{display:block;text-align:right;opacity:.6;font-size:12px}
+.pop.flw{font-size:24px;color:#fff;-webkit-text-stroke:1px #2a1a3a;background:rgba(255,90,170,.85);padding:3px 12px;border-radius:14px;animation:tmb 1.4s ease-out forwards}.pop.flw.r1{background:rgba(40,150,230,.9)}.pop.flw.r2{background:linear-gradient(90deg,#ffb000,#ff4a9a);font-size:28px}
+.fic{font-size:30px;width:42px;text-align:center}.row.dim{opacity:.45}.mini.big{min-height:44px;padding:0 12px;font-size:15px}.row.bsay{background:#ffffff18}.earn b{color:#ffe14a}
 </style></head><body>
 <canvas id="gl"></canvas><div class="tilt" id="tiltT"></div><div class="tilt" id="tiltB"></div><div id="vig"></div>
-<div id="hud"><div class="chip"><span class="coin"></span><span id="hCoins">0</span></div><div class="chip"><span class="pea"></span><span id="hPea">0</span></div><div class="chip"><i>⭐</i><span id="hStars">0/7</span></div></div>
+<button id="helpBtn">🧭 <span>Where to?</span></button><div id="tipbox"></div><div id="hud"><div class="chip"><span class="coin"></span><span id="hCoins">0</span></div><div class="chip"><span class="pea"></span><span id="hPea">0</span></div><div class="chip"><i>⭐</i><span id="hStars">0/7</span></div></div>
 <button id="mbtn" class="tx">☰</button><div id="rtitle" class="tx"></div><div id="hint"><b>A</b><span></span></div>
 <div id="bui"><div id="bparty"></div><div id="fpbox">FP 0/0</div><div id="banner"></div>
  <div id="bcmd"><button class="cb" id="cX">✨<span>Special</span><b>X</b></button><button class="cb" id="cA">👊<span>Attack</span><b>A</b></button><button class="cb" id="cY">🍙<span>Item</span><b>Y</b></button><button class="cb" id="cB">🛡️<span>Defend</span><b>B</b></button></div>
@@ -871,10 +878,11 @@ function buildRoom(id){clearScene();const RD=ROOMS[id];const sc=new THREE.Scene(
  const M={w:RD.w,d:RD.d,h:new Int16Array(RD.w*RD.d).fill(RD.h0||4),t:new Uint8Array(RD.w*RD.d).fill(TT[RD.t0||'grass'].i),wl:null,seed:id.length*977+RD.w};F.M=M;F.room=id;F.RD=RD;
  const B=Builder(M,sc,id);RD.build(B);
  if(B._trees){const near=(x,z)=>{for(const k in F.entries){const e=F.entries[k];if(Math.hypot(e.x-x,e.z-z)<2)return true;}for(const e of F.exits){if(x>e.x0-1.6&&x<e.x1+2.6&&z>e.z0-1.6&&z<e.z1+2.6)return true;}return false;};for(const t of B._trees){if(near(t.x,t.z)){sc.remove(t.o);F.cols=F.cols.filter(c=>!(c.x===t.x&&c.z===t.z));}}}const T=buildTiles(M);sc.add(T.m);if(T.wm){sc.add(T.wm);F.water=T.wm;}else F.water=null;
+ try{addBankBooth(B,RD,id);}catch(e){console.error(e);}
  dressRoom(M,sc,RD,id);setGrade(RD.theme);if(id!=='map')try{exitArrows(M,sc);}catch(e){console.error(e);}
  return B;}
 async function goRoom(id,entry,o){o=o||{};F.lock++;if(!o.instant)await fade(1,.28);
- buildRoom(id);GM.mode="field";const RD=ROOMS[id];const e=(entry==='__save'&&G.savePos&&G.savePos.room===id?{x:G.savePos.x,z:G.savePos.z,f:1}:null)||F.entries[entry]||F.entries.def||{x:RD.w/2,z:RD.d/2};spawnPlayer(e.x,e.z,e.f);G.room=id;G.entry=entry;
+ buildRoom(id);GM.mode="field";const RD=ROOMS[id];const e=(entry==='__save'&&G.savePos&&G.savePos.room===id?{x:G.savePos.x,z:G.savePos.z,f:1}:null)||F.entries[entry]||F.entries.def||{x:RD.w/2,z:RD.d/2};spawnPlayer(e.x,e.z,e.f);G.room=id;G.entry=entry;try{spawnFlowers(RD,id);}catch(er){console.error(er);}
  if(RD.world!=null&&WORLDS[RD.world])G.lastWorld=RD.world;
  camSnap();Music.play(o.music||RD.music||WORLDS[RD.world]&&WORLDS[RD.world].music||'field');showHUD(true);updHUD();
  roomTitle(RD.name);if(!o.instant)await fade(0,.3);F.lock--;if(RD.onEnter)await RD.onEnter();
@@ -901,7 +909,7 @@ function updPlayer(dt){const P=F.P;if(!P)return;const free=!F.lock&&!UI.modal;le
  let nx=P.x+mx*sp*dt;if(!blockedAt(nx,P.z,P.y,P.ground))P.x=nx;let nz=P.z+mz*sp*dt;if(!blockedAt(P.x,nz,P.y,P.ground))P.z=nz;
  P.stk=(P.stk||0)+dt;if(P.stk>.3){P.stk=0;if(P.ground&&blockedAt(P.x,P.z,P.y,true)){let done=0;for(let r=.25;r<2.2&&!done;r+=.25)for(let an=0;an<6.28;an+=.785){const x=P.x+Math.cos(an)*r,z=P.z+Math.sin(an)*r;if(!blockedAt(x,z,P.y,true)&&Math.abs(floorAt(x,z,P.y+.3)-P.y)<.35){P.x=x;P.z=z;done=1;break;}}}}
  // jump / interact
- if(free){const near=nearInteract();if(In.consume('A')){if(near)interact(near);else jump();}if(In.consume('B'))jump();}
+ if(free){const near=nearInteract();const nf=!near&&nearFlower(1.25);if(In.consume('A')){if(near)interact(near);else if(nf)pickFlower(nf);else jump();}if(In.consume('B'))jump();}
  if(!P.ground&&P.vy>3&&!isDown('A')&&!isDown('B')&&P.jumpHeld){P.vy*=.82;}
  const fl=floorAt(P.x,P.z,P.y);
  if(P.ground&&P.y-fl>.05){P.ground=false;P.vy=0;}if(P.ground)P.coy=.1;else P.coy=(P.coy||0)-dt;P.jbuf=(P.jbuf||0)-dt;P.st=Math.max(0,(P.st||0)-dt);P.lvx=lerp(P.lvx||0,mx*sp*.32,Math.min(1,dt*3));P.lvz=lerp(P.lvz||0,mz*sp*.32,Math.min(1,dt*3));
@@ -1243,6 +1251,136 @@ function exitArrows(M,sc){const W=M.w,D=M.d;let G0=geo('chev',()=>{const s=new T
   const ms=[];for(let i=0;i<3;i++){const m=new THREE.Mesh(G0,new THREE.MeshBasicMaterial({color:0xfff2a0,transparent:true,opacity:.0,depthWrite:false,blending:THREE.AdditiveBlending}));m.position.z=(1-i)*.5;g.add(m);ms.push(m);}sc.add(g);
   F.ents.push({kind:'deco',upd(){for(let i=0;i<3;i++){const k=(F.t*1.4-i*.28)%1;ms[i].material.opacity=Math.max(0,Math.sin(k*Math.PI))*.75;}}});}}
 
+// ===================== v1.2: pickable flowers, Pooh Bank branches, helper & tips =====================
+const FLOWERS={
+ daisy:{n:'Daisy',ic:'🌼',p:3,r:0,pet:0xffffff,core:0xffd23a},
+ tulip:{n:'Tulip',ic:'🌷',p:4,r:0,pet:0xff5a8a,core:0xffe08a},
+ bluebell:{n:'Bluebell',ic:'🔵',p:5,r:0,pet:0x5a8aff,core:0xffffff},
+ sunflower:{n:'Sunflower',ic:'🌻',p:10,r:1,pet:0xffc81a,core:0x7a4a1a},
+ rose:{n:'Rose',ic:'🌹',p:12,r:1,pet:0xe8203a,core:0xff9aaa},
+ sproutb:{n:'Sprout Bloom',ic:'🌱',p:30,r:2,w:0,pet:0x8aff4a,core:0xffffff},
+ crystal:{n:'Crystal Lily',ic:'💎',p:35,r:2,w:1,pet:0x8ae8ff,core:0xe0a0ff},
+ marigold:{n:'Slam Marigold',ic:'🏀',p:38,r:2,w:2,pet:0xff8a2a,core:0xffe060},
+ snowbell:{n:'Snow Bell',ic:'❄️',p:40,r:2,w:3,pet:0xeaf6ff,core:0x6ac8ff},
+ poppy:{n:'Confetti Poppy',ic:'🎉',p:45,r:2,w:4,pet:0xff4ad8,core:0xffe14a},
+ orchid:{n:'Bog Orchid',ic:'🪷',p:48,r:2,w:5,pet:0xb06aff,core:0x8aff6a},
+ moonrose:{n:'Moon Rose',ic:'🌙',p:52,r:2,w:6,pet:0x5a7aff,core:0xfff0a0},
+ stinkweed:{n:'Golden Stinkweed',ic:'👑',p:60,r:2,w:7,pet:0xffd24a,core:0x8a5a2a}};
+const FRAR=['Common','Uncommon','RARE'],FRCOL=['#fff','#8ae8ff','#ffd24a'];
+SFX.pick=function(r){if(!AC)return;const t=this.t();const ns=r===2?[79,84,88,91,96,100]:r===1?[79,84,88,91]:[84,91];ns.forEach((n,i)=>tone(t+i*.05,'triangle',hz(n),0,.22,.1));tone(t,'sine',hz(96),0,.3,.05);};
+function flowerModel(F0){const g=new THREE.Group();const st=new THREE.Mesh(geo('fl_st',()=>new THREE.CylinderGeometry(.025,.03,.5,6)),mat(0x3aa83a));st.position.y=.25;g.add(st);
+ const lf=new THREE.Mesh(geo('fl_lf',()=>new THREE.SphereGeometry(.09,8,6)),mat(0x4ac84a));lf.scale.set(1.4,.3,.6);lf.position.set(.07,.16,0);lf.rotation.z=.5;g.add(lf);
+ const head=new THREE.Group();head.position.y=.52;g.add(head);const pm=mat(F0.pet,{emissive:F0.pet,emissiveIntensity:.18});const pg=geo('fl_pt',()=>new THREE.SphereGeometry(.1,10,8));
+ const np=F0.r===2?8:6;for(let i=0;i<np;i++){const a=i/np*Math.PI*2;const m=new THREE.Mesh(pg,pm);m.scale.set(1,.35,.65);m.position.set(Math.cos(a)*.11,0,Math.sin(a)*.11);m.rotation.y=-a;head.add(m);}
+ const c=new THREE.Mesh(geo('fl_c',()=>new THREE.SphereGeometry(.065,10,8)),mat(F0.core,{emissive:F0.core,emissiveIntensity:.3}));c.position.y=.03;head.add(c);head.rotation.x=.35;
+ const gm=new THREE.MeshBasicMaterial({color:FRCOL[F0.r]==='#fff'?0xfff6b0:F0.r===1?0x8ae8ff:0xffd24a,transparent:true,opacity:.5,depthWrite:false,blending:THREE.AdditiveBlending});
+ const glow=new THREE.Mesh(geo('fl_gl',()=>{const g2=new THREE.CircleGeometry(.45,24);g2.rotateX(-Math.PI/2);return g2;}),gm);glow.position.y=.03;g.add(glow);
+ const sp=new THREE.Group();const sm=new THREE.MeshBasicMaterial({color:F0.r===2?0xffe060:0xffffff,transparent:true,opacity:.9,depthWrite:false,blending:THREE.AdditiveBlending});const sg=geo('fl_sp',()=>new THREE.OctahedronGeometry(.045,0));
+ for(let i=0;i<(F0.r===2?5:3);i++){const m=new THREE.Mesh(sg,sm);const a=i/(F0.r===2?5:3)*Math.PI*2;m.position.set(Math.cos(a)*.3,.45+i*.07,Math.sin(a)*.3);sp.add(m);}g.add(sp);
+ g.scale.setScalar(F0.r===2?1.35:1.15);g.userData={head,glow,sp,gm};return g;}
+// reachable half-cells from the main entrance (so flowers never spawn on unreachable ledges)
+function reachCells(){const M=F.M,W=M.w,D=M.d;const e=F.entries.map||F.entries.def||Object.values(F.entries)[0];if(!e)return[];const seen=new Set(),out=[];const s0=[Math.floor(e.x*2),Math.floor(e.z*2),floorAt(e.x,e.z,99)];const q=[s0];seen.add(s0[0]+','+s0[1]);let n=0;
+ while(q.length&&n<6000){n++;const[cx,cz,cy]=q.shift();out.push([cx/2+.25,cz/2+.25,cy]);for(const[dx,dz]of[[1,0],[-1,0],[0,1],[0,-1]]){const nx=cx+dx,nz=cz+dz,k=nx+','+nz;if(seen.has(k))continue;const wx=nx/2+.25,wz=nz/2+.25;if(wx<.5||wz<.5||wx>W-.5||wz>D-.5)continue;const fy=floorAt(wx,wz,cy+.35);if(fy<-50||fy>cy+.35||cy-fy>3)continue;if(blockedAt(wx,wz,cy,true))continue;seen.add(k);q.push([nx,nz,fy]);}}return out;}
+function spawnFlowers(RD,id){if(id==='map'||RD.theme==='title'||!F.M)return;let cells;try{cells=reachCells();}catch(e){return;}if(cells.length<20)return;const w=RD.world;
+ const n=id==='town'?5:WORLDS[w]&&WORLDS[w].rooms.slice(-1)[0]===id?3:7;const rare=w!=null?Object.keys(FLOWERS).find(k=>FLOWERS[k].w===w):null;
+ const far=(x,z)=>{for(const e of F.ents){if(e.x==null||e.kind==='deco')continue;if(Math.hypot(e.x-x,e.z-z)<1.5)return false;}for(const ex of F.exits){if(x>ex.x0-2&&x<ex.x1+3&&z>ex.z0-2&&z<ex.z1+3)return false;}for(const k in F.entries){const en=F.entries[k];if(Math.hypot(en.x-x,en.z-z)<1.6)return false;}return true;};
+ let placed=0,tries=0;const pickT=i=>{if(rare&&i===0&&Math.random()<(id===WORLDS[w].rooms[0]?.3:.45))return rare;const r=Math.random();return r<.12?'rose':r<.24?'sunflower':pick(['daisy','tulip','bluebell']);};
+ while(placed<n&&tries<300){tries++;const c=cells[(Math.random()*cells.length)|0];const x=c[0]+rnd(-.15,.15),z=c[1]+rnd(-.15,.15);if(!far(x,z))continue;const k=pickT(placed);addFlower(k,x,c[2],z);placed++;}}
+function addFlower(k,x,y,z){const F0=FLOWERS[k];const m=flowerModel(F0);m.position.set(x,y,z);F.scene.add(m);const e={kind:'flower',fk:k,x,y,z,mesh:m,got:0,rt:0,ph:Math.random()*6,
+ upd(dt){const U=m.userData;if(e.got){e.rt-=dt;if(e.rt<=0){e.got=0;m.visible=true;m.scale.setScalar(.01);FX.burst(new THREE.Vector3(x,y+.4,z),6,{col:0xffffff,sp:1,up:1.5,size:.14});}return;}
+  const s0=F0.r===2?1.35:1.15;if(m.scale.x<s0)m.scale.setScalar(Math.min(s0,m.scale.x+dt*2.5));U.head.position.y=.52+Math.sin(F.t*3+e.ph)*.05;U.head.rotation.y+=dt*.6;U.sp.rotation.y+=dt*1.6;U.sp.position.y=Math.sin(F.t*2+e.ph)*.06;U.gm.opacity=.32+Math.sin(F.t*4+e.ph)*.18;
+  const P=F.P;if(P&&!F.lock&&!UI.modal&&Math.hypot(P.x-x,P.z-z)<.55&&Math.abs(P.y-y)<1)pickFlower(e);}};F.ents.push(e);return e;}
+function nearFlower(r){const P=F.P;if(!P)return null;let b=null,bd=r||1.3;for(const e of F.ents){if(e.kind!=='flower'||e.got)continue;const d=Math.hypot(P.x-e.x,P.z-e.z);if(d<bd&&Math.abs(P.y-e.y)<1){bd=d;b=e;}}return b;}
+function pickFlower(e){if(e.got)return;const F0=FLOWERS[e.fk];e.got=1;e.rt=120;e.mesh.visible=false;G.flw=G.flw||{};G.flw[e.fk]=(G.flw[e.fk]||0)+1;G.flwN=(G.flwN||0)+1;
+ const p=new THREE.Vector3(e.x,e.y+.6,e.z);SFX.pick(F0.r);FX.burst(p,F0.r===2?22:12,{star:1,col:[F0.pet,0xffffff,F0.core],sp:2,up:2.5,size:.2});
+ const d=popText(p,'+1 '+F0.ic+' '+esc(F0.n),'flw r'+F0.r,-20);if(F0.r===2){banner('✨ RARE FLOWER! '+F0.n,'gold');if(G.party.includes('pooh'))setTimeout(()=>toastQ('Pooh: "That one is worth SO much money! Don\'t drop it. Don\'t even LOOK at it."'),600);}
+ tip('flower2','🌸 Nice! Sell flowers for coins at any Pooh Bank. Check your bunch in Menu ▸ 🌸 Flowers.');}
+function flowerValue(){let n=0,v=0;for(const k in (G.flw||{})){n+=G.flw[k];v+=G.flw[k]*FLOWERS[k].p;}return{n,v};}
+// ---------- Pooh Bank branch booth in the first room of each world ----------
+function boothModel(){const g=new THREE.Group();const add=(gm,c,x,y,z,sx,sy,sz)=>{const m=new THREE.Mesh(gm,mat(c));m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;g.add(m);return m;};const bx=geo('bx1',()=>new THREE.BoxGeometry(1,1,1));
+ add(bx,0xffd24a,0,.3,.35,1.7,.6,.4);add(bx,0xff6ab0,0,.62,.35,1.8,.06,.48);add(bx,0xfff0f6,0,.75,-.55,1.8,1.5,.1);
+ for(const x of[-.85,.85])add(bx,0xffffff,x,.85,-.1,.08,1.7,.08);
+ for(let i=0;i<6;i++)add(bx,i%2?0xffffff:0xff4a9a,-.75+i*.3,1.75,-.05,.3,.08,1.1).rotation.x=-.18;
+ const cv=document.createElement('canvas');cv.width=256;cv.height=72;const x=cv.getContext('2d');x.fillStyle='#ff4a9a';x.fillRect(0,0,256,72);x.fillStyle='#fff';x.font='900 40px Trebuchet MS,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText('POOH BANK',128,38);
+ const tx=new THREE.CanvasTexture(cv);tx.encoding=THREE.sRGBEncoding;const sg=new THREE.Mesh(new THREE.PlaneGeometry(1.5,.42),new THREE.MeshBasicMaterial({map:tx}));sg.position.set(0,2.05,.5);sg.rotation.x=-.1;g.add(sg);
+ const cn=new THREE.Mesh(geo('bk_coin',()=>new THREE.CylinderGeometry(.16,.16,.05,16)),mat(0xffd24a,{metalness:.6,roughness:.3,emissive:0x6a4a00,emissiveIntensity:.4}));cn.rotation.x=Math.PI/2;cn.position.set(.55,.85,.35);g.add(cn);g.userData.coin=cn;return g;}
+function addBankBooth(B,RD,id){if(RD.world==null||!WORLDS[RD.world]||WORLDS[RD.world].rooms[0]!==id)return;const e=F.entries.map;if(!e)return;const y0=floorAt(e.x,e.z,99);
+ let RL=0;const ok=(x,z)=>{const A=RL?.9:1.2,Bv=RL?1.2:1.6;for(let dz=-A;dz<=Bv;dz+=.3)for(let dx=-A;dx<=Bv;dx+=.3){const fy=floorAt(x+dx,z+dz,y0+.3);if(Math.abs(fy-y0)>.05||blockedAt(x+dx,z+dz,y0,true))return false;}for(const en of F.ents){if(en.x!=null&&en.kind!=='deco'&&Math.hypot(en.x-x,en.z-z)<(RL?1.9:2.6))return false;}for(const ex of F.exits){if(x>ex.x0-2.5&&x<ex.x1+3.5&&z>ex.z0-2.5&&z<ex.z1+3.5)return false;}for(const k in F.entries){const en=F.entries[k];if(Math.hypot(en.x-x,en.z-z)<1.8)return false;}return true;};
+ let spot=null;for(RL=0;RL<2&&!spot;RL++)for(let r=2.4;r<(RL?13:9)&&!spot;r+=.5)for(let a=0;a<6.28;a+=.3){const x=e.x+Math.cos(a)*r,z=e.z+Math.sin(a)*r;if(x<2||z<2||x>RD.w-2||z>RD.d-2)continue;if(ok(x,z)){spot=[x,z];break;}}
+ if(!spot)return;const[x,z]=spot;const m=boothModel();m.position.set(x,y0,z);m.rotation.y=Math.PI/4;B.add(m);
+ const bk=(dx,dz)=>[x+dx*Math.cos(Math.PI/4)+dz*Math.sin(Math.PI/4),z-dx*Math.sin(Math.PI/4)+dz*Math.cos(Math.PI/4)];
+ for(const[dx,dz]of[[-.6,-.5],[0,-.5],[.6,-.5]]){const p=bk(dx,dz);B.col(p[0],p[1],.35,y0+2);}
+ const np=bk(0,-.05);const n=B.npc(np[0],np[1],{spr:'p_j_king',h:1.05,name:'Pooh Bank (Branch)',shop:1,tag:'bank',talk:async()=>{await poohBank(true);}});F.bankBooth=n;
+ F.ents.push({kind:'deco',upd(){m.userData.coin.rotation.z+=.05;}});}
+// ---------- sell flowers ----------
+const POOHSELL=['Flowers! I LOVE flowers! Because they turn into MONEY!','Ooh, smells like profit. Profit smells like daisies. Everyone knows that.','*bites coin* ...Yep. Real. Pleasure doing business!','You pick, I pay. You pick MORE, I pay MORE. Easy!'];
+function sellFlowers(){return new Promise(res=>{let earned=0;const p=G.party.includes('pooh');const who=p?'Pooh':'King Pooh';let msg=p?pick(POOHSELL):'Splendid blooms! The royal florist will be thrilled.';
+ const draw=()=>{const ks=Object.keys(FLOWERS).filter(k=>G.flw&&G.flw[k]>0);const fv=flowerValue();
+  let h='<h2>🌸 Sell Flowers</h2><div class="row" style="justify-content:center;gap:16px;flex-wrap:wrap"><span><span class="coin"></span> <b>'+(G.infCoins?'∞':G.coins)+'</b> coins</span><span>🌸 '+fv.n+' flowers worth <b>'+fv.v+'</b></span><span class="earn">Earned today: <b>🪙 '+earned+'</b></span></div><div class="row bsay"><img class="ic" src="'+portSrc(p?'pooh':'p_j_king')+'"><span class="gr"><b>'+who+':</b> '+esc(msg)+'</span></div>';
+  h+=ks.length?ks.map(k=>{const F0=FLOWERS[k],c=G.flw[k];return '<div class="row"><span class="fic">'+F0.ic+'</span><span class="gr">'+F0.n+' x'+c+' <small style="color:'+FRCOL[F0.r]+'">'+FRAR[F0.r]+' · 🪙 '+F0.p+' each</small></span><button class="mini big" data-s1="'+k+'">Sell 1 · 🪙'+F0.p+'</button><button class="mini big" data-sa="'+k+'">All · 🪙'+F0.p*c+'</button></div>';}).join(''):'<div class="row">No flowers yet! Look for sparkly flowers in every world and walk into them to pick them.</div>';
+  h+='<div style="display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap"><button class="btn p" id="fsAll"'+(fv.n?'':' disabled')+'>💰 SELL ALL · 🪙 '+fv.v+'</button><button class="btn" id="fsX">✖ Done</button></div>';
+  $('menuBox').innerHTML=h;const box=$('menuBox');
+  const sell=(k,n)=>{n=Math.min(n,G.flw[k]||0);if(!n)return;const v=n*FLOWERS[k].p;G.flw[k]-=n;if(!G.flw[k])delete G.flw[k];G.coins+=v;earned+=v;SFX.coin();updHUD();msg=p?(FLOWERS[k].r===2?'A RARE one!! You\'re my favourite customer. Don\'t tell the others.':pick(POOHSELL)):'Thank you kindly, Mr Bean!';};
+  box.querySelectorAll('[data-s1]').forEach(b=>b.onclick=()=>{sell(b.dataset.s1,1);draw();});box.querySelectorAll('[data-sa]').forEach(b=>b.onclick=()=>{sell(b.dataset.sa,999);draw();});
+  box.querySelector('#fsAll').onclick=()=>{for(const k of Object.keys(G.flw||{}))sell(k,999);msg=p?'SELL ALL?! Best. Day. EVER. *happy money dance*':'A royal bouquet! Most generous.';SFX.chest();draw();};
+  box.querySelector('#fsX').onclick=()=>{closeScr('sMenu');SFX.back();res(earned);};};
+ draw();openScr('sMenu',null,()=>{closeScr('sMenu');res(earned);});});}
+// ---------- goals, helper button, arrow trail ----------
+const WHINT=[
+ ['pinco','Jump on enemies before they see you for a First Strike. Sprout is waiting at the end of the meadow.'],
+ ['pinco','Mogu Mines is dark. Follow the lamps! And keep an eye out for a certain coin-hunting kid... I mean, Pooh.'],
+ ['pooh','Hoop Heights! Climb the bleachers to reach Slam Dunkle. Basketball players have SO much money.'],
+ ['pinco','Jingle Peaks: ride the ice platforms and cross Frosty Pass to reach the summit.'],
+ ['pooh','Confetti Carnival! Go through Prize Alley to the Big Top. Win all the prizes. ALL OF THEM.'],
+ ['pinco','Murk Swamp: cross Bog Bridge to find Dark Kermit\'s Hollow. Guard against the ghosts!'],
+ ['pinco','Gloom Manor: sneak through the Dusty Library. Emo Bean is upstairs being... emo.'],
+ ['pinco','All seven stars! The Stink Keep is in the middle of the map. Use timed hits and guard when Mr Pooping glows!']];
+function scrDir(dx,dz){const sx=(dx-dz)/1.414,sy=(-dx-dz)/1.414;const a=Math.atan2(sy,sx)*180/Math.PI;const D=['right','up-right','up','up-left','left','down-left','down','down-right'];return D[((Math.round(a/45)%8)+8)%8];}
+function goalInfo(){const n=G.stars.filter(Boolean).length;let i=G.stars.findIndex(s=>!s);if(i<0)i=7;const done=!!G.bossDone.pooping;
+ if(done)return{done:1,text:'You saved the festival! Explore, pick flowers, and hunt for hidden treasures ('+(G.hidden||0)+'/'+HIDDEN_TOTAL+').',w:null,hint:['pinco','Thank you, Mr Bean. Want to look for every hidden treasure block?']};
+ const W=WORLDS[i],bn=BOSS[W.boss].n;const where=i===7?'Stink Keep':W.n;let text;
+ if(i===1&&!G.flags.poohJoined)text='Head to Mogu Mines and find Pooh, then beat '+bn+' for the '+W.star+'.';
+ else if(i===7)text='Storm Stink Keep in the middle of the map and defeat Mr Pooping!';
+ else text='Go to '+where+' and beat '+bn+' to win the '+W.star+'.';
+ const hp=WHINT[i];const sp=G.party.includes(hp[0])?hp[0]:'pinco';return{w:i,text,where,hint:[sp,hp[1]]};}
+function fieldTarget(gi){const cur=F.room,P=F.P;if(!P)return null;const exitTo=to=>{const ex=F.exits.find(e=>e.to===to);return ex?{x:(ex.x0+ex.x1)/2+.5,z:(ex.z0+ex.z1)/2+.5,label:to==='MAP'?'the world map':ROOMS[to].name}:null;};
+ if(gi.done||gi.w==null)return exitTo('MAP');const W=WORLDS[gi.w],R0=W.rooms,idx=R0.indexOf(cur);
+ if(idx<0)return exitTo('MAP')||(()=>{const r=Object.keys(ROOMS).find(k=>ROOMS[k].world===ROOMS[cur].world);return null;})()||backExit();
+ if(gi.w===1&&!G.flags.poohJoined&&cur==='n1'){const p=F.ents.find(e=>e.tag==='poohjoin');if(p)return{x:p.x,z:p.z,label:'Pooh',ent:1};}
+ if(idx===R0.length-1){const b=F.ents.find(e=>e.kind==='boss');if(b)return{x:b.x,z:b.z,label:BOSS[W.boss].n,ent:1};return exitTo('MAP')||backExit();}
+ return exitTo(R0[idx+1]);}
+function backExit(){const RD=F.RD;if(RD.world==null)return null;const R0=WORLDS[RD.world].rooms,idx=R0.indexOf(F.room);const to=idx>0?R0[idx-1]:'MAP';const ex=F.exits.find(e=>e.to===to)||F.exits[0];return ex?{x:(ex.x0+ex.x1)/2+.5,z:(ex.z0+ex.z1)/2+.5,label:to==='MAP'?'the world map':ROOMS[to]?ROOMS[to].name:'the exit'}:null;}
+function trail(tg){if(!tg||!F.P||!F.scene)return;const P=F.P,sc=F.scene;const dx=tg.x-P.x,dz=tg.z-P.z,L=Math.hypot(dx,dz);if(L<.5)return;const n=Math.min(22,Math.max(3,Math.floor(L/.7)));
+ const g=new THREE.Group();sc.add(g);const cg=geo('chev',()=>new THREE.PlaneGeometry(1,1));const ms=[];const ang=Math.atan2(dx,dz);
+ const sh=new THREE.Shape();sh.moveTo(-.42,-.2);sh.lineTo(0,.2);sh.lineTo(.42,-.2);sh.lineTo(.42,.04);sh.lineTo(0,.44);sh.lineTo(-.42,.04);sh.closePath();const gg=geo('trail_ch',()=>{const q=new THREE.ShapeGeometry(sh);q.rotateX(-Math.PI/2);return q;});
+ for(let i=1;i<=n;i++){const k=i/(n+1);const x=P.x+dx*k,z=P.z+dz*k;let y=floorAt(x,z,P.y+4);if(y<-50)y=P.y;const m=new THREE.Mesh(gg,new THREE.MeshBasicMaterial({color:0x22e0a0,transparent:true,opacity:0,depthWrite:false,depthTest:false}));m.position.set(x,y+.08,z);m.rotation.y=ang+Math.PI;m.renderOrder=5;g.add(m);ms.push(m);}
+ const ar=new THREE.Mesh(geo('trail_ar',()=>new THREE.ConeGeometry(.32,.7,4)),new THREE.MeshBasicMaterial({color:0x22e0a0,transparent:true,opacity:.95,depthTest:false}));ar.rotation.x=Math.PI;ar.renderOrder=6;let ty=floorAt(tg.x,tg.z,99);if(ty<-50)ty=P.y;g.add(ar);
+ const t0=F.t,life=7;const e={kind:'deco',upd(){const t=F.t-t0;if(t>life){if(!e.dead){e.dead=1;sc.remove(g);}return;}const fade=Math.min(1,(life-t)/1)*Math.min(1,t*3);
+  for(let i=0;i<ms.length;i++){const k=((t*1.6-i*.09)%1+1)%1;ms[i].material.opacity=(.35+.65*Math.max(0,Math.sin(k*Math.PI)))*fade;const sc2=1+.25*Math.max(0,Math.sin(k*Math.PI));ms[i].scale.set(sc2,1,sc2);}ar.position.set(tg.x,ty+2+(tg.ent?1:0)+Math.abs(Math.sin(t*4))*.5,tg.z);ar.material.opacity=fade;ar.rotation.y=t*2;}};F.ents.push(e);F.trailOn=e;}
+function mapBeacon(w){const nd=MAPN.find(n=>w===7?n.id==='w8':n.w===w);if(!nd||!F.scene)return null;const sc=F.scene,M=F.M;const y=M.h[nd.z*M.w+nd.x]*HU;const g=new THREE.Group();g.position.set(nd.x+.5,y,nd.z+.5);sc.add(g);
+ const pl=new THREE.Mesh(new THREE.CylinderGeometry(.5,.9,9,20,1,true),new THREE.MeshBasicMaterial({color:0x7affd0,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false,blending:THREE.AdditiveBlending}));pl.position.y=4.5;g.add(pl);
+ const rg=new THREE.Mesh(new THREE.RingGeometry(.9,1.25,32),new THREE.MeshBasicMaterial({color:0xffe14a,transparent:true,opacity:.9,side:THREE.DoubleSide,depthWrite:false}));rg.rotation.x=-Math.PI/2;rg.position.y=.15;g.add(rg);
+ const ar=new THREE.Mesh(new THREE.ConeGeometry(.6,1.2,4),new THREE.MeshBasicMaterial({color:0xffe14a}));ar.rotation.x=Math.PI;g.add(ar);const t0=F.t;
+ const e={kind:'deco',upd(){const t=F.t-t0;if(t>9){if(!e.dead){e.dead=1;sc.remove(g);}return;}ar.position.y=3+Math.abs(Math.sin(t*4))*.8;ar.rotation.y=t*2;const s=1+((t*1.2)%1)*.8;rg.scale.set(s,s,s);rg.material.opacity=.9*(1-((t*1.2)%1));pl.material.opacity=.35*Math.min(1,(9-t));}};F.ents.push(e);return nd;}
+let helpBusy=false;
+async function showHelp(){if(helpBusy||UI.modal||F.lock||!(GM.mode==='field'||GM.mode==='map'))return;helpBusy=true;SFX.ok();try{const gi=goalInfo();let line=gi.text;
+ if(GM.mode==='map'){if(gi.w!=null){const nd=mapBeacon(gi.w);if(nd){const cur=MAPN[MAPM.node];line+=nd===cur?' You\'re standing on it: press A to go in!':' It\'s marked on the map: walk '+scrDir(nd.x-cur.x,nd.z-cur.z)+' to '+nd.n+' and press A.';if(!nodeOpen(MAPN.indexOf(nd)))line+=' (It opens once you have all 7 stars.)';if(nd!==cur){F.camFree=true;const a=F.camT.clone();await tween(.8,k=>{F.camT.x=lerp(a.x,nd.x+.5,k);F.camT.z=lerp(a.z,nd.z+.5,k);},ease.inout);}}}}
+ else{const tg=fieldTarget(gi);if(tg){trail(tg);const d=Math.hypot(tg.x-F.P.x,tg.z-F.P.z);line+=tg.ent?' '+tg.label+' is right here, '+scrDir(tg.x-F.P.x,tg.z-F.P.z)+' of you. Talk to them!':' Head '+scrDir(tg.x-F.P.x,tg.z-F.P.z)+' to '+tg.label+'. Follow the glowing arrows!';}}
+ const fv=flowerValue();const extra=fv.n>=5?[[G.party.includes('pooh')?'pooh':'pinco',G.party.includes('pooh')?'Psst! You have '+fv.n+' flowers worth '+fv.v+' coins! Sell them at a Pooh Bank. PLEASE.':'You have '+fv.n+' flowers. Any Pooh Bank will buy them!']]:[];
+ await say([[null,'🧭 '+line,'Where to?'],gi.hint,...extra]);if(F.camFree&&GM.mode==='map'&&F.P){const a=F.camT.clone(),P=F.P;await tween(.6,k=>{F.camT.x=lerp(a.x,P.x,k);F.camT.z=lerp(a.z,P.z,k);});F.camFree=false;}if(GM.mode==='field'){const tg=fieldTarget(gi);if(tg)trail(tg);}}finally{helpBusy=false;}}
+// ---------- first-time tips (non-blocking cards) ----------
+const TIPQ=[];let tipOn=false;
+function tip(id,txt){if(!G)return;G.tips=G.tips||{};if(G.tips[id])return;G.tips[id]=1;TIPQ.push(txt);if(!tipOn)nextTip();}
+function nextTip(){const t=TIPQ.shift();const el=$('tipbox');if(!t||!el){tipOn=false;if(el)el.classList.remove('on');return;}tipOn=true;el.innerHTML='<b>💡 Tip</b> '+t+'<small>tap to close</small>';el.classList.add('on');SFX.sel();clearTimeout(el._t);el._t=setTimeout(()=>{el.classList.remove('on');setTimeout(nextTip,350);},6500);}
+let tipT=0;function tickTips(dt){if(!G||!F.P||GM.mode!=='field'||F.lock||UI.modal)return;tipT-=dt;if(tipT>0)return;tipT=.4;const P=F.P;
+ tip('controls',TOUCH?'Move with the stick. <b>A</b> jumps and talks, <b>B</b> jumps, <b>X</b> opens the menu, <b>Y</b> items. Lost? Tap <b>🧭 Where to?</b>':'Move with <b>WASD/arrows</b>. <b>Space</b> jumps and talks, <b>M</b> menu. Lost? Press <b>H</b> or click <b>🧭 Where to?</b>');
+ for(const e of F.ents){if(e.x==null)continue;const d=Math.hypot(P.x-e.x,P.z-e.z);if(d>3.5)continue;
+  if(e.kind==='chest'&&!e.used&&!e.hidden)tip('blocks','Golden <b>?</b> blocks: jump <b>under</b> one to bonk out coins and items!');
+  else if(e.kind==='save')tip('save','<b>Save Block</b>: jump into it from below to save your game and fully heal the party.');
+  else if(e.kind==='flower'&&!e.got)tip('flower','<b>Sparkly flowers</b> can be picked! Walk into them (or press A). Rare ones are worth lots of coins.');
+  else if(e.tag==='bank'||e.shop&&/Bank/.test(e.name||''))tip('bank','<b>Pooh Bank</b>: sell flowers for coins, or deposit coins. Every Bean Star adds 10% interest!');
+  else if(e.kind==='enemy')tip('enemy','Touch an enemy to battle. Jump on its head first for a <b>First Strike</b>!');}}
+
 const gnow=()=>(R.gt||0)+Math.min(.05,Math.max(0,now()-(R.lr||now())));
 // ================= BATTLE =================
 let BT={on:false};
@@ -1556,7 +1694,7 @@ function toast(t,d){const el=document.createElement('div');el.className='tst';el
 function toastQ(t){toastBusy=toastBusy.then(()=>toast(t,1.5));}
 let banT=0;function banner(t,c){const b=$('banner');b.textContent=t;b.className='on '+(c||'');clearTimeout(banT);banT=setTimeout(()=>b.className='',1500);}
 // ---------- HUD ----------
-function showHUD(on){$('hud').classList.toggle('on',on);$('mbtn').classList.toggle('on',on);$('tc').classList.toggle('on',on||GM.mode==='battle');document.body.classList.toggle('field',GM.mode!=='battle');}
+function showHUD(on){$('hud').classList.toggle('on',on);$('helpBtn').classList.toggle('on',!!on&&GM.mode!=='battle');$('mbtn').classList.toggle('on',on);$('tc').classList.toggle('on',on||GM.mode==='battle');document.body.classList.toggle('field',GM.mode!=='battle');}
 function updHUD(){if(!G)return;$('hCoins').textContent=G.infCoins?'∞':G.coins;$('hPea').textContent=G.pea;$('hStars').textContent=G.stars.filter(Boolean).length+'/7';}
 function updHint(){const h=$('hint');if(GM.mode!=='field'||F.lock||UI.modal||!F.P){h.style.display='none';$('lA').textContent='JUMP';return;}const e=nearInteract();if(!e){h.style.display='none';$('lA').textContent='JUMP';return;}
  const s=toScreen(new THREE.Vector3(e.x,e.y+(e.mesh.userData.bill?e.mesh.userData.bill.userData.h:1)+.35,e.z));h.style.display='block';h.style.left=s.x+'px';h.style.top=s.y+'px';h.querySelector('span').textContent=e.kind==='boss'?'Challenge!':e.shop?'Shop':'Talk';$('lA').textContent='TALK';}
@@ -1614,11 +1752,13 @@ function gameOver(){return new Promise(res=>{Music.stop(true);Music.jingle('over
  s.querySelector('#goTitle').onclick=()=>done(async()=>{showTitle();});});}
 // ---------- pause menu ----------
 function openMenu(tab){if(UI.modal||F.lock&&GM.mode==='field')return;SFX.ok();UI.mtab=tab||UI.mtab||'party';renderMenu();openScr('sMenu',null,()=>{if(UI.sub){UI.sub=null;renderMenu();}else closeScr('sMenu');});}
-const MTABS=[['party','👥 Party'],['items','🍙 Items'],['equip','🎽 Equip'],['spec','✨ Specials'],['stars','⭐ Stars'],['coll','🏆 Collection'],['set','⚙️ Settings'],['quit','🏠 Main Menu']];
-function nextGoal(){const n=G.stars.filter(Boolean).length;if(n>=7)return G.bossDone.pooping?'You saved the festival! Hunt for hidden treasures.':'Storm Stink Keep and defeat Mr Pooping!';const i=G.stars.findIndex(s=>!s);const W=WORLDS[i];if(!W)return'Explore!';if(i===1&&!G.flags.poohJoined)return'Explore '+W.n+' and find Pooh.';return'Find the '+W.star+' in '+W.n+(G.unlocked<=i?' (open the world map from town)':'')+'.';}
+const MTABS=[['party','👥 Party'],['items','🍙 Items'],['flw','🌸 Flowers'],['equip','🎽 Equip'],['spec','✨ Specials'],['stars','⭐ Stars'],['coll','🏆 Collection'],['set','⚙️ Settings'],['quit','🏠 Main Menu']];
+function nextGoal(){return goalInfo().text;}
+function nextGoalOld(){const n=G.stars.filter(Boolean).length;if(n>=7)return G.bossDone.pooping?'You saved the festival! Hunt for hidden treasures.':'Storm Stink Keep and defeat Mr Pooping!';const i=G.stars.findIndex(s=>!s);const W=WORLDS[i];if(!W)return'Explore!';if(i===1&&!G.flags.poohJoined)return'Explore '+W.n+' and find Pooh.';return'Find the '+W.star+' in '+W.n+(G.unlocked<=i?' (open the world map from town)':'')+'.';}
 function bossCard(B0){return new Promise(res=>{const d=document.createElement('div');d.id='bcard';d.innerHTML='<div class="bc1"></div><div class="bc2"><img src="'+portSrc(B0.img)+'"><div><small>BOSS</small><b>'+esc(B0.n)+'</b></div></div><div class="vs">VS</div>';document.body.appendChild(d);SFX.boom();setTimeout(()=>SFX.swoosh(),120);setTimeout(()=>{d.classList.add('out');},1500);setTimeout(()=>{d.remove();res();},1900);});}
 function renderMenu(){const t=UI.mtab;let h='<div class="tabs">'+MTABS.filter(x=>!(GM.mode==='battle'&&(x[0]==='equip'||x[0]==='items'))).map(([k,n])=>'<button class="tab'+(k===t?' on':'')+'" data-t="'+k+'">'+n+'</button>').join('')+'<button class="tab" id="mClose">✖ Close</button></div>';
  if(t==='party')h+='<div class="row goal"><span class="gr">🎯 Next</span><b>'+esc(nextGoal())+'</b></div>'+G.party.map(id=>{const c=G.ch[id];return '<div class="pcard"><img src="'+partyURL(id)+'"><div style="flex:1"><div style="font-size:21px;font-weight:900">'+CH[id].n+' <small style="opacity:.8">Lv '+c.lv+'</small></div><div style="font-weight:800">HP '+c.hp+'/'+maxHP(id)+' · XP '+c.xp+'/'+xpNeed(c.lv)+'</div><div class="stg">'+['atk','def','mag','mdef','spd'].map(k=>'<span>'+STATN[k]+' <b>'+stat(id,k)+'</b></span>').join('')+'</div><small style="opacity:.85">'+esc(CH[id].d)+'</small></div></div>';}).join('')+'<div class="row"><span class="gr">Shared FP</span><b>'+(G.infFP?'∞':G.fp)+' / '+G.fpMax+'</b></div><div class="row"><span class="gr">Coins · Pea Coins · Pooh Bank</span><b><span class="coin"></span> '+(G.infCoins?'∞':G.coins)+' · <span class="pea"></span> '+G.pea+' · 🏦 '+G.bank+'</b></div>';
+ else if(t==='flw'){const fv=flowerValue();const ks=Object.keys(FLOWERS);h+='<div class="row" style="justify-content:center;gap:18px;flex-wrap:wrap"><span>🌸 Carrying <b>'+fv.n+'</b></span><span>Worth <b>🪙 '+fv.v+'</b></span><span>Picked ever: <b>'+(G.flwN||0)+'</b></span></div><div class="row"><span class="gr"><small>Sell flowers at the Pooh Bank in Pinkington or at the Pooh Bank booth near the start of every world.</small></span></div>'+ks.map(k=>{const F0=FLOWERS[k],c=(G.flw||{})[k]||0;const seen=c>0||(G.flwSeen||{})[k];return '<div class="row'+(c?'':' dim')+'"><span class="fic">'+F0.ic+'</span><span class="gr">'+F0.n+(c?' x'+c:'')+' <small style="color:'+FRCOL[F0.r]+'">'+FRAR[F0.r]+(F0.w!=null?' · found in '+WORLDS[F0.w].n:' · everywhere')+' · 🪙 '+F0.p+'</small></span></div>';}).join('');}
  else if(t==='items'){const ks=Object.keys(G.inv).filter(k=>G.inv[k]>0);h+=ks.length?ks.map(k=>'<div class="row">'+icon(IT[k].ic)+'<span class="gr">'+IT[k].n+' x'+G.inv[k]+'<small>'+IT[k].d+'</small></span>'+(IT[k].heal||IT[k].healAll||IT[k].fp||IT[k].revive||IT[k].cure?'<button class="mini" data-use="'+k+'">Use</button>':'')+'</div>').join(''):'<div class="row">No items yet. Buy food at the Beanling Grocer!</div>';}
  else if(t==='equip'){const id=UI.eqWho||'bean';h+='<div class="tabs">'+G.party.map(p=>'<button class="tab'+(p===id?' on':'')+'" data-who="'+p+'">'+CH[p].n+'</button>').join('')+'</div><div class="eqpv"><img src="'+partyURL(id)+'" style="width:130px;height:190px;object-fit:contain;background:radial-gradient(#fff5,transparent 70%);border-radius:14px"><div style="flex:1;min-width:220px">'+
   ['w','a','c'].concat(id==='bean'?['l']:[]).map(s=>{const cur=G.ch[id].eq[{w:'w',a:'a',c:'c',l:'look'}[s]];const nm={w:'Weapon',a:'Armor',c:'Accessory',l:'Hairstyle'}[s];return '<div class="row"><span class="gr"><small>'+nm+'</small>'+(cur?EQ[cur].n:'— none —')+'</span><button class="mini" data-slot="'+s+'">Change</button></div>';}).join('')+'<div class="stg" style="margin-top:6px">'+['hp','atk','def','mag','mdef','spd'].map(k=>'<span>'+STATN[k]+' <b>'+stat(id,k)+'</b></span>').join('')+'</div></div></div>';
@@ -1673,9 +1813,10 @@ function openShop(id){return new Promise(res=>{UI.shop={id,mode:'buy'};const dra
  box.querySelectorAll('[data-buy]').forEach(b=>b.onclick=()=>{const k=b.dataset.buy,p=+b.dataset.p;if(pea){if(G.pea<p)return SFX.err();G.pea-=p;}else{if(!G.infCoins&&G.coins<p)return SFX.err();if(!G.infCoins)G.coins-=p;}if(IT[k])addItem(k);else addEq(k);SFX.coin();updHUD();draw();});
  box.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>{const k=b.dataset.sell;G.inv[k]--;if(G.inv[k]<=0)delete G.inv[k];G.coins+=Math.max(1,Math.floor(IT[k].p/2));SFX.coin();updHUD();draw();});};
  draw();openScr('sMenu',null,()=>{closeScr('sMenu');res();});});}
-async function poohBank(){const p=G.party.includes('pooh');
+async function poohBank(branch){const p=G.party.includes('pooh');if(branch){await say([[p?'pooh':'p_j_king',p?'A POOH BANK BRANCH! I have banks EVERYWHERE now. I am basically a tycoon. Flowers? I buy flowers!':'Welcome to the Pooh Bank branch office! Sell me your flowers, or keep your coins safe. Same bank, same interest!',p?'Pooh':'King Pooh']]);}else 
  await say([[p?'pooh':'p_j_king',p?'Welcome to the POOH BANK! My bank! Put coins in, they get BIGGER. That\'s how money works. I think.':'Welcome to the royal Pooh Bank! My little Pooh runs it, but he\'s out adventuring... I\'ll keep your coins safe.',p?'Pooh':'King Pooh']]);
- while(true){const i=await ask('Pooh Bank: '+G.bank+' coins saved. You have '+(G.infCoins?'∞':G.coins)+'. Every Bean Star you find adds 10% interest!',['Deposit 50','Deposit ALL','Withdraw 50','Withdraw ALL','Leave'],p?'pooh':'p_j_king');
+ while(true){const fv=flowerValue();let i=await ask('Pooh Bank: '+G.bank+' coins saved. You have '+(G.infCoins?'∞':G.coins)+'. 🌸 '+fv.n+' flowers (worth '+fv.v+'). Every Bean Star adds 10% interest!',['🌸 Sell flowers','Deposit 50','Deposit ALL','Withdraw 50','Withdraw ALL','Leave'],p?'pooh':'p_j_king');
+  if(i===0){const got=await sellFlowers();if(got>0)await say([[p?'pooh':'p_j_king',p?'You made '+got+' coins! I made... a FRIEND. And also a small fee. JUST KIDDING. Mostly.':'You earned '+got+' coins. Splendid!',p?'Pooh':'King Pooh']]);continue;}i--;
   if(i===0||i===1){const n=i===0?Math.min(50,G.coins):G.coins;if(!n){await say([[p?'pooh':'p_j_king','You\'re broke! ...Me too, emotionally.',p?'Pooh':'King Pooh']]);continue;}if(!G.infCoins)G.coins-=n;G.bank+=n;SFX.coin();}
   else if(i===2||i===3){const n=i===2?Math.min(50,G.bank):G.bank;G.bank-=n;G.coins+=n;SFX.coin();if(p&&n>0)await say([['pooh','Noooo! My precious deposits! ...Fine. Here.']]);}
   else break;updHUD();}}
@@ -1994,7 +2135,7 @@ midRoom('k3',{name:'Plunger Hall',theme:'keep',world:7,t0:'keep',hi:'keep',pt:'g
 // ================= STORY / MAIN =================
 const GM={mode:'boot'};
 function newState(){const ch={};for(const id of PARTY_ORDER)ch[id]={lv:1,xp:0,hp:0,bonus:{},eq:Object.assign({},CH[id].eq),st:{}};
- const s={v:1,party:['bean','pinco'],ch,fp:12,fpMax:12,coins:30,pea:0,inv:{edamame:3,candycorn:1},eqInv:{bonk:1,pod:1,starw:1,knit:1,purse:1,redtee:1},hairs:{},stars:[0,0,0,0,0,0,0],unlocked:1,bossDone:{},chests:{},flags:{},bank:0,hidden:0,time:0,room:'town',entry:'def',lastWorld:0};return s;}
+ const s={v:1,party:['bean','pinco'],ch,fp:12,fpMax:12,coins:30,pea:0,inv:{edamame:3,candycorn:1},eqInv:{bonk:1,pod:1,starw:1,knit:1,purse:1,redtee:1},hairs:{},stars:[0,0,0,0,0,0,0],unlocked:1,bossDone:{},chests:{},flags:{},bank:0,hidden:0,flw:{},flwN:0,tips:{},time:0,room:'town',entry:'def',lastWorld:0};return s;}
 function fixState(s){const d=newState();for(const k in d)if(s[k]===undefined)s[k]=d[k];for(const id of PARTY_ORDER){if(!s.ch[id])s.ch[id]=d.ch[id];const c=s.ch[id];c.bonus=c.bonus||{};c.st={};c.eq=Object.assign({},CH[id].eq,c.eq||{});}return s;}
 async function newGame(){G=newState();for(const id of PARTY_ORDER)G.ch[id].hp=maxHP(id);G.party=['bean'];await intro();}
 async function loadGame(){const s=readSave();if(!s){newGame();return;}G=fixState(s);GM.mode='field';const sp=G.savePos;if(sp&&ROOMS[sp.room])await goRoom(sp.room,'__save');else await goRoom('town','def');toastQ('Welcome back! ⭐ '+G.stars.filter(Boolean).length+'/7');}
@@ -2037,7 +2178,7 @@ async function bossEncounter(e){const bid=e.bid,B0=BOSS[bid];await say([[B0.img,
  await starGet(B0.star,e);
  buildRoom(room);spawnPlayer(px,pz,1);camSnap();Music.play(F.RD.music||WORLDS[F.RD.world].music);F.lock--;
  if(G.stars.every(Boolean)){await say([[null,'The Star Runway shines across the sky once more!',''],['p_j_king','Wonderful! But... the ground is shaking! Mr Pooping\'s STINK KEEP has risen in the middle of the land!','King Pooh'],['pinco','Then that\'s where we\'re going! Next stop: Mr Pooping!']]);}
- const go=await ask('Return to the World Map?',['Yes','Stay here']);if(go===0)goMap(MAPN.find(n=>n.w===F.RD.world).id);}
+ const go=await ask('Return to the World Map?',['Yes','Stay here']);if(go===0)goMap(MAPN.find(n=>n.w===F.RD.world).id);setTimeout(()=>{toastBusy=toastBusy.then(()=>toast('🧭 Next: '+goalInfo().text+' (Tap 🧭 Where to? for directions)',4.5));},1500);}
 async function starGet(i,e){const sc=F.scene;const s=PROP.star3(.7,STARCOL[i]);const P=F.P;s.position.set(e.x,e.y+5,e.z);sc.add(s);const gl=new THREE.PointLight(STARCOL[i],3,8);s.add(gl);
  Music.stop(true);await tween(1.4,k=>{s.position.set(lerp(e.x,P.x,k),lerp(e.y+5,P.y+2.4,ease.out(k)),lerp(e.z,P.z,k));s.rotation.y+=.15;});Music.jingle('star');SFX.star();
  FX.burst(s.position.clone(),50,{star:1,col:[STARCOL[i],0xffffff,0xffe060],sp:4,up:4,size:.4,life:1.2});P.vy=8;P.ground=false;await tween(1.2,k=>{s.rotation.y+=.25;s.scale.setScalar(1+Math.sin(k*Math.PI)*.4);});sc.remove(s);
@@ -2060,10 +2201,10 @@ let last=performance.now()/1000;
 function loop(){requestAnimationFrame(loop);const t=performance.now()/1000;const dt0=Math.min(.05,t-last);last=t;let dt=dt0;if(R.hs>0){R.hs-=dt0;dt=0;}if(GM.hidden)dt=0;R.t+=dt;F.t+=dt;R.gt=(R.gt||0)+dt;R.lr=t;
  try{
  if(G&&(GM.mode==='field'||GM.mode==='battle'||GM.mode==='map'))G.time+=dt;
- const paused=GM.mode==='battle'&&$('sMenu').classList.contains('on');
+ const paused=GM.mode==='battle'&&$('sMenu').classList.contains('on');if(GM.mode==='battle'&&BT.ui&&BT.ui.mode==='cmd'&&G)tip('timed','<b>Timed hits!</b> Press <b>A</b> again right as your attack lands (watch for the <b>❗</b>). When an enemy flashes a red <b>!</b>, press A just before it hits to <b>guard</b>.');
  if(!paused)tickTweens(dt);tickDlg();tickNav();
  if(In.consume('MENU')||(GM.mode!=='battle'&&!UI.modal&&In.consume('X')&&GM.mode!=='title')){if(!UI.modal){if((GM.mode==='field'&&!F.lock)||GM.mode==='map'&&!F.lock&&!MAPM.moving)openMenu();else if(GM.mode==='battle'&&BT.ui&&BT.ui.mode==='cmd')openMenu('party');}}
- if(GM.mode==='field'){updPlayer(dt);updEnts(dt);updCam(dt);updHint();}
+ if(GM.mode==='field'){updPlayer(dt);updEnts(dt);updCam(dt);updHint();tickTips(dt);}
  else if(GM.mode==='map'){updMap(dt);updEnts(dt);updCam(dt);$('hint').style.display='none';}
  else if(GM.mode==='title'){F.t+=0;const a=R.t*.08,d=48;R.cam.position.set(21+Math.cos(a)*d*.75,d*.85,18+Math.sin(a)*d*.75);R.cam.lookAt(21,0,18);updEnts(dt);}
  else if(GM.mode==='battle'&&BT.scene){updBattle(dt,paused);$('hint').style.display='none';}
@@ -2093,7 +2234,8 @@ function bindTouch(){const zone=$('stickZone'),base=$('stickBase'),knob=$('stick
  $('bui').addEventListener('pointerdown',e=>{if(e.target===$('bui')||e.target.id==='bover'||e.target.id==='bcurs')gl.dispatchEvent(new PointerEvent('pointerdown',e));});}
 // ---------- boot ----------
 document.addEventListener('visibilitychange',()=>{GM.hidden=document.hidden;try{if(typeof AC!=='undefined'&&AC){if(document.hidden)AC.suspend();else AC.resume();}}catch(e){}});
-(async function boot(){try{initGL();applySet();bindTouch();await loadArt();}catch(e){console.error(e);}$('loading').style.display='none';showTitle();requestAnimationFrame(loop);
+addEventListener('keydown',e=>{if(e.code==='KeyH'&&!(e.target&&e.target.tagName==='INPUT'))showHelp();});
+(async function boot(){try{initGL();applySet();bindTouch();$('helpBtn').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();initAudio();showHelp();});$('tipbox').addEventListener('pointerdown',e=>{e.stopPropagation();const el=$('tipbox');clearTimeout(el._t);el.classList.remove('on');setTimeout(nextTip,250);});await loadArt();}catch(e){console.error(e);}$('loading').style.display='none';showTitle();requestAnimationFrame(loop);
  window.BR={quick:async(party,room)=>{if($('sTitle').classList.contains('on'))closeScr('sTitle');G=newState();G.party=party||['bean','pinco'];for(const id of PARTY_ORDER)G.ch[id].hp=maxHP(id);await goRoom(room||'town','def',{instant:1});},G:()=>G,F,BT:()=>BT,GM,In,startBattle,goRoom,goMap,cheat,newGame,loadGame,ROOMS,MAPN,setG:g=>{G=g},SFX,Music,UI,R};})();
 
 </script>
