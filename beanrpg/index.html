@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mr Bean RPG">
 <meta name="theme-color" content="#2a1a5a"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Mr Bean RPG</title><script>window.__BUILD__="v1.3"</script>
+<title>Mr Bean RPG</title><script>window.__BUILD__="v1.4"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);--F:"Trebuchet MS","Avenir Next Rounded","Arial Rounded MT Bold",system-ui,sans-serif;--pa:linear-gradient(180deg,#3d56c8 0%,#2a3c9e 55%,#1e2b78 100%);--bd:#fff6d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -902,7 +902,7 @@ function mkFollowers(){const P=F.P;if(!P)return;if(P.fol)for(const f of P.fol){F
   g.position.set(P.x,P.y,P.z);F.scene.add(g);const sh=blob(.3);sh.position.set(P.x,P.y+.02,P.z);F.scene.add(sh);
   P.fol.push({id,mesh:g,b,sh,shoes,x:P.x-(i+1)*.3*P.face,z:P.z,y:P.y,face:P.face,fl:P.face,hop:0,gap:(i+1)*6});});}
 function updFollowers(dt){const P=F.P;if(!P||!P.trail)return;if(P.folKey!==G.party.join())mkFollowers();if(!P.fol||!P.fol.length)return;const T=P.trail;
- const h=T[0];if(!h||Math.hypot(h.x-P.x,h.z-P.z)>3){T.length=0;for(let i=0;i<40;i++)T.push({x:P.x,y:P.y,z:P.z});}
+ const h=T[0];if(!h||Math.hypot(h.x-P.x,h.z-P.z)>3){T.length=0;const bx=-SR.x*P.face,bz=-SR.z*P.face;for(let i=0;i<40;i++){let x=P.x+bx*i*.14,z=P.z+bz*i*.14;if(cellH(x,z)>50||cellH(x,z)<-50){x=P.x;z=P.z;}T.push({x,y:P.y,z});}for(const f of P.fol){const c=T[Math.min(T.length-1,f.gap)];f.x=c.x;f.z=c.z;f.y=c.y;}}
  else if(Math.hypot(h.x-P.x,h.z-P.z)>.14||Math.abs(h.y-P.y)>.12){T.unshift({x:P.x,y:P.y,z:P.z});if(T.length>60)T.pop();}
  for(const f of P.fol){const c=T[Math.min(T.length-1,f.gap)];const ox=f.x,oz=f.z;const k=Math.min(1,dt*10);f.x=lerp(f.x,c.x,k);f.z=lerp(f.z,c.z,k);const gy=floorAt(f.x,f.z,c.y+.2);f.y=lerp(f.y,c.y,Math.min(1,dt*14));
   const v=Math.hypot(f.x-ox,f.z-oz)/Math.max(dt,1e-4);const dxs=(f.x-ox)*SR.x+(f.z-oz)*SR.z;if(dxs<-.002)f.face=-1;else if(dxs>.002)f.face=1;f.fl=lerp(f.fl,f.face,Math.min(1,dt*12));
@@ -986,12 +986,14 @@ function updEnts(dt){const P=F.P;
  if(F.water)R.waterTex.offset.set(F.t*.03,F.t*.05);}
 function updEnemy(e,dt){const P=F.P;animModel(e.mesh,F.t,e.st==='chase'?1.8:1);e.cool=Math.max(0,e.cool-dt);if(e.dead)return;
  const dx=P.x-e.x,dz=P.z-e.z,dist=Math.hypot(dx,dz);let sp=0,dir=e.dir;
- if(F.lock||UI.modal){}else if(dist<3.6&&e.cool<=0&&Math.abs(P.y-e.y)<2.5){e.st='chase';dir=Math.atan2(dx,dz);sp=2.3;}
+ if(F.lock||UI.modal){}else if((dist<4.6||(e.st==='chase'&&dist<7))&&e.cool<=0&&Math.abs(P.y-e.y)<2.5){if(e.st!=='chase'){e.alT=.9;SFX.sel();}e.st='chase';dir=Math.atan2(dx,dz);sp=e.alT>.55?0:2.6;}
  else{e.st='idle';e.t-=dt;if(e.t<0){e.t=rnd(1,2.6);e.dir=Math.random()*Math.PI*2;e.walk=Math.random()<.65;}if(e.walk){sp=1;const hd=Math.hypot(e.x-e.hx,e.z-e.hz);if(hd>e.rad){e.dir=Math.atan2(e.hx-e.x,e.hz-e.z);}dir=e.dir;}}
  if(sp){const nx=e.x+Math.sin(dir)*sp*dt,nz=e.z+Math.cos(dir)*sp*dt;const fly=EN[e.type].fly;const h=cellH(nx,nz);if(h>-50&&h<50&&(fly||Math.abs(h-e.y)<.3)&&!F.cols.some(c=>!c.box&&Math.hypot(nx-c.x,nz-c.z)<c.r+.3&&c.top>e.y+.3)){e.x=nx;e.z=nz;if(!fly)e.y=h;else e.y=lerp(e.y,Math.max(h,e.y),.1);}else e.dir+=Math.PI*.7;e.mesh.rotation.y=lerp(e.mesh.rotation.y,dir,.15);}
- e.mesh.position.set(e.x,e.y,e.z);e.sh.position.set(e.x,e.y+.02,e.z);
+ e.alT=Math.max(0,(e.alT||0)-dt);const ah=e.alT>.55?Math.sin((.9-e.alT)/.35*Math.PI)*.35:0;e.mesh.position.set(e.x,e.y+ah,e.z);e.sh.position.set(e.x,e.y+.02,e.z);
+ if(e.alT>0){if(!e.al){e.al=new THREE.Sprite(new THREE.SpriteMaterial({map:alertTex(),depthTest:false,transparent:true}));e.al.renderOrder=5;F.scene.add(e.al);}e.al.visible=true;const k=Math.min(1,(.9-e.alT)*8);e.al.scale.set(.55*k,.55*k,1);e.al.position.set(e.x,e.y+1.55,e.z);e.al.material.opacity=Math.min(1,e.alT*4);}else if(e.al)e.al.visible=false;
  // contact
  if(!F.lock&&!UI.modal&&e.cool<=0&&P.inv<=0){const top=e.y+.9*e.mesh.scale.y*(EN[e.type].fly?1.4:1);if(dist<.72&&P.y<top+.1&&P.y+P.h>e.y){const first=!P.ground&&P.vy<0&&P.y>top-.45;encounter(e,first);}}}
+function alertTex(){if(R.alertTex)return R.alertTex;const c=document.createElement('canvas');c.width=c.height=64;const x=c.getContext('2d');x.fillStyle='#ff3a4a';x.strokeStyle='#fff';x.lineWidth=5;x.beginPath();x.arc(32,32,26,0,7);x.fill();x.stroke();x.fillStyle='#fff';x.font='900 40px Arial';x.textAlign='center';x.textBaseline='middle';x.fillText('!',32,34);return R.alertTex=new THREE.CanvasTexture(c);}
 async function encounter(e,first){F.lock++;SFX.enc();if(first){F.P.vy=8;FX.burst(new THREE.Vector3(e.x,e.y+1,e.z),12,{star:1,col:0xffe060});}
  const grp=e.group.slice();const res=await startBattle(grp,{first,theme:F.RD.btheme||F.RD.theme,world:F.RD.world});
  F.lock--;if(res==='win'){e.dead=1;F.scene.remove(e.mesh);F.scene.remove(e.sh);F.ents.splice(F.ents.indexOf(e),1);}else if(res==='run'){e.cool=3;F.P.inv=2;}}
@@ -1240,7 +1242,7 @@ function addCritters(sc,M,theme,n){const DT=DRESS[theme];if(!DT||!DT.crit.length
     if(fly)m.userData.body.children.forEach(w=>{if(w.userData.wing)w.rotation.z=Math.sin(R.t*20+c.ph)*.8*w.userData.wing;});}});}}
 // ---------- per-room hook ----------
 function dressRoom(M,sc,RD,id){const th=RD.theme;try{dressMap(M,sc,th,{h0:RD.h0||4,seed:id.length*31+(id.charCodeAt(1)||0),excl:id==='map'?MAPN.map(n=>[n.x+.5,n.z+.5,2.6,2]):[]});}catch(e){console.error(e);}
- const by=th==='map'?.2-.01:-3.4;bgRing(sc,th,0,0,M.w,M.d,by,{seed:id.length,span:th==='map'?240:150,n:th==='map'?60:280});
+ let env=null;if(th!=='map'&&th!=='title')try{env=encloseRoom(M,sc,RD,id);}catch(e){console.error(e);}const by=th==='map'?.2-.01:env?env.gy:-3.4;bgRing(sc,th,0,0,M.w,M.d,by,{seed:id.length,span:th==='map'?240:150,n:th==='map'?60:280});
  if(RD.extra){const K=new Kit(sc);for(const[k,x,z,s0,ry]of RD.extra){const s=s0||1,y=cellH(x,z);if(!(y>-50))continue;K.put(k,x,y,z,s,ry||0,KDEF[k].tint?pick([0xff4a8a,0x4ac8ff,0xffd84a]):1,null,.4);if(KDEF[k].r)F.cols.push({x,z,r:KDEF[k].r*s,top:y+1.2*s});}K.done();}
  Amb.init(sc,th,-2,-2,M.w+2,M.d+2,th==='map'?1.2:.6,th==='map'?6:4.5);if(th!=='map'&&th!=='title')addCritters(sc,M,th,th==='town'?7:3);}
 
@@ -1398,6 +1400,65 @@ let tipT=0;function tickTips(dt){if(!G||!F.P||GM.mode!=='field'||F.lock||UI.moda
   else if(e.kind==='flower'&&!e.got)tip('flower','<b>Sparkly flowers</b> can be picked! Walk into them (or press A). Rare ones are worth lots of coins.');
   else if(e.tag==='bank'||e.shop&&/Bank/.test(e.name||''))tip('bank','<b>Pooh Bank</b>: sell flowers for coins, or deposit coins. Every Bean Star adds 10% interest!');
   else if(e.kind==='enemy')tip('enemy','Touch an enemy to battle. Jump on its head first for a <b>First Strike</b>!');}}
+
+// ================= ENVIRONMENT: rooms as enclosed places (overhaul stage 2) =================
+// Back cliffs with layered strata on the far sides, lower terrain on the near sides,
+// foreground framing objects that fade when Mr Bean walks behind them.
+const STRATA={
+ meadow:{c:[0x9a6a44,0xb47e50,0x86593a,0xc8925e,0x7a5034,0xa87048],lip:0x6cc04a,lip2:0x58b03c,fg:[['round',3],['pine',2],['pink',1],['rock',1]]},
+ town:{c:[0xe8c4a0,0xd8a888,0xf2d6b8,0xc89a7a,0xe0b494],lip:0x7ac85a,lip2:0x68b84a,fg:[['pink',3],['round',2],['bush',1]]},
+ mine:{c:[0x5e4a3a,0x4a3a2e,0x6a5444,0x3a2c22,0x54402f],lip:0x6a5444,lip2:0x5a4636,fg:[['stalag',3],['rock',2],['crystal',2],['pcrystal',1]]},
+ court:{c:[0xd88a50,0xe8a868,0xc07040,0xf0c080,0xb06a3a],lip:0xa8c860,lip2:0x94b850,fg:[['palm',4],['autumn',1],['rock',1]]},
+ snow:{c:[0xb8c8e0,0x9aaccc,0xd0dcf0,0x8a9cbc,0xa8bad6],lip:0xf4f8ff,lip2:0xe4ecf8,fg:[['snowpine',4],['snowrock',1],['ice',1]]},
+ party:{c:[0xd98aac,0xb070c0,0xe8a0c8,0x9060b0,0xc880b8],lip:0x8ad86a,lip2:0x74c858,fg:[['balloon',3],['pink',2],['present',1]]},
+ swamp:{c:[0x3a4430,0x4a5438,0x2e3626,0x56603e,0x404a32],lip:0x4a6a36,lip2:0x3e5a2e,fg:[['dead',3],['dpine',3],['mossrock',1]]},
+ manor:{c:[0x3a3a54,0x4a4a66,0x2c2c44,0x5a5a78,0x44445e],lip:0x4a5a6a,lip2:0x3e4c5a,fg:[['dead',3],['tomb',2],['pillar',1]]},
+ keep:{c:[0x4a3430,0x5a4038,0x3a2826,0x6a4c40,0x523a32],lip:0x8a6a5a,lip2:0x7a5a4a,fg:[['pillar',3],['rock',2],['torch',1]]}};
+function encloseRoom(M,sc,RD,id){if(id==='map'||RD.noEnclose)return null;const th=RD.theme,S=STRATA[th]||STRATA.meadow,W=M.w,D=M.d,r=srand(W*131+D*7+id.charCodeAt(0)*13+(id.charCodeAt(1)||0));
+ const DT=DRESS[th]||DRESS.meadow,q=DQ();
+ const Hc=(x,z)=>{if(x<0||z<0||x>=W||z>=D)return null;const t=M.t[z*W+x];if(t===255||TTI[t]==='water')return null;return M.h[z*W+x]*HU;};
+ const BY=-7,DEP=14;const B=[];const col=new THREE.Color();
+ const band=(x0,y0,z0,x1,y1,z1,c)=>B.push([x0,y0,z0,x1,y1,z1,c]);
+ // which far-edge cells are exits
+ const exitAt=(side,i)=>F.exits.some(e=>side==='W'?(e.x0<=.01&&i+.5>e.z0-.7&&i+.5<e.z1+.7):(e.z0<=.01&&i+.5>e.x0-.7&&i+.5<e.x1+.7));
+ const edgeH=(side,a,b)=>{let m=-99;for(let i=Math.max(0,a);i<Math.min(side==='W'?D:W,b);i++)for(let k=0;k<2;k++){const h=side==='W'?Hc(k,i):Hc(i,k);if(h!=null&&h>m)m=h;}if(m<-50){m=(RD.h0||4)*HU;}return m;};
+ const K=new Kit(sc);const tops=[];
+ for(const side of['W','N']){const L=side==='W'?D:W;let i=side==='W'?0:-DEP;
+  while(i<L){const ex=i>=0&&exitAt(side,i);let n=ex?1:1+Math.floor(r()*3);while(n>1&&i+n-1<L&&i+n-1>=0&&exitAt(side,i+n-1))n--;
+   if(ex){while(i+n<L&&exitAt(side,i+n))n++;}
+   const a=i,b=Math.min(L,i+n);const eh=edgeH(side,a,b);
+   const top=ex?eh:eh+2.4+r()*2.2+(a<0?.8:0);
+   // stacked strata bands with small setbacks
+   let y=BY,k=Math.floor(r()*5);while(y<top-.3){const t=Math.min(top-.25-y,.45+r()*.45);const ins=-(r()*.16);col.set(S.c[k%S.c.length]).multiplyScalar(.92+r()*.16);
+    if(side==='W')band(-DEP,y,a,ins,y+t,b,col.getHex());else band(a,y,-DEP,b,y+t,ins,col.getHex());y+=t;k++;}
+   const lc=ex?TT.path.t.getHex():(r()<.5?S.lip:S.lip2);
+   if(side==='W')band(-DEP,top-.25,a,.04,top,b,lc);else band(a,top-.25,-DEP,b,top,.04,lc);
+   if(!ex)tops.push({side,a,b,top});else{// a little path tongue + posts mark the way out
+    const c=(a+b)/2;for(const s of[-1,1]){const px=side==='W'?-.4:c+s*((b-a)/2+.2),pz=side==='W'?c+s*((b-a)/2+.2):-.4;K.put(th==='mine'||th==='keep'?'torch':'pot',px,top,pz,.9,0,1,null,.3);}}
+   i=b;}}
+ // instanced strata boxes
+ const g=geo('ubox',()=>new THREE.BoxGeometry(1,1,1).translate(.5,.5,.5));const m=new THREE.MeshStandardMaterial({map:R.noise,roughness:.92,metalness:0});
+ const im=new THREE.InstancedMesh(g,m,B.length);const m4=new THREE.Matrix4(),v=new THREE.Vector3(),s=new THREE.Vector3(),qq=new THREE.Quaternion();
+ B.forEach((b,i)=>{m4.compose(v.set(b[0],b[1],b[2]),qq,s.set(b[3]-b[0],b[4]-b[1],b[5]-b[2]));im.setMatrixAt(i,m4);im.setColorAt(i,col.set(b[6]));});
+ im.instanceMatrix.needsUpdate=true;im.instanceColor.needsUpdate=true;im.receiveShadow=true;im.castShadow=SET.q!=='low';sc.add(im);
+ // dress the cliff tops: a row of wall-kit trees/rocks along the rim, more scattered behind
+ const kinds=DT.wall.length?DT.wall:[['rock',1]];
+ for(const t of tops){const len=t.b-t.a;const n=Math.max(1,Math.round(len*(.6+r()*.5)*Math.max(.6,q)));
+  for(let j=0;j<n;j++){const along=t.a+r()*len,dep=-.7-r()*2.2;const k=wpick(kinds,r);const sc2=1.0+r()*.6;const x=t.side==='W'?dep:along,z=t.side==='W'?along:dep;
+   K.put(k,x,t.top,z,sc2,r()*6.28,KDEF[k].tint?pick([0xff4a8a,0x4ac8ff,0xffd84a,0x8a6aff]):(.85+r()*.3),null,.4);}
+  if(DT.grass)for(let j=0;j<Math.round(len*3*q);j++){const along=t.a+r()*len,dep=-.2-r()*4;K.put('grass',t.side==='W'?dep:along,t.top,t.side==='W'?along:dep,1.1+r()*.6,r()*6,DT.gc);}
+  for(let j=0;j<Math.round(len*.5);j++){const along=t.a+r()*len,dep=-3.5-r()*9;const k=wpick(kinds,r);K.put(k,t.side==='W'?dep:along,t.top,t.side==='W'?along:dep,1.2+r()*.8,r()*6.28,KDEF[k].tint?pick([0xff4a8a,0x4ac8ff,0xffd84a]):(.8+r()*.3),null,0);}}
+ K.done();
+ // foreground framing objects on the lower ground near the camera
+ let nearMin=99;for(let x=0;x<W;x++){const h=Hc(x,D-1);if(h!=null)nearMin=Math.min(nearMin,h);}for(let z=0;z<D;z++){const h=Hc(W-1,z);if(h!=null)nearMin=Math.min(nearMin,h);}if(nearMin>50)nearMin=(RD.h0||4)*HU;
+ const gy=nearMin-1.25;const fg=[];
+ const nearExit=(x,z)=>F.exits.some(e=>x>e.x0-3&&x<e.x1+3&&z>e.z0-3&&z<e.z1+3);
+ const place=(x,z)=>{if(nearExit(x,z))return;const k=wpick(S.fg,r);const s=(KDEF[k].m==='leaf'?1.5:1.3)+r()*.6;const grp=new THREE.Group();sc.add(grp);const K2=new Kit(grp);K2.put(k,x,gy,z,s,r()*6.28,KDEF[k].tint?pick([0xff4a8a,0x4ac8ff,0xffd84a]):(.9+r()*.2),null,0);const ms=K2.done();
+  ms.forEach(mm=>{if(mm.material&&mm.material.clone){mm.material=mm.material.clone();mm.material.transparent=true;}mm.castShadow=false;});fg.push({x,z,ms,op:1});};
+ for(let z=2+r()*3;z<D+2;z+=4.5+r()*3.5)place(W+1+r()*1.6,z);
+ for(let x=2+r()*3;x<W+2;x+=4.5+r()*3.5)place(x,D+1+r()*1.6);
+ if(fg.length)F.ents.push({kind:'deco',upd(dt){const P=F.P;if(!P)return;for(const f of fg){const dx=f.x-P.x,dz=f.z-P.z;const along=(dx+dz)*.7071,perp=Math.abs(dx-dz)*.7071;const hide=along>0&&along<9&&perp<2.4;const t=hide?.28:1;if(Math.abs(f.op-t)>.01){f.op=lerp(f.op,t,Math.min(1,dt*6));for(const mm of f.ms){mm.material.opacity=f.op;mm.material.depthWrite=f.op>.9;}}}}});
+ return {gy};}
 
 const gnow=()=>(R.gt||0)+Math.min(.05,Math.max(0,now()-(R.lr||now())));
 // ================= BATTLE =================
