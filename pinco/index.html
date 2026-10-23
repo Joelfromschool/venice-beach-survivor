@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.9.4"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.9.5"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -155,7 +155,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
  <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ RUNWAY</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
- <div class="ver">v2.9.4</div>
+ <div class="ver">v2.9.5</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div id="th-who"></div><div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
@@ -2255,18 +2255,42 @@ function zPinArm(bt){const G=ZSH.pinco,H=zHands(bt),L=G.len;let tx=G.r[0]+H.R[0]
 function zFedora(x,o,w,a,lift,tilt){const lb=w==='bean'&&o.mech&&IT[o.mech]&&IT[o.mech].k!=='arms'?210:0;const P={pinco:[175,-10],pooh:[182,150],bean:[198,60-lb]}[w]||[175,-10];x.save();x.globalAlpha=a;x.translate(P[0]+60*lift,P[1]-90*lift);x.rotate(-.5*tilt);
  const br=new Path2D();br.ellipse(0,0,120,24,0,0,7);fillP(x,br,'#1a1424','#000',4);const cr=new Path2D();cr.moveTo(-70,0);cr.bezierCurveTo(-74,-90,-40,-104,0,-88);cr.bezierCurveTo(40,-104,74,-90,70,0);cr.closePath();fillP(x,cr,'#231a30','#000',4);x.fillStyle='#f5f5f5';x.fillRect(-70,-26,140,18);x.restore();}
 // moonwalk solo timeline (beats since solo start)
-function zMw(so,d){const sb=dpBeat()-so.b0;if(so.dir==null){const G=DP.geo||{w:400};so.dir=d.cx>G.w/2?-1:1;so.dist=Math.min(d.dh*.8,G.w*.3);}
- let dx=0,ph='glide';if(sb<.5)ph='ready';else if(sb<6)dx=so.dir*so.dist*ZEZ((sb-.5)/5.5);else if(sb<8){dx=so.dir*so.dist;ph='spin';}else if(sb<10.5){dx=so.dir*so.dist;ph='toe';}else if(sb<16)dx=so.dir*so.dist*(1-ZEZ((sb-10.5)/5.5));else ph='zombie';
- return{sb,dx,ph,sliding:(sb>=.5&&sb<6)||(sb>=10.5&&sb<16)};}
+function zCS(p){const a=.12;p=p<0?0:p>1?1:p;return p<a?p*p/(2*a*(1-a)):p>1-a?1-(1-p)*(1-p)/(2*a*(1-a)):(p-a/2)/(1-a);}
+function zMw(so,d){const sb=dpBeat()-so.b0;if(so.x0==null){const G=DP.geo||{w:400},m=Math.max(G.w*.06,d.dh*.2),lo=m,J=dpJuke(G.w,G.h),hi2=Math.min(G.w-m,J.x-J.r-d.dh*.12),x0=DPCL(d.cx,lo,hi2);so.x0=d.cx;so.x1=x0-lo>hi2-x0?lo:hi2;so.dir=Math.sign(so.x1-d.cx)||1;so.dist=Math.abs(so.x1-d.cx);}
+ const P1=[.5,5.5],TU=[5.5,6.5],P2=[6.5,11.5],SP=[11.5,13.5],TO=[13.5,16],D=so.dist,dr=so.dir,spd=D/5;
+ let X=0,ph,f=-dr,pp=0;
+ if(sb<P1[0]){ph='ready';}
+ else if(sb<P1[1]){ph='slide1';pp=(sb-P1[0])/5;X=dr*D*zCS(pp);}
+ else if(sb<TU[1]){ph='turn';X=dr*D;pp=sb-TU[0];f=-dr;}
+ else if(sb<P2[1]){ph='slide2';pp=(sb-P2[0])/5;X=dr*D*(1-zCS(pp));f=dr;}
+ else if(sb<SP[1]){ph='spin';f=dr;pp=(sb-SP[0])/2;}
+ else if(sb<TO[1]){ph='toe';f=dr;pp=(sb-TO[0])/2.5;}
+ else{ph='zombie';f=dr;}
+ const travel=ph==='slide1'?dr:ph==='slide2'?-dr:0;
+ return{sb,dx:X,ph,f,pp,travel,spd,sliding:travel!==0};}
+// side-profile moonwalk shoes in world coords; toe points toward facing f
+function zShoe(x,hx,gy,L,f,lift,a){x.save();x.globalAlpha=a==null?1:a;x.translate(hx,gy);x.scale(f,1);const H=L*.34;
+ if(lift>0){x.translate(L/2,0);x.rotate(lift);x.translate(-L/2,0);}
+ x.fillStyle='#f4f4f4';x.strokeStyle='#222';x.lineWidth=Math.max(1,L*.04);x.beginPath();x.rect(-L*.42,-H*2.1,L*.36,H*1.3);x.fill();x.stroke();
+ const sh=new Path2D();sh.moveTo(-L/2,0);sh.lineTo(-L/2,-H*.95);sh.quadraticCurveTo(-L*.3,-H*1.15,-L*.02,-H*.95);sh.quadraticCurveTo(L*.36,-H*.85,L*.5,-H*.25);sh.quadraticCurveTo(L*.52,0,L*.4,0);sh.closePath();
+ x.save();x.strokeStyle='rgba(230,255,220,.85)';x.lineWidth=Math.max(2,L*.1);x.lineJoin='round';x.stroke(sh);x.restore();x.fillStyle='#16121c';x.fill(sh);x.lineWidth=Math.max(1,L*.035);x.strokeStyle='#000';x.stroke(sh);x.fillStyle='rgba(255,255,255,.55)';x.beginPath();x.ellipse(L*.18,-H*.62,L*.13,H*.14,-.2,0,7);x.fill();
+ x.fillStyle='#3b3346';x.fillRect(-L/2,-H*.14,L*.92,H*.14);x.restore();}
 const _dpDancer294=dpDancer;dpDancer=function(x,o,cx,fy,dh,bt,li,op){op=op||{};if(!ZS()||op.lift)return _dpDancer294(x,o,cx,fy,dh,bt,li,op);
  const sv=ST.on;ST.on=false;const w=WHO(o),PI=Math.PI,now=performance.now()/1000;let dy=0,rot=0,sx=1,sy=1,dx=0,ph=0,sc=1,arm,hat=0,hatL=0,zomb=true,mw=null;
- if(op.solo){sc=1.12;mw=zMw(op.solo,{cx,dh});DP.zMw=mw.ph;const sb=mw.sb;
-  if(mw.sliding){zomb=false;const dir=op.solo.dir,ret=sb>=10.5;rot=-(ret?-dir:dir)*.09;ph=Math.sin(sb*PI)*1.2;dy=-Math.abs(Math.sin(sb*PI))*dh*.012;
-   x.save();x.strokeStyle='rgba(180,255,170,.55)';x.lineWidth=3;x.lineCap='round';for(let k=0;k<3;k++){const yy=fy-2-k*5,len=dh*(.18+.08*k)*(.6+.4*Math.abs(Math.sin(sb*PI*2+k)));const back=-(ret?-dir:dir);x.beginPath();x.moveTo(cx+back*dh*.12,yy);x.lineTo(cx+back*(dh*.12+len),yy);x.stroke();}x.restore();
-   if(Math.random()<.25)spark(x,cx+(Math.random()-.5)*dh*.25,fy-3,4+Math.random()*4,.9);}
-  else if(mw.ph==='spin'){zomb=false;const p=(sb-6)/2;sx=Math.cos(p*PI*4);dy=-Math.sin(p*PI)*dh*.05;}
-  else if(mw.ph==='toe'){zomb=false;const p=(sb-8)/2.5,e=ZEZ(Math.min(1,p*4));sy=1+.08*e;dy=-dh*.05*e;rot=.04*Math.sin(p*PI*2);hat=Math.min(1,p*5,(1-p)*5);hatL=Math.sin(DPCL((p-.25)/.5,0,1)*PI);if(w==='pinco')arm=[300+40*hatL,-30-40*hatL,-1];if(p>.2&&Math.random()<.35)DP.conf.push(dpConf(DP.geo.w,cx,fy-dh*.9));}
-  else if(mw.ph==='ready'){zomb=false;sy=.97;}}
+ let mwF=0,feet=null,ghosts=null;
+ if(op.solo){sc=1.12;mw=zMw(op.solo,{cx,dh});DP.zMw=mw.ph;DP.zMwF=mw.f;DP.zMwT=mw.travel;const sb=mw.sb,f=mw.f;
+  if(mw.ph==='slide1'||mw.ph==='slide2'||mw.ph==='ready'||mw.ph==='turn'){zomb=false;ph=0;dy=0;
+   if(mw.ph==='turn'){const q=ZEZ(mw.pp);sx=.86*f*Math.cos(q*PI);rot=f*.17*Math.cos(q*PI);mwF=sx;}
+   else{const ein=mw.ph==='ready'?ZEZ(sb/.5):1;sx=f*FLERP(1,.86,ein);rot=f*.17*ein;mwF=f;}
+   const u=((sb%1)+1)%1,sp=DPCL(mw.spd/2,dh*.035,dh*.1),L=dh*.24,A=Math.floor(sb)%2===0;
+   if(mw.travel){const sl=f*sp*(1-2*u),tp=-f*sp*(1-2*u);
+    feet=A?[{o:sl,l:0},{o:tp,l:.55}]:[{o:tp,l:.55},{o:sl,l:0}];
+    // floor scuffs under the sliding foot
+    ghosts=[1,2,3].map(k=>({x:cx-mw.travel*k*dh*.13,a:.28-.07*k}));}
+   else feet=[{o:-dh*.055,l:0},{o:dh*.055,l:0}];
+   feet.L=L;}
+  else if(mw.ph==='spin'){zomb=false;const p=mw.pp;sx=f*Math.cos(p*PI*4);dy=-Math.sin(p*PI)*dh*.05;}
+  else if(mw.ph==='toe'){zomb=false;const p=mw.pp,e=ZEZ(Math.min(1,p*4));sx=f;sy=1+.08*e;dy=-dh*.05*e;rot=.04*Math.sin(p*PI*2);hat=Math.min(1,p*5,(1-p)*5);hatL=Math.sin(DPCL((p-.25)/.5,0,1)*PI);if(w==='pinco')arm=[300+40*hatL,-30-40*hatL,-1];if(p>.2&&Math.random()<.35)DP.conf.push(dpConf(DP.geo.w,cx,fy-dh*.9));}}
  if(zomb){const Z=zMove(bt),f=Z.f,sw=Math.pow(1-f,3),side=Z.bi%2?1:-1;
   if(Z.m==='shrug'){dy=-dh*.03*sw;sy=1+.03*sw;rot=side*.09*ZEZ(Math.min(1,f*6));}
   else if(Z.m==='clawL'){const e=ZEZ(Math.min(1,(Z.q-2)*3));dx=-dh*.05*e;rot=-.07*e-.03*sw;dy=dh*.012*sw;}
@@ -2276,12 +2300,18 @@ const _dpDancer294=dpDancer;dpDancer=function(x,o,cx,fy,dh,bt,li,op){op=op||{};i
   const sf=op.soft||0;if(sf>0){const k=1-sf*.6;dy*=k;dx*=k;rot*=k;sy=1+(sy-1)*k;}
   if(w==='pinco')arm=zPinArm(bt);}
  if(op.sq){const t=now-op.sq;if(t<.6){const e2=Math.exp(-t*7)*Math.cos(t*26);sy*=1-.2*e2;sx*=1+.15*e2;}}
- const s=dh/1100*sc;x.save();x.fillStyle='rgba(20,0,30,.4)';x.beginPath();x.ellipse(cx,fy,dh*.16,dh*.025,0,0,7);x.fill();
+ const s=dh/1100*sc,oD=feet?Object.assign({},o,{shoe:null}):o;
+ if(ghosts){for(const g of ghosts){x.save();x.globalAlpha=Math.max(0,g.a);x.translate(g.x,fy);x.rotate(rot);x.scale(sx,sy);x.translate(-225*s,-935*s);x.scale(s,s);try{drawPinco(x,oD,{ph:0});}catch(e){}x.restore();}
+  x.save();x.lineCap='round';for(let k=0;k<5;k++){const yy=fy-dh*(.08+k*.17),len=dh*(.35+.12*(k%3)),x0=cx+(-mw.travel)*dh*.22;const gr=x.createLinearGradient(x0,0,x0-mw.travel*len,0);gr.addColorStop(0,'rgba(190,255,180,.5)');gr.addColorStop(1,'rgba(190,255,180,0)');x.strokeStyle=gr;x.lineWidth=k===0?4:2.5;x.beginPath();x.moveTo(x0,yy);x.lineTo(x0-mw.travel*len,yy);x.stroke();}x.restore();}
+ x.save();x.fillStyle='rgba(20,0,30,.4)';x.beginPath();x.ellipse(cx,fy,dh*.16,dh*.025,0,0,7);x.fill();
  x.translate(cx+dx,fy+dy);x.rotate(rot);x.scale(sx,sy);x.translate(-225*s,-935*s);x.scale(s,s);
- try{drawPinco(x,o,{ph,arm});}catch(e){}
+ try{drawPinco(x,oD,{ph,arm});}catch(e){}
  if(zomb)try{zClaws(x,o,w,bt,op.soft,w==='pinco'?arm:undefined);}catch(e){}
  if(hat>0)zFedora(x,o,w,hat,hatL,hatL);
- x.restore();ST.on=sv;DP.zState={m:zomb?zMove(bt).m:null,mw:mw&&mw.ph};};
+ x.restore();
+ if(feet){const ff=mwF||1;for(const q of feet)zShoe(x,cx+q.o,fy+1,feet.L,ff>=0?1:-1,q.l,1);
+  if(mw&&mw.travel){const fs=feet.find(q=>!q.l);if(fs){x.save();x.globalCompositeOperation='lighter';const gx=cx+fs.o,g=x.createRadialGradient(gx,fy,0,gx,fy,feet.L*.9);g.addColorStop(0,'rgba(200,255,190,.55)');g.addColorStop(1,'rgba(200,255,190,0)');x.fillStyle=g;x.beginPath();x.ellipse(gx,fy,feet.L*.9,feet.L*.25,0,0,7);x.fill();x.restore();for(let k=0;k<3;k++){const a=(now*3+k/3)%1;spark(x,gx+mw.travel*feet.L*(.4+a*1.2),fy-2-a*feet.L*.4,(1-a)*feet.L*.22+2,.9*(1-a));}}}}
+ ST.on=sv;DP.zState={m:zomb?zMove(bt).m:null,mw:mw&&mw.ph,f:mw&&mw.f,travel:mw&&mw.travel};};
 // spotlight + dancer follow the moonwalk glide
 function zSoloDx(d){const so=DP.solo;if(!ZS()||!so)return 0;return zMw(so,d).dx;}
 // --- spooky lighting, fog, lightning ---
