@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.9.7"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.10.0"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -80,6 +80,37 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 #sc-unl{font-weight:800;font-size:14px;color:var(--pu)}#sc-tip{font-weight:700;font-size:13px;color:#a06aa8;margin:4px 0 10px}
 .btn2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.btn2 .big{min-height:52px;font-size:17px;padding:0 10px}
 /* closet */
+/* v2.10 cinema */
+@media (max-width:430px){.cltabs{gap:6px}.cltabs .ctab{min-width:0;font-size:14px!important}.cltabs .ctab.thopen{font-size:25px!important}}
+.cltabs .ctab{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.cltabs .ctab.thopen{flex:0 0 58px;font-size:25px;padding:0;background:linear-gradient(#ffe27a,#ffb300);box-shadow:0 3px 0 #c98600}
+#s-theater{background:radial-gradient(ellipse at 50% 0,#4c2a72,#160a26 72%);overflow:hidden}
+#s-theater>*{position:relative;z-index:1}#s-theater>.thcurt,#s-theater>.thval{position:absolute;z-index:0;pointer-events:none}
+.thcurt{top:0;bottom:0;width:min(8vw,44px);background:repeating-linear-gradient(90deg,#7a0c26 0 8px,#b81a3f 8px 18px,#8b0f2c 18px 26px);box-shadow:0 0 18px #000a}.thcurt.l{left:0;border-radius:0 0 40px 0/0 0 120px 0}.thcurt.r{right:0;border-radius:0 0 0 40px/0 0 0 120px}
+.thval{left:0;right:0;top:0;height:calc(var(--sat) + 18px);background:radial-gradient(circle at 50% 100%,#b81a3f 62%,transparent 65%) 0 0/34px 100% repeat-x,linear-gradient(#7a0c26,#8b0f2c) 0 0/100% 55% no-repeat;filter:drop-shadow(0 3px 3px #0008)}
+.thtop{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:calc(var(--sat) + 22px) calc(min(8vw,44px) + 8px) 0}
+.thb{min-height:48px;font-size:16px;padding:0 14px}.thsp{flex:1}.thall{order:10;flex:1 1 100%;margin-top:2px}
+.thhm{width:48px;height:48px;border-radius:24px;background:#fffd;font-size:22px;box-shadow:0 3px 0 #0001}
+.thsign{order:9;flex:1 1 100%;display:flex;justify-content:center;align-items:center;gap:8px;position:relative;margin:2px 0 0;padding:7px 12px;background:linear-gradient(#5a0f2e,#3b0a22);border:3px solid #ffd23a;border-radius:14px;color:#ffe27a;font-size:clamp(15px,5vw,24px);font-weight:900;letter-spacing:.5px;text-shadow:0 0 10px #ffb300;box-shadow:0 0 0 3px #3b0a22,0 0 20px #ffb30088,inset 0 0 14px #ffb30055;text-align:center}
+.thsign::before,.thsign::after{content:"";position:absolute;left:6px;right:6px;height:6px;background:radial-gradient(circle,#fff6b0 38%,transparent 44%) 0 0/14px 6px repeat-x;animation:thbulb 1s steps(1) infinite}.thsign::before{top:-1px}.thsign::after{bottom:-1px;animation-delay:.5s}@keyframes thbulb{50%{opacity:.35}}html[lang=ja] .thsign{white-space:nowrap;font-size:clamp(12px,4.3vw,22px);gap:4px}
+#th-grid{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:grid;grid-template-columns:repeat(auto-fill,minmax(136px,1fr));grid-auto-rows:max-content;gap:12px;align-content:start;padding:12px calc(min(8vw,44px) + 10px) calc(var(--sab) + 16px)}
+.thc{display:flex;flex-direction:column;text-align:left;background:#2b1642;border:2px solid #ffd23a66;border-radius:14px;overflow:hidden;color:#fff;box-shadow:0 4px 0 #0007;min-height:44px}
+.thc .pw{position:relative;display:block;width:100%;height:0;padding-top:56.25%;background:linear-gradient(135deg,#6a2fb0,#ff3d8b);flex:0 0 auto}.thc .em{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:34px;font-style:normal}
+.thc img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thc .pl{position:absolute;right:6px;bottom:6px;width:34px;height:34px;border-radius:17px;background:#000a;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;padding-left:2px}
+.thc .du{position:absolute;left:6px;bottom:6px;background:#000b;color:#fff;font-size:12px;font-weight:800;padding:1px 7px;border-radius:9px}
+.thc b{padding:7px 9px 9px;font-size:14px;line-height:1.2;font-weight:800}
+#th-msg{display:none;margin:auto;text-align:center;color:#ffe27a;font-weight:800;font-size:18px;line-height:1.4;max-width:80%;padding:20px}#th-msg.on{display:block}#th-msg .big{margin-top:14px}
+#th-pl{position:absolute;inset:0;z-index:5!important;background:#0c0414f2;display:none;flex-direction:column;padding:calc(var(--sat) + 8px) 10px calc(var(--sab) + 10px)}#th-pl.on{display:flex}
+.plbox{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px;justify-content:center;max-width:980px;width:100%;margin:0 auto}
+.plmain{display:flex;flex-direction:column;gap:6px;min-height:0}.plhd{display:flex;justify-content:space-between;gap:8px;color:#ffe27a;font-weight:900;font-size:18px}.plhd span{opacity:.8;white-space:nowrap}
+.plvw{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;box-shadow:0 0 0 3px #ffd23a,0 0 26px #ffb30066}
+.plvw video{position:absolute;inset:0;width:100%;height:100%;background:#000}
+#pl-err{display:none;position:absolute;inset:0;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:800;padding:16px;background:#000c;pointer-events:none}#pl-err.on{display:flex}
+.plbt{display:grid;grid-template-columns:1fr 1fr;gap:10px}.plbt .big{min-height:54px;font-size:17px;padding:0 8px}
+@media (orientation:landscape) and (max-height:560px){.plbox{flex-direction:row;align-items:center;gap:12px;max-width:none}.plmain{flex:1;min-width:0;justify-content:center}.plvw{width:min(calc(100vw - 190px),calc((100vh - 90px)*1.7778));align-self:center}.plbt{display:flex;flex-direction:column;width:150px}.plbt .big{min-height:46px;font-size:15px}.plhd{font-size:15px}
+ .thtop{padding-top:calc(var(--sat) + 20px);flex-wrap:nowrap}.thsign{order:0;flex:1;margin:0;padding:4px 8px}.thsp{display:none}.thall{order:0;flex:0 0 auto;margin:0}.thb{min-height:44px;font-size:15px;padding:0 12px}.thhm{width:44px;height:44px}}
+
 #s-closet{background:linear-gradient(#fff0f7,#ffd6ea)}#s-closet h2{margin:0;font-size:26px;color:var(--pk);font-weight:900}
 #cl-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:10px;padding:10px 12px calc(var(--sab) + 16px);align-content:start}
 .look{background:#fff;border-radius:16px;padding:6px;box-shadow:0 3px 0 #ecd6f5;position:relative}.look img{width:100%;border-radius:12px;display:block}.look span{display:block;font-size:12px;font-weight:900;margin-top:4px}.look em{position:absolute;top:10px;right:10px;font-style:normal;background:#fffe;border-radius:10px;padding:1px 6px;font-weight:900;font-size:12px;color:#c48a00}
@@ -155,7 +186,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
  <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ RUNWAY</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
- <div class="ver">v2.9.7</div>
+ <div class="ver">v2.10.0</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div id="th-who"></div><div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
@@ -174,7 +205,11 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
 <div class="scr" id="s-judge"><button class="hm corner" data-a="gohome" aria-label="Main menu">🏠</button><button class="skip" data-a="skip" data-i18n="skip"></button></div>
 <div class="scr" id="s-score"><div class="res"><div id="sc-stars"></div><div id="sc-tot"></div><div class="gain"><i class="coinic"></i><span id="sc-coin"></span> <span data-i18n="coins"></span></div><div id="sc-pose"></div><div id="sc-candy" style="display:none"></div><div id="sc-unl"></div><div id="sc-tip"></div>
  <div class="btn2" id="sc-free"><button class="big ghost" data-a="photo" data-i18n="photo"></button><button class="big ghost" data-a="closet" data-i18n="closet2"></button><button class="big alt" data-a="home" data-i18n="home"></button><button class="big" data-a="next" data-i18n="next"></button></div><div class="btn2" id="sc-story"></div></div></div>
-<div class="scr" id="s-closet"><div class="topbar"><h2 data-i18n="mycloset"></h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px" data-i18n="back"></button></div><div class="cltabs"><button class="ctab on" data-ct="looks" data-i18n="looks"></button><button class="ctab" data-ct="gifts" data-i18n="gifts"></button></div><div id="cl-grid"></div></div>
+<div class="scr" id="s-theater"><div class="thcurt l"></div><div class="thcurt r"></div><div class="thval"></div>
+<div class="thtop"><button class="big ghost thb" data-th="back" data-i18n="th_back"></button><button class="big thb thall" data-th="playall" data-i18n="th_all"></button><span class="thsp"></span><button class="thhm" data-a="mute">🔊</button><button class="thhm" data-th="home" aria-label="Main menu" title="Main menu">🏠</button><div class="thsign"><i>🎬</i><b data-i18n="th_title"></b><i>🎬</i></div></div>
+<div id="th-grid"></div><div id="th-msg"></div>
+<div id="th-pl"><div class="plbox"><div class="plmain"><div class="plhd"><b id="pl-t"></b><span id="pl-n"></span></div><div class="plvw"><video id="th-vid" playsinline webkit-playsinline controls preload="none"></video><div id="pl-err"></div></div></div><div class="plbt"><button class="big ghost thb" data-th="prev" data-i18n="th_prev"></button><button class="big ghost thb" data-th="next" data-i18n="th_next"></button><button class="big alt thb" data-th="auto" id="pl-auto"></button><button class="big thb" data-th="close" data-i18n="th_close"></button></div></div></div></div>
+<div class="scr" id="s-closet"><div class="topbar"><h2 data-i18n="mycloset"></h2><button class="big ghost" data-a="cclose" style="min-height:44px;font-size:16px;padding:0 16px" data-i18n="back"></button></div><div class="cltabs"><button class="ctab on" data-ct="looks" data-i18n="looks"></button><button class="ctab" data-ct="gifts" data-i18n="gifts"></button><button class="ctab thopen" data-th="open" aria-label="Cutscenes" title="Cutscenes">🎬</button></div><div id="cl-grid"></div></div>
 <div id="look"><div id="look-t"></div><img id="look-img" alt=""><div style="display:flex;gap:10px"><button class="big" id="look-photo" data-i18n="savepng"></button><button class="big alt" id="look-del">🗑</button><button class="big ghost" data-a="lookx" data-i18n="close"></button></div></div>
 <div class="scr" id="s-bank"><div class="topbar"><button class="hm" data-a="bankx" aria-label="Main menu">🏠</button><span class="pill big-pill" id="bank-bal"><i class="coinic"></i><span class="coins">0</span></span><span style="width:44px"></span></div>
  <div class="bank-title" data-i18n="bank"></div><div id="bank-host"><div id="bank-say"></div></div><div id="bank-grid"></div></div>
@@ -2600,6 +2635,49 @@ const _dpDraw296=dpDraw;dpDraw=function(){_dpDraw296();if(DP.show)return;const c
  else if(S.zHeard&&SPYS.some(q=>!S.sh[q])){const bx=J.x-js*.62,by=J.y-js*.95;x.save();x.translate(bx,by);x.rotate(-.18+Math.sin(tt*3)*.06);fillP(x,rrP(-js*.55,-js*.2,js*1.1,js*.4,js*.2),'#ff3d8b','#fff',2);x.fillStyle='#fff';x.font='900 '+Math.round(js*.24)+'px '+FONT;x.textAlign='center';x.fillText('🎶 '+T('snew'),0,js*.09);x.restore();}};
 const _dpConf296=dpConf;dpConf=function(w,x0,y0){const c=_dpConf296(w,x0,y0),k=SPY();if(k==='disco')c.c=pk(['#ffffff','#ffd1f2','#bfeaff','#fff1a8','#ff7ad0']);else if(k==='ham')c.c=pk(['#ffcc33','#ff4fa0','#37c8ff','#9be84a','#fff1a8']);else if(k==='brk')c.c=pk(['#35c8ff','#ff9a1f','#ffffff','#ffcd00','#1ea34a']);return c;};
 window.PG=Object.assign(window.PG||{},{SPY,SPYS,bkPhase,dGrp,hGrp,bGrp,dSolo,hSolo,bSolo});
+// ---- v2.10.0: Dance Party Cinema (cutscene theater, data-driven from movies/movies.json) ----
+STR.th_title=['Dance Party Cinema','ダンスパーティー・シネマ'];STR.th_back=['← Closet','← クローゼット'];STR.th_all=['▶ Play all','▶ ぜんぶ再生'];
+STR.th_prev=['⏮ Prev','⏮ まえ'];STR.th_next=['Next ⏭','つぎ ⏭'];STR.th_on=['🔁 Auto-play: ON','🔁 つづけて再生: ON'];STR.th_off=['Auto-play: OFF','つづけて再生: OFF'];STR.th_close=['✕ Close','✕ とじる'];
+STR.th_empty=['🎬 No movies yet.<br>Check back soon — the dance party is warming up!','🎬 まだムービーがないよ。<br>もうすぐダンスパーティーが始まるよ！'];STR.th_net=['📡 Couldn\'t load the movies.<br>Check your connection and try again.','📡 ムービーを読み込めなかったよ。<br>ネットをたしかめてもう一度ためしてね。'];
+STR.th_retry=['🔄 Try again','🔄 もう一度'];STR.th_err=['😢 This movie won\'t play here.<br>Try the next one!','😢 このムービーは再生できないよ。<br>つぎのをためしてね！'];STR.th_load=['🎞️ Loading…','🎞️ 読み込み中…'];STR.th_end=['🎬 The End!','🎬 おしまい！'];
+const TH={list:null,state:'idle',i:-1,auto:true};
+const thEsc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const thTitle=m=>(LANG()==='ja'&&m.title_ja)?m.title_ja:(m.title_en||m.title_ja||m.base);
+const thDur=d=>{if(d==null||d==='')return'';if(typeof d==='string'&&/:/.test(d))return d;const n=Math.round(+d);if(!(n>0))return'';return Math.floor(n/60)+':'+String(n%60).padStart(2,'0');};
+function thNorm(a){return a.filter(m=>m&&typeof m.file==='string'&&m.file).map(m=>{const f=m.file.replace(/^\/+/,'').replace(/^movies\//,''),file=/\.[a-z0-9]{2,4}$/i.test(f)?f:f+'.mp4',base=file.replace(/\.[^.]+$/,'');
+ const p=m.poster?String(m.poster):base+'.jpg';return{file,base,title_en:m.title_en,title_ja:m.title_ja,url:'movies/'+file.split('/').map(encodeURIComponent).join('/'),poster:/^(https?:|\/|movies\/)/.test(p)?p:'movies/'+p.split('/').map(encodeURIComponent).join('/'),dur:thDur(m.duration)};});}
+function thLoad(){TH.state='loading';thRender();const my=TH.req=(TH.req||0)+1;
+ fetch('movies/movies.json?v='+encodeURIComponent(BUILD)+'&t='+Date.now(),{cache:'no-store'}).then(r=>{if(r.status===404)return[];if(!r.ok)throw new Error('http');return r.json().catch(()=>[]);})
+ .then(j=>{if(my!==TH.req)return;const a=Array.isArray(j)?j:(j&&Array.isArray(j.movies)?j.movies:[]);TH.list=thNorm(a);TH.state=TH.list.length?'ok':'empty';thRender();})
+ .catch(()=>{if(my!==TH.req)return;TH.state='net';thRender();});}
+function thRender(){const g=$('th-grid'),m=$('th-msg');if(!g)return;const st=TH.state;
+ if(st==='ok'){m.classList.remove('on');m.innerHTML='';g.style.display='';g.innerHTML=TH.list.map((v,i)=>'<button class="thc" data-thp="'+i+'"><span class="pw"><i class="em">🎬</i><img loading="lazy" decoding="async" alt="" src="'+thEsc(v.poster)+'" onerror="this.remove()">'+(v.dur?'<span class="du">'+thEsc(v.dur)+'</span>':'')+'<span class="pl">▶</span></span><b>'+thEsc(thTitle(v))+'</b></button>').join('');}
+ else{g.style.display='none';g.innerHTML='';m.classList.add('on');m.innerHTML=st==='loading'?T('th_load'):st==='net'?T('th_net')+'<br><button class="big" data-th="retry">'+T('th_retry')+'</button>':T('th_empty');}
+ document.querySelectorAll('#s-theater .thall').forEach(b=>b.style.display=st==='ok'?'':'none');thPlTxt();}
+function thPlTxt(){const a=$('pl-auto');if(a)a.textContent=T(TH.auto?'th_on':'th_off');const m=TH.list&&TH.list[TH.i];if(m&&$('th-pl').classList.contains('on')){$('pl-t').textContent=thTitle(m);$('pl-n').textContent=(TH.i+1)+' / '+TH.list.length;}}
+function thMute(){const v=$('th-vid');if(v)v.muted=!!S.mute;}
+function thOpen(){if(DP.on||document.getElementById('s-closet').classList.contains('on')){dpStop();}show('s-theater');stopSong();$('th-pl').classList.remove('on');thLoad();}
+function thPlay(i){const L=TH.list;if(!L||!L.length)return;i=((i%L.length)+L.length)%L.length;TH.i=i;const m=L[i],v=$('th-vid'),e=$('pl-err');e.classList.remove('on');$('th-pl').classList.add('on');
+ v.muted=!!S.mute;v.preload='auto';v.poster=m.poster;v.src=m.url;v.load();const p=v.play();if(p&&p.catch)p.catch(()=>{});thPlTxt();}
+function thStop(){const v=$('th-vid');try{v.pause();}catch(e){}v.removeAttribute('src');v.removeAttribute('poster');try{v.load();}catch(e){}$('th-pl').classList.remove('on');}
+function thLeave(){TH.req++;thStop();}
+$('th-vid').addEventListener('ended',()=>{if(TH.auto&&TH.list){if(TH.i+1<TH.list.length)thPlay(TH.i+1);else toast(T('th_end'));}});
+$('th-vid').addEventListener('error',()=>{if($('th-vid').getAttribute('src')){$('pl-err').innerHTML=T('th_err');$('pl-err').classList.add('on');}});
+$('th-vid').addEventListener('playing',()=>$('pl-err').classList.remove('on'));
+document.addEventListener('click',e=>{const c=e.target.closest('[data-thp]');if(c){SFX.tap();thPlay(+c.dataset.thp);return;}
+ const b=e.target.closest('[data-th]');if(!b)return;const a=b.dataset.th;e.stopPropagation();
+ if(a==='open'){SFX.tap();thOpen();}
+ else if(a==='back'){SFX.tap();thLeave();openCloset();if(CLT!=='dance')playSong('title');}
+ else if(a==='home'){SFX.tap();thLeave();goTitle();}
+ else if(a==='playall'){SFX.tap();TH.auto=true;thPlay(0);}
+ else if(a==='prev'){SFX.tap();thPlay(TH.i-1);}else if(a==='next'){SFX.tap();thPlay(TH.i+1);}
+ else if(a==='auto'){SFX.tap();TH.auto=!TH.auto;thPlTxt();}
+ else if(a==='close'){SFX.tap();thStop();}
+ else if(a==='retry'){SFX.tap();thLoad();}},true);
+{const _sm=setMute;setMute=function(m){_sm(m);thMute();};}
+{const _al=applyLang;applyLang=function(){_al();const o=document.querySelector('[data-th="open"]');if(o){o.setAttribute('aria-label',LANG()==='ja'?'ムービー':'Cutscenes');o.title=LANG()==='ja'?'ムービー':'Cutscenes';}const h=document.querySelector('[data-th="home"]');if(h){h.setAttribute('aria-label',LANG()==='ja'?'メインメニュー':'Main menu');}};}
+{const _rl=refreshLangUI;refreshLangUI=function(){_rl();if($('s-theater').classList.contains('on')){if(TH.state==='ok'||TH.state==='empty'||TH.state==='net')thRender();thPlTxt();}};}
+window.PG=Object.assign(window.PG||{},{TH,thOpen,thPlay,thLoad});
 // ---- boot ----
 applyLang();requestAnimationFrame(frame);setMute(S.mute);goTitle();
 window.PG=Object.defineProperties(window.PG||{},Object.getOwnPropertyDescriptors({get SV(){return SV},get RUN(){return RUN},get RESULT(){return RESULT},get DLG(){return DLG},get INT(){return INT},nowA,storyGo,openShop,setLang,CH,get st(){return st},set st(v){st=v},get theme(){return theme}}));
