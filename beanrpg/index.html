@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mr Bean RPG">
 <meta name="theme-color" content="#2a1a5a"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Mr Bean RPG</title><script>window.__BUILD__="v2.4"</script>
+<title>Mr Bean RPG</title><script>window.__BUILD__="v2.5"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);--F:"Trebuchet MS","Avenir Next Rounded","Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic","Meiryo","Noto Sans JP","Noto Sans CJK JP",system-ui,sans-serif;--pa:linear-gradient(180deg,#3d56c8 0%,#2a3c9e 55%,#1e2b78 100%);--bd:#fff6d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -2612,7 +2612,7 @@ ROOMS.town={extra:[['pot',11.2,20.2,1.1],['pot',15.8,20.2,1.1],['crate',2.6,20.6
  B.npc(16.2,6.8,{spr:'p_c_max',h:1.15,name:'Max',shop:1,talk:async()=>{await say([['p_c_max',G.pea?'Psst. Pea Coins? Max\'s Back Room has the GOOD stuff.':'Max is the palace doorman. Max also runs a secret shop. Find Pea Coins in treasure blocks and come back!','Max']]);await openShop('max');}});
    B.npc(23,19.2,{col:0xff7ab0,hat:'bow',name:'Florist Bean',talk:floristTalk});
  B.npc(21.6,14.6,{col:0xffffff,hat:'cap',name:'Bunny Keeper',talk:bunnyTalk});
- bn(B,16.6,18.6,'green',['Welcome to Pinkington! Walk into a door to go inside.','Item Shop and Granny\'s cottage are top-left. Outfitters and the Inn are top-right. The Pooh Bank is bottom-left.','Lost? Tap 🧭 Where to? Side quests are listed in Menu ▸ 📜 Quests.'],{name:'Town Guide'});
+ bn(B,16.6,18.6,'green',['Welcome to Pinkington! Walk into a door to go inside.','Item Shop and Granny\'s cottage are top-left. Outfitters and the Inn are top-right. The Pooh Bank is bottom-left.','Lost? Tap 🧭 Where to? Side quests are listed in Menu ▸ 📜 Quests.','Want to play? Open the world map and tap 🎠 Park. Swings, seesaws and lots of friends are waiting!'],{name:'Town Guide'});
  bn(B,15.5,13,'pink',['The Star Runway used to sparkle over the palace every night...','Now it\'s just... sky. Regular boring sky.']).wander=1.5;
  bn(B,9,16.5,'blue',['Tip! Jump on an enemy\'s head to start the battle with a FIRST STRIKE!','In battle, press A again right as your attack lands for a timed hit. NICE!']);
  bn(B,18,21,'red',['Golden ? blocks float everywhere. Jump and bonk them from below!','Some blocks are INVISIBLE. They count as Hidden Treasures. Jump around in weird spots!']);
@@ -3023,9 +3023,9 @@ const PKMET=['sprout','mogu','bronny','jingles','partyguy','kermit','emobean','p
 function pkMeet(k){if(PKMET.indexOf(k)<0||PKS.met[k])return;PKS.met[k]=1;pkSave();const n=PKMET.filter(x=>PKS.met[x]).length;if(n===PKMET.length)pkStamp('friends');else toastQ(tf('👋 Park friends met: {0}/{1}',n,PKMET.length));}
 function pkFriend(B,key,x,z,spr,h,name,lines,o){o=o||{};const lab=pkT(name,o.ja||name);
  const e=B.npc(x,z,Object.assign({spr,h,name:lab,hint:'Chat',la:'CHAT',hh:h},o,{talk:async(en)=>{const L=lines;const i=(en.ti=en.ti||0)%L.length;en.ti++;await say([[spr,L[i],lab]]);pkMeet(key);}}));
- e.ph_=o.phr||null;if(o.move)pkMute(e);return e;}
+ e.ph_=o.phr||null;e.key=key;if(o.move)pkMute(e);return e;}
 function pkBuddy(B,type,x,z,lines,o){o=o||{};const nm=EN[type].n;const m=enemyModel(EN[type].model);m.scale.setScalar(o.s||1);const y=o.y!=null?o.y:B.hAt(x,z);m.position.set(x,y,z);B.add(m);const sh=blob(.35);sh.position.set(x,y+.02,z);B.add(sh);
- const e={kind:'npc',mesh:m,x,z,y,sh,ph:Math.random()*6,name:nm,hint:'Chat',la:'CHAT',buddy:1,hh:1,ph_:o.phr||null,talk:async(en)=>{const i=(en.ti=en.ti||0)%lines.length;en.ti++;SFX.giggle();await say([[null,lines[i],nm]]);}};
+ const e={kind:'npc',mesh:m,x,z,y,sh,btype:type,ph:Math.random()*6,name:nm,hint:'Chat',la:'CHAT',buddy:1,hh:1,ph_:o.phr||null,talk:async(en)=>{const i=(en.ti=en.ti||0)%lines.length;en.ti++;SFX.giggle();await say([[null,lines[i],nm]]);}};
  F.ents.push(e);if(!o.move)F.cols.push({x,z,r:.32,top:y+.9});return e;}
 function pkBean(B,x,z,col,hat,name,lines,o){const lab=pkT(name,(o&&o.ja)||name);const e=B.npc(x,z,Object.assign({col,hat,name:lab,hint:'Chat',la:'CHAT',hh:1.2},o||{},{talk:async(en)=>{const i=(en.ti=en.ti||0)%lines.length;en.ti++;SFX.giggle();await say([[null,lines[i],lab]]);}}));e.ph_=(o&&o.phr)||null;if(o&&o.move)pkMute(e);return e;}
 function pkPlace(e,x,y,z){e.x=x;e.z=z;e.y=y;e.mesh.position.set(x,y,z);if(e.sh){e.sh.position.set(x,(e.gy!=null?e.gy:y)+.02,z);}}
@@ -3405,6 +3405,300 @@ for(const[a,b]of[['🎟️ Park stamp: {0} {1}! +10 coins ({2}/{3})','🎟️ �
 for(const[a,b]of[['Nice!','いいね！'],['Stuck the landing!','ピタッと ちゃくち！'],['Boing!!','ボヨーン！！'],['Boing!','ボヨン！'],['SUPER BOUNCE!','スーパー ジャンプ！'],['Again! Again!','もういっかい！ もういっかい！'],['Whoa... dizzy!','うわぁ… めがまわる！'],['Dig dig dig!','ほるほるほる！'],['More sand!','もっと すな！'],['Soft sand!','ふかふかの すな！'],['Nothing yet...','まだ なにも…'],['Quack quack!','ガーガー！'],['🦆 Quack!','🦆 ガーガー！'],['Yum! Quack!','おいしい！ ガー！'],['You found a Pea Coin!! 🟢','ピーコインを みつけた！！ 🟢'],['You dug up {0}','{0} を ほりだした！']])pkT(a,b);
 for(const[a,b]of[['🎠 Welcome to Bean Park! No battles here. Go play!','🎠 ビーンパークへ ようこそ！ たたかいは なし。あそぼう！'],['🦆 Ducks fed: {0}/3','🦆 アヒルに エサ： {0}/3'],['PUSH','おす']])pkT(a,b);
 pkT('PUMP','こぐ');pkT('BOUNCE','はずむ');
+
+// ===================== v2.5: PARK PALS =====================
+// Swing with a friend, seesaw duets (heavy friends!), merry-go-round crews, team kickball, snack sharing + friendship hearts,
+// and a conga line. All friends, no enemies, no battles. Built on the v2.4 ride framework (c9_park.js).
+const PKJOIN=['jingles','sprout','mogu','bronny','kermit','emobean','pooping','king','max','stinky','weed','shroom','crab','frog','snow','cake','ball'];
+const PKINFO={ // emoji, weight (seesaw), favourite snack
+ sprout:['🌱',.5,'apple'],jingles:['🔔',1.1,'cookie'],mogu:['🕳️',.7,'cookie'],bronny:['🏀',1.6,'banana'],kermit:['🐸',.9,'sandwich'],emobean:['🖤',.8,'cupcake'],pooping:['🎩',1.3,'cupcake'],king:['👑',1.4,'cookie'],max:['🚪',1,'sandwich'],partyguy:['🎉',1,'cupcake'],
+ stinky:['💨',.8,'banana'],weed:['🌿',.6,'apple'],shroom:['🍄',.5,'cupcake'],crab:['🦀',.8,'sandwich'],frog:['🪷',.7,'banana'],snow:['⛄',.6,'cupcake'],cake:['🍰',.9,'cookie'],ball:['🏐',.9,'apple'],balloon:['🎈',.4,'cookie'],ghost:['👻',.3,'cupcake'],bee:['🐝',.2,'apple']};
+const PKSN={apple:['🍎',pkT('Apple','りんご')],cookie:['🍪',pkT('Cookie','クッキー')],cupcake:['🧁',pkT('Cupcake','カップケーキ')],banana:['🍌',pkT('Banana','バナナ')],sandwich:['🥪',pkT('Sandwich','サンドイッチ')]};
+let PKF={};
+PKS.hearts=PKS.hearts||{};PKS.sn=PKS.sn||[];PKS.gifts=PKS.gifts||0;
+// ---- new stamps ----
+PKST.push(
+ ['swing2','👯',pkT('Swing Buddies','ブランコ なかよし'),pkT('Swing in sync with a friend.','ともだちと タイミングを あわせて こごう。')],
+ ['see2','🏋️',pkT('Heavy Lifter','おもい おもい？'),pkT('Bounce with a heavy friend until YOU fly!','おもい ともだちと シーソー。こんどは じぶんが とぶ！')],
+ ['merry2','🎡',pkT('Carousel Crew','のりのり クルー'),pkT('Spin fast with 3 friends aboard.','ともだち 3にんと はやく まわそう。')],
+ ['pass','🤝',pkT('Team Player','チームプレイ'),pkT('Pass the ball around 6 times with friends.','ともだちと ボールを 6かい パスしよう。')],
+ ['snack','🍪',pkT('Snack Sharer','おやつ はんぶんこ'),pkT('Share 5 snacks with friends.','ともだちに おやつを 5こ あげよう。')],
+ ['conga','🪘',pkT('Conga Captain','コンガ たいちょう'),pkT('Lead a conga line of 3 or more friends.','ともだち 3にん いじょうで コンガを しよう。')],
+ ['hearts','💖',pkT('Best Buddy','しんゆう'),pkT('Reach 5 hearts with a friend.','ともだちと ハート 5こに なろう。')]);
+PKST[3][3]=pkT('Bounce the seesaw with a friend until they fly!','ともだちと シーソーを こいで とばそう！');
+PKST[8][3]=pkT('Chat with all 10 park friends.','こうえんの ともだち 10にんと おしゃべり。');
+// ---- friend lines ----
+const PKL={
+ swing:{_:[pkT('Wheee! Higher!','ウィー！ もっと たかく！'),pkT('Higher, Mr Bean!','もっと たかく、ミスター・ビーン！'),pkT('This is the best!','さいこう！'),pkT('Pump pump pump!','こげ こげ こげ！')],
+  jingles:[pkT('Jingle jangle SWING!','ジングル ジャングル ブランコ！'),pkT('Ho ho HIGHER!','ホーホー もっと たかく！')],
+  mogu:[pkT('No dirt up here! Scary! Fun!','ここは つちが ない！ こわい！ たのしい！')],
+  bronny:[pkT('I just dunked on the SKY!','いま そらに ダンクした！')],
+  kermit:[pkT('...Okay. This is fun. Shh.','…まあ…たのしい。シーッ。')],
+  emobean:[pkT('Back... forth... deep.','いったり…きたり…ふかい。')],
+  pooping:[pkT('MISTER Pooping is SOARING!','ミスター・プーピング、とんでるー！')],
+  king:[pkT('A swing is a pendulum of fortune!','ブランコは ふうんの ふりこ！')],
+  max:[pkT('Doors swing both ways. So do I!','ドアは りょうほうに ひらく。ぼくも！')],
+  sprout:[pkT("I'm a leaf in the wind!",'かぜに ゆれる はっぱだよ！')]},
+ see:{_:[pkT('Boing! Your turn!','ボヨン！ つぎは きみ！'),pkT('Up and down!','あがって さがって！'),pkT('Ha ha! Again!','あはは！ もういっかい！')],
+  bronny:[pkT("Careful! I'm a BIT tall for this!",'きをつけて！ オレ ちょっと せがたかい！')],
+  king:[pkT("I'm heavy with coins today!",'きょうは コインで おもいよ！')],
+  pooping:[pkT('MISTER Pooping is heavy with dignity!','ミスターは ぎょうぎで おもたい！')],
+  sprout:[pkT('Light as a leaf! Fly me!','はっぱみたいに かるい！ とばして！')]},
+ merry:{_:[pkT('Push! Push!','おせ おせ！'),pkT('Faster! Faster!','もっと はやく！'),pkT('Weeee-ee-ee!','ウィーーー！')],
+  pooping:[pkT('The world is spinning! MISTER is fine!','せかいが まわってる！ ミスターは へいき！')],
+  kermit:[pkT('...Spinning. Of course.','…グルグル。やっぱりね。')],
+  king:[pkT('Spin me like a coin!','コインみたいに まわして！')]},
+ pass:{_:[pkT('Nice pass!','ナイスパス！'),pkT('Over here!','こっち こっち！'),pkT('Got it!','もらった！'),pkT('Pass it back!','パスして！')],
+  bronny:[pkT('Assist! Obviously!','アシスト！ とうぜん！')],
+  kermit:[pkT('...Nice. Pass. Whatever.','…ナイス。パス。まあね。')],
+  king:[pkT('Passing is just sharing coins!','パスは コインの わけっこ！')]},
+ conga:{_:[pkT('Conga!','コンガ！'),pkT('Follow the leader!','リーダーに ついてこい！'),pkT('Hey! Hey! Conga!','ヘイ！ ヘイ！ コンガ！')],
+  kermit:[pkT("...Fine. Conga.",'…しょうがない。コンガ。')],
+  emobean:[pkT('Even I conga.','ぼくも コンガ する。')]},
+ snack:{_:[pkT('Yum! Thanks, Mr Bean!','おいしい！ ありがとう、ミスター・ビーン！'),pkT('Ooh, a snack! Thank you!','わぁ、おやつ！ ありがとう！'),pkT("Mmm! You're the best!",'うーん！ きみが いちばん！')]}};
+const PKFAV={sprout:pkT("A fruit! We're practically cousins!",'くだもの！ ほとんど いとこだね！'),jingles:pkT('Cookies! Santa would be proud!','クッキー！ サンタも ほこらしい！'),mogu:pkT('Crumbs for the soil! Mogu mogu!','つちに パンくず！ モグモグ！'),
+ bronny:pkT('Potassium for the dunk! Thanks!','ダンクの ための カリウム！ ありがとう！'),kermit:pkT('...My favorite. Don\'t tell anyone.','…だいすき。ないしょだよ。'),emobean:pkT("It's sad how good this is.",'かなしいくらい おいしい。'),
+ pooping:pkT('A MISTER-ly treat! Thank you!','ミスターに ふさわしい おやつ！ ありがとう！'),king:pkT('Coin-shaped! I approve! Thank you!','コインの かたち！ さんせい！ ありがとう！'),max:pkT('Lunch break! You read my mind!','おひるやすみ！ きもち わかってる！'),
+ _:pkT('My FAVORITE! Thank you!','だいすきな やつ！ ありがとう！')};
+const pkLine=(key,act)=>{const d=PKL[act];if(!d)return '';const a=(d[key]&&Math.random()<.65)?d[key]:d._;return a[(Math.random()*a.length)|0];};
+const pkHrt=k=>{const h=Math.min(5,PKS.hearts[k]||0);return '♥'.repeat(h)+'♡'.repeat(5-h);};
+// ---- hearts ----
+function pkHeart(key,n,src){const r=PKF[key];if(!r)return;PK.hg=PK.hg||{};if(src){if(PK.hg[key+'|'+src])return;PK.hg[key+'|'+src]=1;}
+ const old=PKS.hearts[key]||0;if(old>=5)return;const nw=Math.min(5,old+n);PKS.hearts[key]=nw;pkSave();const e=r.e;
+ popText(new THREE.Vector3(e.x,e.y+(e.hh||1.4)+.5,e.z),'♥'.repeat(nw-old),'long');SFX.star&&SFX.star();
+ FX.burst(new THREE.Vector3(e.x,e.y+(e.hh||1.4)*.8,e.z),10,{star:1,col:[0xff5a8a,0xff9ac0,0xffffff],sp:1.6,up:2.2,g:-1,size:.26,life:1});
+ if(nw>=5){setTimeout(()=>{toastQ(tf('💖 {0} is your Best Buddy! 5 hearts!',tr(e.name)));pkStamp('hearts');},700);}}
+// ---- friends registry + hold system (a friend can be "held" by an activity) ----
+function pkPut(e,x,y,z,gy){e.x=x;e.z=z;e.y=y;e.gy=gy;e.mesh.position.set(x,y,z);if(e.sh)e.sh.position.set(x,gy+.02,z);}
+function pkHoldWrap(r){const e=r.e;if(e.hw)return;e.hw=1;const u0=e.upd;e.upd=function(dt){if(this.hold){this.hold.call(this,dt);return;}if(u0)u0.call(this,dt);};}
+async function pkRun(r,tgt,dur,arch,after){const e=r.e,tok=r.tok=(r.tok||0)+1;const a={x:e.x,y:e.y,z:e.z};e.hold=()=>{};
+ await tween(dur,k=>{if(r.tok!==tok)return;const t=tgt(),q=ease.inout(k);const x=lerp(a.x,t.x,q),z=lerp(a.z,t.z,q),y=lerp(a.y,t.y,q)+Math.sin(k*Math.PI)*(arch||.6);if(Math.abs(t.x-a.x)+Math.abs(t.z-a.z)>.05)pkFace(e,t.x-a.x,t.z-a.z);pkPut(e,x,y,z,Math.min(cellH(x,z),y));});
+ if(r.tok===tok){const t=tgt();pkPut(e,t.x,t.y,t.z,Math.min(cellH(t.x,t.z),t.y));if(after)after();}}
+function pkGoHome(r){return pkRun(r,()=>r.homeFn?r.homeFn():r.home,.8,.9,()=>{r.e.hold=null;r.e.flip=0;});}
+function pkStandAt(r,x,z){const y=cellH(x,z)+(r.dy||0);return function(){pkPut(this,x,y,z,cellH(x,z));};}
+function pkPals(B,SW,SE,P_){PKF={};
+ for(const e of F.ents){const key=e.key||e.btype;if(!key||!PKINFO[key]||e.kind!=='npc')continue;const inf=PKINFO[key];
+  const r={key,e,emo:inf[0],w:inf[1],fav:inf[2],join:PKJOIN.indexOf(key)>=0,home:{x:e.x,y:e.y,z:e.z},dy:e.y-cellH(e.x,e.z)};PKF[key]=r;e.pkr=r;
+  const t0=e.talk;e.talk=async function(en){await t0.call(this,en);await pkGiveSnack(r);};}
+ const J=PKF.jingles,S_=PKF.sprout;
+ if(J)J.homeFn=()=>{const q=pkSwingPos(SW,-.95,.7*Math.sin(F.t*2.2+1));return{x:q.x,y:q.y,z:q.z};};
+ if(S_)S_.homeFn=()=>{const q=pkSsPos(SE,-1.55,PK.ss.tilt);return{x:q.x,y:q.y,z:q.z};};
+ for(const k of PKJOIN){const r=PKF[k];if(!r)continue;if(!r.e.move)pkMute(r.e);pkHoldWrap(r);}
+}
+const _pkPop0=pkPopulate;
+pkPopulate=function(B,SW,SE,P_,cb){_pkPop0.apply(this,arguments);try{pkPals(B,SW,SE,P_);}catch(er){console.error(er);}};
+// ---- picker UI ----
+let PK2=null;
+function pk2UI(){if(PK2)return PK2;
+ const st=document.createElement('style');st.textContent=`
+#pkpick{position:fixed;inset:0;z-index:57;display:none;align-items:center;justify-content:center;background:rgba(30,16,60,.55);backdrop-filter:blur(3px)}
+#pkpick.on{display:flex}
+#pkpick .bx{width:min(760px,95vw);max-height:92vh;display:flex;flex-direction:column;border-radius:24px;border:4px solid #fff;background:linear-gradient(180deg,#e8f8ff,#ffe6f4);color:#4a2a5a;padding:12px 14px 12px;box-shadow:0 8px 0 #0006;font-family:var(--F)}
+#pkpick h2{margin:0 0 8px;font:900 21px var(--F);text-align:center}
+#pkpick .gr{overflow:auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px;padding:2px;flex:1 1 auto;min-height:0;-webkit-overflow-scrolling:touch}
+.pkc{border-radius:16px;border:3px solid #d8b8e8;background:#fff;padding:6px 4px;text-align:center;min-height:82px;display:flex;flex-direction:column;align-items:center;gap:1px;font-family:var(--F);color:#4a2a5a;touch-action:manipulation}
+.pkc i{font-style:normal;font-size:30px;line-height:1.1}.pkc b{font-size:13px;line-height:1.15;font-weight:900}.pkc span{font-size:12px;color:#e0407a;letter-spacing:1px}
+.pkc.on{border-color:#ff7a3a;background:linear-gradient(180deg,#fff8d8,#ffe08a);transform:scale(1.04)}
+.pkc:active{transform:scale(.97)}
+#pkpick .ft{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+#pkpick .ft button,#pkgo{height:54px;min-width:130px;padding:0 20px;border-radius:18px;border:3px solid #fff;color:#fff;font:900 19px var(--F);box-shadow:0 4px 0 #0006;touch-action:manipulation}
+#pkpick .ft button:active{transform:translateY(3px)}
+.pkbG{background:linear-gradient(180deg,#5ad89a,#18a868)}.pkbB{background:linear-gradient(180deg,#5ac8ff,#3a8aff)}.pkbR{background:linear-gradient(180deg,#ff8a6a,#e0443a)}
+#pkgame{position:fixed;left:50%;bottom:calc(var(--sab) + 12px);transform:translateX(-50%);z-index:13;display:none;align-items:center;gap:12px;max-width:min(560px,70vw);padding:8px 10px 8px 16px;border-radius:22px;background:rgba(40,24,80,.82);border:3px solid #fff;color:#fff;font:800 16px/1.25 var(--F);box-shadow:0 4px 0 #0008}
+#pkgame.on{display:flex}#pkgame b{color:#ffe060}
+#pkgstop{flex:none;height:52px;padding:0 16px;border-radius:16px;border:3px solid #fff;background:linear-gradient(180deg,#ff8a6a,#e0443a);color:#fff;font:900 17px var(--F);box-shadow:0 3px 0 #8a1a1a;touch-action:manipulation}
+#pkgstop:active{transform:translateY(3px)}
+#pkSnack{position:fixed;z-index:12;display:none;align-items:center;gap:4px;height:46px;padding:0 12px;border-radius:16px;border:3px solid #fff;background:rgba(40,24,80,.78);color:#fff;font:900 22px var(--F);left:calc(var(--sal) + 226px);top:calc(var(--sat) + 62px);pointer-events:none}
+#pkcard .hh{margin-top:8px;padding:6px 8px;border-radius:14px;background:#fff;border:3px solid #ffb8d8}
+#pkcard .hh h3{margin:0 0 4px;font:900 14px var(--F)}
+#pkcard .hg{display:flex;flex-wrap:wrap;gap:4px 6px}#pkcard .hg span{font-size:12px;font-weight:800;background:#fff0f6;border-radius:10px;padding:2px 7px;white-space:nowrap}#pkcard .hg em{font-style:normal;color:#e0407a;letter-spacing:1px}
+@media (max-height:430px){#pkpick .bx{padding:8px 10px 10px}#pkpick h2{font-size:17px;margin-bottom:5px}.pkc{min-height:66px}.pkc i{font-size:24px}.pkc b{font-size:12px}#pkpick .ft button{height:48px;font-size:17px}#pkSnack{top:calc(var(--sat) + 58px);left:calc(var(--sal) + 214px);height:44px;font-size:20px}}
+@media (max-width:480px){#pkgame{left:3vw;right:3vw;transform:none;max-width:none;bottom:calc(var(--sab) + 150px)}#pkSnack{left:calc(var(--sal) + 10px);top:calc(var(--sat) + 122px)}}`;
+ document.head.appendChild(st);
+ const mk=(id,html)=>{const e=document.createElement('div');e.id=id;e.innerHTML=html||'';document.body.appendChild(e);return e;};
+ PK2={pick:mk('pkpick'),game:mk('pkgame','<span id="pkgt"></span><button id="pkgstop">✋ <span>Stop</span></button>'),sn:mk('pkSnack')};
+ const gs=document.getElementById('pkgstop');gs.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();pkGrpEnd(1);});
+ setInterval(pk2Tick,200);return PK2;}
+function pk2Tick(){if(!PK2)return;const on=pkOn()&&!F.lock&&!UI.modal&&!document.querySelector('.scr.on')&&!document.body.classList.contains('title');
+ const g=PK.grp;const show=!!(g&&on&&!PK.act);PK2.game.classList.toggle('on',show);if(show){const el=document.getElementById('pkgt');const t=tr(PK.gsay||'');if(el.dataset.t!==t){el.dataset.t=t;el.innerHTML=t.replace(/\*([^*]+)\*/g,'<b>$1</b>');}}
+ const sn=PKS.sn||[];PK2.sn.style.display=(on&&!PK.act&&sn.length)?'flex':'none';const h=sn.map(k=>PKSN[k][0]).join('');if(PK2.sn.dataset.h!==h){PK2.sn.dataset.h=h;PK2.sn.textContent=h;}}
+function pkPick(title,keys,max,o){o=o||{};pk2UI();return new Promise(res=>{const el=PK2.pick;const ks=keys.filter(k=>PKF[k]&&!PKF[k].use);
+ if(!ks.length){toastQ(tr('Your friends are busy right now!'));res(null);return;}
+ let sel=[];const draw=()=>{el.innerHTML='<div class="bx"><h2>'+esc(tr(title))+'</h2><div class="gr">'+ks.map(k=>{const r=PKF[k];return '<button class="pkc'+(sel.indexOf(k)>=0?' on':'')+'" data-k="'+k+'"><i>'+r.emo+'</i><b>'+esc(tr(r.e.name))+'</b><span>'+pkHrt(k)+'</span></button>';}).join('')+'</div><div class="ft">'+
+   (max>1?'<button class="pkbG" id="pkgo">'+esc(tr("Let's go!"))+(sel.length?' ('+sel.length+')':'')+'</button>':'')+(o.solo?'<button class="pkbB" id="pksolo">'+esc(tr(o.solo))+'</button>':'')+'<button class="pkbR" id="pkno">'+esc(tr('Not now'))+'</button></div></div>';};
+ const close=v=>{el.classList.remove('on');el.innerHTML='';UI.modal=Math.max(0,UI.modal-1);In.clear&&In.clear();res(v);};
+ draw();UI.modal++;el.classList.add('on');SFX.sel&&SFX.sel();
+ el.onpointerdown=e=>{const t=e.target.closest('button');if(!t){return;}e.preventDefault();e.stopPropagation();
+  if(t.id==='pkno'){SFX.back();close(null);return;}if(t.id==='pksolo'){SFX.ok();close([]);return;}
+  if(t.id==='pkgo'){SFX.ok();close(sel.slice());return;}
+  const k=t.dataset.k;if(!k)return;if(max===1){SFX.ok();close([k]);return;}
+  const i=sel.indexOf(k);if(i>=0)sel.splice(i,1);else{sel.push(k);if(sel.length>max)sel.shift();}SFX.sel&&SFX.sel();draw();};});}
+// ---------- swing: with a friend ----------
+const T_SWD1=pkT('Tap *A* at the TOP of the swing to sync up with your friend!','ブランコの いちばん うえで *A* ボタン！ ともだちと タイミングを あわせよう！');
+const T_SWD2=pkT('Keep syncing! Tap *A* at the top!','そのまま あわせて！ うえで *A*！');
+const T_SWD3=pkT('TOGETHER! Hold it! Press *B* to jump off.','いっしょ！ そのまま！ おりるときは *B*。');
+pkT('Who swings with you?','だれと ブランコに のる？');pkT('Swing alone','ひとりで こぐ');pkT('Not now','やめる');pkT("Let's go!",'いくよ！');pkT('Together!','いっしょに！');
+pkT('I can see the WHOLE park!','こうえんが ぜんぶ みえる！');pkT('BEAN\nPARK','ビーン\nパーク');pkT('BEAN PARK','ビーン パーク');pkT('BEAN','ビーン');pkT('PARK','パーク');pkT('🎠 PARK','🎠 パーク');pkT('Your friends are busy right now!','ともだちは いま いそがしいよ！');
+pkSwingTalk=async function(S,en){
+ const pick=await pkPick('Who swings with you?',PKJOIN,1,{solo:'Swing alone'});if(pick===null)return;
+ const pal=pick.length?PKF[pick[0]]:null,jin=PKF.jingles;const P=F.P,sw=S.sw[1],swL=S.sw[0],lx=sw.lx;const pos=pkSwingPos(S,lx,0);
+ const jobs=[pkMove({x:pos.x,y:pos.y,z:pos.z,g:S.gy},.4,.6,1)];
+ if(pal){pal.use='swing';
+  if(jin&&pal!==jin){const[jx,jz]=pkW(S.o,-3.0,2.2);jobs.push(pkRun(jin,()=>({x:jx,y:cellH(jx,jz),z:jz}),.7,.8,()=>{jin.e.hold=pkStandAt(jin,jx,jz);}));}
+  jobs.push(pkRun(pal,()=>{const q=pkSwingPos(S,-.95,0);return{x:q.x,y:q.y,z:q.z};},.7,.8,null));}
+ await Promise.all(jobs);
+ const A={A:.22,sync:0,tog:0,nice:0,thL:0,ct:2.2,once:0,done:0,hi:0,fp:0};
+ if(pal)pal.e.hold=function(dt){const q=pkSwingPos(S,-.95,A.thL);pkPut(this,q.x,q.y,q.z,S.gy);this.flip=1;};
+ await pkAct({la:'PUMP',ph:0,hi:0,init(){pkSay(pal?T_SWD1:T_SWING1);},upd(dt){this.ph+=dt*2.55;const sn=Math.sin(this.ph);A.A=Math.max(.2,A.A-dt*.035);
+   if(pal){A.sync=Math.max(0,A.sync-dt*.05);const fph=this.ph+(1-A.sync)*Math.PI;const fs=Math.sin(fph);
+    if(Math.floor((fph-1.5708)/Math.PI)!==Math.floor((fph-dt*2.55-1.5708)/Math.PI))A.A=Math.min(1,A.A+.03);
+    A.thL=A.A*1.15*fs;swL.piv.rotation.x=A.thL;
+    const tog=A.sync>=.98&&A.A>.4;if(tog){A.tog+=dt;if(!A.once){A.once=1;const q=pkSwingPos(S,0,0);popText(new THREE.Vector3(q.x,q.y+1.9,q.z),'Together!','long');SFX.cheer&&SFX.cheer();}if(A.tog>2.5&&!A.done){A.done=1;pkStamp('swing2');pkHeart(pal.key,2,'swing');}}else A.tog=Math.max(0,A.tog-dt*.6);
+    A.ct-=dt;if(A.ct<=0){A.ct=rnd(2.6,4.2);popText(new THREE.Vector3(pal.e.x,pal.e.y+(pal.e.hh||1.4)+.2,pal.e.z),pkLine(pal.key,'swing'),'');if(Math.random()<.5)SFX.giggle();}
+    if(A.A>.5&&A.fp<=0){A.fp=6;pkHeart(pal.key,1,'swingride');}A.fp-=dt*(A.A>.5?1:0);}
+   if(In.consume('A')){const good=Math.abs(sn)>.78;A.A=Math.min(1,A.A+(good?.17:.06));if(good){A.nice++;if(pal)A.sync=Math.min(1,A.sync+.34);SFX.nice&&SFX.nice(1);popText(new THREE.Vector3(pos.x,pos.y+1.5,pos.z),A.A>.85?'Wheee!':'Nice!','');}else SFX.hop();}
+   const th=A.A*1.15*sn;sw.piv.rotation.x=th;const q=pkSwingPos(S,lx,th);PK.pose={x:q.x,y:q.y,z:q.z,g:q.g,face:1,sy:1+Math.abs(sn)*A.A*.04};
+   if(Math.floor(this.ph/Math.PI)!==Math.floor((this.ph-dt*2.55)/Math.PI))SFX.creak(A.A);
+   if(A.A>=.85){this.hi+=dt;if(this.hi>.8)pkStamp('swing');}
+   pkSay(!pal?(A.A<.5?T_SWING1:A.A<.85?T_SWING2:T_SWING3):(A.sync>=.98&&A.A>.4?T_SWD3:A.A<.5?T_SWD1:T_SWD2));
+   if(In.consume('B')){this.upd=()=>{};pkSwingExit(S,sw,lx,q,th,A);
+    if(pal){const thL=A.thL;tween(.5,k=>{swL.piv.rotation.x=lerp(thL,0,k);});(async()=>{await pkGoHome(pal);pal.use=null;if(jin&&pal!==jin)await pkGoHome(jin);})();}}}});
+ if(pal&&pal.use==='swing'){pal.use=null;}};
+// ---------- seesaw: with a friend (heavy friends send YOU flying) ----------
+const T_SEF1=pkT('Tap *A* to push off and bounce! Your friend is on the other end.','*A* で ジャンプして シーソーを こごう！ はんたいがわに ともだちが いるよ。');
+const T_SEF2=pkT('Keep bouncing! Press *B* to hop off.','どんどん バウンス！ おりるときは *B*。');
+pkT('Who bounces with you?','だれと シーソーを する？');pkT('WHOA! Mr Bean launched!','うわー！ ミスター・ビーンが ぶっとんだ！');pkT('I can see my house!','おうちが みえる！');
+pkSeesawTalk=async function(S,en){
+ const pick=await pkPick('Who bounces with you?',PKJOIN,1,{});if(!pick||!pick.length)return;
+ const pal=PKF[pick[0]],spr=PKF.sprout;const P=F.P;const rest=pkSsPos(S,1.55,-.3);PK.ss.manual=true;PK.ss.tilt=-.3;
+ const bias=Math.max(-.16,Math.min(.1,-(pal.w-.8)*.14)),heavy=pal.w>=1.3;pal.use='see';
+ const far=function(dt){const tl=PK.ss.tilt;const q=pkSsPos(S,-1.55,tl);let dx=0,dy=0;if(pal.fl){pal.ft+=dt;const k=Math.min(1,pal.ft/2.5);dy=Math.sin(k*Math.PI)*5.2;dx=Math.sin(k*Math.PI)*1.2;if(k>=1)pal.fl=0;}pkPut(this,q.x+dx,q.y+dy,q.z,S.gy);};
+ const jobs=[pkMove({x:rest.x,y:rest.y,z:rest.z,g:S.gy},.4,.6,-1)];
+ if(spr&&pal!==spr){const[sx,sz]=pkW(S.o,-3.0,1.8);jobs.push(pkRun(spr,()=>({x:sx,y:cellH(sx,sz)+(spr.dy||0),z:sz}),.7,.8,()=>{spr.e.hold=pkStandAt(spr,sx,sz);}));}
+ jobs.push(pkRun(pal,()=>{const q=pkSsPos(S,-1.55,PK.ss.tilt);return{x:q.x,y:q.y,z:q.z};},.7,.9,()=>{pal.e.hold=far;}));
+ await Promise.all(jobs);
+ const A={dir:1,tgt:.3+bias,cd:0,n:0,fcd:0,pf:0,pft:0,ct:3};
+ await pkAct({la:'BOUNCE',init(){pkSay(T_SEF1);},upd(dt){A.cd-=dt;A.fcd-=dt;
+   if(In.consume('A')&&A.cd<=0){A.dir=-A.dir;A.tgt=Math.max(-.5,Math.min(.5,A.dir*.3+bias));A.cd=.4;if(A.fcd<=0)A.n++;SFX.boing();if(A.dir>0){popText(new THREE.Vector3(rest.x,rest.y+1.2,rest.z),A.n>=4?'Boing!!':'Boing!','');if(Math.random()<.4)popText(new THREE.Vector3(pal.e.x,pal.e.y+(pal.e.hh||1.4)+.2,pal.e.z),pkLine(pal.key,'see'),'');}else{FX.burst(new THREE.Vector3(rest.x,S.gy+.1,rest.z),6,{col:0xfff4d8,add:false,sp:1.2,up:.5,g:-.5,size:.2,life:.35});SFX.land();}}
+   PK.ss.tilt=lerp(PK.ss.tilt,A.tgt,Math.min(1,dt*8));S.board.rotation.z=PK.ss.tilt;const q=pkSsPos(S,1.55,PK.ss.tilt);let lift=0;
+   if(A.pf){A.pft+=dt;const k=Math.min(1,A.pft/2.2);lift=Math.sin(k*Math.PI)*4.6;if(k>=1){A.pf=0;A.n=0;A.fcd=1;}}
+   PK.pose={x:q.x,y:q.y+lift,z:q.z,g:q.g,face:-1,sy:1+(A.tgt<0&&Math.abs(PK.ss.tilt-A.tgt)<.06?-.06:0),tilt:A.pf?Math.sin(A.pft*8)*.4:0};
+   if(A.n>=6&&!A.pf&&!pal.fl&&A.fcd<=0){A.fcd=3.2;A.n=0;SFX.cheer();pkStamp('seesaw');pkHeart(pal.key,1,'see');
+    if(heavy){A.pf=1;A.pft=0;pkStamp('see2');popText(new THREE.Vector3(q.x,q.y+1.8,q.z),'WHOA! Mr Bean launched!','long');}
+    else{pal.fl=1;pal.ft=0;popText(new THREE.Vector3(q.x,q.y+1.8,q.z),'SUPER BOUNCE!','long');popText(new THREE.Vector3(pal.e.x,pal.e.y+2.2,pal.e.z),pal.key==='sprout'?'I can see the WHOLE park!':'I can see my house!','long');}}
+   pkSay(A.n<6?T_SEF1:T_SEF2);
+   if(In.consume('B')){this.upd=()=>{};(async()=>{const to=pkW(S.o,2.6,.9);await pkMove({x:to[0],y:S.gy,z:to[1],g:S.gy},.4,.6,-1);PK.ss.manual=false;pkEnd(to);
+     pal.fl=0;(async()=>{await pkGoHome(pal);pal.use=null;if(spr&&pal!==spr)await pkGoHome(spr);})();})();}}});};
+// ---------- merry-go-round: a whole crew ----------
+pkT('Who rides with you? (up to 3)','だれと のる？（3にんまで）');pkT('Ride alone','ひとりで のる');pkT('Push!','おせー！');
+const T_MGC=pkT('Tap *A* to push! Your friends help spin too!','*A* で おそう！ ともだちも てつだってくれるよ！');
+pkMerryTalk=async function(S,en){
+ const pick=await pkPick('Who rides with you? (up to 3)',PKJOIN,3,{solo:'Ride alone'});if(pick===null)return;
+ const pals=pick.map(k=>PKF[k]).filter(Boolean),n=pals.length;const P=F.P,mg=PK.mg,stand=en.sp,rr=1.25;
+ const a0=Math.atan2(stand[1]-S.o[1],stand[0]-S.o[0])+mg.ang;
+ const at=a=>{const aa=a-mg.ang;return{x:S.o[0]+Math.cos(aa)*rr,z:S.o[1]+Math.sin(aa)*rr};};
+ const p0=at(a0);const jobs=[pkMove({x:p0.x,y:S.gy+.2,z:p0.z,g:S.gy},.4,.6,P.face)];
+ pals.forEach((r,i)=>{r.use='merry';const ai=a0+(i+1)*Math.PI*2/(n+1);r.mA=ai;jobs.push(pkRun(r,()=>{const q=at(ai);return{x:q.x,y:S.gy+.2,z:q.z};},.8+i*.1,.9,()=>{r.e.hold=function(){const q=at(ai);pkPut(this,q.x,S.gy+.2+Math.abs(Math.sin(F.t*7+i*2))*.04,q.z,S.gy+.2);};}));});
+ await Promise.all(jobs);
+ const A={fast:0,f2:0,pt:1.2,done2:0};
+ await pkAct({la:'PUSH',init(){pkSay(n?T_MGC:T_MG1);},upd(dt){if(In.consume('A')){mg.w=Math.min(5.5,mg.w+.95);SFX.swoosh();SFX.giggle();}
+   if(n){mg.w=Math.min(5.5,mg.w+n*dt*.07);A.pt-=dt;if(A.pt<=0){A.pt=rnd(1.5,2.4);const r=pals[(Math.random()*n)|0];popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),Math.random()<.5?'Push!':pkLine(r.key,'merry'),'');SFX.swoosh();pkHeart(r.key,1,'merry');}}
+   mg.w+=(.9-mg.w)*dt*.28;const q=at(a0);PK.pose={x:q.x,y:S.gy+.2+Math.abs(Math.sin(F.t*(5+mg.w*3)))*.03,z:q.z,g:S.gy+.2,face:1,tilt:Math.min(.4,mg.w*.07)*Math.sin(F.t*1)};
+   if(mg.w>3.4){A.fast+=dt;if(A.fast>1.3)pkStamp('merry');}else A.fast=Math.max(0,A.fast-dt);
+   if(n>=3&&mg.w>3){A.f2+=dt;if(A.f2>2.5&&!A.done2){A.done2=1;pkStamp('merry2');pals.forEach(r=>pkHeart(r.key,1,'merry2'));popText(new THREE.Vector3(q.x,S.gy+2.2,q.z),'Together!','long');SFX.cheer();}}else A.f2=Math.max(0,A.f2-dt);
+   pkSay(mg.w<2?(n?T_MGC:T_MG1):mg.w<3.4?T_MG2:T_MG3);
+   if(Math.random()<dt*mg.w*2)FX.burst(new THREE.Vector3(q.x,S.gy+.4,q.z),1,{star:1,col:[0xffffff,0xff7ab8,0xffe060],sp:.5,up:.3,g:-.2,size:.14,life:.4});
+   if(In.consume('B')){this.upd=()=>{};(async()=>{const fast=mg.w>3.2;const cur=PK.pose;const to=stand;SFX.jump();
+     pals.forEach((r,i)=>{(async()=>{await pkGoHome(r);r.use=null;})();});
+     await tween(fast?1.1:.45,k=>{PK.pose={x:lerp(cur.x,to[0],k),y:S.gy+.2+Math.sin(k*Math.PI)*(fast?1.2:.4),z:lerp(cur.z,to[1],k),g:S.gy,face:1,tilt:fast?Math.sin(k*Math.PI*5)*.5:0};});
+     if(fast){SFX.giggle();popText(new THREE.Vector3(to[0],S.gy+1.7,to[1]),'Whoa... dizzy!','long');FX.burst(new THREE.Vector3(to[0],S.gy+1.3,to[1]),10,{star:1,col:[0xffe060,0xffffff],sp:1.2,up:.6,g:-.6,size:.2,life:.9});
+       await tween(1.1,k=>{PK.pose={x:to[0]+Math.sin(k*18)*.12*(1-k),y:S.gy,z:to[1],g:S.gy,face:1,tilt:Math.sin(k*14)*.28*(1-k)};});}
+     pkEnd(to);})();}}});};
+// ---------- group games bar / end ----------
+pkT('Stop','おわる');
+async function pkGrpEnd(manual){const g=PK.grp;if(!g)return;PK.grp=null;SFX.back&&SFX.back();
+ for(const r of g.rs){r.use=null;pkGoHome(r);}
+ if(g.kind==='pass'&&PK.ball)PK.ball.idle=Math.max(PK.ball.idle,20);
+ if(manual)toastQ(tr(g.kind==='conga'?'Conga line over! Great dancing!':'Great game! Friends head home.'));}
+pkT('Conga line over! Great dancing!','コンガ おわり！ ナイスダンス！');pkT('Great game! Friends head home.','いい しあい！ ともだちは おうちへ。');
+// ---------- team kickball ----------
+const PKSLOT=[[6.4,19.2],[6.4,25.0],[12.8,22.0]];
+pkT('Kickball','キックボール');pkT('PLAY','あそぶ');pkT('Team up! Who plays kickball with you? (up to 3)','チームを つくろう！ だれと キックボール？（3にんまで）');
+const T_PASS1=pkT('Kick the ball to your friends! They pass it back. Chain: *{0}*','ともだちに ボールを けろう！ パスが かえってくるよ。れんぞく: *{0}*');
+pkT('Pass!','パス！');
+async function pkPassTalk(){if(PK.grp&&PK.grp.kind==='pass'){pkGrpEnd(1);return;}if(PK.grp)pkGrpEnd(0);
+ const pick=await pkPick('Team up! Who plays kickball with you? (up to 3)',PKJOIN,3,{});if(!pick||!pick.length)return;
+ const rs=pick.map(k=>PKF[k]).filter(Boolean);const g=PK.grp={kind:'pass',rs,t:0,touch:0,last:null,prev:null,idle:0,far:0,nx:0,done:0};
+ rs.forEach((r,i)=>{r.use='pass';r.slot=PKSLOT[i];r.hold_t=0;const[sx,sz]=r.slot;pkRun(r,()=>({x:sx,y:cellH(sx,sz)+(r.dy||0),z:sz}),.9,1,()=>{r.e.hold=function(dt){const b=PK.ball;const y=cellH(sx,sz)+(r.dy||0)+(r.hold_t>0?Math.abs(Math.sin(F.t*14))*.1:Math.abs(Math.sin(F.t*3+i))*.05);pkPut(this,sx,y,sz,cellH(sx,sz));if(b)pkFace(this,b.x-sx,b.z-sz);};});});
+ PK.gsay=tf(T_PASS1,0);SFX.cheer&&SFX.cheer();}
+function pkPassKick(g,r){const b=PK.ball,P=F.P;const others=g.rs.filter(o=>o!==r);let tg;
+ if(g.prev==='P'&&others.length)tg=others[(Math.random()*others.length)|0];else tg=(!others.length||Math.random()<.7)?'P':others[(Math.random()*others.length)|0];
+ const T=tg==='P'?{x:P.x,z:P.z}:{x:tg.slot[0],z:tg.slot[1]};const dx=T.x-b.x,dz=T.z-b.z,d=Math.hypot(dx,dz)||1;const vh=Math.min(10,Math.max(3,d/1.55));
+ b.vx=dx/d*vh;b.vz=dz/d*vh;b.vy=7.3;b.y+=.15;b.cd=.3;b.idle=0;g.last=r;g.prev=r;SFX.kick&&SFX.kick();
+ popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),Math.random()<.45?'Pass!':pkLine(r.key,'pass'),'');}
+function pkPassTouch(g,who){g.touch++;g.idle=0;PK.gsay=tf(T_PASS1,g.touch);const b=PK.ball;popText(new THREE.Vector3(b.x,b.y+1.2,b.z),'x'+g.touch,'');
+ if(g.touch>=6&&!g.done){g.done=1;pkStamp('pass');g.rs.forEach(r=>pkHeart(r.key,1,'pass'));SFX.cheer&&SFX.cheer();popText(new THREE.Vector3(b.x,b.y+1.8,b.z),'Together!','long');}}
+const _pkBU0=pkBallUpd;
+pkBallUpd=function(dt){const g=PK.grp,b=PK.ball;if(!g||g.kind!=='pass'||!b)return _pkBU0(dt);
+ const cd0=b.cd;_pkBU0(dt);dt=Math.min(dt,.05);const P=F.P;g.t+=dt;g.idle+=dt;
+ if(cd0<=0&&b.cd>.29&&b.goalT<=0){ // the player kicked: assist toward the next friend
+  g.last='P';g.prev='P';pkPassTouch(g,'P');
+  if(b.x>=8){const r=g.rs[g.nx++%g.rs.length];const dx=r.slot[0]-b.x,dz=r.slot[1]-b.z,d=Math.hypot(dx,dz)||1;const vh=Math.min(10,Math.max(3,d/1.55));b.vx=dx/d*vh;b.vz=dz/d*vh;b.vy=7.3;}}
+ for(const r of g.rs){if(r.hold_t>0){r.hold_t-=dt;if(r.hold_t<=0){r.hold_t=0;pkPassKick(g,r);}continue;}
+  if(!r.slot||b.goalT>0||b.cd>0||g.last===r)continue;const d=Math.hypot(b.x-r.slot[0],b.z-r.slot[1]);
+  if(d<1.05&&b.y<cellH(b.x,b.z)+1.5){b.vx=b.vz=0;b.vy=0;b.x=lerp(b.x,r.slot[0],.6);b.z=lerp(b.z,r.slot[1],.6);b.y=cellH(b.x,b.z)+.27;r.hold_t=.45;g.last=r;pkPassTouch(g,r);SFX.hop&&SFX.hop();}}
+ // game end / chain timeout
+ if(Math.hypot(P.x-10,P.z-22)>17)g.far+=dt;else g.far=0;
+ if(g.far>6||g.t>200){pkGrpEnd(1);return;}
+ if(g.idle>14&&g.touch>0){g.touch=0;g.done=0;g.idle=0;PK.gsay=tf(T_PASS1,0);}};
+// ---------- picnic snacks + friendship ----------
+pkT('Snack basket','おやつバスケット');pkT('TAKE','とる');pkT('Your hands are full! Share some snacks first.','りょうてが いっぱい！ さきに おやつを あげよう。');
+pkT('You picked up {0} {1}! Give it to a friend. ♥','{0}{1} を てにいれた！ ともだちに あげよう。♥');
+pkT('You gave {0} {1} to {2}! ♥','{2} に {0}{1} を あげた！ ♥');pkT("Nobody's here to share with... yet!",'まだ だれも いないよ…');
+function pkBasketTalk(){const sn=PKS.sn;if(sn.length>=3){toastQ(tr('Your hands are full! Share some snacks first.'));SFX.err&&SFX.err();return;}
+ const ks=Object.keys(PKSN);const k=ks[(Math.random()*ks.length)|0];sn.push(k);pkSave();SFX.ok&&SFX.ok();toastQ(tf('You picked up {0} {1}! Give it to a friend. ♥',PKSN[k][0],PKSN[k][1]));}
+async function pkGiveSnack(r){const sn=PKS.sn;if(!sn||!sn.length)return;let i=sn.indexOf(r.fav);const fav=i>=0;if(i<0)i=0;const k=sn.splice(i,1)[0];PKS.gifts=(PKS.gifts||0)+1;pkSave();
+ const e=r.e;const at=new THREE.Vector3(e.x,e.y+(e.hh||1.4)+.2,e.z);
+ toastQ(tf('You gave {0} {1} to {2}! ♥',PKSN[k][0],PKSN[k][1],tr(e.name)));SFX.giggle&&SFX.giggle();
+ popText(at,fav?(PKFAV[r.key]||PKFAV._):PKL.snack._[(Math.random()*3)|0],'long');pkHeart(r.key,fav?2:1,null);
+ if(PKS.gifts>=5)pkStamp('snack');}
+// ---------- conga line ----------
+pkT('Conga','コンガ');pkT('CONGA','コンガ');pkT('Who joins the conga line? (up to 4)','だれが コンガに さんか？（4にんまで）');
+const T_CG=pkT('Conga time! Walk around the park and your friends follow you! Distance: *{0}*','コンガの じかん！ こうえんを あるくと ともだちが ついてくるよ！ きょり: *{0}*');
+async function pkCongaTalk(){if(PK.grp&&PK.grp.kind==='conga'){pkGrpEnd(1);return;}if(PK.grp)pkGrpEnd(0);
+ const pick=await pkPick('Who joins the conga line? (up to 4)',PKJOIN,4,{});if(!pick||!pick.length)return;
+ const rs=pick.map(k=>PKF[k]).filter(Boolean);const P=F.P;const g=PK.grp={kind:'conga',rs,path:[{x:P.x,z:P.z}],dist:0,bt:.5,ct:3,done:0,t:0};
+ rs.forEach((r,i)=>{r.use='conga';r.ci=i;const near=()=>pkPathAt(g,(i+1)*1.2);pkRun(r,()=>{const t=near();return{x:t.x,y:cellH(t.x,t.z)+(r.dy||0),z:t.z};},.8+i*.15,.9,()=>{r.e.hold=function(dt){const t=near();const k=Math.min(1,dt*9);const x=lerp(this.x,t.x,k),z=lerp(this.z,t.z,k);const gy=cellH(x,z);pkFace(this,t.x-this.x+.001,t.z-this.z);pkPut(this,x,gy+(r.dy||0)+Math.abs(Math.sin(F.t*8+i*1.3))*.12,z,gy);};});});
+ PK.gsay=tf(T_CG,0);SFX.cheer&&SFX.cheer();}
+function pkPathAt(g,s){const p=g.path;let acc=0;for(let i=p.length-1;i>0;i--){const d=Math.hypot(p[i].x-p[i-1].x,p[i].z-p[i-1].z);if(acc+d>=s){const k=(s-acc)/(d||1);return{x:lerp(p[i].x,p[i-1].x,k),z:lerp(p[i].z,p[i-1].z,k)};}acc+=d;}return p[0];}
+function pk2Upd(dt){const g=PK.grp;if(!g||g.kind!=='conga')return;const P=F.P;g.t+=dt;const L=g.path[g.path.length-1];const d=Math.hypot(P.x-L.x,P.z-L.z);
+ if(d>.12){g.path.push({x:P.x,z:P.z});g.dist+=d;if(g.path.length>400)g.path.shift();}
+ g.bt-=dt;if(g.bt<=0){g.bt=.5;SFX.hop&&SFX.hop();}
+ g.ct-=dt;if(g.ct<=0&&g.dist>3){g.ct=rnd(2.4,4);const r=g.rs[(Math.random()*g.rs.length)|0];popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),pkLine(r.key,'conga'),'');}
+ const m=Math.round(g.dist);if(m!==g.m){g.m=m;PK.gsay=tf(T_CG,m);}
+ if(g.dist>=45&&g.rs.length>=3&&!g.done){g.done=1;pkStamp('conga');g.rs.forEach(r=>pkHeart(r.key,1,'conga'));SFX.cheer&&SFX.cheer();popText(new THREE.Vector3(P.x,P.y+2.3,P.z),'Together!','long');}}
+// ---------- room hooks: spots, basket, wiring ----------
+const _pkBuildRoom=buildRoom;
+buildRoom=function(id){PK.grp=null;PK.hg={};return _pkBuildRoom.apply(this,arguments);};
+function pkBuild2(B){pk2UI();
+ const BS=[10.5,25.8];const g=new THREE.Group();g.position.set(BS[0],B.hAt(BS[0],BS[1]),BS[1]);B.add(g);
+ M3(cyl(.34,.27,.28,10),mat(0xc8944a,{roughness:.9}),0,.2,0,1,1,1,g);M3(new THREE.TorusGeometry(.3,.03,5,12),mat(0xa87430),0,.34,0,1,1,1,g).rotation.x=Math.PI/2;
+ const hd=M3(new THREE.TorusGeometry(.3,.025,5,10,Math.PI),mat(0xa87430),0,.34,0,1,1,1,g);
+ M3(cyl(.3,.3,.03,10),mat(0xff5a6a),0,.33,0,1,1,1,g);
+ for(const[ax,az,c]of[[-.1,.05,0xff4a4a],[.1,-.05,0xffd84a],[.02,.12,0x6ad05a]])M3(sph(.11,8,6),mat(c),ax,.45,az,1,1,1,g);
+ pkSpot(B,BS[0]+.1,BS[1]+.9,{hint:'Snack basket',lab:'TAKE',col:0xffa84a,reach:1.2,talk:()=>pkBasketTalk()});
+ pkSpot(B,9.8,19.6,{hint:'Kickball',lab:'PLAY',col:0x4ac8ff,talk:()=>pkPassTalk()});
+ pkSpot(B,24.8,15.6,{hint:'Conga',lab:'CONGA',col:0xff7ab8,talk:()=>pkCongaTalk()});
+ F.ents.push({kind:'deco',x:0,z:0,upd(dt){try{pk2Upd(dt);}catch(er){console.error(er);}}});}
+const _pkRB=ROOMS.park.build;
+ROOMS.park.build=function(B){const r=_pkRB.apply(this,arguments);try{pkBuild2(B);}catch(er){console.error(er);}return r;};
+// stamp card: friendship hearts
+const _pkOC=pkOpenCard;
+pkOpenCard=function(){if(UI.modal||F.lock)return;_pkOC();const U=pkUI();const bx=U.pan.querySelector('.bx'),fl=U.pan.querySelector('.fl');if(!bx||!fl)return;
+ const d=document.createElement('div');d.className='hh';d.innerHTML='<h3>💖 '+tr('Friendship hearts')+'</h3><div class="hg">'+PKJOIN.concat(['partyguy']).filter(k=>PKF[k]).map(k=>'<span>'+PKF[k].emo+' '+tr(PKF[k].e.name)+' <em>'+pkHrt(k)+'</em></span>').join('')+'</div>';fl.after(d);};
+pkT('Friendship hearts','ともだち ハート');
+
+pkT('Want to play? Open the world map and tap 🎠 Park. Swings, seesaws and lots of friends are waiting!','あそびたい？ ワールドマップを ひらいて 🎠パーク を タップ！ ブランコや シーソー、たくさんの ともだちが まってるよ！');
 
 // ================= STORY / MAIN =================
 const GM={mode:'boot'};
