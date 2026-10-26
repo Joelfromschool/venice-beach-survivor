@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Mr Bean RPG">
 <meta name="theme-color" content="#2a1a5a"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Mr Bean RPG</title><script>window.__BUILD__="v2.5"</script>
+<title>Mr Bean RPG</title><script>window.__BUILD__="v2.5.2"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px);--F:"Trebuchet MS","Avenir Next Rounded","Arial Rounded MT Bold","Hiragino Maru Gothic ProN","Hiragino Sans","Hiragino Kaku Gothic ProN","BIZ UDPGothic","Yu Gothic","Meiryo","Noto Sans JP","Noto Sans CJK JP",system-ui,sans-serif;--pa:linear-gradient(180deg,#3d56c8 0%,#2a3c9e 55%,#1e2b78 100%);--bd:#fff6d8}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -941,7 +941,7 @@ function animModel(g,t,speed){const b=g.userData.body;if(!b)return;const p=g.use
  b.children.forEach(o=>{if(o.userData.wing){o.rotation.y=Math.sin(p*25)*.6*o.userData.wing;}if(o.userData.fly!=null){const q=p*4+o.userData.fly*2.1;o.position.set(Math.cos(q)*.45,.85+Math.sin(q*1.7)*.12,Math.sin(q)*.45);}if(o.userData.spin)o.rotation.y+=.4;if(o.userData.flick)o.scale.y=1+Math.sin(p*20)*.15;});}
 // ---------- particles ----------
 const FX={list:[],scene:null,
- burst(p,n,o){if(!this.scene)return;o=o||{};for(let i=0;i<n;i++){const m=new THREE.SpriteMaterial({map:o.star?R.starTex:R.sparkTex,color:o.col!=null?(Array.isArray(o.col)?pick(o.col):o.col):0xffffff,transparent:true,depthWrite:false,blending:o.add===false?THREE.NormalBlending:THREE.AdditiveBlending,fog:false});
+ burst(p,n,o){if(!this.scene)return;o=o||{};n=Math.min(n,Math.max(0,220-this.list.length));for(let i=0;i<n;i++){const m=new THREE.SpriteMaterial({map:o.star?R.starTex:R.sparkTex,color:o.col!=null?(Array.isArray(o.col)?pick(o.col):o.col):0xffffff,transparent:true,depthWrite:false,blending:o.add===false?THREE.NormalBlending:THREE.AdditiveBlending,fog:false});
   const s=new THREE.Sprite(m);s.position.copy(p);const sz=o.size||.25;s.scale.setScalar(sz*rnd(.6,1.3));this.scene.add(s);
   const a=Math.random()*Math.PI*2,sp=(o.sp||3)*rnd(.4,1);this.list.push({s,v:new THREE.Vector3(Math.cos(a)*sp,(o.up||3)*rnd(.5,1.3),Math.sin(a)*sp),life:o.life||.7,t:0,g:o.g==null?6:o.g,sz:s.scale.x,spin:rnd(-6,6)});}},
  tick(dt){for(let i=this.list.length-1;i>=0;i--){const p=this.list[i];p.t+=dt;p.v.y-=p.g*dt;p.s.position.addScaledVector(p.v,dt);const k=1-p.t/p.life;p.s.material.opacity=Math.max(0,k);p.s.material.rotation+=p.spin*dt;p.s.scale.setScalar(p.sz*(.5+k*.5));if(p.t>=p.life){this.scene&&this.scene.remove(p.s);p.s.material.dispose();this.list.splice(i,1);}}},
@@ -2878,7 +2878,7 @@ midRoom('j3',{name:'Frosty Pass',theme:'snow',world:3,t0:'snow',hi:'snow',pt:'ic
  props(B){for(const[x,z]of[[6,5],[19,8.6]])B.add(PROP.snowman(B.v(x,z))),B.col(x,z,.4,B.hAt(x,z)+1.6);for(const[x,z,col]of[[3,6,0xff4a6a],[20,4,0x4a8aff],[12,18,0xffd84a]])B.add(PROP.present(B.v(x,z),col));B.add(PROP.cane(B.v(11,5)));B.add(PROP.cane(B.v(2.6,11.6)));}});
 midRoom('p3',{name:'Prize Alley',theme:'party',world:4,t0:'confetti',hi:'pink',pt:'gold',tree:'pink',seed:43,lamp:0xff8ad8,item:'cupcake',
  npc:['pink',['Step right up! The Big Top is just through here!','Pooh already tried to win every prize. With a fake ticket. Made of a napkin.'],'Prize Bean'],
- props(B){B.add(PROP.tent(B.v(5,5),0xff6ab0));B.colBox(3.5,3.5,6.5,6.5,B.hAt(5,5)+2.5);for(const[x,z,col]of[[12,6,0xff4a8a],[3,11.5,0x4ac8ff],[20.5,14,0xffd84a]])B.add(PROP.balloon(B.v(x,z),col));B.add(PROP.flag(B.v(9,3.6),0xffd23a));}});
+ props(B){B.add(PROP.tent(B.v(5,5),0xff6ab0,0xffffff));B.colBox(3.5,3.5,6.5,6.5,B.hAt(5,5)+2.5);for(const[x,z,col]of[[12,6,0xff4a8a],[3,11.5,0x4ac8ff],[20.5,14,0xffd84a]])B.add(PROP.balloon(B.v(x,z),col));B.add(PROP.flag(B.v(9,3.6),0xffd23a));}});
 midRoom('s3',{name:'Bog Bridge',theme:'swamp',world:5,t0:'swamp',hi:'swamp',pt:'mud',tree:'dead',seed:45,lamp:0xb0ff70,item:'wrapped',
  npc:['old',['The bridge creaks, but it holds. Mostly.','Kermit\'s hollow is to the west. Bring snacks. He is very grumpy when hungry.'],'Ferry Bean'],
  props(B){for(const[x,z]of[[5,5],[20,8.4],[12,18.4]])B.add(PROP.pumpkin(B.v(x,z),1.1,1));for(const[x,z]of[[3,12.4],[11.6,14.2],[4,18]])B.add(PROP.cattail(B.v(x,z)));B.add(PROP.tomb(B.v(9,5)));}});
@@ -2982,7 +2982,7 @@ function pkUI(){if(PK.ui)return PK.ui;
 #pkclose:active{transform:translateY(3px)}
 @media (max-height:430px){.pkb{height:50px;font-size:17px;padding:0 13px}#pkMapBtn{height:54px;font-size:19px;top:calc(var(--sat) + 58px)}#pkBack,#pkCardBtn{top:calc(var(--sat) + 58px)}#pkCardBtn{left:calc(var(--sal) + 112px)}#pkcard .bx{padding:10px 12px 12px}.pks{min-height:74px}.pks i{font-size:24px}}
 #pkclose{position:sticky;bottom:0}@media (max-height:430px){#pkclose{height:46px;margin-top:6px}#pkcard .sub{display:none}#pkcard h2{font-size:19px}.pks{min-height:64px;padding:4px}.pks span{font-size:10px}#pkcard .fl{margin-top:5px;padding:4px 8px;font-size:12px}}
-@media (max-width:480px){#pkride{max-width:94vw;bottom:calc(var(--sab) + 150px)}#pkCardBtn{left:calc(var(--sal) + 118px)}}
+@media (max-width:480px){#pkride{left:3vw;right:3vw;transform:none;max-width:none;bottom:calc(var(--sab) + 150px)}#pkCardBtn{left:calc(var(--sal) + 118px)}}
 body.ja .pkb{letter-spacing:0}`;
  document.head.appendChild(st);
  const mk=(tag,id,cls,html)=>{const e=document.createElement(tag);if(id)e.id=id;if(cls)e.className=cls;if(html!=null)e.innerHTML=html;document.body.appendChild(e);return e;};
@@ -3369,12 +3369,12 @@ const PKFL=[
 for(const[k,n,ic,p,r,a,pet,core,d,dj,nj]of PKFL){FLOWERS[k]={n,ic,p,r,a,pet,core,d:pkT(d,dj),j:1};pkT(n,nj);}
 const _spawn0=spawnFlowers;
 spawnFlowers=function(RD,id){if(id!=='park')return _spawn0(RD,id);if(!F.M)return;
- const y=1.0,reg=floraOf('park').filter(k=>FLOWERS[k].r<2);const SPOT={pinwheelpoppy:[31.4,9.6],duckdaisy:[31.4,26.6],sandlily:[33.2,17.6],picnicpuff:[13.4,27.8]};
+ const y=1.0,reg=floraOf('park').filter(k=>FLOWERS[k].r<2);const SPOT={pinwheelpoppy:[30.4,10.2],duckdaisy:[31.4,26.6],sandlily:[33.5,18.8],picnicpuff:[13.4,27.8]};
  for(const k of reg){const s=SPOT[k];const e=addFlower(k,s[0],y,s[1]);e.jf=1;}
- const rare=floraOf('park').find(k=>FLOWERS[k].r===2);const RS=[[12.4,9.4],[22.4,1.8],[33.3,3.6],[2.8,27.2],[16.2,2.4]];
+ const rare=floraOf('park').find(k=>FLOWERS[k].r===2);const RS=[[13,10],[22.4,1.8],[33.3,3.2],[2.8,27.2],[16.2,2.4]];
  if(rare&&Math.random()<RARE_CHANCE*(window.__RARE_FORCE?99:1)){const s=pick(RS);const e=addFlower(rare,s[0],y,s[1]);e.rare=1;rareFx(e);setTimeout(()=>{if(G&&GM.mode==='field'){SFX.pick(2);toastQ(tr('✨ Something rare is blooming nearby...'));}},900);}
- const pts=[[3.6,10.4],[5.6,9.6],[25.2,4.4],[29.4,5.8],[32.4,12.4],[33.4,20.6],[30,28.4],[24,29],[8.2,29],[3.4,23.8],[11,14.4],[25,13.6],[15.4,23.4],[20,9.6]];
- pts.sort(()=>Math.random()-.5).slice(0,9).forEach(([x,z])=>{const r=Math.random();addFlower(r<.12?'rose':r<.24?'sunflower':pick(['daisy','tulip','bluebell']),x+rnd(-.3,.3),y,z+rnd(-.3,.3));});};
+ const pts=[[3.6,10.4],[4.6,9.9],[25.2,4.4],[29.4,5.8],[33.4,12.4],[31.6,20.6],[30,28.4],[24,29],[8.2,29],[3.4,23.8],[11,14.4],[25,13.6],[15.4,23.4],[20,9.6]];
+ pts.sort(()=>Math.random()-.5).slice(0,9).forEach(([x,z])=>{const r=Math.random();addFlower(r<.12?'rose':r<.24?'sunflower':pick(['daisy','tulip','bluebell']),x+rnd(-.15,.15),y,z+rnd(-.15,.15));});};
 const _pick1=pickFlower;
 pickFlower=function(e){const was=e.got;_pick1(e);if(!was&&e.rare&&G.room==='park')setTimeout(()=>pkStamp('rare'),1200);};
 // ---------- world map: node decor + trail ----------
@@ -3699,6 +3699,140 @@ pkOpenCard=function(){if(UI.modal||F.lock)return;_pkOC();const U=pkUI();const bx
 pkT('Friendship hearts','ともだち ハート');
 
 pkT('Want to play? Open the world map and tap 🎠 Park. Swings, seesaws and lots of friends are waiting!','あそびたい？ ワールドマップを ひらいて 🎠パーク を タップ！ ブランコや シーソー、たくさんの ともだちが まってるよ！');
+
+// ===================== v2.5.x: more Park Pals games — tug-of-war, jump rope, photo booth =====================
+PKST.push(
+ ['tug','🪢',pkT('Tug Champions','つなひき チャンピオン'),pkT('Win a friendly tug-of-war.','なかよし つなひきで かとう！')],
+ ['rope','🤸',pkT('Rope Rockers','なわとび ロッカー'),pkT('Jump rope 10 times in a row.','なわとびを 10かい れんぞくで とぼう。')],
+ ['photo','📸',pkT('Say Cheese!','はい、チーズ！'),pkT('Take a photo with friends in the photo booth.','フォトブースで ともだちと しゃしん。')]);
+const TUGP=[28.4,13.2],ROPEP=[10,5.4],BOOTHP=[14.6,13.2];
+PKL.tug={_:[pkT('Heave ho!','よいしょ！'),pkT('Pull pull pull!','ひけ ひけ ひけ！'),pkT("Don't let go!",'はなさないで！')],
+ bronny:[pkT('My arms are basically basketballs!','うでは ほぼ バスケボール！')],pooping:[pkT('MISTER Pooping never lets go!','ミスターは ぜったい はなさない！')]};
+PKL.tug.king=[pkT('Pulling is just collecting coins!','ひっぱるのは コインあつめと おなじ！')];
+PKL.rope={_:[pkT('Hop! Hop! Hop!','ピョン！ ピョン！'),pkT('Nice jump!','ナイスジャンプ！'),pkT('Keep going!','その ちょうし！')],kermit:[pkT('...Jumping. I guess.','…ジャンプ。たぶん。')],bronny:[pkT('I can jump higher than this!','もっと たかく とべるよ！')]};
+PKL.photo={_:[pkT('Say cheese!','はい、チーズ！'),pkT('Look at the camera!','カメラを みて！'),pkT('Squeeze in!','ぎゅっと よって！')]};
+// ---------- build: props + spots ----------
+let PKTUG=null,PKRP=null;
+function pkBuild3(B){
+ // tug-of-war: rope with a flag and a muddy puddle in the middle
+ {const g=pkGroup(B,TUGP);const rope=pkBar(g,[-2.6,.5,0],[2.6,.5,0],.045,0xd8a860);const flag=new THREE.Group();flag.position.y=.5;g.add(flag);
+  M3(rbox(.34,.22,.04,.01),mat(0xff3a4a),0,.15,0,1,1,1,flag);pkBar(flag,[0,0,0],[0,.32,0],.015,0xffffff);
+  M3(cyl(.95,.95,.03,16),mat(0x8a5a3a,{roughness:.95}),0,.03,0,1,1,1,g);M3(cyl(.7,.7,.04,16),mat(0xa87a52,{roughness:.95}),0,.05,0,1,1,1,g);
+  for(const sx of[-1,1]){M3(cyl(.12,.14,.1,8),mat(0xe8e8f0),sx*2.7,.08,0,1,1,1,g);}
+  PKTUG={g,flag,o:TUGP};
+  const sp=pkW(TUGP,0,1.5);pkSpot(B,sp[0],sp[1],{hint:'Tug-of-war',lab:'PULL',col:0xff7a3a,reach:1.2,talk:()=>pkTugTalk()});}
+ // jump rope: two little posts + bead rope
+ {const g=pkGroup(B,ROPEP);for(const sx of[-2.2,2.2]){M3(cyl(.07,.09,.9,8),mat(0xff7ab8),sx,.45,0,1,1,1,g);M3(sph(.1,8,6),mat(0xffd24a),sx,.92,0,1,1,1,g);}
+  const rg=new THREE.Group();g.add(rg);const beads=[];for(let i=0;i<15;i++)beads.push(M3(sph(.085,6,5),mat(i%2?0xff4a6a:0xffffff),0,.5,0,1,1,1,rg));
+  PKRP={g,rg,beads,o:ROPEP};rg.visible=false;
+  const sp=pkW(ROPEP,0,1.6);pkSpot(B,sp[0],sp[1],{hint:'Jump rope',lab:'JUMP',col:0xff7ab8,reach:1.2,talk:()=>pkRopeTalk()});}
+ // photo booth
+ {const g=pkGroup(B,BOOTHP);M3(rbox(1.9,1.9,.9,.08),mat(0xff7ab8,{roughness:.55}),0,.95,-.2,1,1,1,g);M3(rbox(1.5,1.3,.1,.05),mat(0xfff0f8),0,.95,.28,1,1,1,g);
+  M3(rbox(2.1,.18,1.1,.05),mat(0x4ac8ff),0,1.95,-.2,1,1,1,g);M3(rbox(1.0,.4,.06,.04),mat(0xffe060),0,2.25,-.2,1,1,1,g);
+  M3(sph(.22,10,8),mat(0x303040),0,1.05,.36,1,1,1,g);M3(sph(.1,8,6),mat(0xff4a4a,{emissive:0xff2a2a,emissiveIntensity:.8}),.0,1.05,.52,1,1,1,g);
+  B.col(BOOTHP[0],BOOTHP[1],.9,B.hAt(BOOTHP[0],BOOTHP[1])+2.2);
+  const sp=pkW(BOOTHP,0,1.9);pkSpot(B,sp[0],sp[1],{hint:'Photo booth',lab:'SNAP',col:0xffd24a,reach:1.2,talk:()=>pkPhotoTalk()});}
+}
+const _pkB2=pkBuild2;pkBuild2=function(B){_pkB2(B);try{pkBuild3(B);}catch(er){console.error(er);}};
+// ---------- tug-of-war ----------
+pkT('Tug-of-war','つなひき');pkT('PULL','ひく');pkT('Pick teammates! (up to 2)','チームメイトを えらぼう！（2にんまで）');pkT('Just me','ひとりで');
+pkT('Not enough friends are free right now!','いま あそべる ともだちが たりないよ！');
+const T_TUG1=pkT('Tap *A* as fast as you can to pull! Your team helps too.','*A* を れんだして ひっぱれ！ チームも てつだうよ。');
+pkT('Splash!','バシャーン！');pkT('YOU WIN!','かったー！');pkT('Draw! Everyone is laughing!','ひきわけ！ みんな わらってる！');pkT('Great pull! Everyone is muddy and happy.','いい しょうぶ！ みんな どろんこで ハッピー。');
+async function pkTugTalk(){const T=PKTUG,o=T.o;
+ const pick=await pkPick('Pick teammates! (up to 2)',PKJOIN,2,{solo:'Just me'});if(pick===null)return;
+ const mates=pick.map(k=>PKF[k]).filter(Boolean);
+ const opp=['bronny','king','pooping','max','jingles'].map(k=>PKF[k]).filter(r=>r&&!r.use&&mates.indexOf(r)<0).slice(0,2);
+ if(opp.length<2){toastQ(tr('Not enough friends are free right now!'));return;}
+ const P=F.P;const all=mates.concat(opp);all.forEach(r=>r.use='tug');
+ const S={m:0};const sh=1.15;const baseP=-1.0;
+ const slot=(side,i)=>side*(1.0+i*.78);   // local x of base positions
+ const pos=(lx,m)=>{const q=pkW(o,lx+m*sh,0);return{x:q[0],z:q[1]};};
+ const dirR=pkW([0,0],1,0);
+ const holdFor=(r,lx,face)=>function(dt){const q=pos(lx,S.m);const y=cellH(q.x,q.z)+(r.dy||0)+Math.abs(Math.sin(F.t*(5+Math.abs(S.m)*3)+lx))*.06;pkPut(this,q.x,y,q.z,cellH(q.x,q.z));pkFace(this,dirR[0]*face,dirR[1]*face);};
+ mates.forEach((r,i)=>{const lx=-1.0-(i+1)*.78;pkRun(r,()=>{const q=pos(lx,0);return{x:q.x,y:cellH(q.x,q.z)+(r.dy||0),z:q.z};},.9,1,()=>{r.e.hold=holdFor(r,lx,1);});});
+ opp.forEach((r,i)=>{const lx=1.0+i*.78;pkRun(r,()=>{const q=pos(lx,0);return{x:q.x,y:cellH(q.x,q.z)+(r.dy||0),z:q.z};},.9,1,()=>{r.e.hold=holdFor(r,lx,-1);});});
+ const p0=pos(baseP,0);await pkMove({x:p0.x,y:cellH(p0.x,p0.z),z:p0.z,g:cellH(p0.x,p0.z)},.5,.6,1);await sl_(.5);
+ const A={ct:2,res:0};
+ await pkAct({la:'PULL',init(){pkSay(T_TUG1);},upd(dt){const t=this.t;
+   if(!A.res){const taps=In.consume('A')?1:0;if(taps){S.m+=.05;SFX.hop&&SFX.hop();}
+    S.m+=(mates.length*.07-(.2+.06*Math.sin(t*2.3)))*dt;S.m=Math.max(-1.05,Math.min(1.05,S.m));
+    A.ct-=dt;if(A.ct<=0){A.ct=rnd(1.4,2.4);const r=all[(Math.random()*all.length)|0];popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),pkLine(r.key,'tug'),'');}
+    if(S.m>=1)A.res=1;else if(S.m<=-1)A.res=-1;else if(t>30)A.res=2;
+    if(A.res){this.fin=0;SFX.cheer&&SFX.cheer();}}
+   T.flag.position.x=S.m*sh;const q=pos(baseP,S.m);const gy=cellH(q.x,q.z);PK.pose={x:q.x,y:gy+Math.abs(Math.sin(t*(5+Math.abs(S.m)*3)))*.05,z:q.z,g:gy,face:1,tilt:-.18-Math.abs(S.m)*.1};
+   if(A.res&&!this.done){this.fin=(this.fin||0)+dt;
+    if(A.res!==2){const loserSide=A.res>0?1:-1;const lose=A.res>0?opp:mates;const c=pkW(o,0,0);
+     if(this.fin<1.1){const k=this.fin/1.1;lose.forEach((r,i)=>{r.e.hold=function(){const x=lerp(this.x,c[0]+i*.4,.12),z=lerp(this.z,c[1]+i*.3,.12);pkPut(this,x,cellH(x,z)+Math.sin(k*Math.PI)*.8+(r.dy||0),z,cellH(x,z));};});}
+     if(!A.sp&&this.fin>.9){A.sp=1;SFX.land&&SFX.land();FX.burst(new THREE.Vector3(c[0],cellH(c[0],c[1])+.3,c[1]),22,{col:[0x8a5a3a,0xa87a52,0xffffff],add:false,sp:2.6,up:3,g:7,size:.3,life:.8});popText(new THREE.Vector3(c[0],cellH(c[0],c[1])+1.8,c[1]),'Splash!','long');
+      if(A.res<0){}}}
+    if(!A.msg&&this.fin>1.2){A.msg=1;const q2=pkW(o,0,0);popText(new THREE.Vector3(q2[0],cellH(q2[0],q2[1])+2.6,q2[1]),A.res>0?'YOU WIN!':A.res<0?'Splash!':'Draw! Everyone is laughing!','long');SFX.giggle&&SFX.giggle();pkSay(T_TUG2);
+     if(A.res>0)pkStamp('tug');all.forEach(r=>pkHeart(r.key,1,'tug'));}
+    if(this.fin>3.2){this.done=1;this.upd=()=>{};(async()=>{const to=pkW(o,-1.6,2.2);await pkMove({x:to[0],y:cellH(to[0],to[1]),z:to[1],g:cellH(to[0],to[1])},.45,.5,1);pkEnd(to);all.forEach(r=>{(async()=>{await pkGoHome(r);r.use=null;})();});})();}}
+   if(In.consume('B')&&!A.res){this.done=1;this.upd=()=>{};(async()=>{const to=pkW(o,-1.6,2.2);await pkMove({x:to[0],y:cellH(to[0],to[1]),z:to[1],g:cellH(to[0],to[1])},.45,.5,1);pkEnd(to);all.forEach(r=>{(async()=>{await pkGoHome(r);r.use=null;})();});})();}}});
+ T.flag.position.x=0;};
+const T_TUG2=pkT('Great pull! Everyone is muddy and happy.','いい しょうぶ！ みんな どろんこで ハッピー。');
+const sl_=s=>tween(s,()=>{});
+// ---------- jump rope ----------
+pkT('Jump rope','なわとび');pkT('JUMP','ジャンプ');pkT('Who plays jump rope? Pick 2 to turn the rope, and a 3rd to jump with you!','なわとび！ 2にんが なわを まわして、3にんめが いっしょに とぶよ！');
+pkT('Jump rope needs at least 2 friends to turn the rope!','なわを まわす ともだちが 2にん ひつよう！');pkT('Oops! Try again!','おっと！ もういっかい！');
+const T_RP1=pkT('Tap *A* to jump when the rope comes down! Streak: *{0}*','なわが したに きたら *A* で ジャンプ！ れんぞく: *{0}*');
+async function pkRopeTalk(){const R_=PKRP,o=R_.o;
+ const pick=await pkPick('Who plays jump rope? Pick 2 to turn the rope, and a 3rd to jump with you!',PKJOIN,3,{});if(pick===null)return;
+ if(pick.length<2){toastQ(tr('Jump rope needs at least 2 friends to turn the rope!'));return;}
+ const tn=[PKF[pick[0]],PKF[pick[1]]],bd=pick[2]?PKF[pick[2]]:null;const all=tn.concat(bd?[bd]:[]);all.forEach(r=>r.use='rope');
+ const pw=(lx,lz)=>{const q=pkW(o,lx,lz||0);return{x:q[0],z:q[1]};};
+ tn.forEach((r,i)=>{const lx=i?2.2:-2.2;const q=pw(lx,.1);pkRun(r,()=>({x:q.x,y:cellH(q.x,q.z)+(r.dy||0),z:q.z}),.9,1,()=>{r.e.hold=function(){pkPut(this,q.x,cellH(q.x,q.z)+(r.dy||0)+Math.abs(Math.sin(F.t*6+i))*.04,q.z,cellH(q.x,q.z));pkFace(this,i?-1:1,0);};});});
+ let jb={y:0};if(bd){const q=pw(.7,.2);pkRun(bd,()=>({x:q.x,y:cellH(q.x,q.z)+(bd.dy||0),z:q.z}),.9,1,()=>{bd.e.hold=function(){pkPut(this,q.x,cellH(q.x,q.z)+(bd.dy||0)+jb.y,q.z,cellH(q.x,q.z));pkFace(this,0,1);};});}
+ const p0=pw(-.5,.2);const gy=cellH(p0.x,p0.z);await pkMove({x:p0.x,y:gy,z:p0.z,g:gy},.5,.6,1);await sl_(.5);
+ const A={ph:0,w:4.8,streak:0,best:0,jy:0,jv:0,air:false,done:0,ct:2.5,trip:0};R_.rg.visible=true;PK.ropeA=A;
+ await pkAct({la:'JUMP',init(){pkSay(tf(T_RP1,0));},upd(dt){
+   const prev=A.ph;A.ph+=A.w*dt;
+   if(In.consume('A')&&!A.air){A.air=true;A.jv=3.8;SFX.jump&&SFX.jump();}
+   if(A.air){A.jv-=12*dt;A.jy+=A.jv*dt;if(A.jy<=0){A.jy=0;A.air=false;A.jv=0;}}
+   // rope geometry: circle in the local y/z plane
+   const cosp=Math.cos(A.ph),sinp=Math.sin(A.ph);const base=cellH(o[0],o[1]);
+   R_.beads.forEach((b,i)=>{const u=i/(R_.beads.length-1)*2-1;const a=.85*Math.sqrt(Math.max(0,1-u*u));b.position.set(u*2.2,Math.max(.05,.8+a*cosp*(.75+.25*(1-Math.abs(u)))),a*sinp*.9);});
+   // crossing when the rope hits the floor (phase = PI mod 2PI)
+   if(Math.floor((A.ph+Math.PI)/(2*Math.PI))!==Math.floor((prev+Math.PI)/(2*Math.PI))){
+    if(A.jy>.14){A.streak++;A.best=Math.max(A.best,A.streak);SFX.hop&&SFX.hop();popText(new THREE.Vector3(P_x(p0),F.P.y+1.6,P_z(p0)),'x'+A.streak,'');pkSay(tf(T_RP1,A.streak));
+     if(A.streak%4===0){A.w=Math.min(8,A.w*1.08);}
+     if(bd&&Math.random()<.5)popText(new THREE.Vector3(bd.e.x,bd.e.y+(bd.e.hh||1.4)+.2,bd.e.z),pkLine(bd.key,'rope'),'');
+     if(A.streak>=10&&!A.done){A.done=1;pkStamp('rope');all.forEach(r=>pkHeart(r.key,1,'rope'));SFX.cheer&&SFX.cheer();popText(new THREE.Vector3(P_x(p0),F.P.y+2.4,P_z(p0)),'Together!','long');}}
+    else{A.streak=0;A.w=4.8;A.trip=.6;SFX.err&&SFX.err();popText(new THREE.Vector3(P_x(p0),F.P.y+1.6,P_z(p0)),'Oops! Try again!','');pkSay(tf(T_RP1,0));}}
+   A.trip=Math.max(0,A.trip-dt);
+   if(bd){const psi=((A.ph-Math.PI)%(2*Math.PI)+2*Math.PI)%(2*Math.PI);const d=Math.min(psi,2*Math.PI-psi);jb.y=d<.8?.5*Math.cos(d/.8*Math.PI/2):0;}
+   PK.pose={x:p0.x,y:gy+A.jy,z:p0.z,g:gy,face:1,sy:1+(A.air?.05:0),tilt:A.trip>0?Math.sin(A.trip*30)*.25:0};
+   A.ct-=dt;if(A.ct<=0){A.ct=rnd(2.2,3.5);const r=tn[(Math.random()*2)|0];popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),pkLine(r.key,'rope'),'');}
+   if(In.consume('B')){this.upd=()=>{};R_.rg.visible=false;(async()=>{const to=pw(0,2.3);await pkMove({x:to.x,y:cellH(to.x,to.z),z:to.z,g:cellH(to.x,to.z)},.45,.5,1);pkEnd([to.x,to.z]);all.forEach(r=>{(async()=>{await pkGoHome(r);r.use=null;})();});})();}}});};
+const P_x=p=>p.x,P_z=p=>p.z;
+// ---------- photo booth ----------
+pkT('Photo booth','フォトブース');pkT('SNAP','とる');pkT('Who joins the photo? (up to 3)','だれと しゃしんを とる？（3にんまで）');pkT('Smile!','わらって！');pkT('Take photo','とる');
+pkT('Mr Bean & friends in Bean Park','ミスター・ビーンと なかま ＠ ビーンパーク');pkT('Save photo','ほぞんする');pkT('Close','とじる');pkT('Photo saved! 📸','しゃしんを ほぞんしたよ！ 📸');
+function pkFlash(){let d=document.getElementById('pkflash');if(!d){d=document.createElement('div');d.id='pkflash';d.style.cssText='position:fixed;inset:0;background:#fff;z-index:58;pointer-events:none;opacity:0;transition:opacity .35s';document.body.appendChild(d);}d.style.transition='none';d.style.opacity='.95';setTimeout(()=>{d.style.transition='opacity .45s';d.style.opacity='0';},60);}
+function pkSnap(){try{R.ren.render(F.scene,R.cam);const c=R.ren.domElement;const w=c.width,h=c.height;const s=Math.min(w,h)*.9;const cv=document.createElement('canvas');cv.width=cv.height=640;const x=cv.getContext('2d');
+  x.drawImage(c,(w-s)/2,(h-s)/2,s,s,0,0,640,640);return cv.toDataURL('image/jpeg',.88);}catch(e){console.error(e);return null;}}
+async function pkPhotoTalk(){const o=BOOTHP;
+ const pick=await pkPick('Who joins the photo? (up to 3)',PKJOIN,3,{solo:'Just me'});if(pick===null)return;const rs=pick.map(k=>PKF[k]).filter(Boolean);rs.forEach(r=>r.use='photo');
+ const P=F.P,sp=pkW(o,-1.2,2.6);const slots=[[-2.4,2.5],[0,2.4],[-3.5,2.7]];
+ rs.forEach((r,i)=>{const q=pkW(o,slots[i][0],slots[i][1]);pkRun(r,()=>({x:q[0],y:cellH(q[0],q[1])+(r.dy||0),z:q[1]}),.8,.9,()=>{r.e.hold=function(){pkPut(this,q[0],cellH(q[0],q[1])+(r.dy||0)+Math.abs(Math.sin(F.t*4+i*2))*.05,q[1],cellH(q[0],q[1]));pkFace(this,0,1);};});});
+ const gy=cellH(sp[0],sp[1]);await pkMove({x:sp[0],y:gy,z:sp[1],g:gy},.5,.6,1);
+ const urlP=new Promise(res=>{pkAct({la:'SNAP',init(){pkSay(T_PH1);},upd(dt){PK.pose={x:sp[0],y:gy+Math.abs(Math.sin(F.t*3))*.04,z:sp[1],g:gy,face:1};
+   if(In.consume('B')){this.upd=()=>{};res(null);}
+   if(In.consume('A')){this.upd=()=>{PK.pose={x:sp[0],y:gy,z:sp[1],g:gy,face:1};};(async()=>{for(const n of['3','2','1']){popText(new THREE.Vector3(sp[0],gy+2.4,sp[1]),n,'long');SFX.sel&&SFX.sel();rs.forEach(r=>{if(Math.random()<.5)popText(new THREE.Vector3(r.e.x,r.e.y+(r.e.hh||1.4)+.2,r.e.z),pkLine(r.key,'photo'),'');});await sl_(.8);}
+     await sl_(.1);const u=pkSnap();pkFlash();SFX.cheer&&SFX.cheer();res(u||'');})();}}}).then(()=>{});});
+ const url=await urlP;
+ if(url!==null){pkStamp('photo');rs.forEach(r=>pkHeart(r.key,1,'photo'));await pkShowPhoto(url,rs);}
+ const to=pkW(o,0,3.4);pkEnd(to);rs.forEach(r=>{(async()=>{await pkGoHome(r);r.use=null;})();});}
+const T_PH1=pkT('Line up! Tap *A* to take a photo (3, 2, 1...). *B* to leave.','ならんで！ *A* で しゃしん（3、2、1…）。やめるなら *B*。');
+function pkShowPhoto(url,rs){return new Promise(res=>{pk2UI();let d=document.getElementById('pkphoto');if(!d){d=document.createElement('div');d.id='pkphoto';document.body.appendChild(d);
+  const st=document.createElement('style');st.textContent='#pkphoto{position:fixed;inset:0;z-index:57;display:none;align-items:center;justify-content:center;background:rgba(30,16,60,.6);backdrop-filter:blur(3px)}#pkphoto.on{display:flex}#pkphoto .pkpc{background:#fffdf6;border-radius:10px;padding:12px 12px 10px;box-shadow:0 8px 0 #0006;transform:rotate(-2deg);max-width:min(78vh,92vw);text-align:center;font-family:var(--F);color:#4a2a5a;border:3px solid #fff}#pkphoto img{width:100%;max-height:62vh;object-fit:cover;border-radius:4px;display:block;background:#dde}#pkphoto .cap{font:900 17px var(--F);margin:8px 0 2px}#pkphoto .cap2{font:800 13px var(--F);opacity:.7}#pkphoto .bt{display:flex;gap:10px;justify-content:center;margin-top:10px}#pkphoto button{white-space:nowrap;height:54px;min-width:120px;padding:0 18px;border-radius:18px;border:3px solid #fff;color:#fff;font:900 18px var(--F);box-shadow:0 4px 0 #0006;touch-action:manipulation}@media (max-height:430px){#pkphoto .pkpc{max-width:min(62vh,60vw);padding:8px}#pkphoto img{max-height:46vh}#pkphoto button{height:48px}}';document.head.appendChild(st);}
+  const names=['Mr Bean'].concat(rs.map(r=>tr(r.e.name))).map(n=>n==='Mr Bean'?tr('Mr Bean'):n).join(' & ');const dt=new Date();
+  d.innerHTML='<div class="pkpc">'+(url?'<img src="'+url+'">':'<div style="height:160px;display:flex;align-items:center;justify-content:center;font-size:60px">📸</div>')+'<div class="cap">'+esc(names)+'</div><div class="cap2">🎠 '+tr('Bean Park')+' · '+dt.getFullYear()+'/'+(dt.getMonth()+1)+'/'+dt.getDate()+' ♥'+'</div><div class="bt">'+(url?'<button class="pkbB" id="pksave">💾 '+tr('Save photo')+'</button>':'')+'<button class="pkbG" id="pkpclose">'+tr('Close')+'</button></div></div>';
+  d.classList.add('on');UI.modal++;SFX.ok&&SFX.ok();
+  const close=()=>{d.classList.remove('on');d.innerHTML='';UI.modal=Math.max(0,UI.modal-1);In.clear&&In.clear();res();};
+  d.onpointerdown=e=>{const t=e.target.closest('button');if(!t)return;e.preventDefault();e.stopPropagation();if(t.id==='pkpclose'){SFX.back();close();}
+   else if(t.id==='pksave'){try{const a=document.createElement('a');a.href=url;a.download='mr-bean-park-photo.jpg';document.body.appendChild(a);a.click();a.remove();toastQ(tr('Photo saved! 📸'));}catch(er){}}};});}
 
 // ================= STORY / MAIN =================
 const GM={mode:'boot'};
