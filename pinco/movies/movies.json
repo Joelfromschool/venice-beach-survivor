@@ -47,5 +47,19 @@
     "title_ja": "グランドフィナーレ",
     "poster": "dp11_grand_finale.jpg",
     "duration": 10
+  },
+  {
+    "file": "dp12_bob_duo.mp4",
+    "title_en": "Disco Bounce",
+    "title_ja": "ディスコ・バウンス",
+    "poster": "dp12_bob_duo.jpg",
+    "duration": 6
+  },
+  {
+    "file": "dp13_teddy_bounce.mp4",
+    "title_en": "Teddy Bounce",
+    "title_ja": "テディ・バウンス",
+    "poster": "dp13_teddy_bounce.jpg",
+    "duration": 6
   }
 ]
