@@ -1,3 +1,51 @@
 [
-  {"file": "dp01_disco_floor.mp4", "title_en": "Disco Floor", "title_ja": "ディスコ・フロア", "poster": "dp01_disco_floor.jpg", "duration": 8}
+  {
+    "file": "dp01_disco_floor.mp4",
+    "title_en": "Disco Floor",
+    "title_ja": "ディスコ・フロア",
+    "poster": "dp01_disco_floor.jpg",
+    "duration": 4
+  },
+  {
+    "file": "dp05_pants_party.mp4",
+    "title_en": "Parachute Pants Party",
+    "title_ja": "パラシュートパンツ・パーティー",
+    "poster": "dp05_pants_party.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp06_catwalk_party.mp4",
+    "title_en": "Catwalk Party",
+    "title_ja": "キャットウォーク・パーティー",
+    "poster": "dp06_catwalk_party.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp07_conga_line.mp4",
+    "title_en": "Conga Line",
+    "title_ja": "コンガ・ライン",
+    "poster": "dp07_conga_line.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp09_sleepover.mp4",
+    "title_en": "Sleepover Dance Party",
+    "title_ja": "おとまりダンスパーティー",
+    "poster": "dp09_sleepover.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp08_dj_king.mp4",
+    "title_en": "DJ King",
+    "title_ja": "DJキング",
+    "poster": "dp08_dj_king.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp11_grand_finale.mp4",
+    "title_en": "Grand Finale",
+    "title_ja": "グランドフィナーレ",
+    "poster": "dp11_grand_finale.jpg",
+    "duration": 10
+  }
 ]
