@@ -56,10 +56,73 @@
     "duration": 6
   },
   {
-    "file": "dp13_teddy_bounce.mp4",
-    "title_en": "Teddy Bounce",
-    "title_ja": "テディ・バウンス",
-    "poster": "dp13_teddy_bounce.jpg",
+    "file": "dp02_king_groove.mp4",
+    "title_en": "King's Groove",
+    "title_ja": "キングのグルーヴ",
+    "poster": "dp02_king_groove.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp03_break_battle.mp4",
+    "title_en": "Breakdance Battle",
+    "title_ja": "ブレイクダンス・バトル",
+    "poster": "dp03_break_battle.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp04_monster_groove.mp4",
+    "title_en": "Monster Groove",
+    "title_ja": "モンスター・グルーヴ",
+    "poster": "dp04_monster_groove.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp10_park_jumprope.mp4",
+    "title_en": "Park Jump Rope",
+    "title_ja": "こうえんのなわとび",
+    "poster": "dp10_park_jumprope.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp14_birthday_sway.mp4",
+    "title_en": "Birthday Sway",
+    "title_ja": "バースデー・スウェイ",
+    "poster": "dp14_birthday_sway.jpg",
     "duration": 6
+  },
+  {
+    "file": "dp15_zombie_sway.mp4",
+    "title_en": "Zombie Sway",
+    "title_ja": "ゾンビ・スウェイ",
+    "poster": "dp15_zombie_sway.jpg",
+    "duration": 6
+  },
+  {
+    "file": "dp16_karaoke.mp4",
+    "title_en": "Karaoke Party",
+    "title_ja": "カラオケ・パーティー",
+    "poster": "dp16_karaoke.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp17_pants_party2.mp4",
+    "title_en": "Pants Party 2",
+    "title_ja": "パンツ・パーティー2",
+    "poster": "dp17_pants_party2.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp18_rooftop_sunset.mp4",
+    "title_en": "Rooftop Sunset",
+    "title_ja": "ルーフトップ・サンセット",
+    "poster": "dp18_rooftop_sunset.jpg",
+    "duration": 8
+  },
+  {
+    "file": "dp19_picnic.mp4",
+    "title_en": "Picnic Party",
+    "title_ja": "ピクニック・パーティー",
+    "poster": "dp19_picnic.jpg",
+    "duration": 8
   }
 ]
