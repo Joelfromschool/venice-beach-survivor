@@ -63,8 +63,8 @@ html[lang=ja] .card .nm{font-size:calc(var(--px)*12)}
 .sym{display:inline-block;width:calc(var(--px)*7);height:calc(var(--px)*7);vertical-align:middle}
 @media (orientation:landscape) and (max-height:500px){.card .th{width:calc(var(--px)*28);height:calc(var(--px)*28)}.card{min-height:44px;margin:var(--p2) 0;padding:var(--p2) var(--p4)}}
 </style></head><body><canvas id="c"></canvas><div id="ui"></div>
-<script>window.__BUILD__='v1.2';</script>
-<script>const PXS={"party_idle": [132], "party_tell": [134], "party_punch": [132], "party_hurt": [130], "party_ko": [126], "party_down": [57], "kermit_idle": [124], "kermit_tell": [119], "kermit_punch": [124], "kermit_hurt": [118], "kermit_ko": [118], "kermit_down": [58], "bronny_idle": [128], "bronny_tell": [128], "bronny_punch": [128], "bronny_hurt": [123], "bronny_ko": [123], "bronny_down": [57], "pooping_idle": [104], "pooping_tell": [109], "pooping_punch": [106], "pooping_hurt": [97], "pooping_ko": [106], "pooping_down": [59], "asmon_idle": [128], "asmon_tell": [128], "asmon_punch": [129], "asmon_hurt": [121], "asmon_ko": [120], "asmon_down": [44], "pooh_back_idle": [88], "pooh_back_jab": [87], "pooh_front": [100], "pooh_victory_body": [84], "pooh_run_body": [66], "shoeL": [15], "shoeR": [15], "run_shoeL": [13], "run_shoeR": [13], "pinco_coach": [112], "bean_cheer": [94], "bike": [104]};
+<script>window.__BUILD__='v1.2.1';</script>
+<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [72], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [75], "bronny_idle": [164], "bronny_tell": [164], "bronny_punch": [164], "bronny_hurt": [158], "bronny_ko": [158], "bronny_down": [74], "pooping_idle": [136], "pooping_tell": [142], "pooping_punch": [139], "pooping_hurt": [127], "pooping_ko": [138], "pooping_down": [77], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [56], "pooh_back_idle": [88], "pooh_back_jab": [87], "pooh_front": [100], "pooh_victory_body": [84], "pooh_run_body": [66], "shoeL": [15], "shoeR": [15], "run_shoeL": [13], "run_shoeR": [13], "pinco_coach": [112], "bean_cheer": [94], "bike": [104]};
 'use strict';
 // ===== Canvas / scaling =====
 const C=document.getElementById('c'),X=C.getContext('2d'),UI=document.getElementById('ui');
@@ -219,7 +219,7 @@ function swapImg(img,kind,col,amt){img._sw=img._sw||{};const key=kind+col+amt;if
  for(let i=0;i<p.length;i+=4){if(!p[i+3])continue;const k=(p[i]<<16)|(p[i+1]<<8)|p[i+2];let v=map.get(k);
   if(!v){const l=.3*p[i]+.59*p[i+1]+.11*p[i+2];
    if(kind==='f'){// hit flash: outline stays dark, everything else becomes a 2-tone ramp of the flash colour
-    v=l<34?[p[i],p[i+1],p[i+2]]:amt>=.35?(l>96?[255,255,255]:t.map(x=>Math.min(255,x*.85+30))):[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*.4))}
+    v=l<34?[p[i],p[i+1],p[i+2]]:amt>=.35?(l>96?[255,255,255]:t.map(x=>Math.min(255,x*.85+30))):[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*(.1+.35*l/255)))}
    else v=[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*amt));
    v=v.map(x=>Math.round(x/8)*8>255?255:Math.round(x/8)*8);map.set(k,v)}
   p[i]=v[0];p[i+1]=v[1];p[i+2]=v[2]}
@@ -656,9 +656,10 @@ function fightScene(oi,replay){
  const P={s:'idle',t:0,dur:0,side:'L',x:0,y:0,held:false,cd:0,tired:false,tt:0,hitDone:false};
  const Q={s:'idle',t:0,dur:0,move:null,side:'L',guard:'H',gt:O.guardT,next:2,rep:0,hf:0,jolt:0,sway:0,dy:0,ctr:false,force:null};
  let T0=0,starBtn={x:0,y:0,r:0};
- const oh=()=>NH(O.id+'_idle'),obase=()=>PORTRAIT()?Math.round(H*.70):Math.round(H*.79);
- const ph=()=>NH('pooh_back_idle');
- const pBase=()=>PORTRAIT()?Math.round(obase()+ph()*.72):H-ph()*.24-2;
+ const OK=()=>PORTRAIT()?2:1,PK=()=>PORTRAIT()?2:1;// whole-number sprite scales: SPO camera (big opponent, big see-through Pooh)
+ const oh=()=>NH(O.id+'_idle')*OK(),obase=()=>PORTRAIT()?Math.round(H*.71):Math.round(H*.79);
+ const ph=()=>NH('pooh_back_idle')*PK();
+ const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H-ph()*.2-22);
  const target=(aim,side)=>({x:W/2+Q.sway+(side==='L'?-1:1)*oh()*.11,y:obase()-oh()*(aim==='H'?.80:.47)});
  function setQ(s,dur){Q.s=s;Q.t=0;Q.dur=dur||0;}
  function chooseMove(){if(Q.force){const m=Q.force;Q.force=null;return m}const ms=O.moves;let tot=ms.reduce((a,m)=>a+m.w,0),r=Math.random()*tot;
@@ -673,7 +674,7 @@ function fightScene(oi,replay){
   const dodged=P.s==='dodge'&&P.t<P.dur,blocked=P.s==='block';
   if(dodged){AU.play('whoosh');F.hearts=Math.min(10,F.hearts+1);if(P.tired&&F.hearts>=3)P.tired=false;
    if(multi){Q.rep++;startTell(m,.32);return}
-   Q.rep=0;setQ('open',m.o*(1+.06*st.spd)*(tutOn?1.5:1));Q.ctr=false;popText(T('open'),W/2,obase()-oh()*1.02,30,'#ffd34a',.8);if(F.tut==='dodge'||(tutOn&&F.tut!=='aim'&&F.tut!=='star'))F.tut='open';return}
+   Q.rep=0;setQ('open',m.o*(1+.06*st.spd)*(tutOn?1.5:1));Q.ctr=false;popText(T('open'),W/2,Math.max(H*.2,obase()-oh()*1.02),30,'#ffd34a',.8);if(F.tut==='dodge'||(tutOn&&F.tut!=='aim'&&F.tut!=='star'))F.tut='open';return}
   if(blocked&&!unbl){AU.play('block');spark(W/2+P.x*W*.25,pBase()-ph()*.7,'#9ff',8,40);const chip=m.d*O.dmg*.12;F.pHP-=chip;F.ptsO+=chip*.5;SHAKE=5;
    if(multi){Q.rep++;startTell(m,.32);return}Q.rep=0;setQ('rec',.4);if(F.pHP<=0)playerDown();return}
   // hit
@@ -687,13 +688,13 @@ function fightScene(oi,replay){
   AU.play(star?'starpunch':ctr?'counter':'hit');FREEZE=star?.2:ctr?.1:.05;SHAKE=star?22:ctr?10:5;vib(star?[40,30,80]:ctr?35:12);
   spark(tg.x,tg.y,star?'#ffd34a':ctr?'#fff6a0':'#fff',star?16:ctr?11:7,star?120:ctr?70:45);burst(tg.x,tg.y,star?30:ctr?14:6,star?'#ffd34a':'#fff',star?520:300,.4,star?8:5);
   if(star){FLASH=.6;FLASHC='#fff';popText(T('starpunch'),W/2,H*.4,40,'#ffd34a',1.2);AU.roar(1.5)}
-  if(F.combo>=3)popText(T('combo',F.combo),W/2,obase()-oh()*1.08,26,'#7dffa0',.7);
+  if(F.combo>=3)popText(T('combo',F.combo),W/2,Math.max(H*.2,obase()-oh()*1.08),26,'#7dffa0',.7);
   if(F.oHP<=0){F.oHP=0;oppDown();}}
  function resolvePunch(){const s=Q.s;const base=4+st.pow*1.1,tg=target(F.aim,P.side);
   if(s==='open'||s==='taunt'){if(s==='taunt'){setQ('open',.9);Q.ctr=false}
    const first=!Q.ctr;Q.ctr=true;if(first&&F.stars<3){F.stars++;AU.play('star');popText('\u2605',tg.x,tg.y-30,40,'#ffd34a',.8);if(tutOn&&F.stars===1&&!SAVE.tut.star)F.tut='star'}
-   if(first)popText(T('counter'),W/2,obase()-oh()*.95,30,'#fff',.6);oppHit(base*1.6,true);if(Q.s==='open'&&Q.t>Q.dur-.15)Q.dur+=.12;return}
-  if(s==='tell'&&O.interrupt&&Q.t<Q.dur*.75){setQ('hurt',.45);Q.rep=0;if(F.stars<3){F.stars++;AU.play('star')}popText(T('counter'),W/2,obase()-oh()*.95,30,'#fff',.6);oppHit(base*1.4,true);return}
+   if(first)popText(T('counter'),W/2,Math.max(H*.2,obase()-oh()*.95),30,'#fff',.6);oppHit(base*1.6,true);if(Q.s==='open'&&Q.t>Q.dur-.15)Q.dur+=.12;return}
+  if(s==='tell'&&O.interrupt&&Q.t<Q.dur*.75){setQ('hurt',.45);Q.rep=0;if(F.stars<3){F.stars++;AU.play('star')}popText(T('counter'),W/2,Math.max(H*.2,obase()-oh()*.95),30,'#fff',.6);oppHit(base*1.4,true);return}
   if(s==='idle'||s==='rec'||s==='hurt'){if(s!=='hurt'&&F.aim===Q.guard){blockedPunch(tg);if(F.tut==='tap'||(tutOn&&!SAVE.tut.aim)){F.tut='aim'}return}
    Q.hits=(Q.hits||0)+1;if(Q.hits>=O.tol+(s==='hurt'?1:0)){Q.hits=0;setQ('guard',.75);oppHit(base*.6,false);return}
    setQ('hurt',.24);oppHit(base*[1,.6,.45,.36,.3][oi],false);if(F.tut==='tap')F.tut=null;
@@ -807,6 +808,8 @@ function fightScene(oi,replay){
   else if(Q.s==='down'){const p=Math.min(1,Q.t*3.2);y=Q.t<.32?b+Math.round(h*.06*p):b+2;x=W/2+Q.sway}
   else if(Q.s==='getup'){const p=Q.t/Q.dur;y=b+h*.06*(1-p)}
   else if(Q.s==='guard'||Q.s==='blk'){o.flash=.15;o.fc='#7ad7ff'}
+  if(Q.s==='tell'&&O.id==='kermit'){o.flash=Math.sin(Q.t*28)>0?.55:.2;o.fc='#e4ff70';y-=GPX(3*OK())}
+  o.k=OK();
   if(Q.hf>0&&Q.s!=='down'&&!o.flash&&Math.floor(Q.hf*24)%2===0){o.flash=.5;o.fc='#fff'}
   // shadow (stepped, whole pixels)
   pxShadow(W/2+Q.sway,b+2,h*.62,.4);
@@ -818,11 +821,11 @@ function fightScene(oi,replay){
   // guard shield (readable)
   if(F.phase==='fight'&&['idle','rec','guard','blk'].includes(Q.s)){const both=Q.s==='guard';['H','B'].forEach(z=>{if(!both&&z!==Q.guard)return;const t=target(z,'L'),t2=target(z,'R');const cx=(t.x+t2.x)/2,cy=t.y;X.save();X.globalAlpha=.55+.2*Math.sin(T0*6);X.strokeStyle='#8fe3ff';X.lineWidth=4;X.lineCap='round';const gw=h*.24,gh=h*.1;[-1,1].forEach(sx=>{X.beginPath();X.moveTo(cx+sx*(gw-14),cy-gh);X.quadraticCurveTo(cx+sx*gw,cy-gh,cx+sx*gw,cy-gh+14);X.lineTo(cx+sx*gw,cy+gh-14);X.quadraticCurveTo(cx+sx*gw,cy+gh,cx+sx*(gw-14),cy+gh);X.stroke()});X.fillStyle='#8fe3ff';X.globalAlpha=.85;X.beginPath();const ix=cx+gw+16,iy=cy;X.moveTo(ix,iy-11);X.lineTo(ix+9,iy-7);X.lineTo(ix+8,iy+3);X.quadraticCurveTo(ix,iy+12,ix,iy+12);X.quadraticCurveTo(ix,iy+12,ix-8,iy+3);X.lineTo(ix-9,iy-7);X.closePath();X.fill();X.restore()})}
   // taunt bubble
-  if(F.bubbleT>0&&F.bubble){const bx=W/2,by2=b-h*1.04;X.font='22px '+FD();const w=X.measureText(F.bubble).width+30;rr(bx-w/2,by2-22,w,44,18);X.fillStyle='#fff';X.fill();X.lineWidth=3;X.strokeStyle='#000';X.stroke();txt(F.bubble,bx,by2,22,'#2a1300',{st:0,sh:0})}
+  if(F.bubbleT>0&&F.bubble){const bx=W/2,by2=Math.max(H*.17,b-h*1.04);X.font='22px '+FD();const w=X.measureText(F.bubble).width+30;rr(bx-w/2,by2-22,w,44,18);X.fillStyle='#fff';X.fill();X.lineWidth=3;X.strokeStyle='#000';X.stroke();txt(F.bubble,bx,by2,22,'#2a1300',{st:0,sh:0})}
  }
 
  function drawHammer(x,y,s,p){X.save();X.translate(x,y);X.rotate(-.6+p*.3);X.fillStyle='#6b4423';X.strokeStyle='#000';X.lineWidth=3;X.fillRect(-s*.06,-s*.1,s*.12,s*.9);X.strokeRect(-s*.06,-s*.1,s*.12,s*.9);rr(-s*.45,-s*.38,s*.9,s*.34,s*.06);X.fillStyle='#d8202a';X.fill();X.stroke();txt('BAN',0,-s*.21,s*.22,'#fff',{st:'#000',lw:3,sh:0});X.restore();}
- function drawPooh(){const h=ph(),b=pBase();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={a:.72},img=IMG.pooh_back_idle,sc=1;
+ function drawPooh(){const h=ph(),b=pBase();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={a:PORTRAIT()?.62:.72,k:PK()},img=IMG.pooh_back_idle,sc=1;
   if(P.s==='punch'){img=IMG.pooh_back_jab;o.flip=P.side==='R';const k=Math.sin(Math.min(1,P.t/P.dur)*Math.PI);y-=h*.12*k;sc=1-.06*k;x+=(P.side==='L'?-1:1)*h*.06*k}
   else if(P.s==='star'){img=IMG.pooh_back_jab;const k=P.t<.38?P.t/.38:1-(P.t-.38)/.12;y-=h*(P.t<.38?-.04*k:.2*k);sc=P.t<.38?1+.04*k:.9;o.flash=P.t<.38?.3+.3*Math.sin(P.t*40):0;o.fc='#ffd34a'}
   else if(P.s==='dodge'){y+=Math.round(h*.06)}
@@ -832,7 +835,7 @@ function fightScene(oi,replay){
   if(P.tired&&P.s!=='hit'){o.tint='#ff7ad6';o.tintA=.45}
   const fb=Math.sin(T0*5)*h*.015;
   // floating shoes
-  if(P.s!=='down'){const sh=h*.17,sy=b+h*.2+Math.sin(T0*5+1)*h*.012;spr(IMG.shoeL,x-h*.2+P.x*8,sy,sh,{a:.85});spr(IMG.shoeR,x+h*.2+P.x*8,sy+Math.sin(T0*5+2.4)*h*.01,sh*.95,{a:.85})}
+  if(P.s!=='down'){const sh=h*.17,sy=b+h*.2+Math.sin(T0*5+1)*h*.012;spr(IMG.shoeL,x-h*.2+P.x*8,sy,sh,{a:.8,k:PK()});spr(IMG.shoeR,x+h*.2+P.x*8,sy+Math.sin(T0*5+2.4)*h*.01,sh,{a:.8,k:PK()})}
   spr(img,x,y+fb,h*sc,o);
   if(P.s==='block'){X.save();X.globalAlpha=.5;X.strokeStyle='#bff0ff';X.lineWidth=5;X.beginPath();X.arc(x,b-h*.55,h*.42,Math.PI*1.15,Math.PI*1.85);X.stroke();X.restore()}}
  // ---- Super Punch-Out style HUD, drawn on whole game pixels ----
@@ -875,7 +878,7 @@ function fightScene(oi,replay){
    star5(sx,sy-2,r*.55,'#fff',true);txt('x'+F.stars,sx+r*.7,sy+r*.65,16,'#fff',{st:'#000',lw:5,sh:0})}else starBtn={x:-999,y:-999,r:0};}
  function banner(s,y,sz,col,t){const k=ease(Math.min(1,t*4));X.save();X.globalAlpha=Math.min(1,t*5);const w=W*k;X.fillStyle='rgba(0,0,0,.55)';X.fillRect((W-w)/2,y-sz*.75,w,sz*1.5);X.restore();txt(s,W/2,y,sz*(1+Math.max(0,.2-t)*3),col,{grad:col==='g'?['#fff6b0','#ffc400','#ff6a00']:null,st:'#000',lw:Math.max(6,sz*.15)});}
  function drawOverlays(){const t=F.pt;
-  if(F.labelT>0&&F.label){txt(F.label,W/2,obase()-oh()*1.12,30,'#fff',{grad:['#fff','#ffb0b0','#ff3b3b'],st:'#000',lw:7,sc:1+Math.max(0,F.labelT-.9)*2})}
+  if(F.labelT>0&&F.label){txt(F.label,W/2,Math.max(H*.22,obase()-oh()*1.12),30,'#fff',{grad:['#fff','#ffb0b0','#ff3b3b'],st:'#000',lw:7,sc:1+Math.max(0,F.labelT-.9)*2})}
   if(F.phase==='rintro'){if(t<1.3)banner(T('round',F.round),H*.42,54,'g',t);else banner(T('fightgo'),H*.42,64,'g',t-1.3)}
   if(F.phase==='rend')banner(T('endround',F.round),H*.42,40,'g',t);
   if(F.phase==='odown'||(F.phase==='ko')){if(F.count>0)txt(String(F.count),W/2,H*.4,110,'#fff',{grad:['#fff','#ffd34a'],st:'#000',lw:12,sc:1+Math.max(0,.3-F.ct)*1.5});
