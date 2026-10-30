@@ -1,0 +1,1 @@
+{"name": "Pooh's Punch Out", "short_name": "Punch Out", "start_url": "./", "display": "standalone", "orientation": "portrait", "background_color": "#120822", "theme_color": "#120822", "icons": [{"src": "icon.png", "sizes": "512x512", "type": "image/png"}]}
