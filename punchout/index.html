@@ -63,8 +63,8 @@ html[lang=ja] .card .nm{font-size:calc(var(--px)*12)}
 .sym{display:inline-block;width:calc(var(--px)*7);height:calc(var(--px)*7);vertical-align:middle}
 @media (orientation:landscape) and (max-height:500px){.card .th{width:calc(var(--px)*28);height:calc(var(--px)*28)}.card{min-height:44px;margin:var(--p2) 0;padding:var(--p2) var(--p4)}}
 </style></head><body><canvas id="c"></canvas><div id="ui"></div>
-<script>window.__BUILD__='v1.2.10';</script>
-<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [178], "bronny_tell": [178], "bronny_punch": [178], "bronny_hurt": [172], "bronny_ko": [172], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [145], "pooh_victory_body": [147], "pooh_run_body": [111], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [191], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [11], "shoe_fR": [11], "kermit_wind": [154], "bronny_wind": [178], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
+<script>window.__BUILD__='v1.2.11';</script>
+<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [178], "bronny_tell": [178], "bronny_punch": [178], "bronny_hurt": [172], "bronny_ko": [172], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [145], "pooh_victory_body": [147], "pooh_run_body": [111], "shoeL": [16], "shoeR": [16], "run_shoeL": [14], "run_shoeR": [14], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [191], "shoe_lgL": [21], "shoe_lgR": [21], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [10], "shoe_fR": [10], "kermit_wind": [154], "bronny_wind": [178], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
 'use strict';
 // ===== Canvas / scaling =====
 const C=document.getElementById('c'),UI=document.getElementById('ui');let X=C.getContext('2d');const X0=X;
@@ -643,11 +643,11 @@ function drawStream(t,by,ph){const w=Math.min(W*.86,420),h=w*.62,x=(W-w)/2,y=Mat
  X.restore();rr(x+12,y+12,52,22,6);X.fillStyle='#e91916';X.fill();txt('LIVE',x+38,y+23,14,'#fff',{body:1,w:'800',st:0,sh:0});rr(x+70,y+12,80,22,6);X.fillStyle='#000a';X.fill();X.fillStyle='#fff';X.font='bold 13px '+FB();X.textAlign='left';X.fillText('LIVE 48,201',x+77,y+27);}
 function drawFront(x,by,h,o){// front Pooh standing on his two floating shoes, all parts at one whole-number scale
  o=o||{};const L=o.lg&&IMG.pooh_front_lg&&IMG.pooh_front_lg.width,B=L?IMG.pooh_front_lg:IMG.pooh_front,S=L?IMG.shoe_lgL:IMG.shoeL;if(!B||!B.width)return;const k=o.k||KF(B,h),g=1/DPR,bh=B.height*k*g,sh=(S&&S.width?S.height:12)*k*g,f=GPX(Math.round(Math.sin(performance.now()/250))*k);
- spr(S,x-bh*.17,by+f,sh,{k});spr(L?IMG.shoe_lgR:IMG.shoeR,x+bh*.17,by-f,sh,{k});spr(B,x,by-sh-g*k*3,bh,Object.assign({k},o||{}))}
+ spr(S,x-bh*.14,by+f,sh,{k});spr(L?IMG.shoe_lgR:IMG.shoeR,x+bh*.14,by-f,sh,{k});spr(B,x,by-sh-g*k*3,bh,Object.assign({k},o||{}))}
 function drawChamp(x,by,h,t,nobelt){// Pooh with arms up, floating shoes, belt; one whole-number scale for every part
  const B=IMG.pooh_victory_body,S=IMG.shoeL;if(!B||!B.width)return;const k=KF(B,h*.78),g=1/DPR,bh=B.height*k*g,sh=(S&&S.width?S.height:12)*k*g;
  const bob=GPX(Math.round(Math.sin(t*3)*2)*k);
- spr(IMG.shoeL,x-bh*.2,by+GPX(Math.round(Math.sin(t*3+1)*2)*k),sh,{k});spr(IMG.shoeR,x+bh*.2,by+GPX(Math.round(Math.sin(t*3+2)*2)*k),sh,{k});
+ spr(IMG.shoeL,x-bh*.16,by+GPX(Math.round(Math.sin(t*3+1)*2)*k),sh,{k});spr(IMG.shoeR,x+bh*.16,by+GPX(Math.round(Math.sin(t*3+2)*2)*k),sh,{k});
  spr(B,x,by-sh-g*k*2+bob,bh,{k});
  if(nobelt)return;const cy=PX(by-sh-bh*.36+bob),bw=Math.round(B.width*.34)*k,R=(dx,dy,w,hh,c)=>{X.fillStyle=c;X.fillRect(PX(x)+dx*g,cy+dy*g,w*g,hh*g)};
  R(-bw/2-k,-3*k,bw+2*k,6*k,'#000');R(-bw/2,-2*k,bw,4*k,'#2a2a2a');R(-bw/2,-2*k,bw,k,'#4a4a4a');
@@ -687,7 +687,7 @@ function fightScene(oi,replay){
  const OK=()=>PORTRAIT()?2:1,PK=()=>PORTRAIT()?2:1;// whole-number sprite scales: SPO camera (big opponent, big see-through Pooh)
  const oh=()=>NH(O.id+'_idle')*OK(),obase=()=>PORTRAIT()?Math.round(H*.75):Math.round(H-8);
  const ph=()=>NH('pooh_back_idle')*PK();
- const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H+ph()*.2);// v1.2.9 landscape: Pooh sits lower and off to the left so the opponent's chest stays clear
+ const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H-ph()*.24-4);// v1.2.11: high enough that the floating shoes show in landscape// v1.2.9 landscape: Pooh sits lower and off to the left so the opponent's chest stays clear
  const target=(aim,side)=>({x:W/2+Q.sway+(side==='L'?-1:1)*oh()*.05,y:obase()-oh()*(aim==='H'?.70:.42)});
  // one callout at a time, newest replaces the old, fixed spot under the HUD
  function callout(s,c,life,sz){F.co={s,c,l:life||.8,ml:life||.8,sz:Math.round(Math.min(sz||26,28)*.72)}}
@@ -893,7 +893,7 @@ function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27-(
   const fb=snap(Math.sin(T0*5)*h*.015);x=snap(x);y=snap(y);
   // floating shoes follow the body (incl. the punch lift), scaled to Pooh's body
   if(P.s!=='down'){const S=IMG.shoe_fL&&IMG.shoe_fL.width?['shoe_fL','shoe_fR']:['shoeL','shoeR'],dy=y-b,sh=NH(S[0])*kk,sy=b+h*.16+dy+snap(Math.sin(T0*5+1)*h*.012);
-   spr(IMG[S[0]],x-h*.17,sy,sh,{k:kk});spr(IMG[S[1]],x+h*.17,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{k:kk})}
+   spr(IMG[S[0]],x-h*.14,sy,sh,{k:kk});spr(IMG[S[1]],x+h*.14,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{k:kk})}
   composePooh(img,x,y+fb,h*sc,o,arm);
   if(o.gold){const gr=PORTRAIT()?2:1,gi=goldOf(img,gr),ga=arm&&arm.width?goldOf(arm,gr):null,gh=(gi.height)*kk/DPR;spr(gi,x,y+fb+gr*kk/DPR,gh,{k:kk,flip:o.flip});if(ga)spr(ga,x,y+fb+gr*kk/DPR,gh,{k:kk,flip:o.flip})}
   if(P.s==='block'){X.save();X.globalAlpha=.5;X.strokeStyle='#bff0ff';X.lineWidth=5;X.beginPath();X.arc(x,b-h*.55,h*.42,Math.PI*1.15,Math.PI*1.85);X.stroke();X.restore()}}
