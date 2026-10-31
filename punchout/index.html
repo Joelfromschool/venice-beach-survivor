@@ -63,8 +63,8 @@ html[lang=ja] .card .nm{font-size:calc(var(--px)*12)}
 .sym{display:inline-block;width:calc(var(--px)*7);height:calc(var(--px)*7);vertical-align:middle}
 @media (orientation:landscape) and (max-height:500px){.card .th{width:calc(var(--px)*28);height:calc(var(--px)*28)}.card{min-height:44px;margin:var(--p2) 0;padding:var(--p2) var(--p4)}}
 </style></head><body><canvas id="c"></canvas><div id="ui"></div>
-<script>window.__BUILD__='v1.2.8';</script>
-<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [178], "bronny_tell": [178], "bronny_punch": [178], "bronny_hurt": [172], "bronny_ko": [172], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [144], "pooh_victory_body": [144], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [11], "shoe_fR": [11], "kermit_wind": [154], "bronny_wind": [178], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
+<script>window.__BUILD__='v1.2.9';</script>
+<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [178], "bronny_tell": [178], "bronny_punch": [178], "bronny_hurt": [172], "bronny_ko": [172], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [144], "pooh_victory_body": [147], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [11], "shoe_fR": [11], "kermit_wind": [154], "bronny_wind": [178], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
 'use strict';
 // ===== Canvas / scaling =====
 const C=document.getElementById('c'),UI=document.getElementById('ui');let X=C.getContext('2d');const X0=X;
@@ -85,7 +85,7 @@ const pick=a=>a[(Math.random()*a.length)|0];
 const PORTRAIT=()=>H>=W;
 // ===== Assets =====
 const IMG={};
-const ART=['party','kermit','bronny','pooping','asmon'].flatMap(o=>['idle','tell','wind','punch','hurt','ko','down'].map(p=>o+'_'+p)).concat(['pooh_back_idle','pooh_back_jab','pooh_front','pooh_run_body','run_shoeL','run_shoeR','pooh_victory_body','shoeL','shoeR','pooh_front_lg','shoe_lgL','shoe_lgR','pooh_back_jab1','pooh_back_jab2','pooh_back_body','pooh_back_body2','pooh_back_jab1_arm','pooh_back_jab2_arm','pooh_back_jab_arm','pooh_back_body_arm','pooh_back_body2_arm','shoe_fL','shoe_fR','pinco_coach','bean_cheer','bike']);
+const ART=['party','kermit','bronny','pooping','asmon'].flatMap(o=>['idle','tell','wind','punch','hurt','ko','down'].map(p=>o+'_'+p)).concat(['pooh_back_idle','pooh_back_jab','pooh_front','pooh_run_body','pooh_victory_body','pooh_front_lg','pooh_back_jab1','pooh_back_jab2','pooh_back_body','pooh_back_body2','pooh_back_jab1_arm','pooh_back_jab2_arm','pooh_back_jab_arm','pooh_back_body_arm','pooh_back_body2_arm','pinco_coach','bean_cheer','bike']);// v1.2.9: Pooh has real legs now, no floating shoes
 const BG=['arena','dawn_city','freezer','gym','steps','ending','credits'];
 function loadAll(onp){const list=[];ART.forEach(n=>{const hs=PXS[n]||[];IMG[n]=null;IMG[n+'#v']=[];hs.forEach(h=>list.push(['px/'+n+'_'+h+'.png',n,h]))});
   BG.forEach(n=>{list.push(['px/bg_'+n+'.png','bg_'+n,0]);if(n!=='dawn_city')list.push(['px/bg_'+n+'_w.png','bg_'+n+'#w',0])});
@@ -222,7 +222,7 @@ function swapImg(img,kind,col,amt){img._sw=img._sw||{};const key=kind+col+amt;if
  for(let i=0;i<p.length;i+=4){if(!p[i+3])continue;const k=(p[i]<<16)|(p[i+1]<<8)|p[i+2];let v=map.get(k);
   if(!v){const l=.3*p[i]+.59*p[i+1]+.11*p[i+2];
    if(kind==='f'){// hit flash: outline stays dark, everything else becomes a 2-tone ramp of the flash colour
-    v=l<34?[p[i],p[i+1],p[i+2]]:amt>=.35?(l>96?[255,255,255]:t.map(x=>Math.min(255,x*.85+30))):[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*(.1+.35*l/255)))}
+    v=l<34?[p[i],p[i+1],p[i+2]]:amt>=.35?(l>200?[255,255,255]:l>140?t.map(x=>Math.round(x*.9+14)):l>96?t.map(x=>Math.round(x*.74+20)):t.map(x=>Math.round(x*.55+22))):[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*(.1+.35*l/255)))}
    else v=[0,1,2].map(j=>Math.round(p[i+j]+(t[j]-p[i+j])*amt));
    v=v.map(x=>Math.round(x/8)*8>255?255:Math.round(x/8)*8);map.set(k,v)}
   p[i]=v[0];p[i+1]=v[1];p[i+2]=v[2]}
@@ -240,13 +240,14 @@ function outlineOf(img){// only the dark outline pixels, for SPO-style see-throu
  if(img._ol)return img._ol;const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const g=c.getContext('2d');g.drawImage(img,0,0);
  try{const d=g.getImageData(0,0,c.width,c.height),p=d.data;for(let i=0;i<p.length;i+=4){if(p[i+3]&&.3*p[i]+.59*p[i+1]+.11*p[i+2]>=48)p[i+3]=0}g.putImageData(d,0,0)}catch(e){return img}
  c._nat=1;return img._ol=c}
-function goldOf(img){// v1.2.7 star punch: outline pixels recoloured gold plus a 1-px gold rim outside the silhouette
- if(img._gold)return img._gold;const c=document.createElement('canvas');c.width=img.width+4;c.height=img.height+4;const g=c.getContext('2d');g.drawImage(img,2,2);
+function goldOf(img,r){r=r||2;const ck='_gold'+r;if(img[ck])return img[ck];// v1.2.9: rim width r (2 portrait, 1 landscape)
+// v1.2.7 star punch: outline pixels recoloured gold plus a 1-px gold rim outside the silhouette
+ const c=document.createElement('canvas');c.width=img.width+2*r;c.height=img.height+2*r;const g=c.getContext('2d');g.drawImage(img,r,r);
  try{const d=g.getImageData(0,0,c.width,c.height),p=d.data,W2=c.width,a=new Uint8Array(p.length/4);for(let i=0;i<a.length;i++)a[i]=p[i*4+3]?1:0;
   for(let i=0;i<a.length;i++){const x=i%W2,y=(i/W2)|0;let set=0;
-   if(a[i]){set=.3*p[i*4]+.59*p[i*4+1]+.11*p[i*4+2]<48}else{for(let dy=-2;dy<=2&&!set;dy++)for(let dx=-2;dx<=2;dx++){if(Math.abs(dx)+Math.abs(dy)>3)continue;const xx=x+dx,yy=y+dy;if(xx>=0&&xx<W2&&yy>=0&&yy<c.height&&a[yy*W2+xx]){set=1;break}}}
+   if(a[i]){set=.3*p[i*4]+.59*p[i*4+1]+.11*p[i*4+2]<48}else{for(let dy=-r;dy<=r&&!set;dy++)for(let dx=-r;dx<=r;dx++){if(Math.abs(dx)+Math.abs(dy)>(r>1?3:1))continue;const xx=x+dx,yy=y+dy;if(xx>=0&&xx<W2&&yy>=0&&yy<c.height&&a[yy*W2+xx]){set=1;break}}}
    if(set){p[i*4]=255;p[i*4+1]=a[i]?211:240;p[i*4+2]=a[i]?74:150;p[i*4+3]=255}else p[i*4+3]=0}g.putImageData(d,0,0)}catch(e){return img}
- c._nat=1;return img._gold=c}
+ c._nat=1;return img[ck]=c}
 function obb(img){// opaque column range of a native sprite (cached), used to keep wide poses on screen
  if(img._bb)return img._bb;let x0=0,x1=img.width-1;try{const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const g=c.getContext('2d');g.drawImage(img,0,0);const d=g.getImageData(0,0,c.width,c.height).data;x0=img.width;x1=-1;
   for(let y=0;y<img.height;y++)for(let x=0;x<img.width;x++)if(d[(y*img.width+x)*4+3]){if(x<x0)x0=x;if(x>x1)x1=x}if(x1<0){x0=0;x1=img.width-1}}catch(e){}return img._bb=[x0,x1]}
@@ -422,7 +423,7 @@ const STR={en:{
  montage:'TRAINING MONTAGE',result:'RESULT',statup:s=>s+' UP!',maxed:'Already maxed out!',score:'Score',go:'GO!',
  money:'MONEY!',tomato:'Dodge!',
  credits:'CREDITS',theend:'THE END',champ:'WORLD CHAMPION',
- intro_time:'5:00 AM',intro_sub:'Three dollars. One dream.',b1:'Faster, ya bum!',b2:'GO POOH GO!',b3:"Money don't chase itself!",b4:'I believe in you!',b5:'Pick up those shoes!',
+ intro_time:'5:00 AM',intro_sub:'Three dollars. One dream.',b1:'Faster, ya bum!',b2:'GO POOH GO!',b3:"Money don't chase itself!",b4:'I believe in you!',b5:'Pick up those feet!',
  steps_t:'TITLE DAY. DAWN.',st1:"He's not even out of breath!",st2:"He's got no legs, Mr Bean.",
  drawpts:'Points',you:'YOU',
  res_win:'WINNER',res_lose:'TRY AGAIN',lose_t:'Get up, ya bum! Again!',
@@ -445,7 +446,7 @@ const STR={en:{
  montage:'特訓モンタージュ',result:'結果',statup:s=>s+' アップ！',maxed:'もう最大だ！',score:'スコア',go:'GO!',
  money:'お金！',tomato:'よけろ！',
  credits:'クレジット',theend:'おわり',champ:'世界チャンピオン',
- intro_time:'午前5時',intro_sub:'所持金3ドル。夢はひとつ。',b1:'もっと速く走れ、このグータラ！',b2:'がんばれプー！',b3:'金は勝手に追いかけてこないぞ！',b4:'信じてるよ！',b5:'靴をもっと上げろ！',
+ intro_time:'午前5時',intro_sub:'所持金3ドル。夢はひとつ。',b1:'もっと速く走れ、このグータラ！',b2:'がんばれプー！',b3:'金は勝手に追いかけてこないぞ！',b4:'信じてるよ！',b5:'足をもっと上げろ！',
  steps_t:'タイトル戦の朝',st1:'息も切れてないよ！',st2:'足が無いからな、Mr Bean。',
  drawpts:'ポイント',you:'あなた',
  res_win:'勝者',res_lose:'リトライ',lose_t:'立て、グータラ！もう一回だ！',
@@ -457,7 +458,7 @@ const STR={en:{
 const STORY={
  s0:{bg:'gym',lines:[
   ['pooh','Three dollars. And half a jar of honey. That\u2019s my whole fortune.','3ドル。それとハチミツ半分。これが全財産だ。'],
-  ['pinco','You\u2019re a bum, Pooh. A bum with no legs and floating shoes.','お前はグータラだ、プー。足も無い、靴は浮いてる。'],
+  ['pinco','You\u2019re a bum, Pooh. A bum with stubby legs and a honey tummy.','お前はグータラだ、プー。短い足に、ハチミツ腹。'],
   ['pooh','A bum with BIG dreams. Dreams made of cold, hard cash.','でかい夢があるグータラさ。札束でできた夢がな。'],
   ['bean','Pooh can do it! Pooh is the best!','プーならできる！プーが一番！'],
   ['pinco','Club fight tonight. Forty bucks to the winner. Party Hat Guy.','今夜クラブで試合だ。勝てば40ドル。相手はパーティハット君。'],
@@ -465,14 +466,14 @@ const STORY={
   ['pinco','Watch his gloves. When they flash, he\u2019s coming. Dodge, then hit him while he\u2019s wide open.','グローブを見ろ。光ったら来るぞ。よけて、スキだらけのところを打て。']]},
  s1:{bg:'arena',lines:[
   ['asmon','Chat, my title opponent just bailed. So I\u2019m giving some random nobody a shot.','チャット、タイトル戦の相手が逃げた。だから無名の誰かにチャンスをやる。'],
-  ['asmon','Wait\u2026 that bear puppet with the floating shoes? He\u2019s perfect. LOL.','待て…あの靴が浮いてるクマのパペット？最高じゃん。草。'],
+  ['asmon','Wait\u2026 that chubby honey bear in the headband? He\u2019s perfect. LOL.','待て…あのハチマキのぽっちゃりハチミツグマ？最高じゃん。草。'],
   ['asmon','Beat my three contenders, bear, and the title shot is yours. One million dollar purse.','俺の挑戦者3人に勝てばタイトル戦だ。賞金は100万ドル。'],
   ['pooh','One\u2026 MILLION\u2026 dollars?!','ひゃく…まん…ドル！？'],
   ['pinco','You ain\u2019t ready. But I\u2019m gonna MAKE you ready. Gym. Now.','お前はまだ準備ができてない。だが俺がしてやる。ジムへ行くぞ。'],
   ['bean','Training montage!!','特訓モンタージュだ！！']]},
  s2:{bg:'gym',lines:[
   ['kermit','Yaaay\u2026 I mean\u2026 ow.','やった〜…じゃなくて…いてて。'],
-  ['pinco','Not bad. But Bronny\u2019s quick. Real quick. Your shoes gotta be quicker.','悪くない。だがブロニーは速い。本当に速い。靴をもっと速く動かせ。'],
+  ['pinco','Not bad. But Bronny\u2019s quick. Real quick. Your feet gotta be quicker.','悪くない。だがブロニーは速い。本当に速い。足をもっと速く動かせ。'],
   ['bean','I made a drill! I throw tomatoes, Pooh dodges!','特訓を考えた！僕がトマトを投げて、プーがよける！'],
   ['pooh','Do I get paid for every tomato I dodge?','トマト1個よけるごとにお金もらえる？'],
   ['pinco','No.','もらえない。']]},
@@ -507,7 +508,7 @@ const TIPS={
  pooping:[['When he puffs up, a Stink Cloud is coming. You can\u2019t see, so LISTEN for the whoosh.','ふくらんだら悪臭雲が来る。見えないから音を聞け。'],['His uppercut breaks your guard. Dodge it. Don\u2019t block it.','アッパーはガードを崩す。ガードじゃなくてよけろ。'],['He guards low. Aim for the head.','ボディを固めてる。顔を狙え。']],
  asmon:[['He feints. Don\u2019t move till the glove glows.','フェイントしてくる。グローブが光るまで動くな。'],['BAN HAMMER! Can\u2019t block it. Dodge left or right, then unload!','バンハンマー！ガード不可。左右によけて、打ちまくれ！'],['The Roach Rush is three punches. Dodge, dodge, dodge!','ローチラッシュは3連打。よけて、よけて、よけろ！']]
 };
-const BEAN_GAGS=[['I believe in you! Also I ate your sandwich.','信じてるよ！あと君のサンドイッチ食べちゃった。'],['Water? I brought water. I drank most of it.','水？持ってきたよ。ほとんど飲んじゃったけど。'],['You look great! Your shoes look great!','かっこいい！靴もかっこいい！'],['Teddy! Teddy is cheering too!','テディも応援してるよ！'],['If you win, can we get honey? Lots of honey?','勝ったらハチミツ買える？いっぱい？']];
+const BEAN_GAGS=[['I believe in you! Also I ate your sandwich.','信じてるよ！あと君のサンドイッチ食べちゃった。'],['Water? I brought water. I drank most of it.','水？持ってきたよ。ほとんど飲んじゃったけど。'],['You look great! Your headband looks great!','かっこいい！ハチマキもかっこいい！'],['Teddy! Teddy is cheering too!','テディも応援してるよ！'],['If you win, can we get honey? Lots of honey?','勝ったらハチミツ買える？いっぱい？']];
 
 // ===== Flow =====
 const FLOW=[['story:s0','fight:0'],['story:s1','train:sb','fight:1'],['story:s2','train:dd','fight:2'],['story:s3','train:ml','fight:3'],['story:s4','steps','story:s5','fight:4'],['end']];
@@ -637,7 +638,7 @@ function storyScene(key,done){const S=STORY[key];let i=0,t=0,ch=0,lt=0;const str
 function drawStream(t,by,ph){const w=Math.min(W*.86,420),h=w*.62,x=(W-w)/2,y=Math.max(ST+70,by-ph*.95);X.save();rr(x-8,y-8,w+16,h+16,18);X.fillStyle='#14141c';X.fill();rr(x,y,w,h,12);X.fillStyle='#2a1d48';X.fill();X.clip();
  const g=X.createLinearGradient(0,y,0,y+h);g.addColorStop(0,'#3b2a6a');g.addColorStop(1,'#120a24');X.fillStyle=g;X.fillRect(x,y,w,h);spr(IMG.asmon_idle,x+w*.38,y+h*1.25,h*1.35,{});
  // chat column
- X.fillStyle='rgba(0,0,0,.45)';X.fillRect(x+w*.68,y,w*.32,h);const msgs=['KEKW','LUL','bear??','POGGERS','OMEGALUL','W','shoes float??','$$$','GG','LMAO'];
+ X.fillStyle='rgba(0,0,0,.45)';X.fillRect(x+w*.68,y,w*.32,h);const msgs=['KEKW','LUL','bear??','POGGERS','OMEGALUL','W','honey??','$$$','GG','LMAO'];
  for(let k=0;k<8;k++){const m=msgs[(k+Math.floor(t*2.5))%msgs.length];X.fillStyle=['#ff7ac8','#7dffa0','#7ac8ff','#ffd34a'][k%4];X.font='bold 12px '+FB();X.textAlign='left';X.fillText(m,x+w*.7,y+16+k*(h/8.5))}
  X.restore();rr(x+12,y+12,52,22,6);X.fillStyle='#e91916';X.fill();txt('LIVE',x+38,y+23,14,'#fff',{body:1,w:'800',st:0,sh:0});rr(x+70,y+12,80,22,6);X.fillStyle='#000a';X.fill();X.fillStyle='#fff';X.font='bold 13px '+FB();X.textAlign='left';X.fillText('LIVE 48,201',x+77,y+27);}
 function drawFront(x,by,h,o){// front Pooh standing on his two floating shoes, all parts at one whole-number scale
@@ -686,7 +687,7 @@ function fightScene(oi,replay){
  const OK=()=>PORTRAIT()?2:1,PK=()=>PORTRAIT()?2:1;// whole-number sprite scales: SPO camera (big opponent, big see-through Pooh)
  const oh=()=>NH(O.id+'_idle')*OK(),obase=()=>PORTRAIT()?Math.round(H*.75):Math.round(H-8);
  const ph=()=>NH('pooh_back_idle')*PK();
- const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H+ph()*.04);
+ const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H+ph()*.2);// v1.2.9 landscape: Pooh sits lower and off to the left so the opponent's chest stays clear
  const target=(aim,side)=>({x:W/2+Q.sway+(side==='L'?-1:1)*oh()*.05,y:obase()-oh()*(aim==='H'?.70:.42)});
  // one callout at a time, newest replaces the old, fixed spot under the HUD
  function callout(s,c,life,sz){F.co={s,c,l:life||.8,ml:life||.8,sz:Math.round(Math.min(sz||26,28)*.72)}}
@@ -876,7 +877,7 @@ t2.globalCompositeOperation='source-atop';t2.globalAlpha=.55;t2.fillStyle='#ffe7
    const OL=layer('o');drawTo(OL,()=>spr(outlineOf(img),x,y,h,{k,flip:o.flip}));const ol=OL.getContext('2d');ol.setTransform(1,0,0,1,0,0);ol.globalCompositeOperation='source-in';ol.fillStyle='#fff3c4';ol.fillRect(0,0,OL.width,OL.height);ol.globalCompositeOperation='destination-in';ol.drawImage(M,0,0);ol.globalCompositeOperation='source-over';
    X.drawImage(T1,0,0,W,H);if(!PORTRAIT())X.globalAlpha=.5;X.drawImage(T2,0,0,W,H);X.globalAlpha=1;X.drawImage(OL,0,0,W,H)}
   if(arm&&arm.width)spr(arm,x,y,h,{k,flip:o.flip})}
-function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={k:kk},img=IMG.pooh_back_idle,sc=1,arm=null;
+function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27-(PORTRAIT()?0:oh()*.42),y=b+P.y*h*.09,o={k:kk},img=IMG.pooh_back_idle,sc=1,arm=null;
   const snap=v=>Math.round(v*DPR/kk)*kk/DPR;// move in whole sprite pixels
   if(P.s==='punch'){const p=Math.min(1,P.t/P.dur),f=punchFrame(p,P.aim==='B');img=f.img;arm=f.arm;o.flip=P.side==='R';const s=P.side==='L'?-1:1;
    // body: dips on the wind-up, drives up and toward the punching side on the extend
@@ -891,10 +892,10 @@ function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y
   x=keepOn(img,kk,x,o.flip,3);// never slide off screen on a dodge
   const fb=snap(Math.sin(T0*5)*h*.015);x=snap(x);y=snap(y);
   // floating shoes follow the body (incl. the punch lift), scaled to Pooh's body
-  if(P.s!=='down'){const S=IMG.shoe_fL&&IMG.shoe_fL.width?['shoe_fL','shoe_fR']:['shoeL','shoeR'],dy=y-b,sh=NH(S[0])*kk,sy=b+h*.16+dy+snap(Math.sin(T0*5+1)*h*.012);
+  if(false&&P.s!=='down'){const S=IMG.shoe_fL&&IMG.shoe_fL.width?['shoe_fL','shoe_fR']:['shoeL','shoeR'],dy=y-b,sh=NH(S[0])*kk,sy=b+h*.16+dy+snap(Math.sin(T0*5+1)*h*.012);
    spr(IMG[S[0]],x-h*.17,sy,sh,{k:kk});spr(IMG[S[1]],x+h*.17,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{k:kk})}
   composePooh(img,x,y+fb,h*sc,o,arm);
-  if(o.gold){const gi=goldOf(img),ga=arm&&arm.width?goldOf(arm):null,gh=(gi.height)*kk/DPR;spr(gi,x,y+fb+2*kk/DPR,gh,{k:kk,flip:o.flip});if(ga)spr(ga,x,y+fb+2*kk/DPR,gh,{k:kk,flip:o.flip})}
+  if(o.gold){const gr=PORTRAIT()?2:1,gi=goldOf(img,gr),ga=arm&&arm.width?goldOf(arm,gr):null,gh=(gi.height)*kk/DPR;spr(gi,x,y+fb+gr*kk/DPR,gh,{k:kk,flip:o.flip});if(ga)spr(ga,x,y+fb+gr*kk/DPR,gh,{k:kk,flip:o.flip})}
   if(P.s==='block'){X.save();X.globalAlpha=.5;X.strokeStyle='#bff0ff';X.lineWidth=5;X.beginPath();X.arc(x,b-h*.55,h*.42,Math.PI*1.15,Math.PI*1.85);X.stroke();X.restore()}}
 // ---- Super Punch-Out style HUD, drawn on whole game pixels ----
  function gp(v){return Math.round(v*DPR)}function cp(v){return v/DPR}
@@ -924,7 +925,7 @@ function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y
   for(let k=0;k<3;k++)star5(mid-g*14+k*g*14,y0+g*39,g*6,'#ffd34a',k<F.stars);
   for(let k=0;k<F.kdO;k++)fxDraw(FX.coin,bx1-g*4-k*g*10,y0+g*39,g*8);
   // power meter along the bottom: S badge + chevrons, 3 per star
-  const my=PX(H-PX(Math.max(6,(window.__sb||0)))-g*10),mx=PX(W/2-g*62);gbox(mx-g*2,my-g*2,g*128,g*12,'#000');
+  const my=PORTRAIT()?PX(H-PX(Math.max(6,(window.__sb||0)))-g*10):PX(H-g*104),mx=PORTRAIT()?PX(W/2-g*62):PX(W-g*134);// v1.2.9 landscape: meter sits right, above the star button, off Poohgbox(mx-g*2,my-g*2,g*128,g*12,'#000');
   gbox(mx,my,g*12,g*8,'#2a5ad8');txt('S',mx+g*6,my+g*4,8/DPR/.68,'#fff',{st:0,sh:0});
   for(let k=0;k<9;k++){const on=k<F.stars*3,cx=mx+g*16+k*g*12;const col=on?((T0*6|0)%2&&F.stars>=3?'#fff':['#3cb850','#f0c000','#e8362a'][k/3|0]):'#3a3050';
    for(let r=0;r<8;r++){const dx=Math.abs(r-3.5)|0;gbox(cx+g*(3-dx),my+g*r,g*4,g,col)}}
