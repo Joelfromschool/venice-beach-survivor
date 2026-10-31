@@ -63,11 +63,14 @@ html[lang=ja] .card .nm{font-size:calc(var(--px)*12)}
 .sym{display:inline-block;width:calc(var(--px)*7);height:calc(var(--px)*7);vertical-align:middle}
 @media (orientation:landscape) and (max-height:500px){.card .th{width:calc(var(--px)*28);height:calc(var(--px)*28)}.card{min-height:44px;margin:var(--p2) 0;padding:var(--p2) var(--p4)}}
 </style></head><body><canvas id="c"></canvas><div id="ui"></div>
-<script>window.__BUILD__='v1.2.5';</script>
-<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [164], "bronny_tell": [164], "bronny_punch": [164], "bronny_hurt": [158], "bronny_ko": [158], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [96], "pooh_back_jab": [152], "pooh_front": [144], "pooh_victory_body": [144], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [152], "pooh_back_jab2": [152], "pooh_back_body2": [152], "pooh_back_body": [152], "shoe_fL": [14], "shoe_fR": [14]};
+<script>window.__BUILD__='v1.2.6';</script>
+<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [164], "bronny_tell": [164], "bronny_punch": [164], "bronny_hurt": [158], "bronny_ko": [158], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [96], "pooh_back_jab": [178], "pooh_front": [144], "pooh_victory_body": [144], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [178], "pooh_back_jab2": [178], "pooh_back_body2": [178], "pooh_back_body": [178], "shoe_fL": [14], "shoe_fR": [14], "kermit_wind": [154], "bronny_wind": [164], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [178], "pooh_back_jab2_arm": [178], "pooh_back_jab_arm": [178], "pooh_back_body2_arm": [178], "pooh_back_body_arm": [178]};
 'use strict';
 // ===== Canvas / scaling =====
-const C=document.getElementById('c'),X=C.getContext('2d'),UI=document.getElementById('ui');
+const C=document.getElementById('c'),UI=document.getElementById('ui');let X=C.getContext('2d');const X0=X;
+// draw into an offscreen layer (same size and transform as the main canvas)
+function layer(n){const L=layer[n]||(layer[n]=document.createElement('canvas'));if(L.width!==C.width||L.height!==C.height){L.width=C.width;L.height=C.height}const g=L.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,0,L.width,L.height);g.imageSmoothingEnabled=false;g.setTransform(DPR,0,0,DPR,0,0);return L}
+function drawTo(L,fn){const p=X;X=L.getContext('2d');try{fn()}finally{X=p}}
 let W=390,H=844,DPR=1,U=1,ST=0;
 let GW=240,GH=426,KPX=1;
 function resize(){const dpr=window.devicePixelRatio||1,cw=innerWidth,chh=innerHeight,dw=Math.round(cw*dpr),dh=Math.round(chh*dpr),port=chh>=cw;
@@ -82,7 +85,7 @@ const pick=a=>a[(Math.random()*a.length)|0];
 const PORTRAIT=()=>H>=W;
 // ===== Assets =====
 const IMG={};
-const ART=['party','kermit','bronny','pooping','asmon'].flatMap(o=>['idle','tell','punch','hurt','ko','down'].map(p=>o+'_'+p)).concat(['pooh_back_idle','pooh_back_jab','pooh_front','pooh_run_body','run_shoeL','run_shoeR','pooh_victory_body','shoeL','shoeR','pooh_front_lg','shoe_lgL','shoe_lgR','pooh_back_jab1','pooh_back_jab2','pooh_back_body','pooh_back_body2','shoe_fL','shoe_fR','pinco_coach','bean_cheer','bike']);
+const ART=['party','kermit','bronny','pooping','asmon'].flatMap(o=>['idle','tell','wind','punch','hurt','ko','down'].map(p=>o+'_'+p)).concat(['pooh_back_idle','pooh_back_jab','pooh_front','pooh_run_body','run_shoeL','run_shoeR','pooh_victory_body','shoeL','shoeR','pooh_front_lg','shoe_lgL','shoe_lgR','pooh_back_jab1','pooh_back_jab2','pooh_back_body','pooh_back_body2','pooh_back_jab1_arm','pooh_back_jab2_arm','pooh_back_jab_arm','pooh_back_body_arm','pooh_back_body2_arm','shoe_fL','shoe_fR','pinco_coach','bean_cheer','bike']);
 const BG=['arena','dawn_city','freezer','gym','steps','ending','credits'];
 function loadAll(onp){const list=[];ART.forEach(n=>{const hs=PXS[n]||[];IMG[n]=null;IMG[n+'#v']=[];hs.forEach(h=>list.push(['px/'+n+'_'+h+'.png',n,h]))});
   BG.forEach(n=>{list.push(['px/bg_'+n+'.png','bg_'+n,0]);if(n!=='dawn_city')list.push(['px/bg_'+n+'_w.png','bg_'+n+'#w',0])});
@@ -264,7 +267,7 @@ function drawPT(){PT.forEach(p=>{const t=p.l/p.ml;X.save();if(p.k==='dot'){X.fil
  X.restore()})}
 function moneyRain(n){for(let i=0;i<n;i++)PT.push({k:'bill',x:rnd(0,W),y:rnd(-H*.8,-20),vx:rnd(-20,20),vy:rnd(90,170),r:rnd(0,6),vr:rnd(-2,2),l:rnd(5,8),ml:8,ph:rnd(0,6),coin:Math.random()<.35})}
 // ===== Scene manager & loop =====
-let SC=null,NOW=0,TIME_MUL=1;
+let SC=null,NOW=0,TIME_MUL=1,FLASHF=0;// FLASHF: whole-screen flash for N rendered frames (not stretched by hit-stop)
 function go(s){if(SC&&SC.exit)SC.exit();UI.innerHTML='';PT=[];SHAKE=0;FLASH=0;FREEZE=0;TS=1;SC=s;if(s.enter)s.enter();}
 let last=performance.now();
 function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/1000)*TIME_MUL;last=now;NOW+=dt;
@@ -275,6 +278,7 @@ function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/
  try{if(SC&&SC.update)SC.update(sdt,dt);updPT(sdt);
  X.imageSmoothingEnabled=false;X.save();if(SHAKE>.5)X.translate(PX(rnd(-SHAKE,SHAKE)),PX(rnd(-SHAKE,SHAKE)));X.clearRect(-50,-50,W+100,H+100);if(SC&&SC.draw)SC.draw(sdt);drawPT();X.restore();
  if(SC&&SC.overlay)SC.overlay();
+ if(FLASHF>0){FLASHF--;X.fillStyle='#fff';X.globalAlpha=FLASHF?.9:.55;X.fillRect(0,0,W,H);X.globalAlpha=1}
  if(FLASH>0){X.fillStyle=FLASHC;X.globalAlpha=FLASH>.5?.85:FLASH>.2?.5:.25;X.fillRect(0,0,W,H);X.globalAlpha=1}
  if(SET.scan){X.save();X.setTransform(1,0,0,1,0,0);X.fillStyle='rgba(0,0,0,.22)';for(let y=1;y<GH;y+=2)X.fillRect(0,y,GW,1);X.restore()}}catch(e){console.error(e);}
 }
@@ -705,7 +709,7 @@ function fightScene(oi,replay){
  function oppHit(dmg,ctr,star){F.dl=F.dl||{i:0,c:0,s:0,n:0};F.dl[star?'s':ctr?'c':'i']+=dmg;F.dl.n++;const tg=target(F.aim,P.side);F.oHP-=dmg;F.ptsP+=dmg;F.combo++;F.comboT=.9;Q.hf=star?.5:.24;Q.jolt=(P.side==='L'?1:-1)*(star?14:ctr?8:5)*OK()/DPR;Q.kb=(F.aim==='H'?-1:1)*(star?6:ctr?3:2)*OK()/DPR;Q.kbT=star?.22:.12;
   AU.play(star?'starpunch':ctr?'counter':'hit');FREEZE=star?.2:ctr?.1:.05;SHAKE=star?22:ctr?10:5;vib(star?[40,30,80]:ctr?35:12);
   spark(tg.x,tg.y,star?'#ffd34a':ctr?'#fff6a0':'#fff',star?16:ctr?11:7,(star?130:ctr?95:70)*Math.max(.7,OK()/2));burst(tg.x,tg.y,star?30:ctr?14:6,star?'#ffd34a':'#fff',star?520:300,.4,star?8:5);
-  if(star){FLASH=.6;FLASHC='#fff';callout(T('starpunch'),'#ffd34a',1.2,40);AU.roar(1.5)}
+  if(star){FLASHF=2;callout(T('starpunch'),'#ffd34a',1.2,PORTRAIT()?30:40);AU.roar(1.5)}
   if(F.combo>=3&&!(F.co&&F.co.ml-F.co.l<.02))callout(T('combo',F.combo),'#7dffa0',.7,26);
   if(F.oHP<=0){F.oHP=0;oppDown();}}
  function resolvePunch(){const s=Q.s;const base=4+st.pow*1.1,tg=target(F.aim,P.side);
@@ -761,7 +765,7 @@ function fightScene(oi,replay){
   if(Q.s==='tell'&&m){const left=Q.dur-Q.t;if(!BOT.done&&left<BOT.react){BOT.done=true;if(m.k==='feint'){if(BOT.skill<.35)dodge(pick(['L','R']))}else if(BOT.skill<(PO.skill||.88)){if(['jab','hook','flail','rush','stink'].includes(m.k)&&Math.random()<.3)block(false);else dodge(pick(['L','R']))}}return}
   if(['open','taunt','hurt'].includes(Q.s)){if(F.stars>=2&&Q.s==='open'&&P.s==='idle')starPunch();else if(ab<=0){punch(pick(['L','R']));ab=.1}}
   else if(Q.s==='idle'||Q.s==='rec'){if(F.aim===Q.guard){if(ab<=0){aim();ab=.25}}else if(ab<=0){punch(pick(['L','R']));ab=rnd(.25,.5)}}}
- PO.Q=Q;PO.P=P;
+ PO.Q=Q;PO.P=P;PO.O=O;
  // ===== scene =====
  return{
  enter(){MUS.play('fight');AU.setBed(.12);T0=0;const s=screen('');s.style.pointerEvents='none';const pb=el('<div class="icon" style="left:12px;top:calc('+(PORTRAIT()?96:74)+'px + var(--st));pointer-events:auto;width:44px;height:44px;border-radius:14px">'+ICO.pause+'</div>');pb.onclick=e=>{e.stopPropagation();AU.play('ui');pause()};UI.appendChild(pb);},
@@ -789,7 +793,7 @@ function fightScene(oi,replay){
   else if(F.phase==='fight'){F.clock-=dt*3;if(F.clock<=0){F.clock=0;endRound();return}}
   else if(F.phase==='rend'){if(F.pt>1.8){if(F.round>=3){decision()}else{F.phase='corner';openCorner()}}}
   else if(F.phase==='odown'){F.ct+=dt;if(F.ct>=.75){F.ct=0;F.count++;AU.play('tick');AU.roar(.6);
-    if(F.count>=F.getAt){setQ('getup',.7);F.phase='fight';F.oHP=F.oMax*(F.kdOT===1?[.62,.7,.75,.8,.85][oi]:[.42,.5,.55,.6,.65][oi]);Q.next=1.1;}
+    if(F.count>=F.getAt){setQ('getup',.95);F.phase='fight';F.oHP=F.oMax*(F.kdOT===1?[.62,.7,.75,.8,.85][oi]:[.42,.5,.55,.6,.65][oi]);Q.next=1.1;}
     else if(F.fin&&(F.count>=10||(F.fin==='tko'&&F.count>=2))){F.phase='ko';F.pt=0;AU.play('bell3');AU.roar(3);result(true,F.fin)}}}
   else if(F.phase==='pdown'){F.ct+=dt;if(F.mash<1)F.mash=Math.max(0,F.mash-dt*.12);
     if(F.lossBy==='tko'&&F.ct>1){F.phase='ko';result(false,'tko');return}
@@ -814,7 +818,7 @@ function fightScene(oi,replay){
   drawPooh();drawHUD();drawOverlays();},
  overlay(){}
  };
- function oppImg(){const id=O.id;switch(Q.s){case 'tell':case 'taunt':return id+'_tell';case 'atk':return id+'_punch';case 'open':return Q.hf>0?id+'_hurt':id+'_punch';case 'hurt':return id+'_hurt';case 'down':return Q.t<.32?id+'_ko':id+'_down';case 'getup':return id+'_ko';default:return Q.hf>0?id+'_hurt':id+'_idle'}}
+ function oppImg(){const id=O.id;switch(Q.s){case 'tell':return Q.t/Q.dur>=.15&&IMG[id+'_wind']?id+'_wind':id+'_tell';case 'taunt':return id+'_tell';case 'atk':return id+'_punch';case 'open':return Q.hf>0?id+'_hurt':id+'_punch';case 'hurt':return id+'_hurt';case 'down':return Q.t<.32?id+'_ko':id+'_down';case 'getup':{const p=Q.t/Q.dur;return p<.3?id+'_down':p<.46?id+'_hurt':p<.8?id+'_ko':id+'_idle'}default:return Q.hf>0?id+'_hurt':id+'_idle'}}
  function drawOpp(){const h=oh(),b=obase(),sp=v=>Math.round(v*DPR/OK())*OK()/DPR;let x=W/2+Q.sway+sp(Q.jolt),y=b+sp(Q.kb||0),o={},sc=1,img=oppImg();const m=Q.move;
   const bob=Math.sin(T0*4)*h*.008;y+=bob;
   if(Q.s==='tell'&&m){const p=Q.t/Q.dur;o.flip=!O.noflip&&Q.side!==O.natT;if(m.k==='dunk'){y-=h*.12*Math.sin(Math.min(1,p)*Math.PI*.5)}sc=1+.03*p;
@@ -824,14 +828,14 @@ function fightScene(oi,replay){
   else if(Q.s==='open'){o.flip=!O.noflip&&Q.side!==O.natP;y+=Math.round(Math.sin(Q.t*9)*1.5);x+=(Q.side==='L'?-1:1)*h*.07;if(Q.hf<=0&&Math.sin(Q.t*14)>0){o.flash=.15;o.fc='#ffe66b'}}
   else if(Q.s==='hurt'){x+=Q.jolt>0?3:-3}
   else if(Q.s==='down'){const p=Math.min(1,Q.t*3.2);y=Q.t<.32?b+Math.round(h*.06*p):b+2;x=W/2+Q.sway}
-  else if(Q.s==='getup'){const p=Q.t/Q.dur;y=b+h*.06*(1-p)}
+  else if(Q.s==='getup'){const p=Q.t/Q.dur,g=Math.max(1,Math.round(OK()))/DPR;if(p<.3){y=b+2;x=W/2+Q.sway+(Math.floor(Q.t*18)%2?g:-g)}else if(p<.46){y=b+Math.round(h*.2/g)*g;x=W/2+Q.sway}else if(p<.8){const q=(p-.46)/.34;y=b+Math.round(h*.12*(1-q)*(1-q)/g)*g;x=W/2+Q.sway}else{const q=(p-.8)/.2;y=b-Math.round(h*.04*Math.sin(q*Math.PI)/g)*g}}
   else if(Q.s==='guard'||Q.s==='blk'){o.flash=.15;o.fc='#7ad7ff'}
-  if(Q.s==='tell'&&O.id==='kermit'){o.flash=Math.sin(Q.t*28)>0?.55:.2;o.fc='#e4ff70';y-=GPX(3*OK())}
+  if(Q.s==='tell'&&O.id==='kermit'){o.flash=Math.sin(Q.t*28)>0?.35:.04;o.fc='#e4ff70';y-=GPX(3*OK())}
   o.k=OK();x=keepOn(IMG[img],o.k,x,o.flip);
   if(Q.hf>0&&Q.s!=='down'&&!o.flash&&Math.floor(Q.hf*24)%2===0){o.flash=.5;o.fc='#fff'}
   // shadow (stepped, whole pixels)
   pxShadow(W/2+Q.sway,b+2,h*.62,.4);
-  spr(IMG[img],x,y,h*sc,o);
+  spr(IMG[img],x,y,h*sc,o);F._om={img:IMG[img],x,y,h:h*sc,k:o.k,flip:o.flip};
   // tell glint
   if(Q.s==='tell'&&m&&!(m.k==='stink'&&F.fog>.4)){const p=Q.t/Q.dur;const gx=W/2+Q.sway+(Q.side==='L'?-1:1)*h*.22,gy=b-h*(m.k==='dunk'||m.k==='ban'?1.02:.72)-(m.k==='dunk'?h*.1:0);const r=h*.06*(0.6+p)*(1+.2*Math.sin(Q.t*30));
    const c=['ban','dunk','upper'].includes(m.k)?'#ff3b3b':'#fff27a';X.save();X.translate(gx,gy);X.rotate(Q.t*4);X.fillStyle=c;X.shadowColor=c;X.shadowBlur=20;X.beginPath();for(let k=0;k<8;k++){const a=k*Math.PI/4,rr2=k%2?r*.28:r;X.lineTo(Math.cos(a)*rr2,Math.sin(a)*rr2)}X.closePath();X.fill();X.restore();
@@ -845,24 +849,41 @@ function fightScene(oi,replay){
  function drawHammer(x,y,s,p){X.save();X.translate(x,y);X.rotate(-.6+p*.3);X.fillStyle='#6b4423';X.strokeStyle='#000';X.lineWidth=3;X.fillRect(-s*.06,-s*.1,s*.12,s*.9);X.strokeRect(-s*.06,-s*.1,s*.12,s*.9);rr(-s*.45,-s*.38,s*.9,s*.34,s*.06);X.fillStyle='#d8202a';X.fill();X.stroke();txt('BAN',0,-s*.21,s*.22,'#fff',{st:'#000',lw:3,sh:0});X.restore();}
  // punch frames: wind-up -> extend -> recover (left-arm art, mirrored for the right)
 function punchFrame(p,body){const a=body?['pooh_back_jab1','pooh_back_body2','pooh_back_body','pooh_back_body2']:['pooh_back_jab1','pooh_back_jab2','pooh_back_jab','pooh_back_jab2'];
- const i=p<.16?0:p<.34?1:p<.74?2:3;return {img:IMG[a[i]]||IMG.pooh_back_jab,ph:i}}
-function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={a:PORTRAIT()?.5:.62,k:kk},img=IMG.pooh_back_idle,sc=1;
+ const i=p<.16?0:p<.34?1:p<.74?2:3;return {img:IMG[a[i]]||IMG.pooh_back_jab,arm:IMG[a[i]+'_arm'],ph:i}}
+// SPO-style Pooh: full colour and opacity, except over the opponent's head/chest where he becomes a crisp
+// SNES checkerboard (whole sprite pixels) with a bright outline; the punching arm is always solid on top.
+var CHK=null;
+function composePooh(img,x,y,h,o,arm){const k=o.k,L=layer('p'),M=layer('m'),om=F._om;
+  drawTo(L,()=>spr(img,x,y,h,o));
+  let over=false;if(om&&om.img&&Q.s!=='down'){drawTo(M,()=>spr(om.img,om.x,om.y,om.h,{k:om.k,flip:om.flip}));over=true;
+   const cut=Math.round((obase()-oh()*.42)*DPR),g=M.getContext('2d');g.setTransform(1,0,0,1,0,0);g.clearRect(0,cut,M.width,M.height)}
+  if(!over){X.drawImage(L,0,0,W,H)}else{
+   const T1=layer('t1'),t1=T1.getContext('2d');t1.setTransform(1,0,0,1,0,0);t1.drawImage(L,0,0);t1.globalCompositeOperation='destination-out';t1.drawImage(M,0,0);t1.globalCompositeOperation='source-over';
+   const T2=layer('t2'),t2=T2.getContext('2d');t2.setTransform(1,0,0,1,0,0);t2.drawImage(L,0,0);t2.globalCompositeOperation='destination-in';t2.drawImage(M,0,0);
+   if(!CHK||CHK.k!==k){const c=document.createElement('canvas');c.width=c.height=2*k;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,k,k);g.fillRect(k,k,k,k);CHK={k,c}}
+   const pat=t2.createPattern(CHK.c,'repeat'),iw=pickVar(img,h).width*k,ih=pickVar(img,h).height*k,cx=Math.round(x*DPR),left=o.flip?cx+Math.floor(iw/2)-iw:cx-Math.floor(iw/2),top=Math.round(y*DPR)-ih;
+   pat.setTransform(new DOMMatrix().translate(left,top));t2.fillStyle=pat;t2.fillRect(0,0,T2.width,T2.height);t2.globalCompositeOperation='source-over';
+   const OL=layer('o');drawTo(OL,()=>spr(outlineOf(img),x,y,h,{k,flip:o.flip}));const ol=OL.getContext('2d');ol.setTransform(1,0,0,1,0,0);ol.globalCompositeOperation='source-in';ol.fillStyle='#fff3c4';ol.fillRect(0,0,OL.width,OL.height);ol.globalCompositeOperation='destination-in';ol.drawImage(M,0,0);ol.globalCompositeOperation='source-over';
+   X.drawImage(T1,0,0,W,H);X.drawImage(T2,0,0,W,H);X.drawImage(OL,0,0,W,H)}
+  if(arm&&arm.width)spr(arm,x,y,h,{k,flip:o.flip})}
+function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={k:kk},img=IMG.pooh_back_idle,sc=1,arm=null;
   const snap=v=>Math.round(v*DPR/kk)*kk/DPR;// move in whole sprite pixels
-  if(P.s==='punch'){const p=Math.min(1,P.t/P.dur),f=punchFrame(p,P.aim==='B');img=f.img;o.flip=P.side==='R';const s=P.side==='L'?-1:1;
+  if(P.s==='punch'){const p=Math.min(1,P.t/P.dur),f=punchFrame(p,P.aim==='B');img=f.img;arm=f.arm;o.flip=P.side==='R';const s=P.side==='L'?-1:1;
    // body: dips on the wind-up, drives up and toward the punching side on the extend
-   const lift=[-2,4,9,4][f.ph],side=[1,-1,-3,-1][f.ph];y-=lift*kk*g*(P.aim==='B'?.5:1);x+=s*side*-kk*g}
-  else if(P.s==='star'){const ch=P.t<.38;img=ch?IMG.pooh_back_jab1:(P.t<.62?IMG.pooh_back_jab:IMG.pooh_back_jab2);y-=ch?-2*kk*g:8*kk*g;o.flash=ch?.3+.3*Math.sin(P.t*40):0;o.fc='#ffd34a'}
+   const lift=[-2,5,13,5][f.ph],side=[1,-1,-3,-1][f.ph];y-=lift*kk*g*(P.aim==='B'?.5:1);x+=s*side*-kk*g}
+  else if(P.s==='star'){const ch=P.t<.38,nm=ch?'pooh_back_jab1':(P.t<.62?'pooh_back_jab':'pooh_back_jab2');img=IMG[nm];arm=IMG[nm+'_arm'];y-=ch?-2*kk*g:8*kk*g;o.flash=ch?.3+.3*Math.sin(P.t*40):0;o.fc='#ffd34a'}
   else if(P.s==='dodge'){y+=Math.round(h*.06)}
   else if(P.s==='hit'){x+=(Math.sin(P.t*40)>0?2:-2)*kk*g;o.tint='#ff2030';o.tintA=.35*(1-P.t/P.dur)}
-  else if(P.s==='down'){o.a=.6;y+=Math.round(h*.3)}
+  else if(P.s==='down'){y+=Math.round(h*.3)}
+  else if(P.s==='back'){const p=Math.min(1,P.t/P.dur);y+=Math.round(h*.3*(1-p)*(1-p))}
   else if(P.s==='block'){sc=.94}
   if(P.tired&&P.s!=='hit'){o.tint='#ff7ad6';o.tintA=.45}
   x=keepOn(img,kk,x,o.flip,3);// never slide off screen on a dodge
   const fb=snap(Math.sin(T0*5)*h*.015);x=snap(x);y=snap(y);
   // floating shoes follow the body (incl. the punch lift), scaled to Pooh's body
   if(P.s!=='down'){const S=IMG.shoe_fL&&IMG.shoe_fL.width?['shoe_fL','shoe_fR']:['shoeL','shoeR'],dy=y-b,sh=NH(S[0])*kk,sy=b+h*.16+dy+snap(Math.sin(T0*5+1)*h*.012);
-   spr(IMG[S[0]],x-h*.17,sy,sh,{a:.8,k:kk});spr(IMG[S[1]],x+h*.17,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{a:.8,k:kk})}
-  spr(img,x,y+fb,h*sc,o);if(P.s!=='down')spr(outlineOf(img),x,y+fb,h*sc,{k:kk,flip:o.flip,a:.95});
+   spr(IMG[S[0]],x-h*.17,sy,sh,{k:kk});spr(IMG[S[1]],x+h*.17,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{k:kk})}
+  composePooh(img,x,y+fb,h*sc,o,arm);
   if(P.s==='block'){X.save();X.globalAlpha=.5;X.strokeStyle='#bff0ff';X.lineWidth=5;X.beginPath();X.arc(x,b-h*.55,h*.42,Math.PI*1.15,Math.PI*1.85);X.stroke();X.restore()}}
 // ---- Super Punch-Out style HUD, drawn on whole game pixels ----
  function gp(v){return Math.round(v*DPR)}function cp(v){return v/DPR}
