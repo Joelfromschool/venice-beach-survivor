@@ -63,8 +63,8 @@ html[lang=ja] .card .nm{font-size:calc(var(--px)*12)}
 .sym{display:inline-block;width:calc(var(--px)*7);height:calc(var(--px)*7);vertical-align:middle}
 @media (orientation:landscape) and (max-height:500px){.card .th{width:calc(var(--px)*28);height:calc(var(--px)*28)}.card{min-height:44px;margin:var(--p2) 0;padding:var(--p2) var(--p4)}}
 </style></head><body><canvas id="c"></canvas><div id="ui"></div>
-<script>window.__BUILD__='v1.2.7';</script>
-<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [164], "bronny_tell": [164], "bronny_punch": [164], "bronny_hurt": [158], "bronny_ko": [158], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [144], "pooh_victory_body": [144], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [14], "shoe_fR": [14], "kermit_wind": [154], "bronny_wind": [164], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
+<script>window.__BUILD__='v1.2.8';</script>
+<script>const PXS={"party_idle": [168], "party_tell": [171], "party_punch": [168], "party_hurt": [165], "party_ko": [160], "party_down": [50], "kermit_idle": [160], "kermit_tell": [154], "kermit_punch": [160], "kermit_hurt": [152], "kermit_ko": [153], "kermit_down": [59], "bronny_idle": [178], "bronny_tell": [178], "bronny_punch": [178], "bronny_hurt": [172], "bronny_ko": [172], "bronny_down": [55], "pooping_idle": [126], "pooping_tell": [132], "pooping_punch": [129], "pooping_hurt": [118], "pooping_ko": [128], "pooping_down": [62], "asmon_idle": [164], "asmon_tell": [164], "asmon_punch": [165], "asmon_hurt": [154], "asmon_ko": [154], "asmon_down": [44], "pooh_back_idle": [77], "pooh_back_jab": [142], "pooh_front": [144], "pooh_victory_body": [144], "pooh_run_body": [112], "shoeL": [20], "shoeR": [20], "run_shoeL": [17], "run_shoeR": [17], "pinco_coach": [112], "bean_cheer": [94], "bike": [104], "pooh_front_lg": [190], "shoe_lgL": [26], "shoe_lgR": [26], "pooh_back_jab1": [142], "pooh_back_jab2": [142], "pooh_back_body2": [142], "pooh_back_body": [142], "shoe_fL": [11], "shoe_fR": [11], "kermit_wind": [154], "bronny_wind": [178], "party_wind": [171], "asmon_wind": [164], "pooping_wind": [132], "pooh_back_jab1_arm": [142], "pooh_back_jab2_arm": [142], "pooh_back_jab_arm": [142], "pooh_back_body2_arm": [142], "pooh_back_body_arm": [142]};
 'use strict';
 // ===== Canvas / scaling =====
 const C=document.getElementById('c'),UI=document.getElementById('ui');let X=C.getContext('2d');const X0=X;
@@ -241,10 +241,10 @@ function outlineOf(img){// only the dark outline pixels, for SPO-style see-throu
  try{const d=g.getImageData(0,0,c.width,c.height),p=d.data;for(let i=0;i<p.length;i+=4){if(p[i+3]&&.3*p[i]+.59*p[i+1]+.11*p[i+2]>=48)p[i+3]=0}g.putImageData(d,0,0)}catch(e){return img}
  c._nat=1;return img._ol=c}
 function goldOf(img){// v1.2.7 star punch: outline pixels recoloured gold plus a 1-px gold rim outside the silhouette
- if(img._gold)return img._gold;const c=document.createElement('canvas');c.width=img.width+2;c.height=img.height+2;const g=c.getContext('2d');g.drawImage(img,1,1);
+ if(img._gold)return img._gold;const c=document.createElement('canvas');c.width=img.width+4;c.height=img.height+4;const g=c.getContext('2d');g.drawImage(img,2,2);
  try{const d=g.getImageData(0,0,c.width,c.height),p=d.data,W2=c.width,a=new Uint8Array(p.length/4);for(let i=0;i<a.length;i++)a[i]=p[i*4+3]?1:0;
   for(let i=0;i<a.length;i++){const x=i%W2,y=(i/W2)|0;let set=0;
-   if(a[i]){set=.3*p[i*4]+.59*p[i*4+1]+.11*p[i*4+2]<48}else{set=(x>0&&a[i-1])||(x<W2-1&&a[i+1])||(y>0&&a[i-W2])||a[i+W2]}
+   if(a[i]){set=.3*p[i*4]+.59*p[i*4+1]+.11*p[i*4+2]<48}else{for(let dy=-2;dy<=2&&!set;dy++)for(let dx=-2;dx<=2;dx++){if(Math.abs(dx)+Math.abs(dy)>3)continue;const xx=x+dx,yy=y+dy;if(xx>=0&&xx<W2&&yy>=0&&yy<c.height&&a[yy*W2+xx]){set=1;break}}}
    if(set){p[i*4]=255;p[i*4+1]=a[i]?211:240;p[i*4+2]=a[i]?74:150;p[i*4+3]=255}else p[i*4+3]=0}g.putImageData(d,0,0)}catch(e){return img}
  c._nat=1;return img._gold=c}
 function obb(img){// opaque column range of a native sprite (cached), used to keep wide poses on screen
@@ -275,7 +275,7 @@ function drawPT(){PT.forEach(p=>{const t=p.l/p.ml;X.save();if(p.k==='dot'){X.fil
 function moneyRain(n){for(let i=0;i<n;i++)PT.push({k:'bill',x:rnd(0,W),y:rnd(-H*.8,-20),vx:rnd(-20,20),vy:rnd(90,170),r:rnd(0,6),vr:rnd(-2,2),l:rnd(5,8),ml:8,ph:rnd(0,6),coin:Math.random()<.35})}
 // ===== Scene manager & loop =====
 let SC=null,NOW=0,TIME_MUL=1,FLASHF=0;// FLASHF: whole-screen flash for N rendered frames (not stretched by hit-stop)
-function go(s){if(SC&&SC.exit)SC.exit();UI.innerHTML='';PT=[];SHAKE=0;FLASH=0;FREEZE=0;TS=1;SC=s;const z=s._k==='fight'?1:0;if(z!==ZOOM){ZOOM=z;resize()}if(s.enter)s.enter();}
+function go(s){if(SC&&SC.exit)SC.exit();UI.innerHTML='';PT=[];SHAKE=0;FLASH=0;FREEZE=0;TS=1;SC=s;const z=0;if(z!==ZOOM){ZOOM=z;resize()}if(s.enter)s.enter();}
 let last=performance.now();
 function frame(now){requestAnimationFrame(frame);let dt=Math.min(.05,(now-last)/1000)*TIME_MUL;last=now;NOW+=dt;
  X.setTransform(DPR,0,0,DPR,0,0);
@@ -684,9 +684,9 @@ function fightScene(oi,replay){
  const Q={s:'idle',t:0,dur:0,move:null,side:'L',guard:'H',gt:O.guardT,next:2,rep:0,hf:0,jolt:0,sway:0,dy:0,ctr:false,force:null};
  let T0=0,starBtn={x:0,y:0,r:0};
  const OK=()=>PORTRAIT()?2:1,PK=()=>PORTRAIT()?2:1;// whole-number sprite scales: SPO camera (big opponent, big see-through Pooh)
- const oh=()=>NH(O.id+'_idle')*OK(),obase=()=>PORTRAIT()?Math.round(H*.75):Math.round(H+20);
+ const oh=()=>NH(O.id+'_idle')*OK(),obase=()=>PORTRAIT()?Math.round(H*.75):Math.round(H-8);
  const ph=()=>NH('pooh_back_idle')*PK();
- const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H+ph()*.1);
+ const pBase=()=>PORTRAIT()?Math.round(H-ph()*.2-16):Math.round(H+ph()*.04);
  const target=(aim,side)=>({x:W/2+Q.sway+(side==='L'?-1:1)*oh()*.05,y:obase()-oh()*(aim==='H'?.70:.42)});
  // one callout at a time, newest replaces the old, fixed spot under the HUD
  function callout(s,c,life,sz){F.co={s,c,l:life||.8,ml:life||.8,sz:Math.round(Math.min(sz||26,28)*.72)}}
@@ -722,7 +722,7 @@ function fightScene(oi,replay){
   if(F.oHP<=0){F.oHP=0;oppDown();}}
  function resolvePunch(){const s=Q.s;const base=4+st.pow*1.1,tg=target(F.aim,P.side);
   if(s==='open'||s==='taunt'){if(s==='taunt'){setQ('open',.9);Q.ctr=false}
-   const first=!Q.ctr;Q.ctr=true;if(first&&F.stars<3){F.stars++;AU.play('star');popText('\u2605',tg.x,tg.y-30,40,'#ffd34a',.8);if(tutOn&&F.stars===1&&!SAVE.tut.star)F.tut='star'}
+   const first=!Q.ctr;Q.ctr=true;if(first&&F.stars<3){F.stars++;AU.play('star');popText('\u2605',tg.x+(P.side==='L'?1:-1)*oh()*.34,tg.y-oh()*.22,PORTRAIT()?40:28,'#ffd34a',.8);if(tutOn&&F.stars===1&&!SAVE.tut.star)F.tut='star'}
    if(first)callout(T('counter'),'#fff',.6,30);oppHit(base*1.6,true);if(Q.s==='open'&&Q.t>Q.dur-.15)Q.dur+=.12;return}
   if(s==='tell'&&O.interrupt&&Q.t<Q.dur*.75){setQ('hurt',.45);Q.rep=0;if(F.stars<3){F.stars++;AU.play('star')}callout(T('counter'),'#fff',.6,30);oppHit(base*1.4,true);return}
   if(s==='idle'||s==='rec'||s==='hurt'){if(s!=='hurt'&&F.aim===Q.guard){blockedPunch(tg);if(F.tut==='tap'||(tutOn&&!SAVE.tut.aim)){F.tut='aim'}return}
@@ -870,10 +870,11 @@ function composePooh(img,x,y,h,o,arm){const k=o.k,L=layer('p'),M=layer('m'),om=F
    const T2=layer('t2'),t2=T2.getContext('2d');t2.setTransform(1,0,0,1,0,0);t2.drawImage(L,0,0);t2.globalCompositeOperation='destination-in';t2.drawImage(M,0,0);
    if(!CHK||CHK.k!==k){const c=document.createElement('canvas');c.width=c.height=2*k;const g=c.getContext('2d');g.fillStyle='#000';g.fillRect(0,0,k,k);g.fillRect(k,k,k,k);CHK={k,c}}
    const pat=t2.createPattern(CHK.c,'repeat'),iw=pickVar(img,h).width*k,ih=pickVar(img,h).height*k,cx=Math.round(x*DPR),left=o.flip?cx+Math.floor(iw/2)-iw:cx-Math.floor(iw/2),top=Math.round(y*DPR)-ih;
-   pat.setTransform(new DOMMatrix().translate(left,top));t2.fillStyle=pat;t2.fillRect(0,0,T2.width,T2.height);t2.globalCompositeOperation='source-atop';t2.globalAlpha=.55;t2.fillStyle='#ffe7a0';t2.fillRect(0,0,T2.width,T2.height);t2.globalAlpha=1;t2.globalCompositeOperation='source-over';// v1.2.7: one pale tone so the see-through reads as a ghost, not noise
+   pat.setTransform(new DOMMatrix().translate(left,top));if(PORTRAIT()){t2.fillStyle=pat;t2.fillRect(0,0,T2.width,T2.height)}// v1.2.8: landscape uses a clean translucent ghost (1x pixels make a checker look like a screen door)
+t2.globalCompositeOperation='source-atop';t2.globalAlpha=.55;t2.fillStyle='#ffe7a0';t2.fillRect(0,0,T2.width,T2.height);t2.globalAlpha=1;t2.globalCompositeOperation='source-over';// v1.2.7: one pale tone so the see-through reads as a ghost, not noise
 
    const OL=layer('o');drawTo(OL,()=>spr(outlineOf(img),x,y,h,{k,flip:o.flip}));const ol=OL.getContext('2d');ol.setTransform(1,0,0,1,0,0);ol.globalCompositeOperation='source-in';ol.fillStyle='#fff3c4';ol.fillRect(0,0,OL.width,OL.height);ol.globalCompositeOperation='destination-in';ol.drawImage(M,0,0);ol.globalCompositeOperation='source-over';
-   X.drawImage(T1,0,0,W,H);X.drawImage(T2,0,0,W,H);X.drawImage(OL,0,0,W,H)}
+   X.drawImage(T1,0,0,W,H);if(!PORTRAIT())X.globalAlpha=.5;X.drawImage(T2,0,0,W,H);X.globalAlpha=1;X.drawImage(OL,0,0,W,H)}
   if(arm&&arm.width)spr(arm,x,y,h,{k,flip:o.flip})}
 function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y=b+P.y*h*.09,o={k:kk},img=IMG.pooh_back_idle,sc=1,arm=null;
   const snap=v=>Math.round(v*DPR/kk)*kk/DPR;// move in whole sprite pixels
@@ -893,7 +894,7 @@ function drawPooh(){const h=ph(),b=pBase(),g=1/DPR,kk=PK();let x=W/2+P.x*W*.27,y
   if(P.s!=='down'){const S=IMG.shoe_fL&&IMG.shoe_fL.width?['shoe_fL','shoe_fR']:['shoeL','shoeR'],dy=y-b,sh=NH(S[0])*kk,sy=b+h*.16+dy+snap(Math.sin(T0*5+1)*h*.012);
    spr(IMG[S[0]],x-h*.17,sy,sh,{k:kk});spr(IMG[S[1]],x+h*.17,sy+snap(Math.sin(T0*5+2.4)*h*.01),sh,{k:kk})}
   composePooh(img,x,y+fb,h*sc,o,arm);
-  if(o.gold){const gi=goldOf(img),ga=arm&&arm.width?goldOf(arm):null,gh=(gi.height)*kk/DPR;spr(gi,x,y+fb+kk/DPR,gh,{k:kk,flip:o.flip});if(ga)spr(ga,x,y+fb+kk/DPR,gh,{k:kk,flip:o.flip})}
+  if(o.gold){const gi=goldOf(img),ga=arm&&arm.width?goldOf(arm):null,gh=(gi.height)*kk/DPR;spr(gi,x,y+fb+2*kk/DPR,gh,{k:kk,flip:o.flip});if(ga)spr(ga,x,y+fb+2*kk/DPR,gh,{k:kk,flip:o.flip})}
   if(P.s==='block'){X.save();X.globalAlpha=.5;X.strokeStyle='#bff0ff';X.lineWidth=5;X.beginPath();X.arc(x,b-h*.55,h*.42,Math.PI*1.15,Math.PI*1.85);X.stroke();X.restore()}}
 // ---- Super Punch-Out style HUD, drawn on whole game pixels ----
  function gp(v){return Math.round(v*DPR)}function cp(v){return v/DPR}
