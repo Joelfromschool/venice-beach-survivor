@@ -154,7 +154,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%}
 </div>
 <div id="upd"></div>
 <script>
-const VER='v1.1.1';
+const VER='v1.1.2';
 const W=1280,H=720;
 let SV;
 function T(o){return typeof o==='string'?o:(o[SV&&SV.lang||'en']||o.en)}
@@ -247,22 +247,22 @@ const TECH={
 function techKey(ids){return ids.slice().sort().join('+')}
 // level paths in world coords
 const LV=[
- {area:0,bg:'bg_meadow',gold:260,n:{en:'1. Honey Road',ja:'1. はちみつ街道'},map:[150,560],
+ {area:0,bg:'bg_meadow',gold:260,dm:1.4,cm:1.5,n:{en:'1. Honey Road',ja:'1. はちみつ街道'},map:[150,560],
   paths:[[[-40,175],[180,190],[380,250],[560,330],[760,360],[980,350],[1320,345]],[[-40,575],[200,540],[400,440],[560,330]]],
   waves:[[[0,'goblin',5,1.4,0]],[[1,'goblin',6,1.2,0],[0,'goblin',3,1.5,3]],[[0,'roach',5,1,0],[1,'goblin',6,1.2,1]],[[0,'goblin',8,.9,0],[1,'roach',6,1,2]],[[0,'ogre',1,1,0],[1,'goblin',8,.8,0],[0,'roach',5,1,6]],[[0,'goblin',10,.7,0],[1,'goblin',10,.7,0],[1,'ogre',1,1,8]]]},
- {area:0,bg:'bg_meadow',gold:280,n:{en:'2. Windmill Hill',ja:'2. 風車の丘'},map:[300,430],
+ {area:0,bg:'bg_meadow',gold:280,dm:1.6,cm:1.7,gm:.92,n:{en:'2. Windmill Hill',ja:'2. 風車の丘'},map:[300,430],
   paths:[[[520,-40],[530,140],[680,240],[820,380],[960,520],[1100,600],[1320,610]],[[-40,300],[230,330],[520,380],[820,380]]],
   waves:[[[0,'goblin',6,1.2,0],[1,'goblin',4,1.4,2]],[[1,'roach',6,.9,0],[0,'bat',4,1.4,2]],[[0,'goblin',10,.8,0],[1,'skel',3,2,3]],[[1,'roach',8,.8,0],[0,'bat',6,1,0],[0,'ogre',1,1,6]],[[0,'skel',5,1.5,0],[1,'goblin',12,.6,0],[1,'ogre',1,1,5]],[[0,'roach',10,.6,0],[1,'roach',10,.6,0],[0,'ogre',2,4,6],[1,'bat',8,.8,4]],[[0,'goblin',14,.5,0],[1,'skel',6,1.2,0],[1,'ogre',2,4,8]]]},
- {area:0,bg:'bg_meadow',gold:320,hpm:.92,boss:'asmon3',n:{en:'3. Castle Gate (Boss)',ja:'3. 城門（ボス）'},map:[470,250],
+ {area:0,bg:'bg_meadow',gold:320,dm:1.35,cm:1.5,gm:.88,hpm:.92,boss:'asmon3',n:{en:'3. Castle Gate (Boss)',ja:'3. 城門（ボス）'},map:[470,250],
   paths:[[[-40,365],[260,370],[520,360],[760,340],[1000,340],[1320,340]],[[400,-40],[420,140],[520,360]],[[820,760],[800,560],[760,340]]],
   waves:[[[0,'goblin',8,1,0],[1,'goblin',5,1.2,2]],[[2,'roach',8,.8,0],[0,'bat',5,1.2,2]],[[1,'skel',5,1.4,0],[0,'goblin',12,.7,0],[2,'ghost',4,1.6,3]],[[0,'ogre',2,4,0],[1,'roach',10,.6,2],[2,'bat',8,.8,0]],[[2,'ghost',8,1,0],[0,'skel',6,1.2,0],[1,'ogre',1,1,6]],[[0,'goblin',16,.5,0],[1,'goblin',12,.6,0],[2,'roach',12,.6,0],[0,'troll',1,1,10]],[[1,'asmon',1,1,0],[0,'goblin',12,.8,3],[2,'bat',10,.8,5]]]},
- {area:1,bg:'bg_swamp',gold:340,hpm:.8,n:{en:'4. Soggy Crossing',ja:'4. びしょぬれ渡し'},map:[700,350],
+ {area:1,bg:'bg_swamp',gold:340,dm:2.62,cm:2.48,gm:.685,hpm:.8,n:{en:'4. Soggy Crossing',ja:'4. びしょぬれ渡し'},map:[700,350],
   paths:[[[1320,200],[1060,230],[820,330],[560,380],[300,380],[-40,385]],[[700,-40],[740,150],[820,330]]],
   waves:[[[0,'goblin',8,1,0],[1,'goblin',6,1.1,2]],[[1,'ghost',5,1.6,0],[0,'roach',8,.9,1]],[[0,'skel',4,1.4,0],[1,'bat',5,1.2,2]],[[0,'frog',5,1.5,0],[1,'ghost',6,1.2,0],[0,'ogre',1,1,8]],[[1,'roach',14,.5,0],[0,'skel',8,1,0],[1,'ogre',2,4,6]],[[0,'frog',10,1,0],[1,'frog',8,1.1,0],[0,'troll',1,1,8]],[[0,'ghost',10,.8,0],[1,'bat',8,.9,0],[0,'ogre',2,4,4],[1,'troll',1,1,10]]]},
- {area:1,bg:'bg_swamp',gold:360,n:{en:'5. Three Frog Fork',ja:'5. 三つ又カエル道'},map:[880,520],
+ {area:1,bg:'bg_swamp',gold:360,dm:2.9,n:{en:'5. Three Frog Fork',ja:'5. 三つ又カエル道'},map:[880,520],
   paths:[[[1320,150],[1020,180],[720,300],[440,330],[200,340],[-40,345]],[[1320,610],[1020,580],[760,470],[440,330]],[[460,-40],[540,150],[720,300]]],
   waves:[[[0,'goblin',10,.8,0],[1,'goblin',10,.8,0]],[[2,'bat',8,.9,0],[0,'frog',4,1.5,2]],[[1,'skel',8,1,0],[2,'ghost',8,1,0]],[[0,'roach',14,.5,0],[1,'ogre',2,4,0],[2,'frog',6,1.2,3]],[[0,'frog',8,1,0],[1,'frog',8,1,0],[2,'bat',12,.6,2]],[[1,'troll',1,1,0],[0,'skel',10,.9,2],[2,'ogre',2,4,5]],[[0,'ghost',14,.6,0],[1,'roach',16,.5,0],[2,'frog',10,.9,0],[0,'troll',1,1,10]],[[0,'ogre',4,3,0],[1,'troll',1,1,4],[2,'troll',1,1,10],[1,'bat',14,.6,0]]]},
- {area:1,bg:'bg_swamp',gold:440,hpm:.8,boss:'asmon6',n:{en:'6. Dark Tower (Boss)',ja:'6. 闇の塔（ボス）'},map:[1080,250],
+ {area:1,bg:'bg_swamp',gold:440,dm:2.7,hpm:.8,boss:'asmon6',n:{en:'6. Dark Tower (Boss)',ja:'6. 闇の塔（ボス）'},map:[1080,250],
   paths:[[[-40,170],[200,200],[420,300],[640,360],[880,360],[1320,370]],[[-40,600],[220,560],[440,450],[640,360]],[[700,760],[720,560],[880,360]]],
   waves:[[[0,'goblin',10,.8,0],[1,'roach',8,.8,0]],[[2,'frog',6,1.3,0],[0,'bat',8,.9,2]],[[1,'ghost',10,.8,0],[0,'skel',8,1,0]],[[2,'ogre',3,3,0],[0,'frog',8,1,0],[1,'bat',10,.7,3]],[[0,'troll',1,1,0],[1,'roach',16,.5,0],[2,'skel',8,1,2]],[[0,'ghost',14,.6,0],[1,'frog',10,.9,0],[2,'ogre',3,3,0],[1,'troll',1,1,10]],[[2,'asmon',1,1,0],[0,'goblin',16,.6,2],[1,'frog',8,1,5],[0,'bat',10,.8,8]]]},
 ];
@@ -430,16 +430,16 @@ function startBattle(li,heroIds){
  for(const P of paths)if(P!==exitP){const e=pathAt(P,P.len);let best=0,bd=1e9;for(let d=0;d<=exitP.len;d+=4){const a=pathAt(exitP,d),q=Math.hypot(a.x-e.x,a.y-e.y);if(q<bd){bd=q;best=d}}P.join=best}
  // hero start: near main merge point
  const m=pathAt(paths[0],paths[0].len*.55);
- heroIds.forEach((id,i)=>{const h=mkHero(id);h.x=h.rx=m.x+(i-1)*55;h.y=h.ry=m.y+(i%2?40:-40);G.heroes.push(h)});
+ heroIds.forEach((id,i)=>{const h=mkHero(id);h.x=h.rx=m.x+(i-1)*55;h.y=h.ry=m.y+(i%2?40:-40);G.heroes.push(h)});if(heroIds.length<3)G.gold+=Math.round(L.gold*(L.duo||.35));G.hpx=heroIds.length>=3?(window.TRIX||1.45):1;
  G.bff=techKey(heroIds)=='bean+pinco+pooh';G.duo=heroIds.length==2;if(G.duo)G.gold+=60+(G.li>=5?170:0);G.duoTw=G.duo&&G.li>=5?1.25:1;
  setHUD(true);renderHeroBar();toast(T(S.startHint),5);if(G.bff)setTimeout(()=>G&&toast('💖 '+T(S.bff),3),5200);
 }
 function mkHero(id){const D=HEROES[id],lv=heroLv(id),m=1+(lv-1)*.1;return{kind:'hero',id,D,lv,max:D.hp*m,hp:D.hp*m,dm:m,x:0,y:0,rx:0,ry:0,cd:0,sk:[0,3],tgt:null,dead:0,face:1,moving:false,xpG:0}}
-function enemyStats(type){const e=Object.assign({},EN[type]);const sc=(1+G.li*.03)*(G.L.hpm||1);e.hp*=sc;e.gold=Math.round(e.gold*1.3);if(type=='asmon'&&G.L.boss=='asmon6')e.hp=3200;return e}
+function enemyStats(type){const e=Object.assign({},EN[type]);const sc=(1+G.li*.03)*(G.L.hpm||1)*(G.hpx||1)*(e.fly?Math.sqrt(G.L.dm||1):(G.L.dm||1));e.hp*=sc;e.gold=Math.round(e.gold*1.3*(G.L.gm||1));if(type=='asmon'&&G.L.boss=='asmon6')e.hp=4200;return e}
 function spawn(pi,type){const D=enemyStats(type),P=G.paths[pi];const e={kind:'en',type,D,P,d:0,off:rnd(-14,14),hp:D.hp,max:D.hp,x:0,y:0,blk:null,cd:0,slow:0,stun:0,shred:0,poison:0,face:-1,bc:0};
  if(D.boss){e.off=0;toast('👑 '+T(S.boss)+': '+T(D.n),3);SFX.boss();G.shake=8}G.en.push(e);return e}
 function callWave(early){if(G.wave>=G.nw)return;if(early&&G.waveT>0){const bonus=Math.ceil(G.waveT*1.6);G.gold+=bonus;G.spells.fire.cd=Math.max(0,G.spells.fire.cd-G.waveT);G.spells.rein.cd=Math.max(0,G.spells.rein.cd-G.waveT);fxText(G.exit.x-120,120,'+'+bonus,'#ffd23a');toast(T(S.early)+bonus+T(S.gold),2);SFX.early()}
- for(const g of G.L.waves[G.wave]){for(let i=0;i<g[2];i++)G.spawnQ.push({t:G.t+g[4]+i*g[3],pi:g[0],type:g[1]})}G.wave++;G.waiting=false;G.waveT=-1;if(!(early&&G.waveT>0))SFX.horn()}
+ for(const g of G.L.waves[G.wave]){{const cnt=Math.max(1,Math.round(g[2]*(G.L.cm||1))),gap=g[3]*g[2]/cnt*(G.L.cm>1?1:1);for(let i=0;i<cnt;i++)G.spawnQ.push({t:G.t+g[4]+i*gap,pi:g[0],type:g[1]})}}G.wave++;G.waiting=false;G.waveT=-1;if(!(early&&G.waveT>0))SFX.horn()}
 function hurt(e,dmg,type,src){if(e.hp<=0)return;let a=type=='phys'?(e.D.armor||0)*(e.shred?.5:1):type=='magic'?Math.max(0,(e.D.mr||0)-(has('mage3')?.15:0))*(e.shred?.5:1):0;
  const b=(G.bff?1.15:1)*(G.duo&&src&&src.kind=='hero'?1.35:1)*(src&&src.kind=='tw'?G.duoTw||1:1);e.flT=G.t;e.hp-=dmg*(1-a)*(src&&(src.kind=='hero'||src.kind=='tw')?b:1);
  if(G.bossRetreat&&e.D.boss&&e.hp<e.max*.4){e.hp=0;toast(T(S.asRetreat),3);addFx({k:'poof',x:e.x,y:e.y,t:0,d:1});G.en.splice(G.en.indexOf(e),1);G.gold+=e.D.gold;return}
