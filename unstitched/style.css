@@ -34,3 +34,10 @@
  #interact{bottom:116px;min-width:190px;min-height:56px;font-size:17px;padding:14px 22px}
  #hint{font-size:22px;width:46%}#toast{left:24px;top:355px;transform:translate(0,-8px);max-width:280px;font-size:16px;padding:12px 16px}#toast.on{transform:translate(0,0)}
 }
+
+/* v1.1: readable boss tells, meaningful exploration, and unobtrusive tutorial feedback. */
+#boss-state{display:block;min-height:16px;font:11px/16px system-ui;color:#ffd3b1;text-shadow:0 1px 3px #172a24}#boss-state.open{color:#fff1a4;font-weight:bold}
+.relic-list{display:grid;gap:8px;margin:14px 0 20px}.relic-card{display:flex;align-items:center;gap:10px;border:1px solid #b39b7255;border-radius:12px;padding:10px;background:#5376570a}.relic-card.found{border-color:#a28a4f;background:#e7c98222}.relic-card img{width:48px;height:52px;object-fit:cover;border-radius:8px;opacity:.65}.relic-card.found img{opacity:1}.relic-card div{flex:1}.relic-card b{font-size:14px}.relic-card small{display:block;font:12px/1.5 system-ui;margin-top:4px}.relic-card>span{font-size:22px;color:#937c45}.complete-keepsakes{font:12px/1.4 system-ui;color:#fff0ab;text-shadow:0 1px 4px #173b2a;margin:-5px 0 10px}
+#hint{top:auto;bottom:calc(230px + var(--pad));transform:translateX(-50%);width:min(330px,80%);font:13px/1.45 system-ui;background:#1d3b30d9;border:1px solid #dac58f66;border-radius:12px;padding:9px 12px;text-shadow:none}#toast{white-space:pre-line}
+@media(min-width:1100px) and (min-height:600px){#boss-state{font-size:15px;line-height:22px;min-height:22px}#hint{width:340px;font-size:16px;bottom:210px}}
+@media(max-height:540px) and (min-width:600px){#boss-state{font-size:10px;line-height:13px;min-height:13px}#hint{left:14px;bottom:130px;width:220px;transform:none;font-size:12px}}
