@@ -145,15 +145,8 @@ TEMPLATE = r'''<!doctype html>
 <link rel="preload" href="picker/fonts/sora-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="picker/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="picker/picker.css">
-<script>(function(){try{if(sessionStorage.getItem("lg-splash-seen")==="1"||(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches))document.documentElement.classList.add("lg-splash-skip")}catch(e){document.documentElement.classList.add("lg-splash-skip")}})();</script>
 </head>
 <body>
-<div id="lgSplash" class="lg-splash" role="dialog" aria-label="LANZAGAMES" aria-modal="true">
-  <div class="lg-lockup">
-    <h1 class="lg-wm">LANZAGAMES</h1>
-    <div class="lg-letters" aria-hidden="true"></div>
-  </div>
-</div>
 <a class="skip" href="#rows" data-i18n="skip">Skip to games</a>
 <header class="top">
   <a class="brand" href="./" aria-label="Honeyvale Games">
@@ -208,7 +201,6 @@ TEMPLATE = r'''<!doctype html>
 </div>
 
 <script id="pickerData" type="application/json">%%DATA%%</script>
-<script src="picker/splash.js" defer></script>
 <script src="picker/picker.js" defer></script>
 </body>
 </html>
