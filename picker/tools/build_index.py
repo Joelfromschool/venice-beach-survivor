@@ -170,7 +170,6 @@ TEMPLATE = r'''<!doctype html>
     <p class="hero-desc" id="heroDesc">%%D%%</p>
     <div class="hero-actions">
       <a class="btn-play" id="heroPlay" href="%%ID%%/" data-game="%%ID%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg><span id="heroPlayLabel" data-i18n="play">Play</span></a>
-      <span class="hero-hint" data-i18n="hint">Swipe the rows · tap a tile twice to play</span>
       <p class="hero-meta" id="heroMeta">%%META%%</p>
     </div>
   </div>
