@@ -1,0 +1,5 @@
+Fonts vendored (subset to the characters this page uses) from the box's installed copies:
+- Sora (variable) — SIL Open Font License 1.1 — sora-var.woff2
+- Inter (variable) — SIL Open Font License 1.1 — inter-var.woff2
+- Noto Sans CJK JP Regular/Bold — SIL Open Font License 1.1 — noto-jp-*-subset.woff2 (Japanese UI strings only)
+Re-subset with picker/tools/build_fonts.sh after changing Japanese strings.
