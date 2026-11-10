@@ -61,6 +61,7 @@ a{color:inherit}
 .btn-play:hover{background:#fff}
 .btn-play:active{transform:scale(.97)}
 .hero-hint{font-size:13px;color:var(--dim)}
+.hero-meta{flex-basis:100%;margin:-6px 0 0;font-size:13px;line-height:1.4;color:var(--mute)}
 .hero-body.fade{animation:heroIn .5s var(--ease)}
 @keyframes heroIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
@@ -126,6 +127,7 @@ a{color:inherit}
   .hero-actions{margin-top:16px;gap:12px}
   .btn-play{min-height:50px;flex:0 0 auto;padding:0 28px 0 22px}
   .hero-hint{flex-basis:100%;font-size:12.5px}
+  .hero-meta{margin-top:-2px;font-size:12.5px}
   .rows{margin-top:6px}
   .track{scroll-snap-type:x mandatory}
   .tile{scroll-snap-align:start}
@@ -147,6 +149,7 @@ a{color:inherit}
   .hero-actions{margin-top:10px}
   .btn-play{min-height:42px;font-size:16px;padding:0 24px 0 18px}
   .hero-hint{display:none}
+  .hero-meta{flex-basis:auto;margin:0;font-size:12px}
   .rows{margin-top:calc(-1 * (var(--tile-w)*9/16 + 58px))}
   .row-title{font-size:15px;margin-bottom:2px}
   .track{padding-top:8px;padding-bottom:10px}

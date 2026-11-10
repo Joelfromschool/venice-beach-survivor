@@ -1,8 +1,21 @@
 #!/usr/bin/env python3
 """Generates /index.html (the game picker) from the GAMES table below.
 Static output; GitHub Pages serves it as-is. Run: python3 picker/tools/build_index.py"""
-import json, html, os
+import json, html, os, subprocess
+from datetime import datetime
+from zoneinfo import ZoneInfo
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+TZ = ZoneInfo('America/New_York')
+
+def git_meta(game_id):
+    """Commit count and last-updated date (America/New_York) for a game folder."""
+    n = int(subprocess.check_output(
+        ['git', 'rev-list', '--count', 'HEAD', '--', game_id], cwd=ROOT).decode().strip())
+    raw = subprocess.check_output(
+        ['git', 'log', '-1', '--format=%cI', '--', game_id], cwd=ROOT).decode().strip()
+    dt = datetime.fromisoformat(raw).astimezone(TZ)
+    return n, dt.strftime('%Y-%m-%d')
+
 
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
@@ -95,15 +108,26 @@ def build():
           f'<div class="track" role="list">{"".join(tiles)}</div>'
           f'<button class="row-nav next" type="button" aria-label="Scroll right" tabindex="-1">›</button></div></section>')
     first = GAMES[0]
-    data = dict(games=[dict(id=g['id'], new=bool(g.get('new')), secret=bool(g.get('secret')), pos=g['pos'],
-                            en=g['en'], ja=g['ja']) for g in GAMES],
+    metas = {g['id']: git_meta(g['id']) for g in GAMES}
+    def game_payload(g):
+        rev, updated = metas[g['id']]
+        return dict(id=g['id'], new=bool(g.get('new')), secret=bool(g.get('secret')), pos=g['pos'],
+                    en=g['en'], ja=g['ja'], rev=rev, updated=updated)
+    data = dict(games=[game_payload(g) for g in GAMES],
                 rows={rid: dict(en=en, ja=ja) for rid, en, ja, _ in ROWS}, ui=UI)
     page = TEMPLATE
+    r0, u0 = metas[first['id']]
+    def fmt_en(n, iso):
+        months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()
+        y, m, d = iso.split('-')
+        word = 'revision' if n == 1 else 'revisions'
+        return f"{n} {word} · Last updated {months[int(m)-1]} {int(d)}, {y}"
     rep = {
       '%%ROWS%%': ''.join(rows_html),
       '%%DATA%%': json.dumps(data, ensure_ascii=False, separators=(',', ':')),
       '%%T%%': E(first['en'][0]), '%%G%%': E(first['en'][1]), '%%D%%': E(first['en'][2]),
       '%%ID%%': first['id'],
+      '%%META%%': E(fmt_en(r0, u0)),
     }
     for k, v in rep.items(): page = page.replace(k, v)
     open(os.path.join(ROOT, 'index.html'), 'w', encoding='utf-8').write(page)
@@ -147,6 +171,7 @@ TEMPLATE = r'''<!doctype html>
     <div class="hero-actions">
       <a class="btn-play" id="heroPlay" href="%%ID%%/" data-game="%%ID%%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12.5-7.5z" fill="currentColor"/></svg><span id="heroPlayLabel" data-i18n="play">Play</span></a>
       <span class="hero-hint" data-i18n="hint">Swipe the rows · tap a tile twice to play</span>
+      <p class="hero-meta" id="heroMeta">%%META%%</p>
     </div>
   </div>
 </section>

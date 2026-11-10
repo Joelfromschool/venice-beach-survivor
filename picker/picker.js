@@ -16,11 +16,22 @@ document.addEventListener('keydown',function(){lastPtr='key'},true);
 
 /* ---------- hero / billboard ---------- */
 var poster=$('heroPoster'),vids=[$('vA'),$('vB')],vi=0,heroBody=document.querySelector('.hero-body');
+var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtMeta(g){
+  var n=g.rev||0, p=(g.updated||'').split('-');
+  if(p.length!==3)return '';
+  if(lang==='ja'){
+    return '改訂'+n+'回 · 最終更新 '+p[0]+'年'+parseInt(p[1],10)+'月'+parseInt(p[2],10)+'日';
+  }
+  var word=n===1?'revision':'revisions';
+  return n+' '+word+' · Last updated '+MONTHS[parseInt(p[1],10)-1]+' '+parseInt(p[2],10)+', '+p[0];
+}
 function setHero(id,opts){
   var g=G[id];if(!g)return;
   var same=cur===id;cur=id;
   var t=g[lang];
   $('heroTitle').textContent=t[0];$('heroGenre').textContent=t[1];$('heroDesc').textContent=t[2];
+  var meta=$('heroMeta');if(meta)meta.textContent=fmtMeta(g);
   $('heroNew').hidden=!g.new;
   var play=$('heroPlay');play.href=id+'/';play.dataset.game=id;
   $('heroPlayLabel').textContent=D.ui[lang][g.secret?'open_secret':'play'];
