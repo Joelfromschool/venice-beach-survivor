@@ -145,13 +145,14 @@ TEMPLATE = r'''<!doctype html>
 <link rel="preload" href="picker/fonts/sora-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="picker/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="picker/picker.css">
+<script id="pickerData" type="application/json">%%DATA%%</script>
 </head>
 <body>
 <a class="skip" href="#rows" data-i18n="skip">Skip to games</a>
 <header class="top">
   <a class="brand" href="./" aria-label="LANZAGAMES">
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M16 10.2 21 13.1v5.8L16 21.8l-5-2.9v-5.8Z" fill="currentColor"/></svg>
-    <span class="brand-word"><span class="brand-name">LANZA</span><span class="brand-sub">GAMES</span></span>
+    <span class="brand-word"><span class="brand-name">LANZAGA</span><span class="brand-sub">MES</span></span>
   </a>
   <button class="lang" id="langBtn" type="button" lang="ja" aria-label="Switch to Japanese">日本語</button>
 </header>
@@ -159,7 +160,7 @@ TEMPLATE = r'''<!doctype html>
 <main>
 <section class="hero" id="hero" aria-live="polite">
   <div class="hero-media" aria-hidden="true">
-    <img class="hero-poster" id="heroPoster" src="picker/posters/%%ID%%.webp" alt="" style="object-position:50% 50%">
+    <img class="hero-poster" id="heroPoster" alt="" style="object-position:50% 50%">
     <video class="hero-video" id="vA" muted playsinline preload="none" disablepictureinpicture></video>
     <video class="hero-video" id="vB" muted playsinline preload="none" disablepictureinpicture></video>
   </div>
@@ -175,6 +176,57 @@ TEMPLATE = r'''<!doctype html>
   </div>
   <div class="hero-progress" aria-hidden="true"><span id="heroBar"></span></div>
 </section>
+
+<script>
+(function(){
+  var D=JSON.parse(document.getElementById('pickerData').textContent);
+  var ids=D.games.map(function(g){return g.id});
+  var q='';
+  try{q=new URLSearchParams(location.search).get('start')||''}catch(e){}
+  var id=(q&&ids.indexOf(q)>=0)?q:null;
+  if(!id){
+    var prev=null;
+    try{prev=sessionStorage.getItem('picker_start')}catch(e){}
+    var pool=ids.filter(function(x){return x!==prev});
+    if(!pool.length)pool=ids;
+    id=pool[Math.floor(Math.random()*pool.length)];
+    try{sessionStorage.setItem('picker_start',id)}catch(e){}
+  }
+  window.__pickerStart=id;
+  var g=null;
+  for(var i=0;i<D.games.length;i++)if(D.games[i].id===id)g=D.games[i];
+  if(!g)return;
+  var lang='en';
+  try{lang=localStorage.getItem('picker_lang')||lang}catch(e){}
+  if(lang!=='ja')lang='en';
+  var t=g[lang]||g.en;
+  var poster=document.getElementById('heroPoster');
+  if(poster){
+    poster.src='picker/posters/'+id+'.webp';
+    if(g.pos)poster.style.objectPosition=g.pos;
+  }
+  document.getElementById('heroTitle').textContent=t[0];
+  document.getElementById('heroGenre').textContent=t[1];
+  document.getElementById('heroDesc').textContent=t[2];
+  var play=document.getElementById('heroPlay');
+  play.href=id+'/';play.dataset.game=id;
+  var lab=document.getElementById('heroPlayLabel');
+  if(lab)lab.textContent=D.ui[lang][g.secret?'open_secret':'play'];
+  var newb=document.getElementById('heroNew');
+  if(newb)newb.hidden=!g.new;
+  var meta=document.getElementById('heroMeta');
+  if(meta){
+    var n=g.rev||0, p=(g.updated||'').split('-');
+    if(p.length===3){
+      if(lang==='ja')meta.textContent='改訂'+n+'回 · 最終更新 '+p[0]+'年'+parseInt(p[1],10)+'月'+parseInt(p[2],10)+'日';
+      else {
+        var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+        meta.textContent=n+' '+(n===1?'revision':'revisions')+' · Last updated '+MONTHS[parseInt(p[1],10)-1]+' '+parseInt(p[2],10)+', '+p[0];
+      }
+    }
+  }
+})();
+</script>
 
 <div class="rows" id="rows">
   <section class="row" id="continueRow" hidden aria-labelledby="h-cont">
@@ -200,7 +252,6 @@ TEMPLATE = r'''<!doctype html>
   </div>
 </div>
 
-<script id="pickerData" type="application/json">%%DATA%%</script>
 <script src="picker/picker.js" defer></script>
 </body>
 </html>

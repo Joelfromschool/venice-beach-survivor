@@ -306,9 +306,23 @@ gate.addEventListener('click',function(e){if(e.target===gate)closeSecret()});
 window.__picker={select:function(id){var t=originalTile(id);if(t)select(t)},openSecret:openSecret,advance:advanceHero};
 
 /* ---------- start ---------- */
+function pickStartId(){
+  if(window.__pickerStart&&G[window.__pickerStart])return window.__pickerStart;
+  var ids=D.games.map(function(g){return g.id});
+  var q='';
+  try{q=new URLSearchParams(location.search).get('start')||''}catch(e){}
+  if(q&&G[q])return q;
+  var prev=null;
+  try{prev=sessionStorage.getItem('picker_start')}catch(e){}
+  var pool=ids.filter(function(id){return id!==prev});
+  if(!pool.length)pool=ids;
+  var id=pool[Math.floor(Math.random()*pool.length)];
+  try{sessionStorage.setItem('picker_start',id)}catch(e){}
+  return id;
+}
 var c=buildContinue();
 applyLang();
-var first=originalTile(D.games[0].id)||document.querySelector('.row[data-rowid="all"] .tile:not(.clone)');
+var first=originalTile(pickStartId())||document.querySelector('.row[data-rowid="all"] .tile:not(.clone)');
 select(first,{force:true,instant:true,fromAuto:true});
 if(!noAuto)armFallback();
 // pause previews when tab hidden
