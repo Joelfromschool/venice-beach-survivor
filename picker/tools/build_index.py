@@ -69,11 +69,11 @@ ROWS = [
  ('puz',  'Puzzle, strategy & party',  'パズル・ストラテジー・パーティー', 'puz'),
 ]
 UI = {
- 'en': dict(brand_sub='Games', play='Play', open_secret='Unlock', newb='New', jump='Jump back in', last='Last played',
+ 'en': dict(play='Play', open_secret='Unlock', newb='New', jump='Jump back in', last='Last played',
             lang='日本語', lang_label='Switch to Japanese', hint='Swipe the rows · tap a tile twice to play',
             pw_title='Secret Project', pw_sub='Enter the password', pw_wrong='Wrong password', pw_open='Open', pw_cancel='Cancel',
             skip='Skip to games', count='14 games'),
- 'ja': dict(brand_sub='ゲームズ', play='あそぶ', open_secret='ひらく', newb='NEW', jump='つづきから', last='さいごにあそんだ',
+ 'ja': dict(play='あそぶ', open_secret='ひらく', newb='NEW', jump='つづきから', last='さいごにあそんだ',
             lang='English', lang_label='英語に切り替え', hint='横にスワイプ · タイルを2回タップであそぶ',
             pw_title='シークレット・プロジェクト', pw_sub='パスワードを入力', pw_wrong='パスワードがちがいます', pw_open='ひらく', pw_cancel='キャンセル',
             skip='ゲーム一覧へ', count='14タイトル'),
@@ -140,7 +140,7 @@ TEMPLATE = r'''<!doctype html>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0b0c0f">
-<title>Honeyvale Games</title>
+<title>LANZAGAMES</title>
 <link rel="icon" href="picker/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="picker/fonts/sora-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="picker/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -149,9 +149,9 @@ TEMPLATE = r'''<!doctype html>
 <body>
 <a class="skip" href="#rows" data-i18n="skip">Skip to games</a>
 <header class="top">
-  <a class="brand" href="./" aria-label="Honeyvale Games">
+  <a class="brand" href="./" aria-label="LANZAGAMES">
     <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.5 27.7 9.25v13.5L16 29.5 4.3 22.75V9.25Z" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linejoin="round"/><path d="M16 10.2 21 13.1v5.8L16 21.8l-5-2.9v-5.8Z" fill="currentColor"/></svg>
-    <span class="brand-name">Honeyvale</span><span class="brand-sub" data-i18n="brand_sub">Games</span>
+    <span class="brand-word"><span class="brand-name">LANZA</span><span class="brand-sub">GAMES</span></span>
   </a>
   <button class="lang" id="langBtn" type="button" lang="ja" aria-label="Switch to Japanese">日本語</button>
 </header>
@@ -160,8 +160,8 @@ TEMPLATE = r'''<!doctype html>
 <section class="hero" id="hero" aria-live="polite">
   <div class="hero-media" aria-hidden="true">
     <img class="hero-poster" id="heroPoster" src="picker/posters/%%ID%%.webp" alt="" style="object-position:50% 50%">
-    <video class="hero-video" id="vA" muted playsinline loop preload="none" disablepictureinpicture></video>
-    <video class="hero-video" id="vB" muted playsinline loop preload="none" disablepictureinpicture></video>
+    <video class="hero-video" id="vA" muted playsinline preload="none" disablepictureinpicture></video>
+    <video class="hero-video" id="vB" muted playsinline preload="none" disablepictureinpicture></video>
   </div>
   <div class="hero-scrim" aria-hidden="true"></div>
   <div class="hero-body">
@@ -173,6 +173,7 @@ TEMPLATE = r'''<!doctype html>
       <p class="hero-meta" id="heroMeta">%%META%%</p>
     </div>
   </div>
+  <div class="hero-progress" aria-hidden="true"><span id="heroBar"></span></div>
 </section>
 
 <div class="rows" id="rows">
@@ -182,7 +183,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
   %%ROWS%%
 </div>
-<footer class="foot"><span data-i18n="count">14 games</span> · Honeyvale</footer>
+<footer class="foot"><span data-i18n="count">14 games</span> · LANZAGAMES</footer>
 </main>
 
 <div id="spGate" class="gate" role="dialog" aria-modal="true" aria-labelledby="spTitle" style="display:none">
