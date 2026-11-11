@@ -1,0 +1,246 @@
+/* Heavy Stitch: characters, parts, paints, enemies, missions. All names and designs are original. */
+'use strict';
+const SLOTS=['head','core','arms','legs','booster','gen','fcs','wr','wl','sh','bk'];
+// Characters. Anchors are in source-image pixels. "sl"/"sr" = screen-left/right side.
+const CHARS={
+ pinco:{img:'art/c_pinco.webp',w:202,h:320,body:'humanoid',play:true,
+  name:{en:'Pinco',ja:'ピンコ'},role:{en:'Balanced striker',ja:'バランス型ストライカー'},
+  blurb:{en:'Long limbs, quick hands. Arm and leg hardpoints take anything you bolt on.',ja:'長い手足と速い手。腕と脚のハードポイントは、何でもボルト留めできる。'},
+  mul:{ap:1,spd:1,en:1,fire:1,dash:1},
+  a:{shw:[36,122],bkw:[162,118],head:[110,40],hw:96,eyeY:66,torso:[100,150,90,66],shl:[62,128],shr:[142,128],hl:[32,140],hr:[132,192],legl:[80,262],legr:[128,262],ftl:[72,302],ftr:[136,302],back:[102,132],hip:[148,192],unit:90}},
+ pooh:{img:'art/c_pooh.webp',w:245,h:320,body:'float',play:true,
+  name:{en:'Pooh',ja:'プー'},role:{en:'Heavy fortress',ja:'重装フォートレス'},
+  blurb:{en:'Big heart, bigger plating. No legs, so his hover rings bolt around his floating shoes.',ja:'大きなハートに、もっと大きな装甲。脚がないので、浮かぶくつのまわりにホバーリングを装着。'},
+  mul:{ap:1.3,spd:.86,en:1.05,fire:1,dash:.9},
+  a:{shw:[44,96],bkw:[208,98],head:[125,16],hw:128,eyeY:66,torso:[140,148,118,60],shl:[64,124],shr:[212,124],hl:[22,100],hr:[226,106],ftl:[82,288],ftr:[160,292],back:[140,128],hip:[96,212],unit:118}},
+ bean:{img:'art/c_bean.webp',w:180,h:320,body:'pod',play:true,
+  name:{en:'Mr Bean',ja:'ミスター・ビーン'},role:{en:'Agile skirmisher',ja:'高機動スカーミッシャー'},
+  blurb:{en:'No arms, all nerve. Weapons clamp to side pylons and a spine mount; the tail takes the thruster.',ja:'うではないけど、度胸はある。武器はサイドパイロンと背骨マウントに。しっぽにはスラスター。'},
+  mul:{ap:.82,spd:1.2,en:1,fire:1,dash:1.25},
+  a:{shw:[34,122],bkw:[160,106],head:[96,44],hw:98,eyeY:88,torso:[97,192,92,92],shl:[58,112],shr:[138,112],hl:[6,172],hr:[190,172],ml:[52,172],mr:[146,172],tail:[164,262],bottom:[96,302],back:[97,118],hip:[96,246],unit:92}},
+ asmon:{img:'art/c_asmon.webp',w:202,h:320,body:'humanoid',play:false,
+  name:{en:'Asmon',ja:'アズモン'},role:{en:'Sovereign duelist',ja:'君主デュエリスト'},
+  blurb:{en:'Former ace of the Grey Loom. Fights like a king with something to prove.',ja:'元グレイルームのエース。証明したいものがある王のように戦う。'},
+  mul:{ap:1.05,spd:1.05,en:1,fire:1.1,dash:1.05},
+  a:{shw:[50,126],bkw:[152,120],head:[100,24],hw:92,eyeY:76,torso:[100,160,82,66],shl:[64,128],shr:[140,128],hl:[46,190],hr:[140,206],legl:[76,262],legr:[130,262],ftl:[72,302],ftr:[130,302],back:[100,134],hip:[132,200],unit:84}},
+ bronny:{img:'art/c_bronny.webp',w:203,h:320,body:'humanoid',play:false,
+  name:{en:'Bronny',ja:'ブロニー'},role:{en:'Courtside Lancer ace',ja:'コートサイド・ランサーのエース'},
+  a:{shw:[32,132],bkw:[152,120],head:[96,8],hw:108,eyeY:52,torso:[96,158,92,70],shl:[42,136],shr:[142,128],hl:[24,206],hr:[168,192],legl:[72,272],legr:[128,272],ftl:[70,302],ftr:[130,302],back:[96,140],hip:[60,200],unit:92}},
+ dkermit:{img:'art/c_dkermit.webp',w:301,h:420,body:'humanoid',play:false,
+  name:{en:'Dark Kermit',ja:'ダーク・カーミット'},role:{en:'Loom foreman',ja:'ルームの監督官'},
+  a:{shw:[94,214],bkw:[244,204],head:[168,62],hw:150,eyeY:108,torso:[170,282,112,80],shl:[110,228],shr:[236,228],hl:[50,164],hr:[276,300],legl:[122,370],legr:[222,370],ftl:[110,398],ftr:[232,398],back:[168,232],hip:[214,304],unit:112}},
+ pooping:{img:'art/c_pooping.webp',w:231,h:320,name:{en:'Mr Pooping',ja:'ミスター・プーピング'}},
+ max:{img:'art/c_max.webp',w:182,h:400,name:{en:'Max',ja:'マックス'}},
+ party:{img:'art/c_party.webp',w:142,h:400,name:{en:'Party Hat Guy',ja:'パーティーハット・ガイ'}},
+};
+const PLAYABLE=['pinco','pooh','bean','asmon'];
+
+// ---------- PARTS ----------
+// tier: 0 starter, 1 mid, 2 late, 3 legendary. unlock: mission id that puts it in the shop. reward: mission that grants it.
+const PARTS={};
+function P(id,slot,en,ja,tier,price,st,shape,x){PARTS[id]=Object.assign({id,slot,name:{en,ja},tier,price,shape},st,x||{});}
+// HEAD {w,ap,def,stab}
+P('h_thimble','head','HD-01 Thimble','HD-01 シンブル',0,0,{w:380,ap:820,def:140,stab:180},'cap');
+P('h_button','head','Buttonhole Visor','ボタンホール・バイザー',1,3400,{w:420,ap:900,def:150,stab:200},'visor',{unlock:'m1'});
+P('h_darner','head','Darner Fin','ダーナー・フィン',1,5200,{w:520,ap:1020,def:170,stab:260},'fin',{unlock:'m2'});
+P('h_beetle','head','Stagbeetle Helm','スタッグビートル・ヘルム',2,11800,{w:760,ap:1300,def:220,stab:380},'horns',{unlock:'m4'});
+P('h_owl','head','Owlstitch Cluster','アウルステッチ・クラスター',2,13500,{w:480,ap:960,def:160,stab:240,scan:1.25},'cluster',{unlock:'m5'});
+P('h_halo','head','Halo Bobbin','ヘイロー・ボビン',3,38000,{w:420,ap:1450,def:240,stab:420,scan:1.2},'halo',{reward:'m8'});
+// CORE {w,ap,def,stab}
+P('c_patch','core','CR-01 Patch Plate','CR-01 パッチプレート',0,0,{w:2100,ap:3200,def:180,stab:520},'patch');
+P('c_quilt','core','Quilted Carapace','キルテッド・カラペイス',1,4800,{w:2300,ap:3700,def:210,stab:600},'quilt',{unlock:'m1'});
+P('c_brig','core','Brigandine Mk.II','ブリガンダイン Mk.II',1,7600,{w:2700,ap:4100,def:240,stab:700},'brig',{unlock:'m3'});
+P('c_rivet','core','Rivet Heart','リベット・ハート',2,14200,{w:2600,ap:4300,def:250,stab:680,enb:1.15},'rivet',{unlock:'m5'});
+P('c_bastion','core','Tin Bastion','ティン・バスティオン',2,17500,{w:3900,ap:5600,def:330,stab:960},'bastion',{unlock:'m6'});
+P('c_cathedral','core','Cathedral Core','カテドラル・コア',3,42000,{w:3100,ap:6000,def:340,stab:900,enb:1.2},'cathedral',{reward:'m9'});
+// ARMS {w,ap,def,aim,melee}
+P('a_clamp','arms','AR-01 Clamp Sleeves','AR-01 クランプ・スリーブ',0,0,{w:1100,ap:1500,def:150,aim:1,melee:1},'clamp');
+P('a_spool','arms','Gauntlet Spool','ガントレット・スプール',1,4200,{w:1300,ap:1750,def:170,aim:1.05,melee:1.05},'spool',{unlock:'m1'});
+P('a_feather','arms','Featherweight Braces','フェザーウェイト・ブレイス',1,6400,{w:800,ap:1300,def:130,aim:1.18,melee:.95},'feather',{unlock:'m2'});
+P('a_piston','arms','Piston Cuffs','ピストン・カフ',2,12600,{w:1700,ap:2100,def:200,aim:1,melee:1.35},'piston',{unlock:'m4'});
+P('a_board','arms','Ironing Board Pauldrons','アイロン台パルドロン',2,15000,{w:2400,ap:2700,def:280,aim:.92,melee:1.1},'board',{unlock:'m6'});
+P('a_atlas','arms','Atlas Seams','アトラス・シーム',3,40000,{w:1900,ap:2800,def:290,aim:1.15,melee:1.4},'atlas',{reward:'m10'});
+// LEGS {w,ap,def,spd,jump,load}
+P('l_kick','legs','LG-01 Kick Plates','LG-01 キックプレート',0,0,{w:2600,ap:2500,def:160,spd:1,jump:1,load:9600},'kick');
+P('l_sprint','legs','Sprinter Struts','スプリンター・ストラット',1,5600,{w:2100,ap:2100,def:140,spd:1.14,jump:1.1,load:8800},'sprint',{unlock:'m2'});
+P('l_coil','legs','Grasshopper Coils','グラスホッパー・コイル',1,7200,{w:2500,ap:2400,def:150,spd:1.04,jump:1.4,load:9400},'coil',{unlock:'m3'});
+P('l_skate','legs','Skate Rails','スケート・レール',2,12900,{w:2800,ap:2600,def:170,spd:1.22,jump:.9,load:10200},'skate',{unlock:'m5'});
+P('l_anvil','legs','Anvil Greaves','アンビル・グリーヴ',2,16400,{w:4400,ap:3900,def:300,spd:.86,jump:.8,load:15800},'anvil',{unlock:'m6'});
+P('l_cloud','legs','Cloudwalker','クラウドウォーカー',3,39000,{w:2600,ap:3300,def:240,spd:1.2,jump:1.35,load:13000},'cloud',{reward:'m7'});
+// BOOSTER {w,thrust,dash,ab,use}
+P('b_puff','booster','BT-01 Puff Booster','BT-01 パフ・ブースター',0,0,{w:420,thrust:1,dash:1,ab:1,use:1},'puff');
+P('b_hornet','booster','Hornet Twin','ホーネット・ツイン',1,5000,{w:520,thrust:1.08,dash:1.15,ab:1.05,use:1.08},'hornet',{unlock:'m2'});
+P('b_kettle','booster','Kettle Drive','ケトル・ドライブ',1,6800,{w:700,thrust:1.02,dash:.95,ab:1.25,use:.95},'kettle',{unlock:'m3'});
+P('b_comet','booster','Comet Tail','コメット・テイル',2,14800,{w:640,thrust:1.16,dash:1.3,ab:1.2,use:1.12},'comet',{unlock:'m5'});
+P('b_wild','booster','Wildfire Ring','ワイルドファイア・リング',3,36000,{w:600,thrust:1.22,dash:1.35,ab:1.35,use:.95},'wildfire',{reward:'f1'});
+// GENERATOR {w,en,regen,delay}
+P('g_pocket','gen','GN-01 Pocket Dynamo','GN-01 ポケット・ダイナモ',0,0,{w:520,en:2000,regen:820,delay:1},'pocket');
+P('g_teapot','gen','Teapot Reactor','ティーポット・リアクター',1,5400,{w:700,en:2400,regen:880,delay:1},'teapot',{unlock:'m2'});
+P('g_spindle','gen','Spindle Cell','スピンドル・セル',1,8200,{w:640,en:2200,regen:1080,delay:.8},'spindle',{unlock:'m4'});
+P('g_lantern','gen','Lantern Cell','ランタン・セル',2,15600,{w:820,en:2900,regen:1100,delay:.85},'lantern',{unlock:'m6'});
+P('g_sun','gen','Little Sun','リトル・サン',3,41000,{w:760,en:3300,regen:1380,delay:.7},'sun',{reward:'m9'});
+// FCS {w,range,lock,miss}
+P('f_peep','fcs','FC-01 Peep Scope','FC-01 ピープ・スコープ',0,0,{w:120,range:70,lock:1,miss:1},'peep');
+P('f_magpie','fcs','Magpie Array','マグパイ・アレイ',1,4600,{w:160,range:78,lock:1.2,miss:1.25},'magpie',{unlock:'m3'});
+P('f_needle','fcs','Needle Eye','ニードル・アイ',2,12200,{w:180,range:105,lock:1.1,miss:1},'needle',{unlock:'m5'});
+P('f_oracle','fcs','Oracle Thread','オラクル・スレッド',3,34000,{w:150,range:95,lock:1.45,miss:1.5},'oracle',{reward:'f2'});
+// WEAPONS {w,cls,dmg,rate,shock,mag,reload,spd,rng,...}
+// right hand
+P('wr_tacker','wr','RF-01 Tacker Rifle','RF-01 タッカー・ライフル',0,0,{w:620,cls:'rifle',dmg:120,rate:4,shock:40,mag:30,reload:2.2,spd:150,rng:70},'rifle');
+P('wr_stapler','wr','Stapler SMG','ステープラーSMG',1,4400,{w:520,cls:'rifle',dmg:58,rate:11,shock:22,mag:60,reload:2.4,spd:140,rng:48},'smg',{unlock:'m1'});
+P('wr_buck','wr','Buckshot Bouncer','バックショット・バウンサー',1,6200,{w:720,cls:'shotgun',dmg:62,pel:9,rate:1.25,shock:34,mag:8,reload:2.6,spd:120,rng:30},'shotgun',{unlock:'m2',short:{en:'Buckshot',ja:'バックショット'}});
+P('wr_seam','wr','Long Seam Rifle','ロングシーム・ライフル',1,8800,{w:860,cls:'rifle',dmg:420,rate:.9,shock:180,mag:8,reload:3,spd:260,rng:105},'longrifle',{unlock:'m3',short:{en:'Seam Rifle',ja:'シーム'}});
+P('wr_rivet','wr','Burst Riveter','バースト・リベッター',2,12400,{w:760,cls:'rifle',dmg:150,rate:6.5,burst:3,shock:70,mag:36,reload:2.6,spd:170,rng:72},'burst',{unlock:'m4',short:{en:'Riveter',ja:'リベッター'}});
+P('wr_hammer','wr','Hammer Cannon','ハンマー・キャノン',2,15800,{w:1600,cls:'cannon',dmg:1150,rate:.5,shock:620,mag:6,reload:3.6,spd:85,rng:80,splash:5},'cannon',{unlock:'m6',short:{en:'Hammer',ja:'ハンマー'}});
+P('wr_thread','wr','Thread Laser','スレッド・レーザー',2,17200,{w:900,cls:'laser',dmg:180,rate:2.5,shock:80,en:90,charge:.8,cdmg:1500,cshock:520,rng:90},'laser',{unlock:'m7',short:{en:'Laser',ja:'レーザー'}});
+P('wr_couture','wr','Grand Couturier','グラン・クチュリエ',3,44000,{w:980,cls:'rifle',dmg:240,rate:5,shock:110,mag:40,reload:2,spd:220,rng:90},'couture',{reward:'m10',short:{en:'Couturier',ja:'クチュリエ'}});
+// left hand
+P('wl_cutter','wl','BL-01 Box Cutter','BL-01 ボックスカッター',0,0,{w:340,cls:'blade',dmg:900,rate:1.2,shock:360,cdmg:2200,cshock:900,rng:13},'cutter');
+P('wl_pistol','wl','Tacker Pistol','タッカー・ピストル',1,3600,{w:380,cls:'rifle',dmg:95,rate:4.5,shock:34,mag:24,reload:1.8,spd:150,rng:60},'pistol',{unlock:'m1'});
+P('wl_scatter','wl','Scatter Mitt','スキャッター・ミット',1,6000,{w:640,cls:'shotgun',dmg:58,pel:8,rate:1.4,shock:30,mag:8,reload:2.4,spd:120,rng:28},'mitt',{unlock:'m2'});
+P('wl_shears','wl','Pinking Shears','ピンキング・シアーズ',1,8400,{w:520,cls:'blade',dmg:620,hits:2,rate:1.5,shock:300,cdmg:2600,cshock:1000,rng:12},'shears',{unlock:'m3',short:{en:'Shears',ja:'シアーズ'}});
+P('wl_needle','wl','Needle Driver','ニードル・ドライバー',2,18800,{w:1300,cls:'pile',dmg:2600,rate:.45,shock:1400,cdmg:4200,cshock:1800,rng:9},'needle',{unlock:'m5',short:{en:'Needle',ja:'ニードル'}});
+P('wl_moon','wl','Moonsplitter','ムーンスプリッター',3,40000,{w:460,cls:'blade',dmg:1200,rate:1.2,shock:480,cdmg:3400,cshock:1200,rng:15,wave:1},'moon',{reward:'m8'});
+// shoulder
+P('sh_sparrow','sh','MS-01 Sparrow Pod','MS-01 スパロウ・ポッド',0,0,{w:700,cls:'missile',dmg:240,n:4,rate:.3,shock:120,spd:46,turn:3},'pod');
+P('sh_firefly','sh','Firefly Swarm','ファイアフライ・スウォーム',1,6600,{w:780,cls:'missile',dmg:110,n:10,rate:.28,shock:55,spd:52,turn:4},'swarm',{unlock:'m2',short:{en:'Firefly',ja:'ファイアフライ'}});
+P('sh_mortar','sh','Bobbin Mortar','ボビン・モーター',1,7400,{w:980,cls:'mortar',dmg:680,n:2,rate:.35,shock:420,spd:40,splash:6},'mortar',{unlock:'m3',short:{en:'Mortar',ja:'モーター'}});
+P('sh_thimble','sh','Thimble Rockets','シンブル・ロケット',2,11200,{w:900,cls:'rocket',dmg:900,n:2,rate:.45,shock:520,spd:90,splash:4},'rockets',{unlock:'m4',short:{en:'Rockets',ja:'ロケット'}});
+P('sh_gatling','sh','Spool Gatling','スプール・ガトリング',2,13600,{w:1100,cls:'gatling',dmg:46,rate:14,shock:16,mag:180,reload:4,spd:150,rng:60},'gatling',{unlock:'m6',short:{en:'Gatling',ja:'ガトリング'}});
+P('sh_star','sh','Starburst Array','スターバースト・アレイ',3,43000,{w:1200,cls:'missile',dmg:200,n:16,rate:.22,shock:90,spd:55,turn:4.5},'starburst',{reward:'m9',short:{en:'Starburst',ja:'スターバースト'}});
+// back
+P('bk_rack','bk','Patch Kit Rack','パッチキット・ラック',0,0,{w:300,cls:'rack',kits:1},'rack');
+P('bk_cannon','bk','Long Seam Cannon','ロングシーム・キャノン',1,8600,{w:1500,cls:'cannon',dmg:1300,rate:.32,shock:700,mag:5,reload:4,spd:95,rng:90,splash:6},'bkcannon',{unlock:'m3',short:{en:'Cannon',ja:'キャノン'}});
+P('bk_kites','bk','Kite Drones','カイト・ドローン',2,14400,{w:600,cls:'drones',dmg:70,rate:.1,dur:12,shock:28},'kites',{unlock:'m5'});
+P('bk_pulse','bk','Pulse Bastion','パルス・バスティオン',2,13000,{w:800,cls:'pulse',rate:.1,dur:4,red:.75,dmg:600,shock:500},'pulse',{unlock:'m6'});
+P('bk_rail','bk','Grand Loom Railgun','グランルーム・レールガン',3,46000,{w:1700,cls:'rail',dmg:4200,rate:.18,shock:1600,charge:1.1,rng:140},'rail',{reward:'m10',short:{en:'Railgun',ja:'レールガン'}});
+// character uniques
+P('wl_rapier','wl','Rapier Overlock','レイピア・オーバーロック',2,0,{w:420,cls:'blade',dmg:760,hits:3,rate:1.4,shock:330,cdmg:3000,cshock:1150,rng:14},'rapier',{only:'pinco',reward:'m4',short:{en:'Rapier',ja:'レイピア'}});
+P('bk_hunny','bk','Hunny Mortar','ハニー・モーター',2,0,{w:1100,cls:'mortar',dmg:520,n:3,rate:.3,shock:380,spd:38,splash:7,slow:1},'hunny',{only:'pooh',reward:'m2'});
+P('sh_podburst','sh','Pod Burst Array','ポッドバースト・アレイ',2,0,{w:760,cls:'missile',dmg:130,n:12,rate:.26,shock:70,spd:58,turn:4.2},'podburst',{only:'bean',reward:'m3',short:{en:'Pod Burst',ja:'ポッドバースト'}});
+P('wl_regalia','wl','Violet Regalia','ヴァイオレット・レガリア',3,0,{w:560,cls:'blade',dmg:1300,rate:1.1,shock:520,cdmg:3600,cshock:1300,rng:16,wave:1},'regalia',{only:'asmon',reward:'m10',short:{en:'Regalia',ja:'レガリア'}});
+
+const STARTER={head:'h_thimble',core:'c_patch',arms:'a_clamp',legs:'l_kick',booster:'b_puff',gen:'g_pocket',fcs:'f_peep',wr:'wr_tacker',wl:'wl_cutter',sh:'sh_sparrow',bk:'bk_rack'};
+
+// ---------- PAINTS (p primary, s secondary/gunmetal, a accent, g glow) ----------
+const PAINTS=[
+ {id:'grey',name:{en:'Workshop Grey',ja:'ワークショップ・グレー'},p:'#8d939e',s:'#3a3f4b',a:'#ff7a1a',g:'#4ef0ff',price:0},
+ {id:'orange',name:{en:'Safety Orange',ja:'セーフティ・オレンジ'},p:'#ff8a2a',s:'#2c2f3a',a:'#f4f1e6',g:'#4ef0ff',price:2500},
+ {id:'night',name:{en:'Night Seam',ja:'ナイト・シーム'},p:'#2b3140',s:'#14171f',a:'#46e6ff',g:'#46e6ff',price:4000,unlock:'m2'},
+ {id:'gum',name:{en:'Bubblegum Rush',ja:'バブルガム・ラッシュ'},p:'#f5f1f4',s:'#3b2c3c',a:'#ff4fa0',g:'#ff6ac0',price:4000,unlock:'m3'},
+ {id:'hazard',name:{en:'Honey Hazard',ja:'ハニー・ハザード'},p:'#ffc21f',s:'#1d1b17',a:'#141414',g:'#ffd257',price:5000,unlock:'m4'},
+ {id:'olive',name:{en:'Ranger Olive',ja:'レンジャー・オリーブ'},p:'#6f7a45',s:'#2a2d22',a:'#e8d36a',g:'#a8ff5e',price:5000,unlock:'m5'},
+ {id:'violet',name:{en:'Royal Violet',ja:'ロイヤル・ヴァイオレット'},p:'#5d3c8c',s:'#1d1530',a:'#e4b34a',g:'#c58cff',price:0,reward:'m8'},
+ {id:'chrome',name:{en:'Chrome Bandit',ja:'クローム・バンディット'},p:'#d6dbe3',s:'#30343c',a:'#e8273a',g:'#ff4155',price:9000,unlock:'m7'},
+];
+
+// ---------- ENEMIES ----------
+const FOES={
+ dummy:{ap:400,shock:200,r:1.4,score:50,name:{en:'Target drone',ja:'標的ドローン'}},
+ spindle:{ap:620,shock:260,r:1.5,score:120,cr:350,name:{en:'Spindle drone',ja:'スピンドル・ドローン'}},
+ walker:{ap:1300,shock:520,r:1.9,score:220,cr:600,name:{en:'Shear Walker',ja:'シアー・ウォーカー'}},
+ tank:{ap:2000,shock:900,r:2.6,score:300,cr:800,name:{en:'Bobbin Crawler',ja:'ボビン・クローラー'}},
+ turret:{ap:1600,shock:800,r:2,score:260,cr:700,name:{en:'Needle Turret',ja:'ニードル・タレット'}},
+ pylon:{ap:3200,shock:0,r:2.6,score:400,cr:900,name:{en:'Thread pump',ja:'スレッドポンプ'}},
+ gate:{ap:7000,shock:0,r:4,score:800,cr:2000,name:{en:'Gate core',ja:'ゲートコア'}},
+ jammer:{ap:5200,shock:0,r:3,score:600,cr:1500,name:{en:'Jammer mast',ja:'ジャマー・マスト'}},
+ anchor:{ap:5600,shock:0,r:3,score:700,cr:1600,name:{en:'Spire anchor',ja:'スパイア・アンカー'}},
+ heart:{ap:16000,shock:0,r:5,score:2000,cr:5000,name:{en:'Heart Loom',ja:'ハート・ルーム'}},
+ boss:{ap:30000,shock:4200,r:7,score:3000,cr:8000,name:{en:'Loom Walker LW-0',ja:'ルーム・ウォーカー LW-0'}},
+};
+const ACES={
+ bronny:{ap:18000,shock:2600,spd:15,char:'bronny',paint:{p:'#c9ced8',s:'#20314f',a:'#ff8a1a',g:'#ffb347'},
+   load:{head:null,core:'c_bastion',arms:'a_piston',legs:'l_skate',booster:'b_comet',wr:'wr_buck',wl:'wl_shears',sh:'sh_firefly',bk:null},
+   frame:{en:'SLAM WARD',ja:'スラム・ワード'}},
+ dkermit:{ap:11000,shock:2200,spd:12,char:'dkermit',paint:{p:'#2a2f2a',s:'#141614',a:'#d9b13b',g:'#8dff6a'},
+   load:{head:null,core:'c_brig',arms:'a_spool',legs:'l_coil',booster:'b_kettle',wr:'wr_seam',wl:null,sh:'sh_mortar',bk:'bk_kites'},
+   frame:{en:'BOG REGENT',ja:'ボグ・リージェント'}},
+ asmon:{ap:24000,shock:3200,spd:17,char:'asmon',paint:{p:'#4b2f78',s:'#1b1430',a:'#e4b34a',g:'#c58cff'},
+   load:{head:null,core:'c_cathedral',arms:'a_atlas',legs:'l_cloud',booster:'b_wild',wr:'wr_couture',wl:'wl_regalia',sh:'sh_star',bk:null},
+   frame:{en:'VIOLET SOVEREIGN',ja:'ヴァイオレット・ソヴリン'}},
+};
+
+// ---------- MAPS ----------
+const MAPS={
+ yard:{bg:'bg_hangar',ground:'#2a2d36',line:'#ff8a2a',fog:'#141a26',sky:'#0c1018',light:'#ffd2a0',rim:'#4ef0ff',props:'yard',r:66},
+ highway:{bg:'bg_highway',ground:'#262a33',line:'#ffb347',fog:'#101828',sky:'#0b1222',light:'#ffc07a',rim:'#5ab8ff',props:'highway',r:74},
+ factory:{bg:'bg_factory',ground:'#2c2a2a',line:'#ff4a2a',fog:'#2a1712',sky:'#1a0f0c',light:'#ff9a6a',rim:'#ff4a2a',props:'factory',r:70},
+ court:{bg:'bg_court',ground:'#2a3040',line:'#e8eef7',fog:'#121a2a',sky:'#0b1020',light:'#dbe8ff',rim:'#ff8a2a',props:'court',r:56},
+ canyon:{bg:'bg_canyon',ground:'#3a302c',line:'#46e6ff',fog:'#2a1c1a',sky:'#1a1018',light:'#ffb07a',rim:'#46e6ff',props:'canyon',r:72},
+ crater:{bg:'bg_canyon',ground:'#2f2a2b',line:'#46e6ff',fog:'#1d1418',sky:'#140c12',light:'#ff9a6a',rim:'#46e6ff',props:'crater',r:70},
+ sky:{bg:'bg_sky',ground:'#3a4258',line:'#ffb347',fog:'#3a3050',sky:'#20203a',light:'#ffd0a0',rim:'#5ab8ff',props:'sky',r:58},
+ spire:{bg:'bg_spire',ground:'#25222f',line:'#c58cff',fog:'#1b1530',sky:'#120d22',light:'#d7c0ff',rim:'#c58cff',props:'spire',r:70},
+ town:{bg:'bg_town',ground:'#3a2e2a',line:'#ffb347',fog:'#3a1e14',sky:'#2a140c',light:'#ffb070',rim:'#4ef0ff',props:'town',r:66},
+};
+
+// ---------- MISSIONS ----------
+// phase types: reach, kill, escort, defend, duel, boss, survive, endless
+const MISSIONS=[
+ {id:'m1',ep:1,map:'yard',par:150,cr:6000,brief:'s_m1',debrief:'d_m1',grant:['wr_stapler'],
+  title:{en:'Bolt the First Plate',ja:'最初の装甲'},
+  sum:{en:'Training sortie at the Bobbin Yard. Learn to boost, lock and fire.',ja:'ボビン・ヤードでの訓練出撃。ブースト、ロック、射撃を覚えよう。'},
+  phases:[
+   {type:'reach',at:[0,-34],obj:{en:'Boost to the marker',ja:'マーカーまでブーストせよ'},tip:'tip_move'},
+   {type:'kill',spawn:[{t:'dummy',n:4,ring:[0,-34,14],y:3}],obj:{en:'Lock on and shoot the target drones',ja:'ロックオンして標的ドローンを撃て'},tip:'tip_fire'},
+   {type:'kill',spawn:[{t:'dummy',n:2,ring:[0,-10,8],y:2,shock:60}],obj:{en:'Break a drone, then hit it with your blade',ja:'ドローンを崩して、ブレードで斬れ'},tip:'tip_blade'},
+   {type:'kill',spawn:[{t:'spindle',n:5,ring:[0,0,40]}],obj:{en:'Raid! Destroy the Loom drones',ja:'襲撃！ルームのドローンを撃破せよ'},tip:'tip_dash',comm:'c_m1raid'}]},
+ {id:'m2',ep:2,map:'highway',par:200,cr:9000,brief:'s_m2',debrief:'d_m2',grant:['bk_hunny','h_button'],
+  title:{en:'Night Convoy',ja:'夜のコンボイ'},
+  sum:{en:'Escort three honey haulers to the town gate. Keep at least one alive.',ja:'ハチミツ輸送車3台を町のゲートまで護衛せよ。最低1台を守りきれ。'},
+  phases:[
+   {type:'escort',trucks:3,from:-62,to:62,spd:2.6,waves:[{t:'spindle',n:3,at:8},{t:'walker',n:2,at:20},{t:'spindle',n:4,at:32},{t:'walker',n:3,at:44},{t:'spindle',n:3,at:52}],obj:{en:'Escort the honey haulers',ja:'ハチミツ輸送車を護衛せよ'},tip:'tip_escort'}]},
+ {id:'m3',ep:3,map:'factory',par:260,cr:12000,brief:'s_m3',debrief:'d_m3',grant:['sh_podburst','c_brig'],
+  title:{en:'Spindle Works',ja:'スピンドル工廠'},
+  sum:{en:'Hit the Loom factory. Destroy four thread pumps, then the gate core.',ja:'ルームの工場を叩け。スレッドポンプ4基、そしてゲートコアを破壊せよ。'},
+  phases:[
+   {type:'kill',spawn:[{t:'pylon',n:4,ring:[0,0,36]},{t:'turret',n:2,ring:[0,0,22]},{t:'tank',n:2,ring:[0,0,48]}],need:'pylon',obj:{en:'Destroy the thread pumps',ja:'スレッドポンプを破壊せよ'}},
+   {type:'kill',spawn:[{t:'gate',n:1,at:[0,-50]},{t:'walker',n:4,ring:[0,-40,14]}],need:'gate',obj:{en:'Destroy the gate core',ja:'ゲートコアを破壊せよ'}},
+   {type:'duel',ace:'dkermit',until:.5,obj:{en:'The foreman is here. Drive him off',ja:'監督官が出た。撃退せよ'},comm:'c_m3kermit'}]},
+ {id:'m4',ep:4,map:'yard',par:240,cr:14000,brief:'s_m4',debrief:'d_m4',grant:['wl_rapier','h_beetle'],
+  title:{en:'Hold the Bobbin Yard',ja:'ボビン・ヤード防衛戦'},
+  sum:{en:'The Loom is coming for our hangar. Protect the yard generator through three waves.',ja:'ルームが格納庫を狙っている。3波の攻撃からヤードの発電機を守れ。'},
+  phases:[
+   {type:'defend',hp:9000,waves:[[{t:'spindle',n:6}],[{t:'walker',n:3},{t:'tank',n:2}],[{t:'spindle',n:4},{t:'walker',n:3},{t:'turret',n:2,ring:[0,0,34]}]],obj:{en:'Defend the yard generator',ja:'ヤードの発電機を守れ'},tip:'tip_defend'}]},
+ {id:'m5',ep:5,map:'court',par:180,cr:16000,brief:'s_m5',debrief:'d_m5',grant:['l_skate'],
+  title:{en:'Courtside',ja:'コートサイド'},
+  sum:{en:'A Lancer ace challenged the Brigade to a duel. Beat Bronny.',ja:'ランサーのエースが旅団に決闘を挑んできた。ブロニーを倒せ。'},
+  phases:[{type:'duel',ace:'bronny',until:0,obj:{en:'Defeat Bronny',ja:'ブロニーを倒せ'},tip:'tip_stagger'}]},
+ {id:'m6',ep:6,map:'canyon',par:300,cr:18000,brief:'s_m6',debrief:'d_m6',grant:['g_spindle'],
+  title:{en:'Three Threads',ja:'三本の糸'},
+  sum:{en:'Scan three relay beacons, destroy the jammer, then reach extraction.',ja:'中継ビーコン3つをスキャンし、ジャマーを破壊して、回収地点へ向かえ。'},
+  phases:[
+   {type:'reach',at:[-40,-30],hold:2,spawn:[{t:'spindle',n:3,ring:[-40,-30,20]}],obj:{en:'Scan relay beacon 1 of 3',ja:'中継ビーコンをスキャン (1/3)'}},
+   {type:'reach',at:[42,-38],hold:2,spawn:[{t:'walker',n:3,ring:[42,-38,18]}],obj:{en:'Scan relay beacon 2 of 3',ja:'中継ビーコンをスキャン (2/3)'}},
+   {type:'reach',at:[10,40],hold:2,spawn:[{t:'tank',n:2,ring:[10,40,22]},{t:'spindle',n:2,ring:[10,40,16]}],obj:{en:'Scan relay beacon 3 of 3',ja:'中継ビーコンをスキャン (3/3)'}},
+   {type:'kill',spawn:[{t:'jammer',n:1,at:[0,-58]},{t:'turret',n:3,ring:[0,-58,12]}],need:'jammer',obj:{en:'Destroy the jammer mast',ja:'ジャマー・マストを破壊せよ'}},
+   {type:'reach',at:[0,58],obj:{en:'Reach extraction',ja:'回収地点へ向かえ'}}]},
+ {id:'m7',ep:7,map:'crater',par:260,cr:22000,brief:'s_m7',debrief:'d_m7',grant:['l_cloud'],
+  title:{en:'The Loom Walker',ja:'ルーム・ウォーカー'},
+  sum:{en:'The Loom fielded a four-legged siege unit. Break its legs, then hit the core.',ja:'ルームが四脚の攻城兵器を投入した。脚を壊して、コアを叩け。'},
+  phases:[{type:'boss',obj:{en:'Destroy the Loom Walker',ja:'ルーム・ウォーカーを撃破せよ'},tip:'tip_boss'}]},
+ {id:'m8',ep:8,map:'sky',par:200,cr:24000,brief:'s_m8',debrief:'d_m8',grant:['h_halo','wl_moon'],paint:'violet',
+  title:{en:'Violet Sovereign',ja:'紫の君主'},
+  sum:{en:'Asmon, the Loom’s ace, is hunting the Brigade above the clouds. Survive him.',ja:'ルームのエース、アズモンが雲の上で旅団を狩りに来た。生き延びろ。'},
+  phases:[{type:'duel',ace:'asmon',until:.5,adds:[{t:'spindle',n:3,every:22}],obj:{en:'Survive Asmon. Push him back',ja:'アズモンを押し返せ'},comm:'c_m8asmon'}]},
+ {id:'m9',ep:9,map:'spire',par:360,cr:30000,brief:'s_m9',debrief:'d_m9',grant:['c_cathedral','g_sun','sh_star'],
+  title:{en:'Unspool',ja:'アンスプール'},
+  sum:{en:'Assault the Loom Spire. Cut the anchors, beat Asmon, stop the Heart Loom.',ja:'ルーム・スパイア強襲。アンカーを断ち、アズモンを倒し、ハート・ルームを止めろ。'},
+  phases:[
+   {type:'kill',spawn:[{t:'anchor',n:3,ring:[0,0,44]},{t:'walker',n:3,ring:[0,0,30]},{t:'spindle',n:4,ring:[0,0,36]}],need:'anchor',obj:{en:'Cut the three spire anchors',ja:'スパイア・アンカー3基を断て'}},
+   {type:'duel',ace:'asmon',until:0,obj:{en:'Defeat Asmon',ja:'アズモンを倒せ'},comm:'c_m9asmon'},
+   {type:'kill',spawn:[{t:'heart',n:1,at:[0,0]},{t:'turret',n:3,ring:[0,0,16]}],need:'heart',obj:{en:'Destroy the Heart Loom',ja:'ハート・ルームを破壊せよ'},comm:'c_m9heart'}]},
+ {id:'m10',ep:10,map:'town',par:260,cr:36000,brief:'s_m10',debrief:'d_m10',grant:['a_atlas','wr_couture','bk_rail','wl_regalia'],
+  title:{en:'Stitched Together',ja:'つなぎ合わせて'},
+  sum:{en:'Leftover Loom machines went rogue at the festival. Protect the town lantern.',ja:'ルームの残存機械が祭りで暴走した。町のランタンを守れ。'},
+  phases:[{type:'defend',hp:12000,ally:'asmon',allyWave:1,waves:[[{t:'spindle',n:6},{t:'walker',n:2}],[{t:'walker',n:4},{t:'tank',n:2},{t:'spindle',n:4}],[{t:'tank',n:3},{t:'turret',n:2,ring:[0,0,30]},{t:'spindle',n:6}]],obj:{en:'Protect the town lantern',ja:'町のランタンを守れ'},comm:'c_m10'}]},
+ // free sorties
+ {id:'f1',free:true,map:'highway',par:150,cr:9000,unlockAfter:'m1',grant:['b_wild'],grantRank:'S',
+  title:{en:'Scrap Run',ja:'スクラップ・ラン'},sum:{en:'Wreck 25 Loom machines as fast as you can. Repeatable.',ja:'ルームの機械25機をできるだけ速く破壊せよ。くり返し出撃可。'},
+  phases:[{type:'survive',kills:25,mix:['spindle','spindle','walker','tank'],obj:{en:'Wreck Loom machines',ja:'ルームの機械を破壊せよ'}}]},
+ {id:'f2',free:true,map:'court',par:300,cr:20000,unlockAfter:'m5',grant:['f_oracle'],grantRank:'S',
+  title:{en:'Ace Gauntlet',ja:'エース・ガントレット'},sum:{en:'Three aces back to back: Bronny, Dark Kermit, Asmon. Repeatable.',ja:'エース3人と連戦：ブロニー、ダーク・カーミット、アズモン。くり返し出撃可。'},
+  phases:[{type:'duel',ace:'bronny',until:0,obj:{en:'Ace 1: Bronny',ja:'エース1：ブロニー'}},{type:'duel',ace:'dkermit',until:0,obj:{en:'Ace 2: Dark Kermit',ja:'エース2：ダーク・カーミット'}},{type:'duel',ace:'asmon',until:0,obj:{en:'Ace 3: Asmon',ja:'エース3：アズモン'}}]},
+ {id:'f3',free:true,map:'factory',par:0,cr:1500,unlockAfter:'m4',endless:true,
+  title:{en:'Last Stand',ja:'ラスト・スタンド'},sum:{en:'Endless waves. Credits for every wave you clear. Repeatable.',ja:'終わりのないウェーブ。クリアしたウェーブごとにクレジット。くり返し出撃可。'},
+  phases:[{type:'endless',obj:{en:'Survive the waves',ja:'ウェーブを生き延びろ'}}]},
+];

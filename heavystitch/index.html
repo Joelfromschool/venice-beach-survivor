@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0c10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Heavy Stitch</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<script>window.__BUILD__='v1.0';</script>
+</head>
+<body>
+<div id="app">
+ <!-- TITLE -->
+ <section id="sTitle" class="screen on">
+  <div class="tbg"></div><div class="tlines"></div>
+  <div id="tCast" class="tcast"></div>
+  <div class="tlogo">
+   <div class="tkicker" data-t="brand">A LANZAGAMES production</div>
+   <h1 class="logo"><span>HEAVY</span><span>STITCH</span></h1>
+   <div class="logo-ja">ヘビー・スティッチ</div>
+   <div class="tsub" data-t="title_sub">Bolt-on mech action</div>
+  </div>
+  <div class="tlang"><button class="chip" data-lang="en">English</button><button class="chip" data-lang="ja">日本語</button></div>
+  <button id="tStart" class="tstart" data-t="tap">TAP TO START</button>
+  <a class="tgames" href="../" data-t="allgames">All games</a>
+ </section>
+
+ <!-- MAIN MENU -->
+ <section id="sMenu" class="screen">
+  <div class="mbg"></div>
+  <div class="mhead"><div class="mlogo">HEAVY<b>STITCH</b></div><div class="cred"><i>CR</i><span class="crv">0</span></div></div>
+  <div id="mHero" class="mhero"></div>
+  <nav class="mnav">
+   <button class="mbtn big" id="mStory"><small id="mStorySub"></small><span data-t="story">Story</span></button>
+   <button class="mbtn" data-go="sHangar"><span data-t="hangar">Hangar</span></button>
+   <button class="mbtn" data-go="sMissions"><span data-t="missions">Missions</span></button>
+   <button class="mbtn" data-go="sOptions"><span data-t="options">Options</span></button>
+   <a class="mbtn ghost" href="../"><span data-t="allgames">All games</span></a>
+  </nav>
+ </section>
+
+ <!-- HANGAR -->
+ <section id="sHangar" class="screen">
+  <div class="bar"><button class="btn back" data-go="sMenu">◀ <span data-t="menu">Menu</span></button><h2 data-t="hangar">Hangar</h2><div class="cred"><i>CR</i><span class="crv">0</span></div><button class="btn hot" id="hSortie" data-t="sortie">Sortie</button></div>
+  <div class="hwrap">
+   <div class="hstage" id="hStage">
+    <div class="hlight"></div>
+    <canvas id="hCanvas"></canvas>
+    <div class="hname"><b id="hName"></b><small id="hRole"></small></div>
+    <div class="hstats" id="hStats"></div>
+    <div class="hchars" id="hChars"></div>
+   </div>
+   <div class="hpanel">
+    <div class="tabs"><button class="tab on" data-ht="parts" data-t="parts">Parts</button><button class="tab" data-ht="paint" data-t="paint">Paint</button></div>
+    <div id="hSlots" class="slots"></div>
+    <div id="hList" class="plist"></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- MISSIONS -->
+ <section id="sMissions" class="screen">
+  <div class="bar"><button class="btn back" data-go="sMenu">◀ <span data-t="menu">Menu</span></button><h2 data-t="missions">Missions</h2><div class="cred"><i>CR</i><span class="crv">0</span></div></div>
+  <div class="mwrap"><div id="mList" class="mlist"></div><div id="mDetail" class="mdetail"></div></div>
+ </section>
+
+ <!-- OPTIONS -->
+ <section id="sOptions" class="screen">
+  <div class="bar"><button class="btn back" id="oBack">◀ <span data-t="back">Back</span></button><h2 data-t="options">Options</h2></div>
+  <div class="opts" id="oBody"></div>
+ </section>
+
+ <!-- GAME -->
+ <section id="sGame" class="screen">
+  <canvas id="gl"></canvas>
+  <div id="fxLines" class="fxlines"></div>
+  <div id="vign" class="vign"></div>
+  <div id="hud" class="hud">
+   <div class="hudL"><div class="apbox"><b>AP</b><span id="apv">0</span><div class="bar1"><i id="apb"></i></div></div><div class="enbox"><b>EN</b><div class="bar2"><i id="enb"></i></div><em id="enout" data-t="enout">EN OUT</em></div><div id="kits" class="kits"></div></div>
+   <div class="hudC"><div id="obj" class="obj"><small id="objT"></small><b id="objN"></b><span id="objP"></span></div><div id="bossbar" class="bossbar"><b id="bossN"></b><div class="bb"><i id="bossAp"></i></div><div class="bs"><i id="bossSh"></i></div></div></div>
+   <div class="hudR"><button class="btn icon" id="gPause" aria-label="Menu">❚❚</button><div id="timer" class="timer">0:00</div></div>
+   <div id="comm" class="comm"><img id="commI" alt=""><div><b id="commN"></b><span id="commT"></span></div></div>
+   <div id="tip" class="tip"></div>
+   <div id="reticle" class="ret"><i></i><i></i><i></i><i></i><div class="rinfo"><div class="rap"><i id="rAp"></i></div><div class="rsh"><i id="rSh"></i></div></div></div>
+   <div id="markers"></div>
+   <div id="stamp" class="stamp"></div>
+   <div id="wpn" class="wpn"></div>
+  </div>
+  <div id="touch" class="touch">
+   <div id="stick" class="stick"><div class="knob"></div></div>
+   <div class="tbtns">
+    <button class="tb fire r" data-k="fr"><b>R</b><small id="tbR"></small></button>
+    <button class="tb fire l" data-k="fl"><b>L</b><small id="tbL"></small></button>
+    <button class="tb sp" data-k="sp"><b>SP</b><small id="tbS"></small></button>
+    <button class="tb dash" data-k="dash"><b>DASH</b></button>
+    <button class="tb up" data-k="up"><b>▲</b></button>
+    <button class="tb sm ab" data-k="ab"><b>AB</b></button>
+    <button class="tb sm lock" data-k="lock"><b>LOCK</b></button>
+    <button class="tb sm swap" data-k="swap"><b>⇄</b></button>
+    <button class="tb sm rep" data-k="rep"><b>+</b></button>
+   </div>
+  </div>
+  <div id="cutin" class="cutin"><div class="cband"><canvas id="cutC"></canvas><div class="ctext"><b id="cutT"></b><small id="cutS"></small></div></div></div>
+  <div id="pause" class="pause"><div class="pbox"><h2 data-t="menu">Menu</h2><button class="mbtn big" id="pResume" data-t="resume">Resume</button><button class="mbtn" id="pRetry" data-t="retry">Retry</button><button class="mbtn" id="pOpts" data-t="options">Options</button><button class="mbtn" id="pQuit" data-t="quit">Quit to menu</button><p class="howto" data-t="howtoTxt"></p></div></div>
+ </section>
+
+ <!-- RESULTS -->
+ <section id="sResult" class="screen">
+  <div class="rbg"></div>
+  <div class="rbox"><div id="rHead" class="rhead"></div><div id="rRank" class="rrank"></div><div id="rRows" class="rrows"></div><div id="rLoot" class="rloot"></div>
+   <div class="rbtns"><button class="mbtn big" id="rNext"></button><button class="mbtn" id="rRetry" data-t="retry">Retry</button><button class="mbtn" id="rHangar" data-t="tohangar">To hangar</button></div></div>
+ </section>
+
+ <!-- CUTSCENE -->
+ <section id="sCut" class="screen cut">
+  <div class="cstage"><div id="cBg" class="cbg"></div><div id="cChars" class="cchars"></div><canvas id="cFx" class="cfx"></canvas><div id="cFlash" class="cflash"></div>
+   <div id="cTitle" class="ctitle"></div></div>
+  <div class="lbox top"></div><div class="lbox bot"></div>
+  <div id="cDlg" class="cdlg"><div id="cName" class="cname"></div><div id="cText" class="ctext2"></div><div class="cnext">▼</div></div>
+  <button class="btn cskip" id="cSkip"><span data-t="skip">Skip</span> ▶▶</button>
+ </section>
+ <div id="toast" class="toast"></div>
+</div>
+<script src="js/three.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/story.js"></script>
+<script src="js/parts.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/cutscene.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
+function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}
+function chk(){try{fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&newer(j.build,B)&&!document.getElementById('updbar')){var d=document.createElement('div');d.id='updbar';d.textContent=(window.HS&&HS.T)?HS.T('updated'):'Update available — tap to reload';d.style.cssText='position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:99998;background:#ff7a1aee;color:#0b0c10;border:2px solid #fff;padding:12px 20px;font:800 16px system-ui,sans-serif;letter-spacing:.5px;text-transform:uppercase;box-shadow:0 4px 0 #000a;cursor:pointer;pointer-events:auto';d.onclick=function(e){e.stopPropagation();location.reload()};d.addEventListener('touchstart',function(e){e.stopPropagation();location.reload()},{passive:true});document.body.appendChild(d)}}).catch(function(){})}catch(e){}}
+window.__chkUpdate=chk;chk();setInterval(chk,120000);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')chk()});})();
+</script>
+</body></html>

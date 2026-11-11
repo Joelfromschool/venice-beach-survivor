@@ -1,0 +1,4 @@
+Fonts bundled with Heavy Stitch (subsetted to woff2), all under the SIL Open Font License 1.1 (https://openfontlicense.org):
+- Big Shoulders (bigshoulders.woff2), Copyright The Big Shoulders Project Authors
+- Chakra Petch (chakra-400.woff2, chakra-600.woff2), Copyright The Chakra Petch Project Authors
+- Dela Gothic One (dela-sub.woff2), Copyright The Dela Gothic One Project Authors
