@@ -19,6 +19,9 @@ def git_meta(game_id):
 
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
+ dict(id='heavystitch', new=True, cat='act', pos='50% 50%',
+  en=('Heavy Stitch','Mech action','Bolt parts onto Pinco, Pooh and Mr Bean and sortie through ten story missions.'),
+  ja=('ヘビー・スティッチ','メック・アクション','ピンコ・プー・ミスター・ビーンにパーツを装着して、10のストーリーミッションへ出撃。')),
  dict(id='blockhaven', new=True, cat='adv', pos='50% 50%',
   en=('Blockhaven','Voxel adventure RPG','Mine, build and quest from Honeyvale to a blocky Santa Monica pier and Venice boardwalk. 16 quests, five bosses.'),
   ja=('ブロックヘイブン','ボクセル・アドベンチャーRPG','ハニーヴェイルから、ブロックでできたサンタモニカの桟橋とベニスの遊歩道へ。16のクエストと5体のボスが待っている。')),
@@ -72,11 +75,11 @@ UI = {
  'en': dict(play='Play', open_secret='Unlock', newb='New', jump='Jump back in', last='Last played',
             lang='日本語', lang_label='Switch to Japanese', hint='Swipe the rows · tap a tile twice to play',
             pw_title='Secret Project', pw_sub='Enter the password', pw_wrong='Wrong password', pw_open='Open', pw_cancel='Cancel',
-            skip='Skip to games', count='14 games'),
+            skip='Skip to games', count='15 games'),
  'ja': dict(play='あそぶ', open_secret='ひらく', newb='NEW', jump='つづきから', last='さいごにあそんだ',
             lang='English', lang_label='英語に切り替え', hint='横にスワイプ · タイルを2回タップであそぶ',
             pw_title='シークレット・プロジェクト', pw_sub='パスワードを入力', pw_wrong='パスワードがちがいます', pw_open='ひらく', pw_cancel='キャンセル',
-            skip='ゲーム一覧へ', count='14タイトル'),
+            skip='ゲーム一覧へ', count='15タイトル'),
 }
 E = html.escape
 
@@ -235,7 +238,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
   %%ROWS%%
 </div>
-<footer class="foot"><span data-i18n="count">14 games</span> · LANZAGAMES</footer>
+<footer class="foot"><span data-i18n="count">15 games</span> · LANZAGAMES</footer>
 </main>
 
 <div id="spGate" class="gate" role="dialog" aria-modal="true" aria-labelledby="spTitle" style="display:none">
