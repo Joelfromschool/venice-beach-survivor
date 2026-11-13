@@ -565,3 +565,19 @@ html[lang=ja] .tb.slash b,html[lang=ja] .tb.drift b,html[lang=ja] .tb.super b{fo
 @media (orientation:landscape) and (max-height:500px){.modal{padding:10px}.mbox{padding:12px 16px;gap:6px}.mbox h3.zt{font-size:30px}.mbox p{font-size:13px;line-height:1.4}.mbtns{flex-direction:row}.mbtns .mbtn{flex:1;min-height:52px}}
 @media (orientation:landscape) and (max-height:500px){.gcaps.n10{width:min(640px,100%);gap:6px;padding:6px 6px 0;margin-bottom:44px}.gcaps.n10 .cap{max-width:112px}.mbox td{padding:4px 8px}.mbox h3{font-size:24px}}
 @media (orientation:portrait){html[lang=ja] .bar h2{font-size:15px;letter-spacing:0;text-overflow:clip}}
+/* v2.0.1 polish */
+@media (orientation:landscape) and (max-height:500px){
+ .combo{right:calc(120px + var(--sar));top:calc(56px + var(--sat))}
+ .cband{top:22%;height:50%}
+ #cutC{left:6%;top:-4%;height:118%}
+ .ctext b{font-size:clamp(30px,6vw,60px)}
+}
+html[lang=ja] .st{letter-spacing:0;white-space:nowrap}
+html[lang=ja] .st>span:first-child,html[lang=ja] .st>b:first-child{font-size:9px;white-space:nowrap;overflow:hidden}
+@media (orientation:portrait){
+ .zmode .combo{top:auto;bottom:calc(430px + var(--sab))}
+ .cband{top:30%;height:30%}
+ #cutC{left:0;top:-4%;height:118%}
+}
+@media (orientation:landscape) and (max-height:500px){.hud .tip{top:calc(150px + var(--sat));max-width:46vw}}
+@media (orientation:portrait){.hud .tip{left:calc(12px + var(--sal));transform:none;top:calc(150px + var(--sat));max-width:calc(100vw - 100px);text-align:left}.hud .comm{top:calc(262px + var(--sat));max-width:calc(100vw - 150px)}}
