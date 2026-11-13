@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#ff5aa0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Pinco Pooh Snap</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<script>window.__BUILD__='v1.0';</script>
+</head>
+<body>
+<div id="app">
+ <!-- TITLE -->
+ <section id="sTitle" class="screen on">
+  <div class="tsky"></div><div class="tsun"></div>
+  <div class="tcast" id="tCast"></div>
+  <a class="chip tgames" href="../" data-t="allgames">All games</a>
+  <div class="tlang"><button class="chip" data-lang="en">English</button><button class="chip" data-lang="ja">日本語</button></div>
+  <div class="tlogo">
+   <div class="tkick" data-t="brand">A LANZAGAMES game</div>
+   <h1 class="logo"><span class="l1">Pinco Pooh</span><span class="l2">SNAP!</span></h1>
+   <div class="logo-ja">ピンコ・プー・スナップ</div>
+   <div class="tsub" data-t="sub">Photo safari with friends</div>
+  </div>
+  <button id="tStart" class="tstart" data-t="tap">TAP TO START</button>
+  <div id="tMenu" class="tmenu">
+   <button class="big btn pink" id="tCont"><span data-t="cont">Continue</span><small id="tContSub"></small></button>
+   <button class="big btn" id="tNew"><span data-t="newg">New game</span></button>
+   <button class="chip" id="tOpt" data-t="options">Options</button>
+  </div>
+ </section>
+
+ <!-- INTRO (professor) -->
+ <section id="sIntro" class="screen">
+  <div class="labbg"></div>
+  <img id="iProf" class="prof" src="art/c_prof_1.webp" alt="">
+  <div class="dlg"><b data-t="profName">Professor Pooping</b><p id="iTxt"></p><button class="btn pink" id="iNext" data-t="next">Next</button></div>
+ </section>
+
+ <!-- MAP -->
+ <section id="sMap" class="screen">
+  <div class="bar"><a class="btn sm ghost" href="../" data-t="allgames">All games</a><h2 data-t="map">Courses</h2><div class="pts"><b id="mPts">0</b><small data-t="pts">pts</small></div></div>
+  <div class="regs" id="mRegs"></div>
+  <div class="clist" id="mList"></div>
+  <div class="mnav">
+   <button class="btn" id="mAlbum"><i>📷</i><span data-t="album">Album</span></button>
+   <button class="btn" id="mReq"><i>📝</i><span data-t="requests">Requests</span></button>
+   <button class="btn" id="mOpt"><i>⚙︎</i><span data-t="options">Options</span></button>
+  </div>
+ </section>
+
+ <!-- GAME -->
+ <section id="sGame" class="screen game">
+  <div id="view"></div>
+  <div id="vf" class="vf"><i class="c1"></i><i class="c2"></i><i class="c3"></i><i class="c4"></i><div class="ret"></div><div class="rec">● SNAP</div><div id="zoomT" class="zt">×1.0</div></div>
+  <div class="shade"></div>
+  <div class="hudtop">
+   <div class="film"><span>🎞</span><b id="hFilm">40</b></div>
+   <div class="prog"><i id="hProg"></i><span id="hCourse"></span></div>
+   <button class="btn icon" id="hPause">II</button>
+  </div>
+  <div class="items">
+   <button class="ibtn" id="bApple"><span class="ic">🍎</span><small data-t="apple">Apple</small></button>
+   <button class="ibtn" id="bHoney"><span class="ic">🍯</span><small data-t="honey">Honey</small></button>
+   <button class="ibtn" id="bWhistle"><span class="ic">🎵</span><small data-t="whistle">Whistle</small></button>
+  </div>
+  <div class="zoombox"><small data-t="zoom">Zoom</small><input id="zoomR" type="range" min="1" max="4" step="0.05" value="1"></div>
+  <button class="shutter" id="bShoot"><span></span></button>
+  <div id="hTip" class="tip"></div>
+  <div id="hBanner" class="banner"></div>
+  <div id="hRing" class="ring"></div>
+  <div id="hFlash" class="flash"></div>
+  <div id="hThumb" class="thumb"></div>
+  <div id="pause" class="pause"><div class="pbox"><h2 data-t="pause">Paused</h2><button class="btn pink big" id="pResume" data-t="resume">Resume</button><button class="btn" id="pRestart" data-t="restart">Restart course</button><button class="btn" id="pQuit" data-t="quit">Back to courses</button></div></div>
+ </section>
+
+ <!-- REVIEW -->
+ <section id="sReview" class="screen">
+  <div class="labbg"></div>
+  <div class="bar"><h2 data-t="reviewTitle">Photo review</h2><div class="pts"><small data-t="photosTaken">Photos taken</small><b id="rCount">0</b></div></div>
+  <div id="rPick" class="rpick">
+   <p class="hint" data-t="pickHint">Pick one photo per friend</p>
+   <div id="rGroups" class="rgroups"></div>
+   <button class="btn pink big" id="rShow" data-t="showProf">Show the Professor</button>
+  </div>
+  <div id="rEval" class="reval">
+   <div class="evp"><div class="polar"><img id="eImg" alt=""><div id="eStamp" class="stamp"></div></div><div id="eName" class="ename"></div></div>
+   <div class="evr"><div class="profrow"><img id="eProf" src="art/c_prof_0.webp" alt=""><div class="bub" id="eSay"></div></div><div id="eRows" class="erows"></div><button class="btn pink big" id="eNext" data-t="next">Next</button></div>
+  </div>
+  <div id="rSum" class="rsum">
+   <h3 data-t="summary">Course results</h3><div id="sRows" class="erows"></div><div id="sNews" class="news"></div><button class="btn pink big" id="sDone" data-t="done">Done</button>
+  </div>
+ </section>
+
+ <!-- ALBUM -->
+ <section id="sAlbum" class="screen">
+  <div class="bar"><button class="btn sm" data-go="sMap">◀ <span data-t="back">Back</span></button><h2 data-t="album">Album</h2></div>
+  <div class="agrid" id="aGrid"></div>
+ </section>
+
+ <!-- REQUESTS -->
+ <section id="sReq" class="screen">
+  <div class="bar"><button class="btn sm" data-go="sMap">◀ <span data-t="back">Back</span></button><h2 data-t="requests">Requests</h2></div>
+  <p class="hint" data-t="reqHint">Snap these to impress the Professor</p>
+  <div class="rlist" id="qList"></div>
+ </section>
+
+ <!-- OPTIONS -->
+ <section id="sOptions" class="screen">
+  <div class="bar"><button class="btn sm" id="oBack">◀ <span data-t="back">Back</span></button><h2 data-t="options">Options</h2></div>
+  <div class="olist">
+   <div class="orow"><span data-t="lang">Language</span><div class="seg"><button class="chip" data-lang="en">English</button><button class="chip" data-lang="ja">日本語</button></div></div>
+   <div class="orow"><span data-t="music">Music</span><div class="seg" id="oMusic"></div></div>
+   <div class="orow"><span data-t="sfx">Sound effects</span><div class="seg" id="oSfx"></div></div>
+   <div class="orow"><span data-t="sens">Aim speed</span><div class="seg" id="oSens"></div></div>
+   <div class="orow col"><span data-t="howto">How to play</span><p class="howto" data-t="howtoTxt"></p></div>
+   <div class="orow"><span data-t="cheat">Cheat code</span><div class="seg"><input id="oCheat" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="••••••"><button class="chip" id="oCheatGo" data-t="apply">Apply</button></div></div>
+   <div class="orow"><span></span><button class="btn sm danger" id="oReset" data-t="reset">Reset save</button></div>
+  </div>
+ </section>
+ <div id="modal" class="modal"><div class="mbox" id="mBox"></div></div>
+ <div id="toast" class="toast"></div>
+</div>
+<script src="js/three.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/world.js"></script>
+<script src="js/subjects.js"></script>
+<script src="js/game.js"></script>
+<script src="js/ui.js"></script>
+<script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
+function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}
+function chk(){try{fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&newer(j.build,B)&&!document.getElementById('updbar')){var d=document.createElement('div');d.id='updbar';d.textContent=(window.HS&&HS.T)?HS.T('updated'):'Update available — tap to reload';d.style.cssText='position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:99998;background:#ff5aa0;color:#fff;border:3px solid #fff;border-radius:999px;padding:12px 20px;font:800 16px system-ui,sans-serif;box-shadow:0 4px 0 #0003;cursor:pointer;pointer-events:auto;white-space:nowrap';d.onclick=function(e){e.stopPropagation();location.reload()};d.addEventListener('touchstart',function(e){e.stopPropagation();location.reload()},{passive:true});document.body.appendChild(d)}}).catch(function(){})}catch(e){}}
+window.__chkUpdate=chk;chk();setInterval(chk,120000);document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')chk()});})();
+</script>
+</body></html>
