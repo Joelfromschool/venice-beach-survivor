@@ -20,8 +20,8 @@ def git_meta(game_id):
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
  dict(id='heavystitch', new=True, cat='act', pos='50% 50%',
-  en=('Heavy Stitch','Mech action','Bolt parts onto Pinco, Pooh and Mr Bean and sortie through ten story missions.'),
-  ja=('ヘビー・スティッチ','メック・アクション','ピンコ・プー・ミスター・ビーンにパーツを装着して、10のストーリーミッションへ出撃。')),
+  en=('Heavy Stitch','Mech action','Bolt neon parts onto Pinco, Pooh and Mr Bean, drift and slash through ten story missions, pull gacha banners and survive the zombie Dead Zone.'),
+  ja=('ヘビー・スティッチ','メック・アクション','ピンコ・プー・ミスター・ビーンにネオンパーツを装着。ドリフトと斬撃で10のミッションを戦い、ガチャを回して、ゾンビのデッドゾーンを生き残れ。')),
  dict(id='blockhaven', new=True, cat='adv', pos='50% 50%',
   en=('Blockhaven','Voxel adventure RPG','Mine, build and quest from Honeyvale to a blocky Santa Monica pier and Venice boardwalk. 16 quests, five bosses.'),
   ja=('ブロックヘイブン','ボクセル・アドベンチャーRPG','ハニーヴェイルから、ブロックでできたサンタモニカの桟橋とベニスの遊歩道へ。16のクエストと5体のボスが待っている。')),
