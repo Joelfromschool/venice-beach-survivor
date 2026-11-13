@@ -8,8 +8,8 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
-<script>window.__BUILD__='v1.0';</script>
+<link rel="stylesheet" href="style.css?v=1.1">
+<script>window.__BUILD__='v1.1';</script>
 </head>
 <body>
 <div id="app">
@@ -125,12 +125,14 @@
  <div id="toast" class="toast"></div>
 </div>
 <script src="js/three.min.js"></script>
-<script src="js/data.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/world.js"></script>
-<script src="js/subjects.js"></script>
-<script src="js/game.js"></script>
-<script src="js/ui.js"></script>
+<script src="js/data.js?v=1.1"></script>
+<script src="js/audio.js?v=1.1"></script>
+<script src="js/world.js?v=1.1"></script>
+<script src="js/props.js?v=1.1"></script>
+<script src="js/sets.js?v=1.1"></script>
+<script src="js/subjects.js?v=1.1"></script>
+<script src="js/game.js?v=1.1"></script>
+<script src="js/ui.js?v=1.1"></script>
 <script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
 function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}
 function chk(){try{fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&newer(j.build,B)&&!document.getElementById('updbar')){var d=document.createElement('div');d.id='updbar';d.textContent=(window.HS&&HS.T)?HS.T('updated'):'Update available — tap to reload';d.style.cssText='position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:99998;background:#ff5aa0;color:#fff;border:3px solid #fff;border-radius:999px;padding:12px 20px;font:800 16px system-ui,sans-serif;box-shadow:0 4px 0 #0003;cursor:pointer;pointer-events:auto;white-space:nowrap';d.onclick=function(e){e.stopPropagation();location.reload()};d.addEventListener('touchstart',function(e){e.stopPropagation();location.reload()},{passive:true});document.body.appendChild(d)}}).catch(function(){})}catch(e){}}

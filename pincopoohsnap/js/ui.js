@@ -76,7 +76,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   if(rv.flags.secret)rv.news.unshift('★ '+this.T('secretFound')+': '+this.L(co.secret));
   this.save();
   $('sRows').innerHTML=[[this.L(co),''],[this.T('photosTaken'),rv.photos.length],[this.T('earned'),'+'+rv.course.toLocaleString()],[this.T('requests'),rv.reqPts?'+'+rv.reqPts.toLocaleString():'—'],[this.T('points'),s.pts.toLocaleString()]].map((r,i)=>`<div class="er on ${i===4?'tot':''}"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')+(rv.items.length?'':`<div class="er on"><span>${this.L(PROF_LINES.none[0])}</span><b></b></div>`);
-  $('sNews').innerHTML=rv.news.map(n=>`<div>${n}</div>`).join('');$('rSum').classList.add('on');AU.play(rv.news.length?'fanfare':'yay');
+  $('sNews').innerHTML=rv.news.map(n=>`<div>${n}</div>`).join('');$('rSum').classList.add('on');AU.jingle();
   $('sDone').onclick=()=>{AU.play('ui');const ni=COURSES.findIndex((c,i)=>!before[i]&&this.unlockedIdx(i));if(ni>=0)this.reg=COURSES[ni].reg;this.show('sMap');};},
  // ---------- album / requests ----------
  renderAlbum(){const s=this.state;const cards=CAST_ORDER.map(c=>{const a=s.album[c];return`<button class="acard ${a?'':'empty'}" data-c="${c}">${a&&a.img?`<div class="aimg" style="background-image:url(${a.img})"></div>`:`<div class="aimg sil"><img src="art/c_${c}_1.webp" alt=""></div>`}<b>${this.cn(c)}</b><small>${a?a.score.toLocaleString()+' '+this.T('pts'):this.T('unseen')}</small></button>`;}).join('');
@@ -94,6 +94,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
  init(){this.state=this.load();this.lang=this.state.opt.lang;AU.mv=this.state.opt.music;AU.sv=this.state.opt.sfx;
   $('tCast').innerHTML=['pooh_1','pinco_1','bean_1','max_1','dkermit_1','party_1'].map((k,i)=>`<img class="tc tc${i}" src="art/c_${k}.webp" alt="">`).join('');
   document.addEventListener('pointerdown',()=>AU.unlock(),{passive:true});
+  ['touchend','pointerup'].forEach(ev=>document.addEventListener(ev,()=>AU.unlock(),{passive:true,capture:true}));
   $('sTitle').addEventListener('click',e=>{if(e.target.closest('.tmenu,.tlang,.tgames'))return;if(!$('tMenu').classList.contains('on'))this.titleTap();});
   $('tCont').onclick=()=>{AU.play('ui');this.show('sMap');};$('tNew').onclick=()=>{AU.play('ui');this.newGame();};
   $('tOpt').onclick=()=>{AU.play('ui');this.optBack='sTitle';this.show('sOptions');};$('mOpt').onclick=()=>{AU.play('ui');this.optBack='sMap';this.show('sOptions');};

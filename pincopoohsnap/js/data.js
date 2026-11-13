@@ -6,7 +6,7 @@ const CHARS={
  pooh:{en:'Pooh',ja:'プー',h:2.02,sp:{en:'Honey time',ja:'はちみつタイム'},eat:true,col:'#ffc23a',float:true},
  bean:{en:'Mr Bean',ja:'ミスター・ビーン',h:1.95,sp:{en:'Big bounce',ja:'ビッグバウンス'},eat:false,col:'#9ccc3a'},
  pooping:{en:'Mr Pooping',ja:'ミスター・プーピング',h:1.89,sp:{en:'Happy dance',ja:'ハッピーダンス'},eat:false,col:'#a0663a'},
- bronny:{en:'Bronny',ja:'ブロニー',h:2.47,sp:{en:'Slam dunk',ja:'スラムダンク'},eat:false,col:'#3a5bd0'},
+ bronny:{en:'Bronny',ja:'ブロニー',h:2.47,sp:{en:'Slam dunk',ja:'スラムダンク'},eat:false,col:'#f5b81c'},
  asmon:{en:'Asmon',ja:'アズモン',h:2.41,sp:{en:'Ramen slurp',ja:'ラーメンすすり'},eat:true,col:'#7a4ad0'},
  dkermit:{en:'Dark Kermit',ja:'ダーク・カーミット',h:1.95,sp:{en:'Ukulele song',ja:'ウクレレの歌'},eat:false,col:'#5aa83a'},
  max:{en:'Max',ja:'マックス',h:1.76,sp:{en:'Frisbee catch',ja:'フリスビーキャッチ'},eat:true,col:'#c07a3a'},
