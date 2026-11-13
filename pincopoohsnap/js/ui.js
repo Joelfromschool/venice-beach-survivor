@@ -38,7 +38,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('mRegs').innerHTML=REGIONS.map(r=>{const first=COURSES.findIndex(c=>c.reg===r.id);const ok=this.unlockedIdx(first);return`<button class="chip ${r.id===this.reg?'on':''} ${ok?'':'lock'}" data-reg="${r.id}">${ok?'':'🔒 '}${this.L(r)}</button>`;}).join('');
   $('mRegs').querySelectorAll('[data-reg]').forEach(b=>b.onclick=()=>{AU.play('ui');this.reg=b.dataset.reg;this.renderMap();});
   $('mList').innerHTML=COURSES.map((co,i)=>{if(co.reg!==this.reg)return'';const ok=this.unlockedIdx(i);const prev=COURSES[i-1];
-   return`<div class="ccard ${ok?'':'lock'}" data-i="${i}"><div class="cimg" style="background-image:url(art/bg_${co.bg}.webp)">${s.secrets[co.id]?'<span class="sec">★</span>':''}${co.fork?'<span class="fork">🔀</span>':''}</div>
+   return`<div class="ccard ${ok?'':'lock'}" data-i="${i}"><div class="cimg" style="background-image:url(art/th_${co.id}.webp)">${s.secrets[co.id]?'<span class="sec">★</span>':''}${co.fork?'<span class="fork">🔀</span>':''}</div>
     <div class="cinfo"><b>${this.L(co)}</b><small>${ok?this.L(co.blurb):this.T('needPts',{n:co.need.toLocaleString(),c:prev?this.L(prev):''})}</small>${ok&&s.best[co.id]?`<em>${this.T('best')} ${s.best[co.id].toLocaleString()}</em>`:''}</div>
     <button class="btn ${ok?'pink':''} go" ${ok?'':'disabled'}>${ok?this.T('go'):'🔒'}</button></div>`;}).join('');
   $('mList').querySelectorAll('.ccard').forEach(c=>{const i=+c.dataset.i;c.onclick=()=>{if(!this.unlockedIdx(i)){AU.play('back');return;}AU.play('ui');this.play(COURSES[i]);};});
@@ -51,7 +51,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   this.rv.groups=groups;const keys=CAST_ORDER.filter(c=>groups[c]);
   if(!keys.length){this.summary();return;}
   for(const c of keys){let best=null,bv=-1;for(const p of groups[c]){const v=G.evalPhoto(p).total;if(v>bv){bv=v;best=p;}}this.rv.sel[c]=best.id;}
-  $('rGroups').innerHTML=keys.map(c=>`<div class="rg"><div class="rgh"><img src="art/c_${c}_1.webp" alt=""><b>${this.cn(c)}</b><small>×${groups[c].length}</small></div><div class="rrow">${groups[c].map(p=>`<button class="ph ${this.rv.sel[c]===p.id?'on':''}" data-c="${c}" data-id="${p.id}" style="background-image:url(${p.img})"></button>`).join('')}</div></div>`).join('');
+  $('rGroups').innerHTML=keys.map(c=>`<div class="rg"><div class="rgh"><img src="art/c_${c}_1.webp?v=${window.__BUILD__||''}" alt=""><b>${this.cn(c)}</b><small>×${groups[c].length}</small></div><div class="rrow">${groups[c].map(p=>`<button class="ph ${this.rv.sel[c]===p.id?'on':''}" data-c="${c}" data-id="${p.id}" style="background-image:url(${p.img})"></button>`).join('')}</div></div>`).join('');
   $('rGroups').querySelectorAll('.ph').forEach(b=>b.onclick=()=>{AU.play('tick');const c=b.dataset.c,id=+b.dataset.id;if(this.rv.sel[c]===id)delete this.rv.sel[c];else this.rv.sel[c]=id;$('rGroups').querySelectorAll(`.ph[data-c="${c}"]`).forEach(x=>x.classList.toggle('on',this.rv.sel[c]===+x.dataset.id));$('rShow').disabled=!Object.keys(this.rv.sel).length;});
   $('rShow').disabled=false;$('rPick').classList.add('on');$('rGroups').scrollTop=0;
   $('rShow').onclick=()=>{AU.play('ui');this.rv.items=CAST_ORDER.filter(c=>this.rv.sel[c]!==undefined).map(c=>photos[this.rv.sel[c]]);this.rv.k=0;$('rPick').classList.remove('on');$('rEval').classList.add('on');this.evalNext();};},
@@ -79,7 +79,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('sNews').innerHTML=rv.news.map(n=>`<div>${n}</div>`).join('');$('rSum').classList.add('on');AU.jingle();
   $('sDone').onclick=()=>{AU.play('ui');const ni=COURSES.findIndex((c,i)=>!before[i]&&this.unlockedIdx(i));if(ni>=0)this.reg=COURSES[ni].reg;this.show('sMap');};},
  // ---------- album / requests ----------
- renderAlbum(){const s=this.state;const cards=CAST_ORDER.map(c=>{const a=s.album[c];return`<button class="acard ${a?'':'empty'}" data-c="${c}">${a&&a.img?`<div class="aimg" style="background-image:url(${a.img})"></div>`:`<div class="aimg sil"><img src="art/c_${c}_1.webp" alt=""></div>`}<b>${this.cn(c)}</b><small>${a?a.score.toLocaleString()+' '+this.T('pts'):this.T('unseen')}</small></button>`;}).join('');
+ renderAlbum(){const s=this.state;const cards=CAST_ORDER.map(c=>{const a=s.album[c];return`<button class="acard ${a?'':'empty'}" data-c="${c}">${a&&a.img?`<div class="aimg" style="background-image:url(${a.img})"></div>`:`<div class="aimg sil"><img src="art/c_${c}_1.webp?v=${window.__BUILD__||''}" alt=""></div>`}<b>${this.cn(c)}</b><small>${a?a.score.toLocaleString()+' '+this.T('pts'):this.T('unseen')}</small></button>`;}).join('');
   const sp=COURSES.filter(co=>s.specials[co.id]).map(co=>{const x=s.specials[co.id];return`<button class="acard sp" data-s="${co.id}"><div class="aimg" style="background-image:url(${x.img})"></div><b>★ ${this.L(co.secret)}</b><small>${this.L(co)}</small></button>`;}).join('');
   $('aGrid').innerHTML=cards+`<h3 class="ah">${this.T('specials')} (${Object.keys(s.specials).length}/${COURSES.length})</h3>`+(sp||`<p class="hint">—</p>`);
   $('aGrid').querySelectorAll('[data-c],[data-s]').forEach(b=>b.onclick=()=>{const a=b.dataset.c?s.album[b.dataset.c]:s.specials[b.dataset.s];if(!a||!a.img)return;AU.play('ui');const co=COURSES.find(c=>c.id===a.course||c.id===b.dataset.s);

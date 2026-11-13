@@ -16,7 +16,7 @@ const CONF=[0xff4a8a,0x4ad8ff,0xffd23a,0x7ae05a,0xb07aff];
 class Actor{
  constructor(sp,idx,pos,game){this.sp=sp;this.idx=idx;this.c=sp.c;this.ch=CHARS[sp.c];this.home=pos.clone();this.pos=pos.clone();this.G=game;this.S=game.scene;
   this.b=sp.b;this.state=sp.b==='sleep'?'sleep':sp.b==='hide'?'hide':'idle';this.pose=0;this.timer=1+Math.random()*3;this.look=0;this.tags=new Set();this.dir=1;this.y=0;this.rz=0;this.act=0;this.awake=false;this.hop=0;
-  this.mats=[0,1,2].map(i=>{const n=(i===0&&this.ch.noIdle0)?1:i;const t=W.loadTex('art/c_'+this.c+'_'+n+'.webp');return new THREE.MeshBasicMaterial({map:t,transparent:true,alphaTest:.08,side:THREE.DoubleSide,fog:true});});
+  this.mats=[0,1,2].map(i=>{const n=(i===0&&this.ch.noIdle0)?1:i;const t=W.loadTex('art/c_'+this.c+'_'+n+'.webp?v='+(window.__BUILD__||''));return new THREE.MeshBasicMaterial({map:t,transparent:true,alphaTest:.08,side:THREE.DoubleSide,fog:true});});
   this.geo=new THREE.PlaneGeometry(1,1);this.geo.translate(0,.5,0);this.mesh=new THREE.Mesh(this.geo,this.mats[0]);this.grp=new THREE.Group();this.grp.add(this.mesh);this.S.add(this.grp);
   this.shadow=new THREE.Mesh(new THREE.PlaneGeometry(1,1),new THREE.MeshBasicMaterial({map:FX.t('shadow'),transparent:true,depthWrite:false}));this.shadow.rotation.x=-Math.PI/2;this.S.add(this.shadow);
   this.wanderA=this.home.clone();const t0=game.curve.getTangentAt(Math.min(.99,sp.t));this.tan=new THREE.Vector3(t0.x,0,t0.z).normalize();
