@@ -8,8 +8,8 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css?v=1.1.1">
-<script>window.__BUILD__='v1.1.1';</script>
+<link rel="stylesheet" href="style.css?v=1.2">
+<script>window.__BUILD__='v1.2';</script>
 </head>
 <body>
 <div id="app">
@@ -64,7 +64,7 @@
   </div>
   <div class="items">
    <button class="ibtn" id="bApple"><span class="ic">🍎</span><small data-t="apple">Apple</small></button>
-   <button class="ibtn" id="bHoney"><span class="ic">🍯</span><small data-t="honey">Honey</small></button>
+   <button class="ibtn" id="bMoney"><span class="ic"><svg class="mbag" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true"><path d="M24 14c-3-5 1-9 4-7l4 3 4-3c3-2 7 2 4 7z" fill="#e9d6a2" stroke="#8a6a32" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 17h14c10 6 17 16 17 27 0 9-7 15-24 15S8 53 8 44c0-11 7-21 17-27z" fill="#f1e2b4" stroke="#8a6a32" stroke-width="2.5" stroke-linejoin="round"/><path d="M23 17.5c5 2 13 2 18 0" fill="none" stroke="#e0a630" stroke-width="3.5" stroke-linecap="round"/><text x="32" y="51" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="26" fill="#2e8b3e">$</text></svg></span><small data-t="money">Money</small></button>
    <button class="ibtn" id="bWhistle"><span class="ic">🎵</span><small data-t="whistle">Whistle</small></button>
   </div>
   <div class="zoombox"><small data-t="zoom">Zoom</small><input id="zoomR" type="range" min="1" max="4" step="0.05" value="1"></div>
@@ -125,14 +125,14 @@
  <div id="toast" class="toast"></div>
 </div>
 <script src="js/three.min.js"></script>
-<script src="js/data.js?v=1.1.1"></script>
-<script src="js/audio.js?v=1.1.1"></script>
-<script src="js/world.js?v=1.1.1"></script>
-<script src="js/props.js?v=1.1.1"></script>
-<script src="js/sets.js?v=1.1.1"></script>
-<script src="js/subjects.js?v=1.1.1"></script>
-<script src="js/game.js?v=1.1.1"></script>
-<script src="js/ui.js?v=1.1.1"></script>
+<script src="js/data.js?v=1.2"></script>
+<script src="js/audio.js?v=1.2"></script>
+<script src="js/world.js?v=1.2"></script>
+<script src="js/props.js?v=1.2"></script>
+<script src="js/sets.js?v=1.2"></script>
+<script src="js/subjects.js?v=1.2"></script>
+<script src="js/game.js?v=1.2"></script>
+<script src="js/ui.js?v=1.2"></script>
 <script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
 function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}
 function chk(){try{fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(j){if(j&&newer(j.build,B)&&!document.getElementById('updbar')){var d=document.createElement('div');d.id='updbar';d.textContent=(window.HS&&HS.T)?HS.T('updated'):'Update available — tap to reload';d.style.cssText='position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:99998;background:#ff5aa0;color:#fff;border:3px solid #fff;border-radius:999px;padding:12px 20px;font:800 16px system-ui,sans-serif;box-shadow:0 4px 0 #0003;cursor:pointer;pointer-events:auto;white-space:nowrap';d.onclick=function(e){e.stopPropagation();location.reload()};d.addEventListener('touchstart',function(e){e.stopPropagation();location.reload()},{passive:true});document.body.appendChild(d)}}).catch(function(){})}catch(e){}}

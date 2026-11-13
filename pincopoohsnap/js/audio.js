@@ -191,6 +191,7 @@ const AU={ctx:null,mv:.7,sv:1,on:true,cur:null,pending:null,timer:null,step:0,ne
    case'pop':this.tone(t,320,.1,'sine',.35,null,.002,950);this.nz(t,.05,.2,4000);break;
    case'boing':this.tone(t,190,.33,'sine',.3,null,.005,720);break;
    case'nom':for(let i=0;i<3;i++)this.tone(t+i*.12,280+i*25,.08,'triangle',.16);break;
+   case'cash':this.tone(t,this.hz(88),.06,'square',.08);this.tone(t+.06,this.hz(96),.32,'triangle',.16);this.tone(t+.06,this.hz(100),.26,'sine',.09);this.nz(t+.05,.12,.12,6000);break;
    case'yay':[74,78,81,86].forEach((n,i)=>this.tone(t+i*.055,this.hz(n),.17,'triangle',.17));break;
    case'secret':[70,74,77,81,82,86,89,94].forEach((n,i)=>this.tone(t+i*.065,this.hz(n),.3,'sine',.12));this.nz(t,.6,.08,7000);break;
    case'tick':this.tone(t,1300+Math.random()*200,.035,'triangle',.1);break;

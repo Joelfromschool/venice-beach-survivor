@@ -3,11 +3,13 @@
 const FX={list:[],tex:{},
  t(k){if(this.tex[k])return this.tex[k];const c=document.createElement('canvas');c.width=c.height=64;const g=c.getContext('2d');g.textAlign='center';g.textBaseline='middle';
   const glyph={z:['Z','#6a8aff'],note:['♪','#ff4ab0'],heart:['♥','#ff4a7a'],star:['★','#ffd23a'],spark:['✦','#ffffff'],crumb:['●','#c8945a'],petal:['❀','#ffb7d5'],steam:['~','#ffffff'],cool:['✧','#4af0ff'],drop:['●','#ffb21a']}[k];
+  if(k==='cash'){g.save();g.translate(32,32);g.fillStyle='#fff';g.fillRect(-29,-17,58,34);g.fillStyle='#5cbf5a';g.fillRect(-26,-14,52,28);g.strokeStyle='#2e7d32';g.lineWidth=3;g.strokeRect(-22,-10,44,20);g.fillStyle='#eaffea';g.beginPath();g.arc(0,0,9,0,7);g.fill();g.fillStyle='#2e7d32';g.font='900 16px Arial,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('$',0,1);g.restore();}
+  else if(k==='coin'){g.fillStyle='#fff';g.beginPath();g.arc(32,32,26,0,7);g.fill();g.fillStyle='#ffc93a';g.beginPath();g.arc(32,32,22,0,7);g.fill();g.strokeStyle='#d99a10';g.lineWidth=3;g.beginPath();g.arc(32,32,16,0,7);g.stroke();g.fillStyle='#b8760a';g.font='900 24px Arial,sans-serif';g.fillText('$',32,34);}
   if(glyph){g.font='bold 50px sans-serif';g.lineWidth=6;g.strokeStyle='#ffffff';if(k!=='spark'&&k!=='steam')g.strokeText(glyph[0],32,34);g.fillStyle=glyph[1];g.fillText(glyph[0],32,34);}
   else if(k==='shadow'){const gr=g.createRadialGradient(32,32,2,32,32,30);gr.addColorStop(0,'rgba(0,0,0,.35)');gr.addColorStop(1,'rgba(0,0,0,0)');g.fillStyle=gr;g.fillRect(0,0,64,64);}
   else if(k==='conf'){g.fillStyle='#fff';g.fillRect(16,24,32,16);}
   const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return this.tex[k]=t;},
- spawn(S,k,pos,vel,life,size,col){const m=new THREE.Sprite(new THREE.SpriteMaterial({map:this.t(k),transparent:true,depthWrite:false,color:col||0xffffff}));m.position.copy(pos);m.scale.setScalar(size||.5);S.add(m);this.list.push({m,v:vel||new THREE.Vector3(),life,max:life,g:k==='conf'||k==='crumb'||k==='drop'?-6:0,spin:k==='conf'});},
+ spawn(S,k,pos,vel,life,size,col){const m=new THREE.Sprite(new THREE.SpriteMaterial({map:this.t(k),transparent:true,depthWrite:false,color:col||0xffffff}));m.position.copy(pos);m.scale.setScalar(size||.5);S.add(m);this.list.push({m,v:vel||new THREE.Vector3(),life,max:life,g:k==='conf'||k==='crumb'||k==='drop'||k==='coin'?-6:k==='cash'?-2.2:0,spin:k==='conf'||k==='cash'});},
  burst(S,k,pos,n,spd,life,size,cols){for(let i=0;i<n;i++){const v=new THREE.Vector3((Math.random()-.5)*spd,Math.random()*spd*.8+spd*.3,(Math.random()-.5)*spd);this.spawn(S,k,pos,v,life*(.6+Math.random()*.6),size,cols?cols[i%cols.length]:null);}},
  update(dt,S){for(let i=this.list.length-1;i>=0;i--){const p=this.list[i];p.life-=dt;if(p.life<=0){S.remove(p.m);p.m.material.dispose();this.list.splice(i,1);continue;}p.v.y+=p.g*dt;p.m.position.addScaledVector(p.v,dt);p.m.material.opacity=Math.min(1,p.life/p.max*2);if(p.spin)p.m.material.rotation+=dt*8;}},
  clear(S){for(const p of this.list){S.remove(p.m);p.m.material.dispose();}this.list=[];},
@@ -34,9 +36,10 @@ class Actor{
   if(this.state==='hide'&&this.near(G.cam.position,22))return this.reveal();
   if(this.state==='idle'||this.state==='wander'||this.state==='special'){this.state='look';this.timer=2.6;this.setPose(1);this.hop=.5;AU.play('boing');FX.burst(this.S,'heart',this.headPos(),3,2,1,.45);this.tag('look',2.6);}}
  onLure(item,p,hit){const G=this.G;if(this.state==='gone')return;
+  if(hit&&item==='money'&&this.c==='pooh'){if(this.sp.secret&&G.co.secret.item==='money'&&!G.secretDone)return this.doSecret(p);this.target=p.clone();this.goal='money';this.state='goto';return;}
   if(hit){this.state='bonk';this.timer=2;this.setPose(1);this.tag('bonk',2.4);AU.play('bonk');FX.burst(this.S,'star',this.headPos(),6,3,1.2,.4);if(this.sp.secret&&G.co.secret.item==='apple'&&!G.secretDone&&item==='apple')setTimeout(()=>this.doSecret(),900);if(this.sp.branch&&!G.branchOpen)setTimeout(()=>this.doBranch(),900);return;}
   const d=this.pos.distanceTo(p);
-  if(item==='honey'){if(this.c==='pooh'&&d<24){if(this.sp.secret&&G.co.secret.item==='honey'&&!G.secretDone)return this.doSecret(p);this.state='goto';this.target=p.clone();this.goal='honey';this.wakeIfSleep();return;}
+  if(item==='money'){if(this.c==='pooh'&&d<32){if(this.sp.secret&&G.co.secret.item==='money'&&!G.secretDone)return this.doSecret(p);this.wakeIfSleep();this.grp.visible=true;this.shadow.visible=true;this.rz=0;this.target=p.clone();this.goal='money';this.state='goto';this.hop=.6;AU.play('boing');FX.burst(this.S,'heart',this.headPos(),4,2.5,1,.45);return;}
    if(d<9){this.wakeIfSleep();this.state='look';this.timer=2;this.setPose(1);this.hop=.4;}return;}
   if(item==='apple'){if(this.state==='hide'&&this.sp._propPos&&this.sp._propPos.distanceTo(p)<6)return this.reveal();
    if(d<10){if(this.sp.secret&&G.co.secret.item==='apple'&&!G.secretDone)return this.doSecret(p);if(this.sp.branch&&!G.branchOpen)return this.doBranch();
@@ -60,11 +63,11 @@ class Actor{
    case'sleep':this.setPose(0);this.rz=1.3*(this.idx%2?1:-1);if(Math.random()<dt*.8)FX.spawn(this.S,'z',this.pos.clone().add(new THREE.Vector3(0,ch.h*.55,0)),new THREE.Vector3(.3,.8,0),2.2,.5);sq=1+Math.sin(t*1.6)*.04;if(dist<30&&Math.random()<dt*.15)AU.play('zzz');break;
    case'hide':break;
    case'bonk':this.setPose(1);this.rz=Math.sin(t*14)*.18;if(this.timer<=0){this.rz=0;this.state='look';this.timer=1.5;}break;
-   case'goto':case'run':{const tg=this.target;const v=tg.clone().sub(this.pos).setY(0);const d=v.length();if(d>(this.state==='run'?.5:1.1)){v.normalize().multiplyScalar((this.state==='run'?6:3.2)*dt);this.pos.add(v);this.walkDir(v);bobY=Math.abs(Math.sin(t*12))*.25;this.setPose(this.state==='run'?1:0);}
+   case'goto':case'run':{const tg=this.target;const v=tg.clone().sub(this.pos).setY(0);const d=v.length();const zoomy=this.goal==='money'&&this.state==='goto';if(zoomy&&Math.random()<dt*14)FX.spawn(this.S,'coin',this.pos.clone().add(new THREE.Vector3(0,this.ch.h*.4+this.y,0)),new THREE.Vector3((Math.random()-.5),.6,(Math.random()-.5)),.6,.28);if(d>(this.state==='run'?.5:1.1)){v.normalize().multiplyScalar((this.state==='run'?6:zoomy?9.5:3.2)*dt);this.pos.add(v);this.walkDir(v);bobY=Math.abs(Math.sin(t*12))*.25;this.setPose(this.state==='run'?1:0);}
      else if(this.state==='run'){this.state='idle';this.timer=3;this.home=this.pos.clone();}
-     else{this.state='eat';this.timer=this.goal==='honey'?6:3.5;this.home=this.pos.clone();if(this.goal==='apple'&&G.consume)G.consume(tg);AU.play(this.goal==='honey'?'yay':'nom');}
+     else{this.state='eat';this.timer=this.goal==='money'?6:3.5;this.home=this.pos.clone();if(G.consume)G.consume(tg);if(this.goal==='money'){AU.play('cash');AU.play('yay');this.hop=1;FX.burst(this.S,'cash',this.headPos(),14,5,1.8,.55);FX.burst(this.S,'coin',this.headPos(),8,4,1.2,.32);}else AU.play('nom');}
      if(this.timer<-12){this.state='idle';this.timer=2;}}break;
-   case'eat':if(this.goal==='honey'){this.setPose(2);this.tag('honey',.5);if(Math.random()<dt*3)FX.spawn(this.S,'heart',this.headPos(),new THREE.Vector3((Math.random()-.5),1,0),1.4,.4);}
+   case'eat':if(this.goal==='money'){this.setPose(2);this.tag('money',.5);sq=1+Math.abs(Math.sin(t*7))*.05;this.rz=Math.sin(t*5)*.06;if(Math.random()<dt*7)FX.spawn(this.S,'cash',this.headPos().add(new THREE.Vector3(0,-.3,0)),new THREE.Vector3((Math.random()-.5)*3,2.6+Math.random()*1.5,(Math.random()-.5)*3),1.6,.5);if(Math.random()<dt*2.5)FX.spawn(this.S,'heart',this.headPos(),new THREE.Vector3((Math.random()-.5),1,0),1.4,.4);if(Math.random()<dt*1.2)AU.play('cash');if(this.timer<=0)this.rz=0;}
      else{this.setPose(this.c==='mogu'?2:ch.eat?0:1);this.tag('eat',.5);sq=1+Math.abs(Math.sin(t*10))*.05;if(Math.random()<dt*4)FX.spawn(this.S,'crumb',this.headPos().add(new THREE.Vector3(0,-.4,0)),new THREE.Vector3((Math.random()-.5)*2,1.5,(Math.random()-.5)*2),.8,.18);}
      if(this.timer<=0){this.state='look';this.timer=2;}break;
    case'special':this.specialT+=dt;this.setPose(2);this.tag('special',.3);this.fxSpecial(dt,t);bobY=this._by||0;sq=this._sq||1;if(this.timer<=0){this.state='idle';this.timer=2.5+Math.random()*2;this.rz=0;this._by=0;this._sq=1;}break;
@@ -95,7 +98,7 @@ class Actor{
  fxSecret(dt,t){const S=this.S,k=this.secretT;this._by=0;
   switch(this.c){
    case'pinco':this._by=Math.sin(Math.min(1,k/3)*Math.PI)*5+Math.max(0,Math.sin(k*2))*.5;this.rz=k<3?Math.sin(k*Math.PI*2/3*2)*.6:0;if(Math.random()<dt*14)FX.spawn(S,'spark',this.headPos(),new THREE.Vector3((Math.random()-.5)*2,-.5,(Math.random()-.5)*2),.8,.35);break;
-   case'pooh':this._by=Math.min(4,k*1.2)+Math.sin(k*2)*.2;if(Math.random()<dt*10)FX.spawn(S,this.G.co.id==='tokyo'?'petal':'spark',this.headPos().add(new THREE.Vector3((Math.random()-.5)*3,1,(Math.random()-.5)*3)),new THREE.Vector3(.4,-.6,0),2,.4);break;
+   case'pooh':this._by=Math.min(4,k*1.2)+Math.sin(k*2)*.2;if(Math.random()<dt*16)FX.spawn(S,'cash',this.headPos().add(new THREE.Vector3((Math.random()-.5)*7,3.5+Math.random()*2,(Math.random()-.5)*7)),new THREE.Vector3(.3,-1.2,0),2.6,.55);if(Math.random()<dt*6)FX.spawn(S,this.G.co.id==='tokyo'?'petal':'coin',this.headPos().add(new THREE.Vector3((Math.random()-.5)*4,2.5,(Math.random()-.5)*4)),new THREE.Vector3(.4,-.6,0),2,.4);if(Math.random()<dt*1.5)AU.play('cash');break;
    case'party':if(Math.random()<dt*6)FX.burst(S,'conf',this.headPos(),10,7,1.6,.22,CONF);this.rz=Math.sin(k*6)*.1;break;
    case'dkermit':case'pooping':if(Math.random()<dt*5)FX.spawn(S,this.c==='dkermit'?'note':'star',this.headPos(),new THREE.Vector3((Math.random()-.5),1.2,0),1.6,.5);this.rz=Math.sin(k*(this.c==='pooping'?6:3))*.12;
      for(const a of this.G.actors)if(a!==this&&a.state!=='hide'&&a.state!=='gone'&&a.pos.distanceTo(this.pos)<26&&a.state!=='secret'){a.state='look';a.timer=2;a.setPose(1);if(Math.random()<dt*2)a.hop=.6;a.rz=0;a.tag('dance',2);}break;

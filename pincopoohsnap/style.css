@@ -88,7 +88,7 @@ html[lang=ja] .bar h2{font-family:var(--body);font-weight:900;font-size:22px}
 .btn.icon{min-height:48px;width:52px;padding:0;font-family:var(--body);font-weight:900;font-size:18px}
 .items{position:absolute;display:flex;gap:10px}
 .ibtn{width:76px;height:76px;border-radius:50%;border:4px solid #fff;background:#ffffffd8;box-shadow:0 5px 0 #0003;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;touch-action:none}
-.ibtn .ic{font-size:30px;line-height:1}.ibtn small{font-size:11px;font-weight:900;margin-top:2px}
+.ibtn .ic{font-size:30px;line-height:1}.ibtn .mbag{display:block;width:34px;height:34px}.ibtn small{font-size:11px;font-weight:900;margin-top:2px}
 .ibtn.pop{animation:ipop .3s}@keyframes ipop{40%{transform:scale(.85)}}
 .ibtn.lock{opacity:.4;filter:grayscale(1)}.ibtn.cd{opacity:.55}
 .shutter{position:absolute;width:104px;height:104px;border-radius:50%;border:6px solid #fff;background:var(--pink);box-shadow:0 6px 0 var(--pinkd),0 0 0 6px #ff5aa055;padding:0;touch-action:none}

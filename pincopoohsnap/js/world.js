@@ -43,7 +43,7 @@ const W={tex:{},G:{},matCache:{},
  m(col){return this.matCache[col]||(this.matCache[col]=this.mat(col));},
  rnd:null,seed(s){let x=s>>>0||1;this.rnd=()=>{x^=x<<13;x>>>=0;x^=x>>17;x^=x<<5;x>>>=0;return x/4294967296;};},
  R(a,b){return a+(b-a)*this.rnd();},pick(a){return a[(this.rnd()*a.length)|0];},
- // legacy simple geometry cache (used by game.js for apples/honey)
+ // legacy simple geometry cache (used by game.js for thrown apples/money)
  geo(k){if(this.G[k])return this.G[k];let g;switch(k){case'dot':g=new THREE.CylinderGeometry(.12,.12,.08,8);break;case'box':g=new THREE.BoxGeometry(1,1,1);break;case'cyl':g=new THREE.CylinderGeometry(.5,.5,1,12);break;case'cone':g=new THREE.ConeGeometry(.5,1,12);break;case'sph':g=new THREE.SphereGeometry(.5,14,10);break;case'ico':g=new THREE.IcosahedronGeometry(.5,1);break;case'tor':g=new THREE.TorusGeometry(.5,.08,8,24);break;}return this.G[k]=g;},
  U:{uTime:{value:0}},
  // ---------------- shape library (base at y=0 unless noted) ----------------
@@ -148,7 +148,7 @@ Object.assign(W,{
  cloudTex(){if(this.tex.cloud)return this.tex.cloud;return this.tex.cloud=this.canvasTex(256,128,(g,w,h)=>{const R=Math.random;for(let i=0;i<26;i++){const x=40+R()*176,y=60+R()*36-(Math.abs(x-128)<60?18:0),r=18+R()*26;const gr=g.createRadialGradient(x,y-r*.3,r*.1,x,y,r);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.7,'rgba(250,252,255,.9)');gr.addColorStop(1,'rgba(235,242,255,0)');g.fillStyle=gr;g.beginPath();g.arc(x,y,r,0,7);g.fill();}
    const sh=g.createLinearGradient(0,60,0,128);sh.addColorStop(0,'rgba(255,255,255,0)');sh.addColorStop(1,'rgba(190,205,230,.55)');g.globalCompositeOperation='source-atop';g.fillStyle=sh;g.fillRect(0,0,w,h);});},
  // neon / billboard ad strip for screens (scrolls)
- screenTex(){const t=this.canvasTex(256,1024,(g,w,h)=>{const C=['#ff4ad8','#4af0ff','#ffe14a','#8a6aff','#4aff9a','#ff7a3a'];const words=['SNAP!','ピンコ','HONEY','スナップ','PINCO','ハチミツ','SMILE','パシャ!','POOH','カメラ'];
+ screenTex(){const t=this.canvasTex(256,1024,(g,w,h)=>{const C=['#ff4ad8','#4af0ff','#ffe14a','#8a6aff','#4aff9a','#ff7a3a'];const words=['SNAP!','ピンコ','MONEY','スナップ','PINCO','マネー','SMILE','パシャ!','POOH','カメラ'];
    for(let i=0;i<8;i++){const y=i*128;const gr=g.createLinearGradient(0,y,w,y+128);gr.addColorStop(0,C[i%6]);gr.addColorStop(1,C[(i+2)%6]);g.fillStyle=gr;g.fillRect(0,y,w,128);
     g.globalAlpha=.35;g.fillStyle='#fff';for(let k=0;k<6;k++){g.beginPath();g.arc(Math.random()*w,y+Math.random()*128,6+Math.random()*22,0,7);g.fill();}g.globalAlpha=1;
     g.font='bold 52px "Hiragino Sans","Arial Black",sans-serif';g.textAlign='center';g.textBaseline='middle';g.lineWidth=8;g.strokeStyle='rgba(0,0,0,.35)';g.strokeText(words[i%words.length],w/2,y+66);g.fillStyle='#fff';g.fillText(words[i%words.length],w/2,y+64);}});

@@ -1,18 +1,18 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const HUD={
- start(co){$('hFilm').textContent=G.film;$('hCourse').textContent=HS.L(co);$('bHoney').classList.toggle('lock',!HS.state.honey);$('hTip').classList.remove('on');$('pause').classList.remove('on');$('hBanner').className='banner';this.banner(HS.L(co),'#4ad8ff');},
+ start(co){$('hFilm').textContent=G.film;$('hCourse').textContent=HS.L(co);$('bMoney').classList.toggle('lock',!HS.state.money);$('hTip').classList.remove('on');$('pause').classList.remove('on');$('hBanner').className='banner';this.banner(HS.L(co),'#4ad8ff');},
  update(g){$('hFilm').textContent=g.film;$('hProg').style.width=Math.min(100,g.u*100)+'%';$('bWhistle').classList.toggle('cd',g.whCd>0);$('hFilm').parentNode.classList.toggle('low',g.film<=5);},
  banner(t,col,big){const b=$('hBanner');b.textContent=t;b.style.setProperty('--bc',col||'#ff5aa0');b.className='banner'+(big?' big':'');void b.offsetWidth;b.classList.add('on');},
  tip(t){const e=$('hTip');e.textContent=t;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');clearTimeout(this._tt);this._tt=setTimeout(()=>e.classList.remove('on'),4200);},
  ring(){const r=$('hRing');r.classList.remove('on');void r.offsetWidth;r.classList.add('on');},
  snap(img){const f=$('hFlash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on');const t=$('hThumb');t.style.backgroundImage=`url(${img})`;t.classList.remove('on');void t.offsetWidth;t.classList.add('on');$('vf').classList.remove('kick');void $('vf').offsetWidth;$('vf').classList.add('kick');},
  flashMsg(t){this.tip(t);},
- press(k){const b={apple:'bApple',honey:'bHoney',whistle:'bWhistle'}[k];if(!b)return;const e=$(b);e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');},
+ press(k){const b={apple:'bApple',money:'bMoney',whistle:'bWhistle'}[k];if(!b)return;const e=$(b);e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');},
 };
 const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
- defState(){const ja=(navigator.language||'').toLowerCase().startsWith('ja');return{v:1,started:false,opt:{lang:ja?'ja':'en',music:.7,sfx:1,sens:1},pts:0,unlocked:{venice:true},secrets:{},best:{},album:{},specials:{},req:{},honey:false,cheat:false,played:{}};},
- load(){let s=null;try{s=JSON.parse(localStorage.getItem(this.KEY));}catch(e){}const d=this.defState();if(!s||s.v!==1)return d;return Object.assign(d,s,{opt:Object.assign(d.opt,s.opt||{})});},
+ defState(){const ja=(navigator.language||'').toLowerCase().startsWith('ja');return{v:1,started:false,opt:{lang:ja?'ja':'en',music:.7,sfx:1,sens:1},pts:0,unlocked:{venice:true},secrets:{},best:{},album:{},specials:{},req:{},money:false,cheat:false,played:{}};},
+ load(){let s=null;try{s=JSON.parse(localStorage.getItem(this.KEY));}catch(e){}const d=this.defState();if(!s||s.v!==1)return d;if('honey' in s){s.money=!!(s.money||s.honey);delete s.honey;}if(s.req&&s.req['r_pooh_'+'honey']){s.req.r_pooh_money=true;delete s.req['r_pooh_'+'honey'];}return Object.assign(d,s,{opt:Object.assign(d.opt,s.opt||{})});},
  save(){try{localStorage.setItem(this.KEY,JSON.stringify(this.state));}catch(e){try{for(const k in this.state.album)if(this.state.album[k].img&&this.state.album[k].img.length>60000)this.state.album[k].img='';localStorage.setItem(this.KEY,JSON.stringify(this.state));}catch(e2){}}},
  T(k,v){const s=STR[k];let r=s?s[this.lang==='ja'?1:0]:k;if(v)for(const x in v)r=r.replace('{'+x+'}',v[x]);return r;},
  L(o){return o?(o[this.lang]||o.en):'';},
@@ -71,7 +71,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
  summary(){const rv=this.rv,s=this.state,co=rv.co;const before=COURSES.map((c,i)=>this.unlockedIdx(i));
   if(!s.req.r_all&&CAST_ORDER.every(c=>s.album[c])){s.req.r_all=true;const q=REQUESTS.find(q=>q.id==='r_all');rv.reqPts+=q.pts;rv.news.push(this.T('reqDone',{r:this.L(q),n:q.pts.toLocaleString()}));}
   const earned=rv.course+rv.reqPts;s.pts+=earned;s.best[co.id]=Math.max(s.best[co.id]||0,rv.course);
-  if(!s.honey&&s.pts>=HONEY_AT){s.honey=true;rv.news.push(this.T('honeyGet'));}
+  if(!s.money&&s.pts>=MONEY_AT){s.money=true;rv.news.push(this.T('moneyGet'));}
   COURSES.forEach((c,i)=>{if(!before[i]&&this.unlockedIdx(i)){s.unlocked[c.id]=true;rv.news.push(this.T('unlocked',{c:this.L(c)}));}});
   if(rv.flags.secret)rv.news.unshift('★ '+this.T('secretFound')+': '+this.L(co.secret));
   this.save();
@@ -89,7 +89,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
  renderOpt(){const s=this.state.opt;const seg=(id,vals,cur,f)=>{$(id).innerHTML=vals.map(v=>`<button class="chip ${Math.abs(v[0]-cur)<.01?'on':''}" data-v="${v[0]}">${v[1]}</button>`).join('');$(id).querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{AU.play('ui');f(+b.dataset.v);this.save();this.renderOpt();});};
   const vol=[[0,this.T('off')],[.4,'40%'],[.7,'70%'],[1,'100%']];seg('oMusic',vol,s.music,v=>{s.music=v;AU.setMV(v);});seg('oSfx',vol,s.sfx,v=>{s.sfx=v;AU.setSV(v);AU.play('ui');});
   seg('oSens',[[.7,this.lang==='ja'?'ゆっくり':'Slow'],[1,this.lang==='ja'?'ふつう':'Normal'],[1.4,this.lang==='ja'?'はやい':'Fast']],s.sens,v=>{s.sens=v;});},
- cheat(){const v=($('oCheat').value||'').trim().toUpperCase();if(v==='AMSABABY'){const s=this.state;s.cheat=true;s.honey=true;s.pts+=50000;s.started=true;COURSES.forEach(c=>s.unlocked[c.id]=true);this.save();AU.play('secret');this.toast(this.T('cheatOk'));$('oCheat').value='';}else{AU.play('back');this.toast(this.T('cheatBad'));}},
+ cheat(){const v=($('oCheat').value||'').trim().toUpperCase();if(v==='AMSABABY'){const s=this.state;s.cheat=true;s.money=true;s.pts+=50000;s.started=true;COURSES.forEach(c=>s.unlocked[c.id]=true);this.save();AU.play('secret');this.toast(this.T('cheatOk'));$('oCheat').value='';}else{AU.play('back');this.toast(this.T('cheatBad'));}},
  // ---------- init ----------
  init(){this.state=this.load();this.lang=this.state.opt.lang;AU.mv=this.state.opt.music;AU.sv=this.state.opt.sfx;
   $('tCast').innerHTML=['pooh_1','pinco_1','bean_1','max_1','dkermit_1','party_1'].map((k,i)=>`<img class="tc tc${i}" src="art/c_${k}.webp" alt="">`).join('');
@@ -105,7 +105,7 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('oCheatGo').onclick=()=>this.cheat();$('oReset').onclick=()=>{this.modal(`<p>${this.T('resetQ')}</p>`,[{t:this.T('no')},{t:this.T('yes'),cls:'danger',f:()=>{const l=this.lang;this.state=this.defState();this.state.opt.lang=l;this.save();this.toast('OK');this.show('sTitle');$('tMenu').classList.add('on');$('tStart').classList.add('hide');}}]);};
   // game buttons
   const tapBtn=(id,f)=>{const e=$(id);e.addEventListener('pointerdown',ev=>{ev.preventDefault();ev.stopPropagation();AU.unlock();f();});};
-  tapBtn('bShoot',()=>G.shoot());tapBtn('bApple',()=>G.throwItem('apple'));tapBtn('bHoney',()=>{if(!this.state.honey){HUD.tip(this.T('locked'));return;}G.throwItem('honey');});tapBtn('bWhistle',()=>G.whistle());
+  tapBtn('bShoot',()=>G.shoot());tapBtn('bApple',()=>G.throwItem('apple'));tapBtn('bMoney',()=>{if(!this.state.money){HUD.tip(this.T('moneyLocked',{n:MONEY_AT.toLocaleString()}));return;}G.throwItem('money');});tapBtn('bWhistle',()=>G.whistle());
   tapBtn('hPause',()=>{G.paused=true;$('pause').classList.add('on');AU.play('ui');});
   $('pResume').onclick=()=>{G.paused=false;$('pause').classList.remove('on');AU.play('ui');};
   $('pRestart').onclick=()=>{AU.play('ui');$('pause').classList.remove('on');G.start(this.cur);};

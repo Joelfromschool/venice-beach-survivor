@@ -3,7 +3,7 @@
 // h = world height (m), poses: 0 idle, 1 happy (looks at camera), 2 special
 const CHARS={
  pinco:{en:'Pinco',ja:'ピンコ',h:2.27,sp:{en:'Skateboard cruise',ja:'スケボーでクルーズ'},eat:false,col:'#ff8ab8'},
- pooh:{en:'Pooh',ja:'プー',h:2.02,sp:{en:'Honey time',ja:'はちみつタイム'},eat:true,col:'#ffc23a',float:true},
+ pooh:{en:'Pooh',ja:'プー',h:2.02,sp:{en:'Money time',ja:'マネータイム'},eat:true,col:'#ffc23a',float:true},
  bean:{en:'Mr Bean',ja:'ミスター・ビーン',h:1.95,sp:{en:'Big bounce',ja:'ビッグバウンス'},eat:false,col:'#9ccc3a'},
  pooping:{en:'Mr Pooping',ja:'ミスター・プーピング',h:1.89,sp:{en:'Happy dance',ja:'ハッピーダンス'},eat:false,col:'#a0663a'},
  bronny:{en:'Bronny',ja:'ブロニー',h:2.47,sp:{en:'Slam dunk',ja:'スラムダンク'},eat:false,col:'#f5b81c'},
@@ -96,7 +96,7 @@ const COURSES=[
   ]},
  {id:'tokyo',reg:'jp',en:'Tokyo',ja:'東京',bg:'tokyo',ground:0xb5d98a,path:0xd8c8b0,fog:0xd9e8f5,theme:'sakura',
   blurb:{en:'Temple gate, cherry blossoms, red tower.',ja:'お寺の門、桜、赤いタワー。'},need:80000,
-  secret:{c:'pooh',item:'honey',en:'Sakura float!',ja:'さくらフロート！'},
+  secret:{c:'pooh',item:'money',en:'Sakura money float!',ja:'さくらマネーフロート！'},
   spawns:[
    {c:'mogu',t:.08,s:-1,d:8,b:'special'},
    {c:'asmon',t:.18,s:1,d:7,b:'special',prop:'stall'},
@@ -153,7 +153,7 @@ const COURSES=[
  {id:'maui',reg:'tr',en:'Maui',ja:'マウイ',bg:'maui',ground:0x6fbf5a,path:0x6a6a70,fog:0xc9eaf5,water:1,theme:'jungle',
   blurb:{en:'Waterfalls, ferns and a sleeping volcano.',ja:'滝、シダ、眠る火山。'},need:180000,
   fork:{t:.5,dir:1},
-  secret:{c:'pooh',item:'honey',en:'Rainbow float!',ja:'レインボーフロート！'},
+  secret:{c:'pooh',item:'money',en:'Money Rain!',ja:'マネーレイン！'},
   spawns:[
    {c:'max',t:.08,s:-1,d:8,b:'special'},
    {c:'pinco',t:.18,s:1,d:9,b:'wander'},
@@ -183,12 +183,12 @@ const COURSES=[
   ]},
 ];
 const REGIONS=[{id:'la',en:'Los Angeles',ja:'ロサンゼルス'},{id:'jp',en:'Tokyo',ja:'東京'},{id:'tr',en:'Islands',ja:'アイランズ'}];
-const HONEY_AT=6000;
+const MONEY_AT=6000;
 
 // ---------- REQUESTS ----------
 // test(photo,subj) on evaluated photo meta
 const REQUESTS=[
- {id:'r_pooh_honey',en:'Pooh enjoying honey',ja:'はちみつを楽しむプー',pts:1500,t:p=>p.main&&p.main.c==='pooh'&&p.main.pose===2},
+ {id:'r_pooh_money',en:'Pooh grabbing money',ja:'お金をつかむプー',pts:1500,t:p=>p.main&&p.main.c==='pooh'&&p.main.pose===2},
  {id:'r_pinco_skate',en:'Pinco on a skateboard',ja:'スケボーに乗るピンコ',pts:1500,t:p=>p.main&&p.main.c==='pinco'&&p.main.pose===2},
  {id:'r_duo',en:'Two friends in one shot',ja:'2人の友だちを1枚に',pts:1000,t:p=>p.count>=2},
  {id:'r_trio',en:'Three friends in one shot',ja:'3人の友だちを1枚に',pts:3000,t:p=>p.count>=3},
@@ -216,11 +216,11 @@ const STR={
  menu:['Menu','メニュー'],back:['Back','もどる'],go:['Go!','出発！'],locked:['Locked','ロック中'],
  needPts:['Need {n} pts or find the secret in {c}','{n}ポイント、または{c}のひみつで解放'],
  best:['Best','ベスト'],secretFound:['Secret found','ひみつ発見'],points:['Research points','リサーチポイント'],pts:['pts','pt'],
- film:['Film','フィルム'],apple:['Apple','りんご'],honey:['Honey','はちみつ'],whistle:['Whistle','ふえ'],zoom:['Zoom','ズーム'],
+ film:['Film','フィルム'],apple:['Apple','りんご'],money:['Money','お金'],whistle:['Whistle','ふえ'],zoom:['Zoom','ズーム'],
  pause:['Paused','ポーズ'],resume:['Resume','つづける'],restart:['Restart course','コースをやり直す'],quit:['Back to courses','コース選択へ'],
  tipAim:['Drag anywhere to aim the camera','画面をドラッグしてカメラを向けよう'],tipShoot:['Tap the big pink button to snap a photo','ピンクの大きなボタンで撮影！'],
  tipZoom:['Slide the zoom bar or pinch to zoom','ズームバーをスライド、またはピンチでズーム'],tipApple:['Throw an apple near friends to get their attention','りんごを投げて気を引こう'],
- tipWhistle:['Blow the whistle to wake friends and make them look','ふえで起こしたり、こっちを向かせたり！'],tipHoney:['Honey pots are irresistible to a certain bear…','はちみつは、あのクマの大好物…'],
+ tipWhistle:['Blow the whistle to wake friends and make them look','ふえで起こしたり、こっちを向かせたり！'],tipMoney:['Money is irresistible to a certain bear…','お金は、あのクマの大好物…'],moneyLocked:['Money unlocks at {n} pts','お金は{n}ptで解放'],
  noFilm:['Out of film!','フィルム切れ！'],courseEnd:['End of the course!','コース終了！'],
  newPath:['A new path opened!','新しい道がひらいた！'],secretEv:['Secret!','ひみつ！'],
  reviewTitle:['Photo review','写真チェック'],pickHint:['Pick one photo per friend to show the Professor','友だちごとに1枚えらんで博士に見せよう'],
@@ -229,15 +229,15 @@ const STR={
  centered:['Centered ×2','ど真ん中 ×2'],cropped:['Cropped ×0.6','はみ出し ×0.6'],total:['Total','合計'],
  newRecord:['NEW RECORD!','新記録！'],noSubject:['Nobody in this photo…','だれも写ってない…'],
  summary:['Course results','コース結果'],earned:['Points earned','獲得ポイント'],
- unlocked:['New course unlocked: {c}!','新コース解放：{c}！'],honeyGet:['You got Honey pots!','はちみつポットを手に入れた！'],
+ unlocked:['New course unlocked: {c}!','新コース解放：{c}！'],moneyGet:['You got Money bags!','お金ぶくろを手に入れた！'],
  reqDone:['Request complete: {r} (+{n})','リクエスト達成：{r}（+{n}）'],
  unseen:['Not photographed yet','まだ撮影していない'],specials:['Secret shots','ひみつショット'],
  lang:['Language','言語'],music:['Music','音楽'],sfx:['Sound effects','効果音'],sens:['Aim speed','エイム速度'],on:['On','オン'],off:['Off','オフ'],
- cheat:['Cheat code','チートコード'],apply:['Apply','適用'],cheatOk:['Cheat on: all courses, honey and +50,000 pts!','チート有効：全コース、はちみつ、+50,000pt！'],cheatBad:['Unknown code','無効なコード'],
+ cheat:['Cheat code','チートコード'],apply:['Apply','適用'],cheatOk:['Cheat on: all courses, money and +50,000 pts!','チート有効：全コース、お金、+50,000pt！'],cheatBad:['Unknown code','無効なコード'],
  reset:['Reset save','セーブを消す'],resetQ:['Erase all progress?','すべての進行状況を消しますか？'],
  updated:['Update available — tap to reload','アップデートあり — タップで再読み込み'],
  howto:['How to play','あそびかた'],
- howtoTxt:['Ride the Snap Buggy through each course. Drag to aim, slide or pinch to zoom, and tap the pink shutter to take photos. Throw apples or honey and blow the whistle to coax fun reactions. After the ride, show your best shots to Professor Pooping for points!','スナップバギーに乗ってコースをめぐろう。ドラッグでエイム、スライドやピンチでズーム、ピンクのシャッターで撮影。りんごやはちみつを投げたり、ふえを吹いて楽しいリアクションを引き出そう。最後にベストショットをプーピング博士に見せてポイントゲット！'],
+ howtoTxt:['Ride the Snap Buggy through each course. Drag to aim, slide or pinch to zoom, and tap the pink shutter to take photos. Throw apples or money and blow the whistle to coax fun reactions. After the ride, show your best shots to Professor Pooping for points!','スナップバギーに乗ってコースをめぐろう。ドラッグでエイム、スライドやピンチでズーム、ピンクのシャッターで撮影。りんごやお金を投げたり、ふえを吹いて楽しいリアクションを引き出そう。最後にベストショットをプーピング博士に見せてポイントゲット！'],
  profName:['Professor Pooping','プーピング博士'],
  recordOf:['Best of {c}','{c}のベスト'],cleared:['Done','達成'],
  reqHint:['Snap these to impress the Professor','博士をうならせる写真を撮ろう'],

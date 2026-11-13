@@ -52,7 +52,7 @@ const PROPS={
     const lit=N&&b.R(0,1)<.65;b.P(W.rbox(1.1,1.35,.12,.04),x,y,z,r,1,1,1,lit?b.pick([0xffe7a0,0xffd27a,0xbfe8ff,0xff9ae0]):(N?0x2a2a4a:b.pick([0x8fd0f5,0xa7dcf8,0x9ad7ef])),lit?'glow':'glass');
     if(!N)b.P(W.rbox(1.3,.12,.24,.04),x,y-.1,z,r,1,1,1,0xffffff,'std');}}
   if(!o.flat){b.P(W.cyl(10),w*.25,h+.3,-d*.15,0,1.4,1.6,1.4,N?0x6a6a8a:0xd8d4cc,'std');b.P(W.cone(10),w*.25,h+1.9,-d*.15,0,1.6,.6,1.6,N?0x5a5a7a:0xb8b4ac,'std');b.P(W.rbox(1.6,1,1.2,.1),-w*.25,h+.3,0,0,1,1,1,0xc8c8cc,'std');}
-  if(N&&b.R(0,1)<.75){const nc=b.pick(['#ff4ad8','#4af0ff','#ffe14a','#9a6aff','#4aff9a']);const t=b.pick(['カラオケ','ラーメン','スナップ','ピンコ','ハチミツ','ゲーム','SNAP','PINCO','カフェ','すし']);const uv=b.sign(t,'#140c2a',nc,{neon:1});
+  if(N&&b.R(0,1)<.75){const nc=b.pick(['#ff4ad8','#4af0ff','#ffe14a','#9a6aff','#4aff9a']);const t=b.pick(['カラオケ','ラーメン','スナップ','ピンコ','たいやき','ゲーム','SNAP','PINCO','カフェ','すし']);const uv=b.sign(t,'#140c2a',nc,{neon:1});
    const sw=Math.min(w*.8,6.5);b.signQuad(uv,0,h*.7,d/2+.12,0,sw,sw/4,1);b.halo(0,h*.7,d/2+1,parseInt(nc.slice(1),16),5);
    if(b.R(0,1)<.6){const t2=b.pick(['居酒屋','本','ゲーム','カラオケ','ピンコ']);const uv2=b.sign(t2,'#140c2a',b.pick(['#ff4ad8','#4af0ff','#ffe14a']),{neon:1,w:64,h:256});b.signQuad(uv2,w/2+.15,h*.45,d/2-.6,Math.PI/2,1.4,5.6,1);}}
   b.occ(0,h/2,0,w,h,d);},
