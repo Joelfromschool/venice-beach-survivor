@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="style.css">
-<script>window.__BUILD__='v1.0';</script>
+<script>window.__BUILD__='v2.0';</script>
 </head>
 <body>
 <div id="app">
@@ -25,40 +25,55 @@
   </div>
   <div class="tlang"><button class="chip" data-lang="en">English</button><button class="chip" data-lang="ja">日本語</button></div>
   <button id="tStart" class="tstart" data-t="tap">TAP TO START</button>
+  <div id="tMenu" class="tmenu">
+   <button class="mbtn big" id="tCont"><span data-t="cont">Continue</span><small id="tContSub"></small></button>
+   <button class="mbtn" id="tNew"><span data-t="newg">New game</span></button>
+   <button class="chip topt" data-go="sOptions" data-t="options">Options</button>
+  </div>
   <a class="tgames" href="../" data-t="allgames">All games</a>
  </section>
 
  <!-- MAIN MENU -->
  <section id="sMenu" class="screen">
   <div class="mbg"></div>
-  <div class="mhead"><div class="mlogo">HEAVY<b>STITCH</b></div><div class="cred"><i>CR</i><span class="crv">0</span></div></div>
+  <div class="mhead"><div class="mlogo">HEAVY<b>STITCH</b></div><div class="cur"><div class="cred"><i>CR</i><span class="crv">0</span></div><div class="cred fl"><i>◆</i><span class="fluxv">0</span></div></div></div>
   <div id="mHero" class="mhero"></div>
   <nav class="mnav">
    <button class="mbtn big" id="mStory"><small id="mStorySub"></small><span data-t="story">Story</span></button>
-   <button class="mbtn" data-go="sHangar"><span data-t="hangar">Hangar</span></button>
-   <button class="mbtn" data-go="sMissions"><span data-t="missions">Missions</span></button>
-   <button class="mbtn" data-go="sOptions"><span data-t="options">Options</span></button>
-   <a class="mbtn ghost" href="../"><span data-t="allgames">All games</span></a>
+   <div class="mgrid">
+    <button class="mbtn zb" id="mZombie"><small id="mZSub"></small><span data-t="zombies">Dead Zone</span></button>
+    <button class="mbtn gb" data-go="sGacha"><small id="mGSub"></small><span data-t="gacha">Gacha</span></button>
+    <button class="mbtn" data-go="sHangar"><span data-t="hangar">Hangar</span></button>
+    <button class="mbtn" data-go="sMissions"><span data-t="missions">Missions</span></button>
+   </div>
+   <div class="mrow"><button class="mbtn sm" data-go="sOptions"><span data-t="options">Options</span></button><a class="mbtn sm ghost" href="../"><span data-t="allgames">All games</span></a></div>
   </nav>
  </section>
 
  <!-- HANGAR -->
  <section id="sHangar" class="screen">
-  <div class="bar"><button class="btn back" data-go="sMenu">◀ <span data-t="menu">Menu</span></button><h2 data-t="hangar">Hangar</h2><div class="cred"><i>CR</i><span class="crv">0</span></div><button class="btn hot" id="hSortie" data-t="sortie">Sortie</button></div>
+  <div class="bar"><button class="btn back" data-go="sMenu">◀ <span data-t="menu">Menu</span></button><h2 data-t="hangar">Hangar</h2><div class="cur"><div class="cred"><i>CR</i><span class="crv">0</span></div><div class="cred al"><i>⬢</i><span class="alloyv">0</span></div></div><button class="btn hot" id="hSortie" data-t="sortie">Sortie</button></div>
   <div class="hwrap">
    <div class="hstage" id="hStage">
     <div class="hlight"></div>
     <canvas id="hCanvas"></canvas>
+    <div class="hchars" id="hChars"></div>
     <div class="hname"><b id="hName"></b><small id="hRole"></small></div>
     <div class="hstats" id="hStats"></div>
-    <div class="hchars" id="hChars"></div>
+    <div class="hdelta" id="hDelta"></div>
    </div>
    <div class="hpanel">
-    <div class="tabs"><button class="tab on" data-ht="parts" data-t="parts">Parts</button><button class="tab" data-ht="paint" data-t="paint">Paint</button></div>
-    <div id="hSlots" class="slots"></div>
+    <div class="hcats"><button data-hc="wpn" data-t="cat_wpn">Weapons</button><button data-hc="frame" data-t="cat_frame">Frame</button><button data-hc="sys" data-t="cat_sys">Systems</button><button data-hc="paint" data-t="cat_paint">Paint</button></div>
     <div id="hList" class="plist"></div>
    </div>
   </div>
+ </section>
+
+ <!-- GACHA -->
+ <section id="sGacha" class="screen">
+  <div class="bar"><button class="btn back" data-go="sMenu">◀ <span data-t="menu">Menu</span></button><h2 data-t="gacha">Gacha</h2><div class="cur"><div class="cred fl"><i>◆</i><span class="fluxv">0</span></div><div class="cred al"><i>⬢</i><span class="alloyv">0</span></div></div></div>
+  <div class="gwrap"><div id="gTabs" class="gtabs"></div><div id="gBody" class="gbody"></div></div>
+  <div id="gReveal" class="greveal"></div>
  </section>
 
  <!-- MISSIONS -->
@@ -78,6 +93,7 @@
   <canvas id="gl"></canvas>
   <div id="fxLines" class="fxlines"></div>
   <div id="vign" class="vign"></div>
+  <div id="cockpit" class="cockpit"><canvas id="ckC"></canvas></div>
   <div id="hud" class="hud">
    <div class="hudL"><div class="apbox"><b>AP</b><span id="apv">0</span><div class="bar1"><i id="apb"></i></div></div><div class="enbox"><b>EN</b><div class="bar2"><i id="enb"></i></div><em id="enout" data-t="enout">EN OUT</em></div><div id="kits" class="kits"></div></div>
    <div class="hudC"><div id="obj" class="obj"><small id="objT"></small><b id="objN"></b><span id="objP"></span></div><div id="bossbar" class="bossbar"><b id="bossN"></b><div class="bb"><i id="bossAp"></i></div><div class="bs"><i id="bossSh"></i></div></div></div>
@@ -88,6 +104,10 @@
    <div id="markers"></div>
    <div id="stamp" class="stamp"></div>
    <div id="wpn" class="wpn"></div>
+   <div id="combo" class="combo"><b id="comboN">0</b><span id="comboL">HITS</span><div class="cbar"><i id="comboBar"></i></div></div>
+   <div id="supbox" class="supbox"><b data-t="super">SUPER</b><div class="sbar"><i id="supb"></i></div><div id="slashPips" class="pips"></div></div>
+   <div id="hype" class="hype"></div><div id="pop" class="pop"></div><div id="slashFx" class="slashfx"></div>
+   <div id="zhud" class="zhud"><div id="zRound" class="zround">1</div><div class="zpts"><small data-t="points">Points</small><b id="zPts">0</b><em id="zAdd"></em></div></div>
   </div>
   <div id="touch" class="touch">
    <div id="stick" class="stick"><div class="knob"></div></div>
@@ -101,7 +121,12 @@
     <button class="tb sm lock" data-k="lock"><b>LOCK</b></button>
     <button class="tb sm swap" data-k="swap"><b>⇄</b></button>
     <button class="tb sm rep" data-k="rep"><b>+</b></button>
+    <button class="tb slash" data-k="slash"><b data-t="slash">SLASH</b></button>
+    <button class="tb drift" data-k="drift"><b data-t="drift">DRIFT</b></button>
+    <button class="tb super" data-k="super"><b data-t="super">SUPER</b></button>
    </div>
+   <button class="tb sm cam" data-k="cam"><b>SH</b><small>CAM</small></button>
+   <button class="tb act" data-k="act"><b></b><small></small></button>
   </div>
   <div id="cutin" class="cutin"><div class="cband"><canvas id="cutC"></canvas><div class="ctext"><b id="cutT"></b><small id="cutS"></small></div></div></div>
   <div id="pause" class="pause"><div class="pbox"><h2 data-t="menu">Menu</h2><button class="mbtn big" id="pResume" data-t="resume">Resume</button><button class="mbtn" id="pRetry" data-t="retry">Retry</button><button class="mbtn" id="pOpts" data-t="options">Options</button><button class="mbtn" id="pQuit" data-t="quit">Quit to menu</button><p class="howto" data-t="howtoTxt"></p></div></div>
@@ -111,7 +136,7 @@
  <section id="sResult" class="screen">
   <div class="rbg"></div>
   <div class="rbox"><div id="rHead" class="rhead"></div><div id="rRank" class="rrank"></div><div id="rRows" class="rrows"></div><div id="rLoot" class="rloot"></div>
-   <div class="rbtns"><button class="mbtn big" id="rNext"></button><button class="mbtn" id="rRetry" data-t="retry">Retry</button><button class="mbtn" id="rHangar" data-t="tohangar">To hangar</button></div></div>
+   <div class="rbtns"><button class="mbtn big" id="rNext"></button><button class="mbtn" id="rRetry" data-t="retry">Retry</button><button class="mbtn" id="rHangar" data-t="tohangar">To hangar</button><button class="mbtn" id="rMenu" data-t="menu">Menu</button></div></div>
  </section>
 
  <!-- CUTSCENE -->
@@ -122,6 +147,13 @@
   <div id="cDlg" class="cdlg"><div id="cName" class="cname"></div><div id="cText" class="ctext2"></div><div class="cnext">▼</div></div>
   <button class="btn cskip" id="cSkip"><span data-t="skip">Skip</span> ▶▶</button>
  </section>
+ <!-- ANIME OPENING -->
+ <section id="sOP" class="screen op">
+  <div id="opStage" class="opstage"></div><canvas id="opFx" class="opfx"></canvas><div id="opFlash" class="opflash"></div>
+  <div class="lbox top"></div><div class="lbox bot"></div>
+  <button class="btn cskip" id="opSkip"><span data-t="skip">Skip</span> ▶▶</button>
+ </section>
+ <div id="modal" class="modal"></div>
  <div id="toast" class="toast"></div>
 </div>
 <script src="js/three.min.js"></script>
@@ -131,6 +163,9 @@
 <script src="js/audio.js"></script>
 <script src="js/cutscene.js"></script>
 <script src="js/game.js"></script>
+<script src="js/fun.js"></script>
+<script src="js/zombie.js"></script>
+<script src="js/gacha.js"></script>
 <script src="js/ui.js"></script>
 <script>(function(){var B=window.__BUILD__;function nv(s){return String(s||'').replace(/[^0-9.]/g,'').split('.').map(Number)}
 function newer(a,b){a=nv(a);b=nv(b);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y}return false}

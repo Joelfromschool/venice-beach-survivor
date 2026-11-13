@@ -1,5 +1,5 @@
-/* Heavy Stitch: procedural bolt-on armor renderer. Every part is drawn in code (original designs),
-   clamped and Glimmer-stitched onto the official character cut-outs. */
+/* Heavy Stitch: procedural weld-on armor renderer. Every part is drawn in code (original designs),
+   clamped, cabled and Glimmer-welded onto the character cut-outs. Dystopian-future industrial style. */
 'use strict';
 const INK='#0c0d13';
 const IMGS={};
@@ -40,7 +40,11 @@ function strap(c,cx,cy,w,h,ang,P){const p=xf(rrect(-w/2,-h/2,w,h,1.2),cx,cy,ang)
 function stripes(c,p,col){c.save();pathPts(c,p);c.clip();const bb=bbox(p);c.strokeStyle=col;c.lineWidth=2.4;
  for(let x=bb[0]-30;x<bb[2]+30;x+=6){c.beginPath();c.moveTo(x,bb[3]+2);c.lineTo(x+(bb[3]-bb[1])+4,bb[1]-2);c.stroke();}c.restore();pathPts(c,p);c.lineWidth=1.4;c.strokeStyle=INK;c.stroke();}
 function line(c,pts,col,w){c.beginPath();c.moveTo(pts[0][0],pts[0][1]);for(let i=1;i<pts.length;i++)c.lineTo(pts[i][0],pts[i][1]);c.strokeStyle=col;c.lineWidth=w||1;c.stroke();}
-const GOLD='#e4b34a';
+const GOLD='#ff3df0'; // tier-3 neon trim
+const HAZ='#ffd23a';
+// insulated power cable with a glowing coupler
+function cable(c,x1,y1,x2,y2,sag,col){const mx=(x1+x2)/2,my=(y1+y2)/2+sag;c.save();c.lineCap='round';c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(mx,my,x2,y2);c.strokeStyle=INK;c.lineWidth=4.2;c.stroke();c.strokeStyle='#3a3f4b';c.lineWidth=2.4;c.stroke();
+ c.setLineDash([2,5]);c.strokeStyle=rgba(col,.9);c.lineWidth=1.2;c.stroke();c.setLineDash([]);c.restore();const qx=.25*x1+.5*mx+.25*x2,qy=.25*y1+.5*my+.25*y2;c.beginPath();c.arc(qx,qy,2.2,0,7);c.fillStyle=col;c.fill();glow(c,qx,qy,6,col,.6);}
 function trimFor(part){return part&&part.tier>=3?GOLD:null;}
 
 // ---------- HEAD ----------
@@ -85,11 +89,11 @@ function drawCore(c,A,part,P,ch){if(!part)return;let[cx,cy,w,h]=A.torso;const tr
   const p=[[L-8,top],[R+8,top],[R+2,bot],[cx+w*.12,bot+10],[cx-w*.12,bot+10],[L-2,bot]];plate(c,p,P.p,{trim:tr});plate(c,col,P.s);
   for(const s of[-1,1]){const v=rrect(cx+s*w*.2-6,top+h*.25,12,h*.28,2);pathPts(c,v);c.fillStyle=INK;c.fill();for(let i=0;i<3;i++)line(c,[[cx+s*w*.2-4,top+h*.3+i*5],[cx+s*w*.2+4,top+h*.3+i*5]],P.g,1.2);}
   stripes(c,rrect(L+4,bot-9,R-L-8,7,1),P.a);[[L-3,top+5],[R+3,top+5],[L+2,bot-4],[R-2,bot-4]].forEach(q=>bolt(c,q[0],q[1],2.6));}
- else if(sh==='cathedral'){const p=[[L,top+8],[cx,top-12],[R,top+8],[R-2,bot],[cx,bot+12],[L+2,bot]];plate(c,p,P.p,{trim:GOLD});
-  const q=[[cx-w*.22,top+h*.12],[cx,top-2],[cx+w*.22,top+h*.12],[cx+w*.2,bot-6],[cx-w*.2,bot-6]];plate(c,q,P.s,{trim:GOLD});
-  const rx=cx,ry=top+h*.38;c.beginPath();c.arc(rx,ry,w*.12,0,7);c.fillStyle=P.g;c.fill();c.lineWidth=2;c.strokeStyle=INK;c.stroke();
-  for(let i=0;i<6;i++){const a=i/6*6.283;line(c,[[rx,ry],[rx+Math.cos(a)*w*.12,ry+Math.sin(a)*w*.12]],INK,1.2);}glow(c,rx,ry,w*.4,P.g,.6);
-  stitch(c,L+4,top+12,L+4,bot-4,P.g,3);stitch(c,R-4,top+12,R-4,bot-4,P.g,3);}
+ else if(sh==='cathedral'){const p=[[L-2,top+2],[L+8,top-8],[R-8,top-8],[R+2,top+2],[R,bot],[cx+w*.16,bot+10],[cx-w*.16,bot+10],[L,bot]];plate(c,p,P.p,{trim:GOLD});
+  const q=rrect(cx-w*.2,top-2,w*.4,h*.72,4);plate(c,q,P.s,{trim:GOLD});
+  for(let i=0;i<5;i++){const y=top+3+i*h*.13;line(c,[[cx-w*.15,y],[cx+w*.15,y]],P.g,1.6);}glow(c,cx,top+h*.28,w*.42,P.g,.55);
+  for(const sx of[-1,1]){const v=rrect(cx+sx*w*.33-5,top+h*.1,10,h*.5,2);pathPts(c,v);c.fillStyle=INK;c.fill();for(let i=0;i<4;i++)line(c,[[cx+sx*w*.33-3,top+h*.16+i*6],[cx+sx*w*.33+3,top+h*.16+i*6]],GOLD,1.2);}
+  stripes(c,rrect(L+4,bot-8,R-L-8,6,1),HAZ);[[L+3,top+4],[R-3,top+4]].forEach(q=>bolt(c,q[0],q[1],2.4));}
 }
 // ---------- ARMS ----------
 function drawArms(c,A,part,P,ch){if(!part)return;const tr=trimFor(part),sh=part.shape,u=A.unit;
@@ -224,8 +228,10 @@ function bladeShape(c,part,P,u,charged){const sh=part.shape,g=P.s;let tip=[u*1.3
   c.fillStyle=g2;c.beginPath();c.moveTo(u*.15,-u*.1);c.quadraticCurveTo(u*L*.7,-u*.32,u*L,0);c.quadraticCurveTo(u*L*.7,-u*.08,u*.15,u*.1);c.fill();
   c.fillStyle='rgba(255,255,255,.9)';c.beginPath();c.moveTo(u*.15,-u*.03);c.quadraticCurveTo(u*L*.7,-u*.22,u*L,0);c.quadraticCurveTo(u*L*.7,-u*.1,u*.15,u*.03);c.fill();c.restore();
   plate(c,rrect(-u*.02,-u*.12,u*.22,u*.24,3),P.p,{trim:GOLD});tip=[u*L,0];}
- else if(sh==='rapier'){plate(c,[[u*.1,-u*.025],[u*1.6,0],[u*.1,u*.025]],'#eef1f5',{lw:1.4});c.save();c.globalCompositeOperation='lighter';c.strokeStyle=rgba(P.g,.8);c.lineWidth=1.4;c.beginPath();c.moveTo(u*.15,0);c.lineTo(u*1.55,0);c.stroke();c.restore();
-  c.save();c.lineWidth=3.2;c.strokeStyle=INK;c.beginPath();c.arc(u*.08,0,u*.14,-1.4,1.4);c.stroke();c.lineWidth=1.8;c.strokeStyle=GOLD;c.stroke();c.restore();tip=[u*1.6,0];}
+ else if(sh==='rapier'||sh==='katana'){const col=sh==='rapier'?'#ff4fa0':P.g,L=sh==='katana'?1.75:1.6;
+  c.save();c.globalCompositeOperation='lighter';c.fillStyle=rgba(col,.55);c.beginPath();c.moveTo(u*.18,-u*.07);c.lineTo(u*L,sh==='katana'?-u*.05:0);c.lineTo(u*.18,u*.07);c.fill();
+  c.strokeStyle='rgba(255,255,255,.95)';c.lineWidth=sh==='katana'?3:2;c.beginPath();c.moveTo(u*.2,0);c.quadraticCurveTo(u*L*.6,sh==='katana'?-u*.06:0,u*(L-.04),sh==='katana'?-u*.05:0);c.stroke();c.restore();glow(c,u*.9,0,u*.5,col,.35);
+  plate(c,rrect(-u*.05,-u*.06,u*.24,u*.12,2),P.s,{lw:1.4});plate(c,rrect(u*.14,-u*.1,u*.06,u*.2,1),sh==='katana'?P.a:HAZ,{lw:1.2});tip=[u*L,0];}
  if(charged)glow(c,tip[0]*.6,tip[1],u*.6,P.g,.6);
  return tip;}
 function backShape(c,part,P,u){const sh=part.shape,tr=trimFor(part);let muz=[0,-u];
@@ -263,14 +269,17 @@ function compose(charId,loadout,paint,opt){opt=opt||{};const ch=CHARS[charId];co
  c.setTransform(S,0,0,S,ox*S,oy*S);const A=ch.a,P=paint,u=A.unit;const part=s=>loadout[s]?PARTS[loadout[s]]:null;const out={noz:[]};
  const T=()=>c.getTransform();const tp=(x,y)=>{const p=T().transformPoint(new DOMPoint(x,y));return[p.x,p.y];};
  // shadow
- c.save();c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(ch.w/2,ch.h+4,ch.w*.45,10,0,0,7);c.fill();c.restore();
+ if(!opt.noShadow){c.save();c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(ch.w/2,ch.h+4,ch.w*.45,10,0,0,7);c.fill();c.restore();}
  // BACK slot (behind body, over the screen-right shoulder)
  const bk=part('bk');if(bk){c.save();c.translate(A.bkw[0],A.bkw[1]);const m=backShape(c,bk,P,u);out.bk=tp(m[0],m[1]);c.restore();}
  drawBooster(c,A,part('booster'),P,ch,out);out.noz=out.noz.map(q=>tp(q[0],q[1]));
  if(opt.img)c.drawImage(opt.img,0,0,ch.w,ch.h);
  drawLegs(c,A,part('legs'),P,ch);
  drawCore(c,A,part('core'),P,ch);
+ if(part('core')&&ch.body!=='pod'){const[tx,ty,tw]=A.torso;cable(c,tx-tw*.38,ty-4,A.shl[0]+4,A.shl[1]+8,10,P.g);cable(c,tx+tw*.38,ty-4,A.shr[0]-4,A.shr[1]+8,10,P.g);}
+ else if(part('core')){const[tx,ty,tw]=A.torso;cable(c,tx-tw*.3,ty+10,A.ml[0]+6,A.ml[1],8,P.g);cable(c,tx+tw*.3,ty+10,A.mr[0]-6,A.mr[1],8,P.g);}
  drawGen(c,A,part('gen'),P);
+ if(part('gen')&&part('core')){const[tx,ty]=A.torso;cable(c,A.hip[0],A.hip[1]-8,tx,ty+12,12,P.g);}
  drawArms(c,A,part('arms'),P,ch);
  drawHead(c,A,part('head'),P);
  drawFcs(c,A,part('fcs'),P);
@@ -286,3 +295,11 @@ function compose(charId,loadout,paint,opt){opt=opt||{};const ch=CHARS[charId];co
  c.setTransform(1,0,0,1,0,0);
  return{canvas:cv,W:cv.width,H:cv.height,feetY:(oy+ch.h)*S,anchors:out,scale:S};}
 async function composeAsync(charId,loadout,paint,opt){const img=await loadImg(CHARS[charId].img);return compose(charId,loadout,paint,Object.assign({},opt,{img}));}
+
+// Standalone icon of one part (drawn with no body, auto-cropped). Cached per part+paint.
+const ICONS={};
+function partIcon(id,paint,size){paint=paint||PAINTS[0];size=size||96;const k=id+paint.id+size;if(ICONS[k])return ICONS[k];const p=PARTS[id];if(!p)return null;
+ const cid=p.only||'pinco';const ld={};ld[p.slot]=id;const r=compose(cid,ld,paint,{scale:1.4,noShadow:true});const cv=r.canvas,g=cv.getContext('2d');
+ const d=g.getImageData(0,0,cv.width,cv.height).data;let x0=cv.width,y0=cv.height,x1=0,y1=0;for(let y=0;y<cv.height;y+=2)for(let x=0;x<cv.width;x+=2){if(d[(y*cv.width+x)*4+3]>20){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}}
+ const out=document.createElement('canvas');out.width=out.height=size;if(x1<=x0){ICONS[k]=out;return out;}const w=x1-x0+4,h=y1-y0+4,sc=Math.min(size*.9/w,size*.9/h);
+ out.getContext('2d').drawImage(cv,x0-2,y0-2,w,h,(size-w*sc)/2,(size-h*sc)/2,w*sc,h*sc);ICONS[k]=out;return out;}
