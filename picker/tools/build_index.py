@@ -19,6 +19,9 @@ def git_meta(game_id):
 
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
+ dict(id='pincopoohsnap', new=True, cat='adv', pos='50% 50%',
+  en=('Pinco Pooh Snap','Photo safari','Ride the Snap Buggy through Venice, Tokyo, Maui and more. Toss honey and apples, blow the whistle and catch your friends doing something amazing.'),
+  ja=('ピンコ・プー・スナップ','フォト・サファリ','スナップバギーでベニス、東京、マウイへ。はちみつやりんごを投げ、笛を吹いて、友だちのすごい瞬間を撮影しよう。')),
  dict(id='heavystitch', new=True, cat='act', pos='50% 50%',
   en=('Heavy Stitch','Mech action','Bolt neon parts onto Pinco, Pooh and Mr Bean, drift and slash through ten story missions, pull gacha banners and survive the zombie Dead Zone.'),
   ja=('ヘビー・スティッチ','メック・アクション','ピンコ・プー・ミスター・ビーンにネオンパーツを装着。ドリフトと斬撃で10のミッションを戦い、ガチャを回して、ゾンビのデッドゾーンを生き残れ。')),
@@ -75,11 +78,11 @@ UI = {
  'en': dict(play='Play', open_secret='Unlock', newb='New', jump='Jump back in', last='Last played',
             lang='日本語', lang_label='Switch to Japanese', hint='Swipe the rows · tap a tile twice to play',
             pw_title='Secret Project', pw_sub='Enter the password', pw_wrong='Wrong password', pw_open='Open', pw_cancel='Cancel',
-            skip='Skip to games', count='15 games'),
+            skip='Skip to games', count='16 games'),
  'ja': dict(play='あそぶ', open_secret='ひらく', newb='NEW', jump='つづきから', last='さいごにあそんだ',
             lang='English', lang_label='英語に切り替え', hint='横にスワイプ · タイルを2回タップであそぶ',
             pw_title='シークレット・プロジェクト', pw_sub='パスワードを入力', pw_wrong='パスワードがちがいます', pw_open='ひらく', pw_cancel='キャンセル',
-            skip='ゲーム一覧へ', count='15タイトル'),
+            skip='ゲーム一覧へ', count='16タイトル'),
 }
 E = html.escape
 
@@ -238,7 +241,7 @@ TEMPLATE = r'''<!doctype html>
   </section>
   %%ROWS%%
 </div>
-<footer class="foot"><span data-i18n="count">15 games</span> · LANZAGAMES</footer>
+<footer class="foot"><span data-i18n="count">16 games</span> · LANZAGAMES</footer>
 </main>
 
 <div id="spGate" class="gate" role="dialog" aria-modal="true" aria-labelledby="spTitle" style="display:none">
