@@ -3,7 +3,11 @@
 'use strict';
 const INK='#0c0d13';
 const IMGS={};
-function loadImg(src){return IMGS[src]||(IMGS[src]=new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src;}));}
+// Robust image loader: waits for full decode (iOS Safari can report onload before pixels are ready), retries once, never caches a failure.
+function loadImg(src){if(IMGS[src])return IMGS[src];const p=new Promise((ok,no)=>{let tries=0;const go=()=>{const i=new Image();i.decoding='async';
+  i.onload=()=>{const done=()=>ok(i);if(i.decode)i.decode().then(done,done);else done();};
+  i.onerror=()=>{if(++tries<2)setTimeout(go,400);else{delete IMGS[src];no(new Error('img '+src));}};i.src=src+(tries?(src.includes('?')?'&':'?')+'r='+tries:'');};go();});
+ return IMGS[src]=p;}
 function hex2rgb(h){if(h[0]==='r')return h.match(/[\d.]+/g).slice(0,3).map(Number);h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];}
 function shade(h,f){const c=hex2rgb(h).map(v=>f>=1?Math.round(v+(255-v)*(f-1)):Math.round(v*f));return'rgb('+c.map(v=>Math.max(0,Math.min(255,v))).join(',')+')';}
 function rgba(h,a){const c=hex2rgb(h);return`rgba(${c[0]},${c[1]},${c[2]},${a})`;}
@@ -263,7 +267,11 @@ function shoulderShape(c,part,P,u){const sh=part.shape,tr=trimFor(part);let muz=
 
 // ---------- COMPOSITE ----------
 // Returns {canvas, W, H, feetY, anchors{wr,wl,sh,bk,noz[],head,center}} in canvas px.
-function compose(charId,loadout,paint,opt){opt=opt||{};const ch=CHARS[charId];const S=opt.scale||2;
+function compose(charId,loadout,paint,opt){opt=opt||{};
+ // v2.1: real 3D armor first; 2D painter only as a fallback (no WebGL / context lost / error)
+ if(!opt.force2d&&typeof compose3d==='function'){try{const r=compose3d(charId,loadout,paint,opt);if(r)return r;}catch(e){console.warn('3D compose failed, using 2D',e);}}
+ return compose2d(charId,loadout,paint,opt);}
+function compose2d(charId,loadout,paint,opt){const ch=CHARS[charId];const S=opt.scale||2;
  const W=Math.round(ch.w*2.15),H=Math.round(ch.h*1.45);const ox=(W-ch.w)/2,oy=ch.h*.3;
  const cv=opt.canvas||document.createElement('canvas');cv.width=W*S;cv.height=H*S;const c=cv.getContext('2d');c.clearRect(0,0,cv.width,cv.height);
  c.setTransform(S,0,0,S,ox*S,oy*S);const A=ch.a,P=paint,u=A.unit;const part=s=>loadout[s]?PARTS[loadout[s]]:null;const out={noz:[]};
