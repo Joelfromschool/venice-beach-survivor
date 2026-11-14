@@ -268,8 +268,8 @@ function shoulderShape(c,part,P,u){const sh=part.shape,tr=trimFor(part);let muz=
 // ---------- COMPOSITE ----------
 // Returns {canvas, W, H, feetY, anchors{wr,wl,sh,bk,noz[],head,center}} in canvas px.
 function compose(charId,loadout,paint,opt){opt=opt||{};
- // v2.1: real 3D armor first; 2D painter only as a fallback (no WebGL / context lost / error)
- if(!opt.force2d&&typeof compose3d==='function'){try{const r=compose3d(charId,loadout,paint,opt);if(r)return r;}catch(e){console.warn('3D compose failed, using 2D',e);}}
+ // v3: render the real 3D model (same rig as gameplay); the 2D painter is only the no-WebGL fallback
+ if(!opt.force2d&&window.CH3D&&CH3D.SPEC[charId]){try{const r=CH3D.snap(charId,loadout||{},paint||PAINTS[0],{scale:opt.scale||2,noShadow:opt.noShadow,canvas:opt.canvas,cam:{fit:1.55,cy:.17*((CH3D.SPEC[charId]||{}).H||4.6)}});if(r)return r;}catch(e){console.warn('3D snapshot failed, using 2D',e);}}
  return compose2d(charId,loadout,paint,opt);}
 function compose2d(charId,loadout,paint,opt){const ch=CHARS[charId];const S=opt.scale||2;
  const W=Math.round(ch.w*2.15),H=Math.round(ch.h*1.45);const ox=(W-ch.w)/2,oy=ch.h*.3;
@@ -307,7 +307,8 @@ async function composeAsync(charId,loadout,paint,opt){const img=await loadImg(CH
 // Standalone icon of one part (drawn with no body, auto-cropped). Cached per part+paint.
 const ICONS={};
 function partIcon(id,paint,size){paint=paint||PAINTS[0];size=size||96;const k=id+paint.id+size;if(ICONS[k])return ICONS[k];const p=PARTS[id];if(!p)return null;
- const cid=p.only||'pinco';const ld={};ld[p.slot]=id;const r=compose(cid,ld,paint,{scale:1.4,noShadow:true});const cv=r.canvas,g=cv.getContext('2d');
+ if(window.CH3D){try{const r=CH3D.partIcon(id,paint,size);if(r){ICONS[k]=r;return r;}}catch(e){console.warn('3D icon failed',e);}}
+ const cid=p.only||'pinco';const ld={};ld[p.slot]=id;const r=compose2d(cid,ld,paint,{scale:1.4,noShadow:true});const cv=r.canvas,g=cv.getContext('2d');
  const d=g.getImageData(0,0,cv.width,cv.height).data;let x0=cv.width,y0=cv.height,x1=0,y1=0;for(let y=0;y<cv.height;y+=2)for(let x=0;x<cv.width;x+=2){if(d[(y*cv.width+x)*4+3]>20){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}}
  const out=document.createElement('canvas');out.width=out.height=size;if(x1<=x0){ICONS[k]=out;return out;}const w=x1-x0+4,h=y1-y0+4,sc=Math.min(size*.9/w,size*.9/h);
  out.getContext('2d').drawImage(cv,x0-2,y0-2,w,h,(size-w*sc)/2,(size-h*sc)/2,w*sc,h*sc);ICONS[k]=out;return out;}

@@ -45,7 +45,7 @@ P('h_button','head','Slit Visor','スリット・バイザー',1,3400,{w:420,ap:
 P('h_darner','head','Antenna Fin','アンテナ・フィン',1,5200,{w:520,ap:1020,def:170,stab:260},'fin',{unlock:'m2'});
 P('h_beetle','head','Riot Horns','ライオット・ホーン',2,11800,{w:760,ap:1300,def:220,stab:380},'horns',{unlock:'m4'});
 P('h_owl','head','Optic Cluster','オプティック・クラスター',2,13500,{w:480,ap:960,def:160,stab:240,scan:1.25},'cluster',{unlock:'m5'});
-P('h_halo','head','Halo Sensor Ring','ヘイロー・センサーリング',3,38000,{w:420,ap:1450,def:240,stab:420,scan:1.2},'halo',{reward:'m8'});
+P('h_halo','head','Crown Sensor Array','クラウン・センサーアレイ',3,38000,{w:420,ap:1450,def:240,stab:420,scan:1.2},'halo',{reward:'m8'});
 // CORE {w,ap,def,stab}
 P('c_patch','core','CR-01 Scrap Plate','CR-01 スクラッププレート',0,0,{w:2100,ap:3200,def:180,stab:520},'patch');
 P('c_quilt','core','Grid Plating','グリッド・プレーティング',1,4800,{w:2300,ap:3700,def:210,stab:600},'quilt',{unlock:'m1'});
@@ -115,7 +115,7 @@ P('bk_kites','bk','Kite Drones','カイト・ドローン',2,14400,{w:600,cls:'d
 P('bk_pulse','bk','Pulse Barrier','パルス・バリア',2,13000,{w:800,cls:'pulse',rate:.1,dur:4,red:.75,dmg:600,shock:500},'pulse',{unlock:'m6'});
 P('bk_rail','bk','LOOM-X Railgun','ルームX・レールガン',3,46000,{w:1700,cls:'rail',dmg:4200,rate:.18,shock:1600,charge:1.1,rng:140},'rail',{reward:'m10',short:{en:'Railgun',ja:'レールガン'}});
 // character uniques
-P('wl_rapier','wl','Pink Monowire Saber','ピンク・モノワイヤー・セイバー',2,0,{w:420,cls:'blade',dmg:760,hits:3,rate:1.4,shock:330,cdmg:3000,cshock:1150,rng:14},'rapier',{only:'pinco',reward:'m4',short:{en:'Saber',ja:'セイバー'}});
+P('wl_rapier','wl','Monowire Saber','モノワイヤー・セイバー',2,0,{w:420,cls:'blade',dmg:760,hits:3,rate:1.4,shock:330,cdmg:3000,cshock:1150,rng:14},'rapier',{only:'pinco',reward:'m4',short:{en:'Saber',ja:'セイバー'}});
 P('bk_hunny','bk','Hunny Mortar','ハニー・モーター',2,0,{w:1100,cls:'mortar',dmg:520,n:3,rate:.3,shock:380,spd:38,splash:7,slow:1},'hunny',{only:'pooh',reward:'m2'});
 P('sh_podburst','sh','Pod Burst Array','ポッドバースト・アレイ',2,0,{w:760,cls:'missile',dmg:130,n:12,rate:.26,shock:70,spd:58,turn:4.2},'podburst',{only:'bean',reward:'m3',short:{en:'Pod Burst',ja:'ポッドバースト'}});
 P('wl_regalia','wl','Violet Override Blade','ヴァイオレット・オーバーライド',3,0,{w:560,cls:'blade',dmg:1300,rate:1.1,shock:520,cdmg:3600,cshock:1300,rng:16,wave:1},'regalia',{only:'asmon',reward:'m10',short:{en:'Override',ja:'オーバーライド'}});
@@ -133,13 +133,13 @@ const STARTER={head:'h_thimble',core:'c_patch',arms:'a_clamp',legs:'l_kick',boos
 // ---------- PAINTS (p primary, s secondary/gunmetal, a accent, g glow) ----------
 const PAINTS=[
  {id:'grey',name:{en:'Scrap Grey',ja:'スクラップ・グレー'},p:'#8d939e',s:'#3a3f4b',a:'#ff7a1a',g:'#4ef0ff',price:0},
- {id:'orange',name:{en:'Safety Orange',ja:'セーフティ・オレンジ'},p:'#ff8a2a',s:'#2c2f3a',a:'#f4f1e6',g:'#4ef0ff',price:2500},
+ {id:'orange',name:{en:'Safety Orange',ja:'セーフティ・オレンジ'},p:'#d9701f',s:'#2c2f3a',a:'#e8e2d0',g:'#4ef0ff',price:2500},
  {id:'night',name:{en:'Night Circuit',ja:'ナイト・サーキット'},p:'#2b3140',s:'#14171f',a:'#46e6ff',g:'#46e6ff',price:4000,unlock:'m2'},
- {id:'gum',name:{en:'Bubblegum Rush',ja:'バブルガム・ラッシュ'},p:'#f5f1f4',s:'#3b2c3c',a:'#ff4fa0',g:'#ff6ac0',price:4000,unlock:'m3'},
+ {id:'gum',name:{en:'Rust Belt',ja:'ラスト・ベルト'},p:'#7a4a2e',s:'#231a15',a:'#d9a441',g:'#ff8a3a',price:4000,unlock:'m3'},
  {id:'hazard',name:{en:'Hazard Honey',ja:'ハザード・ハニー'},p:'#ffc21f',s:'#1d1b17',a:'#141414',g:'#ffd257',price:5000,unlock:'m4'},
  {id:'olive',name:{en:'Hazmat Olive',ja:'ハズマット・オリーブ'},p:'#6f7a45',s:'#2a2d22',a:'#e8d36a',g:'#a8ff5e',price:5000,unlock:'m5'},
  {id:'violet',name:{en:'Override Violet',ja:'オーバーライド・ヴァイオレット'},p:'#5d3c8c',s:'#1d1530',a:'#e4b34a',g:'#c58cff',price:0,reward:'m8'},
- {id:'chrome',name:{en:'Chrome Bandit',ja:'クローム・バンディット'},p:'#d6dbe3',s:'#30343c',a:'#e8273a',g:'#ff4155',price:9000,unlock:'m7'},
+ {id:'chrome',name:{en:'Gunmetal Bandit',ja:'ガンメタル・バンディット'},p:'#7d848e',s:'#1e2127',a:'#e8273a',g:'#ff4155',price:9000,unlock:'m7'},
  {id:'neon',name:{en:'Neon Riot',ja:'ネオン・ライオット'},p:'#1c1f2e',s:'#0d0f18',a:'#ff2bd6',g:'#2bfff1',price:0,gacha:1},
  {id:'toxic',name:{en:'Dead Zone Toxic',ja:'デッドゾーン・トキシック'},p:'#3d4a2a',s:'#151a10',a:'#c6ff2e',g:'#7dff4a',price:0,gacha:1},
 ];

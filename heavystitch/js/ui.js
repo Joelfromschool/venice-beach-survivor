@@ -34,11 +34,12 @@ const HS={
  unlockedM(m){if(this.state.cheat)return true;if(m.free)return this.cleared(m.unlockAfter);const L=this.storyList();const i=L.indexOf(m);return i===0||this.cleared(L[i-1].id);},
  nextStory(){return this.storyList().find(m=>!this.cleared(m.id))||null;},
  paintOf(c){return PAINTS.find(p=>p.id===this.state.paint[c])||PAINTS[0];},
- async drawTo(cv,cid,load,paint,scale){const r=await composeAsync(cid,load,paint,{scale:scale||2});cv.width=r.canvas.width;cv.height=r.canvas.height;const g=cv.getContext('2d');g.clearRect(0,0,cv.width,cv.height);g.drawImage(r.canvas,0,0);return r;},
+ async drawTo(cv,cid,load,paint,scale,o){if(window.CH3D&&CH3D.available()){cv.width=Math.round(300*(scale||2));cv.height=Math.round(400*(scale||2));CH3D.stage(cv,Object.assign({chars:[{id:cid,load,paint}],auto:0,drag:false,cam:{fit:1.2}},o||{}));return null;}
+ const r=await composeAsync(cid,load,paint,{scale:scale||2});cv.width=r.canvas.width;cv.height=r.canvas.height;const g=cv.getContext('2d');g.clearRect(0,0,cv.width,cv.height);g.drawImage(r.canvas,0,0);return r;},
  // ---------- TITLE ----------
  renderTitle(){const tc=this.$('tCast');const has=this.hasSave();const c=this.$('tCont');c.disabled=!has;c.classList.toggle('dis',!has);this.$('tContSub').textContent=has?this.saveSummary():this.T('noSave');
   if(tc.dataset.k===this.castKey())return;tc.dataset.k=this.castKey();tc.innerHTML='';
-  for(const c of['pooh','pinco','bean']){const cv=document.createElement('canvas');tc.appendChild(cv);this.drawTo(cv,c,this.state.load[c],this.paintOf(c),1.6);}},
+  for(const c of['pooh','pinco','bean']){const cv=document.createElement('canvas');tc.appendChild(cv);this.drawTo(cv,c,this.state.load[c],this.paintOf(c),1.6,{yaw:c==='pooh'?.45:c==='bean'?-.45:.12});}},
  saveSummary(){const n=this.nextStory();const done=this.storyList().filter(m=>this.cleared(m.id)).length;return(n?`${this.T('ep')} ${String(n.ep).padStart(2,'0')}${this.T('epSuf')}`:(this.lang==='ja'?'全話クリア':'All clear'))+` · ◆ ${this.state.flux.toLocaleString()}`;},
  castKey(){return JSON.stringify([this.state.load.pinco,this.state.load.pooh,this.state.load.bean,this.state.paint]);},
  titleTap(){AU.unlock();AU.on=this.state.opt.on;AU.apply&&AU.apply();AU.playMusic('title');AU.play('slam',.7);this.$('sTitle').classList.add('go');},
@@ -66,6 +67,10 @@ const HS={
  previewLoad(){const c=this.sel;return this.preview?Object.assign({},this.state.load[c],{[this.preview.slot]:this.preview.id}):this.state.load[c];},
  drawHangarChar(bump){const c=this.sel;const load=this.previewLoad();
   const paint=this.previewPaint?PAINTS.find(p=>p.id===this.previewPaint):this.paintOf(c);const cv=this.$('hCanvas');const tok=this.drawTok=(this.drawTok||0)+1;
+  if(window.CH3D&&CH3D.available()){// v3: live 3D model, drag to spin, every slot change rebuilds it instantly
+   if(!this.hStage||this.hStage.cv!==cv||!CH3D.alive(this.hStage)){cv.width=720;cv.height=860;this.hStage=CH3D.stage(cv,{auto:.5,cam:{fit:1.24}});}
+   const key=JSON.stringify([c,load,paint&&paint.id]);if(this.hStage&&this.hStage.key!==key){this.hStage.key=key;this.hStage.set([{id:c,load,paint}]);}
+   if(bump){cv.classList.remove('bump');void cv.offsetWidth;cv.classList.add('bump');}return;}
   composeAsync(c,load,paint,{scale:2}).then(r=>{if(tok!==this.drawTok)return;cv.width=r.canvas.width;cv.height=r.canvas.height;const g=cv.getContext('2d');g.clearRect(0,0,cv.width,cv.height);g.drawImage(r.canvas,0,0);
    if(bump){cv.classList.remove('bump');void cv.offsetWidth;cv.classList.add('bump');}});},
  renderStats(){const c=this.sel;const cur=computeStats(c,this.state.load[c]);const pv=this.preview?computeStats(c,this.previewLoad()):null;
