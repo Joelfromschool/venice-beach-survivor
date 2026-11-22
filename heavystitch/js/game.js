@@ -513,7 +513,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   const dist=fp?-.4:cm==='third'?(portrait?14+bk*4:12.5+bk*3):(portrait?9.6+bk*5:7.6+bk*2.6),side=fp||cm==="third"?0:(portrait?1.75+bk*.9:2.3+bk*.9),hgt=fp?3.3:(cm==='third'?5.6+bk*1.2:(portrait?3.5:2.9)+bk*1.1)+Math.min(4,P.pos.y*.15);
   const fov=fp?(portrait?78:68):portrait?68:58;if(this.cam.fov!==fov){this.cam.fov=fov;this.cam.updateProjectionMatrix();}
   const want=P.pos.clone().addScaledVector(f,-dist).addScaledVector(r,-side);want.y=P.pos.y+hgt;if(this.result&&!this.result.win)want.y+=3;
-  if(fp)this.cam.position.copy(want);else this.cam.position.lerp(want,clamp(7*dt,0,1));const look=P.pos.clone().addScaledVector(f,fp?20:10).addScaledVector(r,-side*.6);look.y=P.pos.y+(fp?3.1:cm==='third'?2.6:(portrait?2.9:2.2)+bk*.8);
+  if(fp)this.cam.position.copy(want);else this.cam.position.lerp(want,clamp(7*dt,0,1));const look=P.pos.clone().addScaledVector(f,fp?20:10).addScaledVector(r,-side*.25);look.y=P.pos.y+(fp?3.1:cm==='third'?2.6:(portrait?2.9:2.2)+bk*.8);
   if(this.lock&&this.lock.alive){const ly=this.aimPoint(this.lock,0,P.pos).y;look.y=lerp(look.y,ly,.35);}
   this.shake=Math.max(0,this.shake-dt*1.8);const sk=this.shake*(HS.state.opt.shake===false?0:1);if(sk>0)this.cam.position.add(new V3(rnd(-1,1)*sk,rnd(-1,1)*sk,rnd(-1,1)*sk*.5));
   this.cam.lookAt(look);
