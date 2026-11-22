@@ -25,7 +25,10 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   this.cam=new THREE.PerspectiveCamera(62,1,.1,900);
   const gm=new Uint8Array([56,56,56,255,128,128,128,255,212,212,212,255]);this.grad=new THREE.DataTexture(gm,3,1);this.grad.minFilter=this.grad.magFilter=THREE.NearestFilter;this.grad.needsUpdate=true;
   this.texLoader=new THREE.TextureLoader();this.bind();addEventListener('resize',()=>this.resize());},
- setQuality(q){this.quality=q;if(this.R){const dpr=window.devicePixelRatio||1;this.R.setPixelRatio(Math.min(dpr,q==='high'?(matchMedia('(pointer:coarse)').matches?1.6:2):1));this.resize();}},
+ setQuality(q){this.quality=q;this.pq=null;if(this.R){const dpr=window.devicePixelRatio||1;this.R.setPixelRatio(Math.min(dpr,q==='high'?(matchMedia('(pointer:coarse)').matches?1.6:2):1,this.autoPR||9));this.resize();}},
+ // v3.1 auto quality: if a phone cannot hold ~45fps, step the render resolution down (remembered for the session)
+ perf(ms){if(!this.R||navigator.webdriver||this.paused||document.hidden||!(ms>0)||ms>400)return;const q=this.pq||(this.pq={n:0,sum:0,warm:0});q.warm+=ms;if(q.warm<2500)return;q.n++;q.sum+=ms;if(q.sum<3000)return;
+  const fps=1000*q.n/q.sum;q.n=0;q.sum=0;const cur=this.R.getPixelRatio();if(fps<45&&cur>.8){const nx=Math.max(.8,Math.round(cur*80)/100);this.autoPR=nx;this.R.setPixelRatio(nx);this.resize();if(nx<=1&&!this.lowLOD){this.lowLOD=true;}console.info('HS auto quality',fps.toFixed(0)+'fps ->',nx);}},
  resize(){if(!this.R)return;const cv=this.R.domElement;const w=cv.clientWidth||innerWidth,h=cv.clientHeight||innerHeight;this.R.setSize(w,h,false);this.cam.aspect=w/h;this.cam.updateProjectionMatrix();},
  mat(col,em){return new THREE.MeshToonMaterial({color:col,gradientMap:this.grad,emissive:em||0x000000});},
  glowMat(col,op){return new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op==null?1:op,blending:THREE.AdditiveBlending,depthWrite:false});},
@@ -33,7 +36,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
  outline(m){const o=new THREE.Mesh(m.geometry,this.inkMat||(this.inkMat=new THREE.MeshBasicMaterial({color:0x07080b,side:THREE.BackSide})));o.scale.setScalar(1.07);m.add(o);return m;},
  // ---------------- WORLD ----------------
  buildWorld(mapId){const M=MAPS[mapId];const sc=this.scene=new THREE.Scene();this.map=M;this.mapId=mapId;
-  sc.background=new THREE.Color(M.sky);sc.fog=new THREE.Fog(M.fog,50,240);if(window.CH3D)try{sc.environment=CH3D.envFor(this.R);}catch(e){}this.dying=[];
+  sc.background=new THREE.Color(M.sky);sc.fog=new THREE.Fog(M.fog,50,240);if(window.CH3D)try{sc.environment=CH3D.envFor(this.R);if(CH3D.rim)CH3D.rim(M.rim,.45);}catch(e){}this.dying=[];
   sc.add(new THREE.HemisphereLight(0xdfe6ff,new THREE.Color(M.ground).multiplyScalar(1.4),.5));
   const dl=new THREE.DirectionalLight(M.light,.8);dl.position.set(-40,70,30);sc.add(dl);const rl=new THREE.DirectionalLight(M.rim,.55);rl.position.set(50,20,-60);sc.add(rl);
   const bt=this.texLoader.load('art/'+M.bg+'.webp');bt.encoding=THREE.sRGBEncoding;bt.wrapS=THREE.MirroredRepeatWrapping;bt.repeat.set(4,1);
@@ -97,6 +100,8 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
  gm(col,op){const k=col+'_'+(op||1);return this.matCache[k]||(this.matCache[k]=this.glowMat(col,op));},
  puff(p,v,col,size,life,grav){const i=this.pI;this.pI=(this.pI+1)%this.pN;const q=this.parts[i];q.life=q.max=life;q.x=p.x;q.y=p.y;q.z=p.z;q.vx=v?v.x:0;q.vy=v?v.y:0;q.vz=v?v.z:0;q.s=size;q.g=grav||0;
   const c=this._c||(this._c=new THREE.Color());c.set(col);this.pCol[i*3]=c.r;this.pCol[i*3+1]=c.g;this.pCol[i*3+2]=c.b;},
+ // v3.1 metal hit sparks: fast hot streaks with gravity + a one-frame white flash
+ sparks(p,n,dir){const v=new V3(),d=dir?_v3.copy(dir).normalize():null;for(let i=0;i<n;i++){v.set(rnd(-1,1),rnd(-.1,1.3),rnd(-1,1));if(d)v.addScaledVector(d,-1.1);v.normalize().multiplyScalar(rnd(9,20));this.puff(p,v,i%3?0xffc35a:0xfff4d0,rnd(.35,.7),rnd(.14,.3),-30);}this.puff(p,null,0xfff2c0,2.6,.06,0);},
  burst(p,col,n,spd,size,life){const v=new V3();for(let i=0;i<n;i++){v.set(rnd(-1,1),rnd(-.4,1),rnd(-1,1)).normalize().multiplyScalar(rnd(.3,1)*spd);this.puff(p,v,col,size*rnd(.6,1.2),life*rnd(.6,1.1),-6);}},
  updParts(dt){const P=this.pPos;for(let i=0;i<this.pN;i++){const q=this.parts[i];if(q.life<=0){this.pA[i]=0;continue;}q.life-=dt;q.vy+=q.g*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.z+=q.vz*dt;q.vx*=.96;q.vz*=.96;
    P[i*3]=q.x;P[i*3+1]=q.y;P[i*3+2]=q.z;const t=Math.max(0,q.life/q.max);this.pA[i]=t;this.pSize[i]=q.s*(.5+t*.5);}
@@ -114,7 +119,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   m.userData={w,h,footOff,comp};const sh=new THREE.Mesh(new THREE.CircleGeometry(1.4,20),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.45,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.y=.04;
   const grp=new THREE.Group();grp.add(m);this.scene.add(grp);this.scene.add(sh);return{grp,spr:m,shadow:sh};},
  // v3: real 3D chassis model (turns, animates, armour on joints)
- makeModel(cid,load,paint){const rig=CH3D.build(cid,load,paint,{});const grp=new THREE.Group();grp.add(rig.root);this.scene.add(grp);
+ makeModel(cid,load,paint){const rig=CH3D.build(cid,load,paint,{});const grp=new THREE.Group();grp.add(rig.root);this.scene.add(grp);const D=rig.D;rig.bulk=clamp((D.chestR*(D.scale||1)*2)/1.05,.9,2);
   const sh=new THREE.Mesh(new THREE.CircleGeometry(1.4,20),new THREE.MeshBasicMaterial({color:0,transparent:true,opacity:.45,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.y=.04;this.scene.add(sh);
   return{grp,rig,shadow:sh,yaw:0};},
  sock(u,k,out){out=out||new V3();const o=u.rig&&(u.rig.S[k]||u.rig.S.center);if(o)return o.getWorldPosition(out);return out.copy(u.pos).setY(u.pos.y+2.4);},
@@ -223,7 +228,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   for(let i=0;i<4;i++){const L={type:'bleg',pos:new V3(),ap:5200,apMax:5200,shock:0,shockMax:0,r:1.6,alive:true,boss:e,i,name:{en:'Leg joint',ja:'脚の関節'},need:false,stag:0,cr:500,vel:new V3()};e.legs.push(L);this.E.push(L);}
   this.E.push(e);this.boss=e;HUD.boss(e);},
  // ---------------- MAIN LOOP ----------------
- frame(now){if(!this.on)return;this.raf=requestAnimationFrame(t=>this.frame(t));let dt=Math.min(.05,(now-this.last)/1000);this.last=now;
+ frame(now){if(!this.on)return;this.raf=requestAnimationFrame(t=>this.frame(t));this.perf(now-this.last);let dt=Math.min(.05,(now-this.last)/1000);this.last=now;
   if(this.paused||!this.P){this.render();return;}
   this.slow=Math.max(0,this.slow-dt);this.cutinT=Math.max(0,this.cutinT-dt);this.cutinCd=Math.max(0,this.cutinCd-dt);
   if(this.hitStop>0)this.hitStop-=dt;const ts=this.cutinT>0?.06:this.hitStop>0?.04:this.slow>0?.28:1;const d=dt*ts;this.t+=d;this.phT+=d;
@@ -341,7 +346,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
  // ---------------- DAMAGE ----------------
  dmgFoe(e,dmg,shock,src){if(!e||!e.alive||e.ally||e.retreat||this.result)return;if(HS.state.cheat)dmg*=3;if(e.stag>0)dmg*=1.5;
   if(e.type==='boss'){dmg*=e.kneel>0?1.3:.2;shock=e.kneel>0?0:shock*.5;}
-  if(e.type==='ace'&&!e.ready)return;if(e.armor&&src!=='slash'&&src!=='super'&&src!=='melee')dmg*=.55;e.ap-=dmg;e.hitT=.08;
+  if(e.type==='ace'&&!e.ready)return;if(e.armor&&src!=='slash'&&src!=='super'&&src!=='melee')dmg*=.55;e.ap-=dmg;e.hitT=.08;if(e.rig&&(!e._hr||this.t-e._hr>.22)){e.rig.hitReact();e._hr=this.t;}if(dmg>=600&&src!=='pulse'){AU.play('thud',.45);this.shake=Math.max(this.shake,.14);}
   if(e.shockMax>0&&e.stag<=0){e.shock+=shock;if(e.shock>=e.shockMax)this.stagger(e);}
   const ap=this.aimPoint(e,0,e.pos);HUD.dmgNum(ap,Math.round(dmg),e.stag>0,e);if(src!=='pulse')AU.play('hit',.35);this.onHit(e,dmg,src);
   if(e.type==='ace'&&this.ph&&this.ph.type==='duel'&&this.ph.until>0&&e.ap<=e.apMax*this.ph.until){e.ap=e.apMax*this.ph.until;this.aceRetreat(e);return;}
@@ -350,7 +355,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   this.burst(this.aimPoint(e,0,e.pos),0xffffff,26,14,1.5,.5);this.ringFx(this.aimPoint(e,0,e.pos),0xffffff,.5,6,.35,false);if(e.type==='ace'||e.type==='boss')HUD.comm(COMMS.c_break);},
  aceRetreat(e){e.retreat=true;e.retT=2.2;e.stag=0;HUD.comm(COMMS.c_retreat);AU.play('whoosh');if(this.lock===e)this.lock=null;},
  killFoe(e){e.alive=false;e.ap=0;const p=this.aimPoint(e,0,e.pos);const big=e.type==='boss'||e.type==='heart'||e.type==='gate'||e.type==='ace'||e.type==='brute';
-  if(e.z)this.scrapBurst(p,e);else this.explode(p,big?9:e.r*1.8,big?0xffffff:0xff7a1a,true,true);if(big){this.slow=1.1;this.shake=1;}
+  if(!big){AU.play('kill',.6);this.hitStop=Math.max(this.hitStop,.05);this.shake=Math.max(this.shake,.22);}this.sparks(p,12);if(e.z)this.scrapBurst(p,e);else this.explode(p,big?9:e.r*1.8,big?0xffffff:0xff7a1a,true,true);if(big){this.slow=1.1;this.shake=1;}
   if(e.mesh){this.scene.remove(e.mesh);e.mesh.traverse(o=>{if(o.geometry)o.geometry.dispose();});}if(e.grp){if(e.rig&&this.dying){e.dieT=1.8;this.dying.push(e);}else{this.scene.remove(e.grp);this.scene.remove(e.shadow);}}if(e.col){const i=this.colliders.indexOf(e.col);if(i>=0)this.colliders.splice(i,1);}
   if(e.type==='bleg'){this.legDown(e);return;}
   if(e.type==='boss'){for(const L of e.legs){L.alive=false;}for(const k of['up','lo','j','ft'])for(const l of e.B.legs)this.scene.remove(l[k]);this.scene.remove(e.B.g);}
@@ -359,7 +364,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   if(down>=2&&B.kneel<=0){B.kneel=6.5;B.stag=6.5;HUD.comm(COMMS.c_boss2);this.slow=.6;this.lock=B;}},
  hurtPlayer(dmg,shock,from){const P=this.P;if(!P||P.ap<=0||this.result)return;if(HS.state.cheat){this.burst(P.pos.clone().setY(2),0xffffff,4,4,.8,.2);return;}
   if(P.dashT>.12||P.driftT>0||P.superT>0){HUD.pop(HS.T('dodge'),'#2bfff1');return;}
-  dmg*=clamp(1-P.st.def/1200,.45,1);if(P.shield>0)dmg*=1-(P.shieldRed||.7);dmg=Math.round(dmg);P.ap-=dmg;P.dmgTaken+=dmg;if(P.rig)P.rig.hitReact();HUD.hurt();AU.play('hurt',.6);this.shake=Math.max(this.shake,Math.min(.5,dmg/900));
+  dmg*=clamp(1-P.st.def/1200,.45,1);if(P.shield>0)dmg*=1-(P.shieldRed||.7);dmg=Math.round(dmg);P.ap-=dmg;P.dmgTaken+=dmg;if(P.rig)P.rig.hitReact();this.sparks(_v2.copy(P.pos).setY(P.pos.y+2.4),dmg>500?12:6);HUD.hurt();AU.play('hurt',.6);this.shake=Math.max(this.shake,Math.min(.5,dmg/900));
   P.shock+=shock||0;if(P.shock>1100+P.st.stab*2){P.shock=0;P.stun=.7;P.abOn=false;HUD.stamp(HS.T('staggered'));if(from)P.vel.add(P.pos.clone().sub(from).setY(0).normalize().multiplyScalar(14));}
   if(P.ap<=0){P.ap=0;this.playerDown();}},
  playerDown(){const P=this.P;this.explode(P.pos.clone().setY(2),6,0xff3a2a,true);this.slow=1.5;P.abOn=false;P.vel.set(0,0,0);AU.boost(0);this.finish(false);},
@@ -469,7 +474,7 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
    if(s.grav)s.vel.y-=s.grav*dt;s.pos.addScaledVector(s.vel,dt);s.m.position.copy(s.pos);if(s.missile||s.mortar)s.m.lookAt(_v.copy(s.pos).add(s.vel));if(s.trail&&Math.random()<.7)this.puff(s.pos,null,s.col,s.missile?1:1.4,.25,0);
    let hit=null;for(const e of this.E){if(!e.alive||e.retreat||(e.type==='ace'&&!e.ready))continue;const r=e.type==='boss'?(e.kneel>0?3:2.2):e.type==='bleg'?2.2:e.r+.6;
     if(s.pos.distanceTo(this.aimPoint(e,0,e.pos))<r+(s.splash?.6:0)||(e.static&&e.type!=='dummy'&&Math.hypot(s.pos.x-e.pos.x,s.pos.z-e.pos.z)<e.r&&s.pos.y<(e.type==='jammer'?16:e.type==='heart'?11:8))){hit=e;break;}}
-   if(hit){this.dmgFoe(hit,s.dmg,s.shock,'shot');if(hit.slowT!=null||s.slow)hit.slowT=s.slow?3:0;this.burst(s.pos,s.col,s.heavy?10:4,s.heavy?8:5,s.heavy?1.4:.8,.25);if(s.splash)this.splash(s.pos,s.splash,s.dmg*.5,s.shock*.5,hit,s.slow);s.life=0;}
+   if(hit){this.sparks(s.pos,s.heavy?14:6,s.vel);this.dmgFoe(hit,s.dmg,s.shock,'shot');if(hit.slowT!=null||s.slow)hit.slowT=s.slow?3:0;this.burst(s.pos,s.col,s.heavy?10:4,s.heavy?8:5,s.heavy?1.4:.8,.25);if(s.splash)this.splash(s.pos,s.splash,s.dmg*.5,s.shock*.5,hit,s.slow);s.life=0;}
    else if(s.pos.y<0){if(s.splash){this.explode(s.pos.clone().setY(.5),s.splash,s.col,false);this.splash(s.pos,s.splash,s.dmg*.6,s.shock*.6,null,s.slow);}else this.puff(s.pos.clone().setY(.2),null,0xc9b8a0,1.2,.3,0);s.life=0;}
    if(s.life<=0)this.scene.remove(s.m);}
   this.shots=this.shots.filter(s=>s.life>0);
@@ -504,10 +509,11 @@ const G={on:false,paused:false,R:null,scene:null,cam:null,in:{},keys:{},stick:{x
   if(this.keys.ArrowLeft)this.camYaw+=dt*2.2;if(this.keys.ArrowRight)this.camYaw-=dt*2.2;
   const f=_v.set(Math.sin(this.camYaw),0,Math.cos(this.camYaw)),r=_v2.set(-f.z,0,f.x);
   const cm=this.result?'third':this.camMode,fp=cm==='fp';
-  const dist=fp?-.4:cm==='third'?(portrait?14:12.5):(portrait?8.8:7.4),side=fp||cm==='third'?0:(portrait?1.25:2.3),hgt=fp?3.3:(cm==='third'?5.6:2.9)+Math.min(4,P.pos.y*.15);
+  const bk=(P.rig&&P.rig.bulk||1)-1;// v3.1: wide mechs (Pooh) get the camera pulled back and further off-shoulder so they never wall off the screen
+  const dist=fp?-.4:cm==='third'?(portrait?14+bk*4:12.5+bk*3):(portrait?9.6+bk*5:7.6+bk*2.6),side=fp||cm==="third"?0:(portrait?1.75+bk*.9:2.3+bk*.9),hgt=fp?3.3:(cm==='third'?5.6+bk*1.2:(portrait?3.5:2.9)+bk*1.1)+Math.min(4,P.pos.y*.15);
   const fov=fp?(portrait?78:68):portrait?68:58;if(this.cam.fov!==fov){this.cam.fov=fov;this.cam.updateProjectionMatrix();}
   const want=P.pos.clone().addScaledVector(f,-dist).addScaledVector(r,-side);want.y=P.pos.y+hgt;if(this.result&&!this.result.win)want.y+=3;
-  if(fp)this.cam.position.copy(want);else this.cam.position.lerp(want,clamp(7*dt,0,1));const look=P.pos.clone().addScaledVector(f,fp?20:10).addScaledVector(r,-side*.6);look.y=P.pos.y+(fp?3.1:cm==='third'?2.6:2.2);
+  if(fp)this.cam.position.copy(want);else this.cam.position.lerp(want,clamp(7*dt,0,1));const look=P.pos.clone().addScaledVector(f,fp?20:10).addScaledVector(r,-side*.6);look.y=P.pos.y+(fp?3.1:cm==='third'?2.6:(portrait?2.9:2.2)+bk*.8);
   if(this.lock&&this.lock.alive){const ly=this.aimPoint(this.lock,0,P.pos).y;look.y=lerp(look.y,ly,.35);}
   this.shake=Math.max(0,this.shake-dt*1.8);const sk=this.shake*(HS.state.opt.shake===false?0:1);if(sk>0)this.cam.position.add(new V3(rnd(-1,1)*sk,rnd(-1,1)*sk,rnd(-1,1)*sk*.5));
   this.cam.lookAt(look);

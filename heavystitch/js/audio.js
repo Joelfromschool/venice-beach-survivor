@@ -33,7 +33,9 @@ const AU={ctx:null,master:null,music:null,sfx:null,on:true,mv:.55,sv:.8,track:nu
   case'missile':this.noise(t,.35,.25*vol,'bandpass',1200,1.5,null,3500);break;
   case'blade':this.noise(t,.16,.5*vol,'bandpass',3500,2,null,900);this.osc('sawtooth',900,t,.1,.06*vol,null,300);break;
   case'pile':this.osc('square',70,t,.3,.6*vol,null,30);this.noise(t,.25,.8*vol,'lowpass',4000,1,null,200);this.noise(t+.02,.06,.5*vol,'highpass',6000);break;
-  case'hit':this.noise(t,.06,.3*vol,'highpass',2500);this.osc('square',520,t,.04,.06*vol,null,260);break;
+  case'hit':{const r=.85+Math.random()*.3;this.noise(t,.05,.28*vol,'highpass',2800);this.osc('square',620*r,t,.035,.05*vol,null,300);this.osc('triangle',2300*r,t,.09,.045*vol,null,1700);this.osc('sine',130,t,.08,.2*vol,null,55);break;}
+  case'thud':this.osc('sine',95,t,.2,.5*vol,null,36);this.noise(t,.14,.42*vol,'lowpass',1100,1,null,180);this.osc('square',240,t,.05,.07*vol,null,80);break;
+  case'kill':this.noise(t,.28,.45*vol,'bandpass',1700,2,null,420);this.osc('sawtooth',320,t,.22,.1*vol,null,55);this.osc('sine',75,t,.32,.5*vol,null,28);this.noise(t+.04,.12,.25*vol,'highpass',4200);break;
   case'hurt':this.noise(t,.18,.45*vol,'lowpass',900);this.osc('sawtooth',110,t,.2,.2*vol,null,60);break;
   case'boom':this.noise(t,.8,.9*vol,'lowpass',900,.7,null,60);this.osc('sine',70,t,.7,.8*vol,null,25);break;
   case'dash':this.noise(t,.28,.55*vol,'bandpass',900,1,null,2600);this.osc('sine',140,t,.15,.2*vol,null,70);break;
