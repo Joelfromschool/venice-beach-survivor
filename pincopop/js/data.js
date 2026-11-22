@@ -16,11 +16,12 @@ const POOL={
  all:[['pinco','I watched this 14 times','これ14回見た'],['pooh','this made me hungry somehow','なぜかお腹すいた'],['party','🎉🎉🎉','🎉🎉🎉'],['max','woof (this is good)','ワン（これいい）'],['mogu','came out of my hole to watch this','穴から出てきて見た'],['bronny','the editing tho 🔥','編集すごい🔥'],['prof','I have reviewed this. It is good.','検証しました。良いです。'],['asmon','…fine. I laughed.','…まあ、笑った。'],['bean','sending this to everyone (with my face)','みんなに送る（顔で）'],['pooping','showing this to my kids','子どもたちに見せる']],
  food:[['bean','I would eat this with no hands','手なしで食べたい'],['pooh','can you make it with coins','金貨で作れる？'],['pinco','recipe pls 🙏','レシピください🙏'],['bronny','pre-game meal unlocked','試合前メシ決定'],['mogu','I am burying this for later','あとで食べるために埋めとく'],['asmon','I could cook this. I simply choose not to.','俺も作れる。作らないだけだ。'],['max','is there any for me 🥺','ぼくのぶんある？🥺'],['prof','The ratio of butter is scientifically perfect','バターの比率が科学的に完璧']],
  comedy:[['bronny','I’m crying 😭😭','泣いてる😭😭'],['pinco','NOT THE ENDING 💀','オチ💀'],['bean','the timing!!!','タイミング！！！'],['pooh','I fell off my chair (I have no legs)','いすから落ちた（足ないけど）'],['party','🤣🤣🤣🤣','🤣🤣🤣🤣'],['asmon','this is slander','これは名誉毀損だ'],['mogu','replaying this underground','地下でリピート中'],['prof','I have no notes. Only laughter.','言うことなし。笑いのみ。']],
+ preg:[['pinco','saving this for my sister 💕','妹のために保存した💕'],['pooh','I already packed the hospital bag. twice.','入院バッグもう詰めた。2回。'],['prof','Sound, mainstream guidance. Approved.','標準的で信頼できる内容。承認。'],['pooping','partners, take notes 📝','パートナーの皆さん、メモを📝'],['bean','I am drinking water in solidarity','連帯して水を飲んでます'],['bronny','the talk test is real','トークテストはガチ'],['party','sending hugs to all mamas-to-be 🤗','プレママのみなさんにハグを🤗'],['max','I will guard the nap 🐶','お昼寝はぼくが見張る🐶']],
  parent:[['pooping','this is my house every day','うちの毎日そのもの'],['pinco','the babies 😭💕','赤ちゃんたち😭💕'],['pooh','babysitting is harder than cooking','ベビーシッターは料理より大変'],['max','I can help 🐶','手伝えるよ🐶'],['party','baby party when?','ベビーパーティーいつ？'],['bean','I was a baby once. tiny pea.','ぼくも昔は赤ちゃんだった。ちっちゃい豆。'],['prof','Parenting is 90% snacks, studies show','研究によると子育ての9割はおやつ'],['bronny','dad mode activated','パパモード起動']],
  makeup:[['pinco','the blend 😍','このぼかし😍'],['asmon','I taught her that','それ俺が教えた'],['bean','I tried. it went everywhere.','やってみた。全部についた。'],['party','add more glitter','ラメもっと'],['pooh','do it on me next','次はぼくにやって'],['bronny','skin is glowing fr','肌つやつやだ'],['mogu','what if I contour my nose','鼻をシェーディングしたら？'],['prof','The shimmer refracts light beautifully','ラメの光の屈折が美しい']],
 };
 const STR={
- en:{foryou:'For you',food:'Food',comedy:'Comedy',parent:'Parenting',makeup:'Makeup',secret:'Bloopers',
+ en:{foryou:'For you',food:'Food',comedy:'Comedy',parent:'Parenting',makeup:'Makeup',preg:'Pregnancy',nomed:'Not medical advice. Ask your doctor or midwife.',secret:'Bloopers',
   follow:'Follow',following:'Following',more:'more',less:'less',orig:'Original audio',sound:'Tap for sound',
   comments:'Comments',addc:'Add a comment…',post:'Post',share:'Share',sendto:'Send to',copy:'Copy link',sharevia:'Share…',save:'Save',saved:'Saved',unsave:'Remove from saved',nope:'Not interested',
   copied:'Link copied',sentto:'Sent to {n}',savedT:'Saved to your collection',unsavedT:'Removed from saved',nopeT:'Got it. You will see fewer like this.',
@@ -28,7 +29,7 @@ const STR={
   allgames:'All games',reset:'Reset likes and saves',resetT:'Likes and saves cleared',reply:'Reply',you:'you',now:'now',liked:'Liked',paused:'Paused',
   about:'PincoPop is a LANZAGAMES app. Every clip stars the gang and is made in the app.',updated:'New clips are here. Tap to refresh',swipe:'Swipe up for more',loading:'Loading',
   autoT:'Moves to the next clip when one ends',views:'views',creator:'Creator'},
- ja:{foryou:'おすすめ',food:'フード',comedy:'お笑い',parent:'子育て',makeup:'メイク',secret:'NG集',
+ ja:{foryou:'おすすめ',food:'フード',comedy:'お笑い',parent:'子育て',makeup:'メイク',preg:'マタニティ',nomed:'医療アドバイスではありません。医師・助産師にご相談ください。',secret:'NG集',
   follow:'フォロー',following:'フォロー中',more:'続きを読む',less:'閉じる',orig:'オリジナル音源',sound:'タップで音声オン',
   comments:'コメント',addc:'コメントを追加…',post:'投稿',share:'シェア',sendto:'送信先',copy:'リンクをコピー',sharevia:'共有…',save:'保存',saved:'保存済み',unsave:'保存を解除',nope:'興味なし',
   copied:'リンクをコピーしました',sentto:'{n}に送信しました',savedT:'コレクションに保存しました',unsavedT:'保存を解除しました',nopeT:'了解です。似た動画を減らします。',

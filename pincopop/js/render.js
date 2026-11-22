@@ -33,13 +33,13 @@ const RD=(()=>{
   if(line)out.push(line)});return out}
  function textCanvas(str,st,fs,maxW,o){o=o||{};const key=st+'|'+fs+'|'+maxW+'|'+(o.c||'')+'|'+str;let r=TC.get(key);if(r)return r;
   if(TC.size>420){TC.clear()}
-  const c=document.createElement('canvas'),x=c.getContext('2d');const wt=st==='sub'||st==='bub'?800:900;
+  const c=document.createElement('canvas'),x=c.getContext('2d');const wt=st==='sub'||st==='bub'?800:st==='note'?700:900;
   x.font=`${wt} ${fs}px ${FONT}`;const lines=wrap(x,str,maxW);const lh=fs*1.24;
-  const pad=st.startsWith('pill')||st==='pink'||st==='yel'||st==='mint'||st==='tag'?fs*.42:st==='bub'?fs*.62:st==='stamp'?fs*.5:fs*.2;
+  const pad=st.startsWith('pill')||st==='note'||st==='pink'||st==='yel'||st==='mint'||st==='tag'?fs*.42:st==='bub'?fs*.62:st==='stamp'?fs*.5:fs*.2;
   const ws=lines.map(l=>x.measureText(l).width);const W=Math.ceil(Math.max(...ws,1)+pad*2+fs*.3),H=Math.ceil(lines.length*lh+pad*2+fs*.25);
   c.width=W;c.height=H;x.font=`${wt} ${fs}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';
-  const bgc={pill:'#fff',pillk:'rgba(10,10,14,.78)',pink:'#ff4f9a',yel:'#ffd84a',mint:'#38dcb0',tag:'rgba(255,255,255,.92)'}[st];
-  const fgc=o.c||({pill:'#111',pillk:'#fff',pink:'#fff',yel:'#111',mint:'#0b2b22',tag:'#e0337a',bub:'#222',stamp:'#e82c4a'}[st]||'#fff');
+  const bgc={note:'rgba(20,10,20,.55)',pill:'#fff',pillk:'rgba(10,10,14,.78)',pink:'#ff4f9a',yel:'#ffd84a',mint:'#38dcb0',tag:'rgba(255,255,255,.92)'}[st];
+  const fgc=o.c||({note:'#fff',pill:'#111',pillk:'#fff',pink:'#fff',yel:'#111',mint:'#0b2b22',tag:'#e0337a',bub:'#222',stamp:'#e82c4a'}[st]||'#fff');
   if(bgc){x.fillStyle=bgc;lines.forEach((l,i)=>{const w=ws[i]+pad*2,yy=pad*.5+i*lh;rr(x,(W-w)/2,yy,w,lh+pad*.9,fs*.38);x.fill()})}
   if(st==='bub'){x.fillStyle='#fff';rr(x,1,1,W-2,H-2,fs*.9);x.fill();x.strokeStyle='rgba(0,0,0,.12)';x.lineWidth=2;x.stroke()}
   if(st==='stamp'){x.strokeStyle=fgc;x.lineWidth=fs*.14;rr(x,fs*.1,fs*.1,W-fs*.2,H-fs*.2,fs*.3);x.stroke()}
@@ -156,7 +156,7 @@ const RD=(()=>{
   (sh.fx||[]).forEach(f=>drawFx(x,f,lt,R,T,true));
   x.restore();
   if(!NOTXT)drawTexts(x,sh,lt,R)}
- let LANG='en',VIS=null,NOTXT=false,SAFE=null;
+ let LANG='en',VIS=null,NOTXT=false,SAFE=null,CURCAT='';
  function drawTexts(x,sh,lt,R){if(!sh.tx)return;const vx0=Math.max(R.x,VIS?VIS.x:R.x),vx1=Math.min(R.x+R.w,VIS?VIS.x+VIS.w:R.x+R.w),vw=vx1-vx0;
   const placed=[];for(const t of sh.tx){const [t0,t1,en,ja,st0,y0,o0]=t;if(lt<t0||lt>t1)continue;const o=o0||{};const st=st0||'pill';let str=LANG==='ja'&&ja?ja:en;if(!str)continue;
    const vh0=VIS?VIS.h:R.h;const base=vw*({big:.088,num:.2,title:.07,sub:.056,bub:.05,stamp:.1,tag:.042}[st]||.054)*(o.s||1);const fs=Math.round(base);
@@ -172,7 +172,7 @@ const RD=(()=>{
    let cx=vx0+vw*(o.x==null?.5:o.x),cy=R.y+R.h*(y0==null?.3:y0);
    cx=clamp(cx,vx0+full.w/2+vw*.03,vx1-full.w/2-vw*.03);if(full.w>vw*.94)cx=vx0+vw/2;
    const vy0=VIS?VIS.y:R.y;const SF=SAFE||{top:.062,railL:.86,railT:.53,railB:.9,metaT:.87};
-   const yTop=vy0+vh0*Math.max(.11,SF.top+.012),yBot=vy0+vh0*(SF.metaT-.01);
+   const yTop=vy0+vh0*Math.max(.11,SF.top+.012),yBot=vy0+vh0*(SF.metaT-(CURCAT==='preg'?.075:.01));
    cy=Math.min(Math.max(cy,yTop+tc.h/2),yBot-tc.h/2);
    if(st!=='bub'&&st!=='stamp'&&st!=='num')for(const q of placed){if(Math.abs(cx-q[0])<(tc.w+q[2])/2&&Math.abs(cy-q[1])<(tc.h+q[3])/2-1)cy=q[1]+q[3]/2+tc.h/2+vh0*.004}
    // keep clear of the right-side button rail
@@ -191,7 +191,7 @@ const RD=(()=>{
  // ---------- transitions ----------
  const TR=.3;
  function shotAt(clip,t){const S=clip.shots;let i=0;while(i<S.length-1&&t>=S[i+1].t0)i++;return i}
- function draw(x,clip,t,CW,CH){
+ function draw(x,clip,t,CW,CH){CURCAT=clip.cat;
   const s=Math.max(CW/9,CH/16),FW=9*s,FH=16*s;const R={x:(CW-FW)/2,y:(CH-FH)/2,w:FW,h:FH};VIS={x:0,y:0,w:CW,h:CH};
   x.fillStyle='#111';x.fillRect(0,0,CW,CH);
   const i=shotAt(clip,t),sh=clip.shots[i],lt=t-sh.t0;const tr=sh.tr||'cut';
@@ -208,6 +208,10 @@ const RD=(()=>{
     case 'flash':default:{drawScene(x,clip,sh,lt,t,R);x.save();x.globalAlpha=Math.pow(1-p,1.6);x.fillStyle='#fff';x.fillRect(0,0,CW,CH);x.restore()}}
    NOTXT=false;x.save();drawTexts(x,sh,lt,R);x.restore();
   }else drawScene(x,clip,sh,lt,t,R);
-  if(sh.post)sh.post(x,lt,R)}
+  if(sh.post){x.save();sh.post(x,lt,R);x.restore()}
+  if(clip.cat==='preg')drawNote(x,R)}
+ const NOTE={en:'ⓘ Not medical advice. Ask your doctor or midwife.',ja:'ⓘ 医療アドバイスではありません。医師・助産師にご相談を。'};
+ function drawNote(x,R){const V=VIS||R,SF=SAFE||{metaT:.87};const vw=Math.min(V.w,R.w);const fs=Math.max(9,Math.round(vw*.03));
+  const rl=SF.railL||.86;const mw=V.w*(rl-.06);const str=NOTE[LANG]||NOTE.en;let f=fs,tc=textCanvas(str,'note',f,9999,{});if(tc.w>mw){f=Math.max(7,Math.floor(f*mw/tc.w));tc=textCanvas(str,'note',f,9999,{})}const y=V.y+V.h*SF.metaT-tc.h*.5-V.h*.006;x.save();x.globalAlpha=.92;x.drawImage(tc.c,V.x+V.w*.025,y-tc.h/2);x.restore()}
  return {load,loadClip,ready,norm,draw,get,assets,textCanvas,set lang(l){LANG=l},set safe(v){SAFE=v},get lang(){return LANG},VID,rr,heart}
 })();
