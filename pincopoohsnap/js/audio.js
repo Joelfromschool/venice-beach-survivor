@@ -115,8 +115,8 @@ const AU={ctx:null,mv:.7,sv:1,on:true,cur:null,pending:null,timer:null,step:0,ne
    la:{bpm:110,swing:.14,li:'whistle',ci:'ep',bassI:'round',gl:'marimba',
     chords:['Abmaj7','Fm7','Dbmaj7','Eb7','Abmaj7','Cm7','Dbmaj7','Eb7','Abmaj7','Fm7','Dbmaj7','Eb7','Abmaj7','Cm7','Dbmaj7','Eb7'],
     lead:S('Eb5 - C5 Eb5 . F5 Eb5 C5 Ab5 - - . G5 F5 Eb5 . F5 - Db5 F5 . Ab5 G5 F5 G5 - - - Bb4 C5 Db5 D5 '+
-      'Eb5 - C5 Eb5 . Ab5 Bb5 C6 Bb5 - G5 Eb5 . G5 Bb5 . Ab5 - F5 Db5 . F5 Eb5 Db5 C5 - - - . . . . '+
-      'C6 . Bb5 Ab5 . Eb5 . C5 Eb5 F5 Ab5 . C6 . Bb5 Ab5 F5 . Ab5 Db6 . C6 . Ab5 Bb5 - G5 . Eb5 - Db5 . '+
+      'Eb5 - C5 Eb5 . Ab5 Bb5 C6 Bb5 - G5 Eb5 . C6 Bb5 . Ab5 - F5 Db5 . F5 Eb5 Db5 C5 - - - . . . . '+
+      'C6 . Bb5 Ab5 . Eb5 . C5 Eb5 F5 Ab5 . C6 . Bb5 Ab5 F5 . Bb5 Db6 . C6 . Ab5 Bb5 - G5 . Eb5 - Db5 . '+
       'C5 Eb5 Ab5 C6 Eb6 - C6 . Bb5 - G5 . Eb5 . G5 . Ab5 . F5 . Db5 . Eb5 F5 Ab5 - - - . . . .'),
     bass:'R...R.O...R.F.A.',comp:'.x..x.x..x..x...',
     dr:{k:'x..x....x.x.....',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',sh:'xxxxxxxxxxxxxxxx',c:'............x...'},
@@ -125,9 +125,9 @@ const AU={ctx:null,mv:.7,sv:1,on:true,cur:null,pending:null,timer:null,step:0,ne
    jp:{bpm:142,swing:0,li:'koto',ci:'sbrass',bassI:'saw8',gl:'glock',
     chords:['Gbmaj7','Ab','Fm7','Bbm','Ebm7','Ab7','Db','Db','Gbmaj7','Ab','Fm7','Bbm','Ebm7','Ab7','Db','Db'],
     lead:S('Bb5 . Ab5 Bb5 . Db6 Bb5 Ab5 F5 . Eb5 F5 Ab5 . Eb5 . Ab5 . F5 Eb5 . Db5 Eb5 F5 Db5 - - . Bb4 Db5 Eb5 F5 '+
-      'Gb5 . F5 Gb5 . Bb5 Ab5 Gb5 F5 . Eb5 F5 . Ab5 C6 Eb6 Db6 - - . Ab5 . F5 . Ab5 Bb5 Ab5 F5 Eb5 . Db5 . '+
+      'Gb5 . F5 Gb5 . Bb5 Ab5 Bb5 Db6 . Eb5 F5 . Ab5 C6 Eb6 Db6 - - . Ab5 . F5 . Ab5 Bb5 Ab5 F5 Eb5 . Db5 . '+
       'Db6 . Bb5 . Ab5 . Gb5 Ab5 Bb5 . Ab5 . F5 . Eb5 F5 Ab5 . C6 . Ab5 . F5 Ab5 Bb5 - - - Db6 . Bb5 . '+
-      'Gb5 . Bb5 Db6 . Bb5 Gb5 . Ab5 . C6 Eb6 . C6 Ab5 . F6 - Eb6 Db6 . Bb5 Ab5 F5 Db6 - - - . . . .'),
+      'Gb5 . Bb5 Db6 . F6 Eb6 . Ab5 . C6 Eb6 . F6 Eb6 . F6 - Eb6 Db6 . Bb5 Ab5 F5 Db6 - - - . . . .'),
     bass:'R.ORR.ORR.ORR.OR',comp:'x..x..x...x.x...',
     dr:{k:'x...x..x..x.x...',s:'....x.......x...',h:'x.x.x.x.x.x.x.x.',o:'..............x.',tb:'..x...x...x...x.'},
     fill:{k:'x...x..x........',s:'....x...........',tk:'........x.x.x.x.',th:'.........x.x.x.x'},snapBars:[7,15]},
@@ -182,7 +182,10 @@ const AU={ctx:null,mv:.7,sv:1,on:true,cur:null,pending:null,timer:null,step:0,ne
   switch(k){
    case'ui':this.tone(t,988,.07,'triangle',.14);this.tone(t+.035,1480,.08,'sine',.08);break;
    case'back':this.tone(t,740,.07,'triangle',.12);this.tone(t+.045,494,.1,'triangle',.1);break;
-   case'shutter':this.tone(t,2600,.012,'square',.08);this.nz(t,.05,.5,3000,'bandpass');this.nz(t+.075,.06,.4,2200,'bandpass');break;
+   case'shutter':this.nz(t,.018,.55,5200,'highpass');this.tone(t,2900,.01,'square',.06);this.tone(t+.004,140,.06,'sine',.32,null,.002,60);this.nz(t+.006,.05,.35,1800,'bandpass');this.nz(t+.062,.022,.5,4200,'bandpass');this.tone(t+.064,2200,.008,'square',.05);
+    for(let i=0;i<5;i++)this.nz(t+.16+i*.034,.016,.16-i*.02,2600+i*120,'bandpass');this.tone(t+.16,420,.17,'sawtooth',.018,null,.01,720);break;
+   case'cheese':this.tone(t,this.hz(84),.1,'triangle',.14);this.tone(t+.09,this.hz(88),.2,'triangle',.15);this.tone(t+.09,this.hz(95),.22,'sine',.06);this.nz(t+.08,.12,.05,8000);break;
+   case'wow':this.tone(t,560,.22,'sine',.16,null,.01,1180);this.tone(t+.02,840,.16,'triangle',.06,null,.01,1500);break;
    case'wind':this.nz(t,.25,.12,900,'bandpass');this.tone(t,300,.25,'sawtooth',.03,null,.01,600);break;
    case'throw':this.nz(t,.25,.25,1200,'bandpass');this.tone(t,520,.2,'sine',.08,null,.01,240);break;
    case'thud':this.tone(t,170,.15,'sine',.4,null,.002,70);break;

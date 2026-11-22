@@ -2,7 +2,7 @@
 // Rail photo-safari engine: camera, input, lures, shutter and photo scoring.
 const G={on:false,paused:false,speed:1/100,
  init(){const el=document.getElementById('view');this.el=el;
-  this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});this.renderer.outputEncoding=THREE.sRGBEncoding;this.renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;el.appendChild(this.renderer.domElement);
+  this.renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});this.renderer.outputEncoding=THREE.sRGBEncoding;if(/[?&]tm=1/.test(location.search)){this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.18;}this.renderer.setPixelRatio(Math.min(2,window.devicePixelRatio||1));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFSoftShadowMap;el.appendChild(this.renderer.domElement);
   W.onSlow=fps=>{W.shadows=false;if(W.dl)W.dl.castShadow=false;this.renderer.setPixelRatio(Math.min(1.5,window.devicePixelRatio||1));this.resize();};
   this.cam=new THREE.PerspectiveCamera(60,1,.1,600);this.pcv=document.createElement('canvas');this.pcv.width=360;this.pcv.height=270;
   window.addEventListener('resize',()=>this.resize());this.resize();this.bindInput();
@@ -37,13 +37,22 @@ const G={on:false,paused:false,speed:1/100,
   const dir=new THREE.Vector3(Math.sin(yw)*Math.cos(pt),Math.sin(pt),Math.cos(yw)*Math.cos(pt));this.cam.lookAt(this.cam.position.clone().add(dir));this.dir=dir;
   if(W.waterMesh)W.waterMesh.position.y=.05+Math.sin(this.t*1.3)*.04;
   for(const a of this.actors){if(a.state==='gone'||a.pathHidden)continue;a.update(dt,this.t);}
-  this.updItems(dt);FX.update(dt,this.scene);this.whCd-=dt;this.thCd-=dt;
+  this.focus(dt);this.updItems(dt);FX.update(dt,this.scene);this.whCd-=dt;this.thCd-=dt;
   HUD.update(this);
   if(this.first)this.tips();
   if(this.u>=1&&!this.ending){this.ending=true;HUD.banner(HS.T('courseEnd'),'#ff5aa0');AU.play('fanfare');setTimeout(()=>{this.on=false;HS.review(this.photos,this.co,{secret:this.secretDone,branch:this.branchOpen});},2200);}
   W.update(dt,this.t,this.cam);
   this.renderer.render(this.scene,this.cam);},
- tips(){const u=this.u,T=(k,at)=>{if(u>=at&&!this.tipsShown[k]){this.tipsShown[k]=1;HUD.tip(HS.T(k));}};T('tipAim',.005);T('tipShoot',.05);T('tipZoom',.11);T('tipApple',.17);T('tipWhistle',.25);if(HS.state.money)T('tipMoney',.33);},
+ // camera-ready poses: keep a friend centred and big in the viewfinder and they strike a pose
+ focus(dt){const cam=this.cam,fr=this.fr;let mx=0;if(!this._fv)this._fv=[new THREE.Vector3(),new THREE.Vector3(),new THREE.Vector3()];const [c,tp,bt]=this._fv;
+  for(const a of this.actors){if(a.state==='gone'||a.pathHidden||!a.grp.visible){a.focusT=0;continue;}
+   c.set(a.pos.x,a.y+a.ch.h*.5,a.pos.z);const dist=c.distanceTo(cam.position);if(dist>45){a.focusT=0;continue;}c.project(cam);if(c.z>1||c.z<-1){a.focusT=0;continue;}
+   const ux=((c.x+1)/2*this.W-fr.x)/fr.w,uy=((1-c.y)/2*this.H-fr.y)/fr.h;tp.set(a.pos.x,a.y+a.ch.h,a.pos.z).project(cam);bt.set(a.pos.x,a.y,a.pos.z).project(cam);const hf=Math.abs(tp.y-bt.y)/2*this.H/fr.h;
+   const ok=Math.abs(ux-.5)<.2&&Math.abs(uy-.5)<.27&&hf>.3;
+   if(ok&&a.canPose()){a.focusT+=dt;mx=Math.max(mx,Math.min(1,a.focusT/1.3));if(a.focusT>1.3)a.strikePose();}else a.focusT=Math.max(0,a.focusT-dt*2);}
+  const vf=this._vfEl||(this._vfEl=document.getElementById('vf'));if(vf){vf.style.setProperty('--lk',mx.toFixed(2));vf.classList.toggle('lk',mx>.05);}},
+ onCamPose(a){this.poseCount=(this.poseCount||0)+1;HUD.tip(HS.T('posing',{c:HS.cn(a.c)}));if(navigator.vibrate)try{navigator.vibrate(25);}catch(e){}},
+ tips(){const u=this.u,T=(k,at)=>{if(u>=at&&!this.tipsShown[k]){this.tipsShown[k]=1;HUD.tip(HS.T(k));}};T('tipAim',.005);T('tipShoot',.05);T('tipZoom',.11);T('tipApple',.17);T('tipWhistle',.25);T('tipPose',.3);if(HS.state.money)T('tipMoney',.33);},
  // ---------- items ----------
  throwItem(kind){if(!this.on||this.paused||this.ending||this.thCd>0)return;if(kind==='money'&&!HS.state.money)return;this.thCd=.45;AU.play('throw');
   const m=kind==='apple'?this.appleMesh():this.moneyMesh();const p=this.cam.position.clone().addScaledVector(this.dir,1).add(new THREE.Vector3(0,-.4,0));m.position.copy(p);this.scene.add(m);
@@ -81,7 +90,7 @@ const G={on:false,paused:false,speed:1/100,
   const score=s=>s.size+this.posePts(s);subs.sort((a,b)=>score(b)-score(a));
   const main=subs[0]||null;const count=subs.filter(s=>s.frac>=.01).length;const tags=[...new Set(subs.flatMap(s=>s.tags))];
   return{subs,main,count,tags};},
- posePts(s){let p=[200,500,900][s.pose]||200;const t=s.tags;if(t.includes('sleep'))p+=100;if(t.includes('eat'))p+=300;if(t.includes('bonk'))p+=400;if(t.includes('woke'))p+=300;if(t.includes('surprise'))p+=500;if(t.includes('dance'))p+=300;if(t.includes('money'))p+=300;return p;},
+ posePts(s){let p=[200,500,900,650,600,1000][s.pose]||200;const t=s.tags;if(t.includes('sleep'))p+=100;if(t.includes('eat'))p+=300;if(t.includes('bonk'))p+=400;if(t.includes('woke'))p+=300;if(t.includes('surprise'))p+=500;if(t.includes('dance'))p+=300;if(t.includes('money'))p+=300;if(t.includes('campose'))p+=300;if(t.includes('wave'))p+=100;if(t.includes('moneywow'))p+=150;return p;},
  // evaluation breakdown used by the review screen
  evalPhoto(m){if(!m.main)return{total:0,none:true};const s=m.main;const size=s.size,pose=this.posePts(s);let mult=1;const notes=[];if(s.center){mult*=2;notes.push('centered');}if(s.crop){mult*=.6;notes.push('cropped');}if(s.hidden){mult*=.5;notes.push('hidden');}
   const friends=Math.max(0,m.count-1)*400;const special=s.tags.includes('secret')?2500:0;const total=Math.round(((size+pose)*mult+friends+special)/10)*10;return{size,pose,mult,notes,friends,special,total};},

@@ -1,7 +1,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const HUD={
- start(co){$('hFilm').textContent=G.film;$('hCourse').textContent=HS.L(co);$('bMoney').classList.toggle('lock',!HS.state.money);$('hTip').classList.remove('on');$('pause').classList.remove('on');$('hBanner').className='banner';this.banner(HS.L(co),'#4ad8ff');},
+ start(co){$('hFilm').textContent=G.film;$('hCourse').textContent=HS.L(co);$('bMoney').classList.toggle('lock',!HS.state.money);$('hTip').classList.remove('on');$('pause').classList.remove('on');$('hBanner').className='banner';this.banner(HS.L(co),'#4ad8ff');HS.fillStars($('pStars'),co);clearTimeout(this._ct);if(!G.first&&co.ch)this._ct=setTimeout(()=>{if(G.on)this.tip('🎯 '+HS.T('challenge')+': '+HS.L(co.ch));},2300);},
  update(g){$('hFilm').textContent=g.film;$('hProg').style.width=Math.min(100,g.u*100)+'%';$('bWhistle').classList.toggle('cd',g.whCd>0);$('hFilm').parentNode.classList.toggle('low',g.film<=5);},
  banner(t,col,big){const b=$('hBanner');b.textContent=t;b.style.setProperty('--bc',col||'#ff5aa0');b.className='banner'+(big?' big':'');void b.offsetWidth;b.classList.add('on');},
  tip(t){const e=$('hTip');e.textContent=t;e.classList.remove('on');void e.offsetWidth;e.classList.add('on');clearTimeout(this._tt);this._tt=setTimeout(()=>e.classList.remove('on'),4200);},
@@ -11,8 +11,8 @@ const HUD={
  press(k){const b={apple:'bApple',money:'bMoney',whistle:'bWhistle'}[k];if(!b)return;const e=$(b);e.classList.remove('pop');void e.offsetWidth;e.classList.add('pop');},
 };
 const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
- defState(){const ja=(navigator.language||'').toLowerCase().startsWith('ja');return{v:1,started:false,opt:{lang:ja?'ja':'en',music:.7,sfx:1,sens:1},pts:0,unlocked:{venice:true},secrets:{},best:{},album:{},specials:{},req:{},money:false,cheat:false,played:{}};},
- load(){let s=null;try{s=JSON.parse(localStorage.getItem(this.KEY));}catch(e){}const d=this.defState();if(!s||s.v!==1)return d;if('honey' in s){s.money=!!(s.money||s.honey);delete s.honey;}if(s.req&&s.req['r_pooh_'+'honey']){s.req.r_pooh_money=true;delete s.req['r_pooh_'+'honey'];}return Object.assign(d,s,{opt:Object.assign(d.opt,s.opt||{})});},
+ defState(){const ja=(navigator.language||'').toLowerCase().startsWith('ja');return{v:1,started:false,opt:{lang:ja?'ja':'en',music:.7,sfx:1,sens:1},pts:0,unlocked:{venice:true},secrets:{},best:{},album:{},specials:{},req:{},money:false,cheat:false,played:{},poses:{},stars:{}};},
+ load(){let s=null;try{s=JSON.parse(localStorage.getItem(this.KEY));}catch(e){}const d=this.defState();if(!s||s.v!==1)return d;if('honey' in s){s.money=!!(s.money||s.honey);delete s.honey;}if(s.req&&s.req['r_pooh_'+'honey']){s.req.r_pooh_money=true;delete s.req['r_pooh_'+'honey'];}const r=Object.assign(d,s,{opt:Object.assign(d.opt,s.opt||{})});r.poses=r.poses||{};r.stars=r.stars||{};return r;},
  save(){try{localStorage.setItem(this.KEY,JSON.stringify(this.state));}catch(e){try{for(const k in this.state.album)if(this.state.album[k].img&&this.state.album[k].img.length>60000)this.state.album[k].img='';localStorage.setItem(this.KEY,JSON.stringify(this.state));}catch(e2){}}},
  T(k,v){const s=STR[k];let r=s?s[this.lang==='ja'?1:0]:k;if(v)for(const x in v)r=r.replace('{'+x+'}',v[x]);return r;},
  L(o){return o?(o[this.lang]||o.en):'';},
@@ -25,6 +25,20 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
  toast(t,ms){const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(this._to);this._to=setTimeout(()=>e.classList.remove('on'),ms||2600);},
  modal(html,btns){const m=$('modal'),b=$('mBox');b.innerHTML=html+'<div class="mbtns">'+btns.map((x,i)=>`<button class="btn ${x.cls||''}" data-i="${i}">${x.t}</button>`).join('')+'</div>';m.classList.add('on');
   b.querySelectorAll('[data-i]').forEach(e=>e.onclick=()=>{AU.play('ui');m.classList.remove('on');const f=btns[+e.dataset.i].f;if(f)f();});},
+ // ---------- stars / challenges / poses ----------
+ starList(co){return[{t:this.T('starScore',{n:co.star.toLocaleString()})},{t:this.T('starSecret')},{t:'🎯 '+this.L(co.ch)}];},
+ starsOf(id){return this.state.stars[id]||[0,0,0];},
+ starCount(){let n=0;for(const k in this.state.stars)n+=this.state.stars[k].filter(Boolean).length;return n;},
+ fillStars(el,co){if(!el)return;const st=this.starsOf(co.id);el.innerHTML=`<h4>${this.T('courseStars')}</h4>`+this.starList(co).map((x,i)=>`<div class="pst ${st[i]?'on':''}"><i>${st[i]?'★':'☆'}</i><span>${x.t}</span></div>`).join('');},
+ chOk(co,p){const c=co.ch;if(!c||!p.subs)return false;if(c.count)return p.count>=c.count;return p.subs.some(s=>s.frac>=.015&&!s.hidden&&(!c.c||s.c===c.c)&&(c.pose==null||s.pose===c.pose)&&(!c.tag||s.tags.includes(c.tag)));},
+ poseName(c,pose){return pose===2?this.L(CHARS[c].sp):this.L(POSE_NAMES[pose]||POSE_NAMES[0]);},
+ thumb(src,cb){const im=new Image();im.onload=()=>{const c=document.createElement('canvas');c.width=160;c.height=120;c.getContext('2d').drawImage(im,0,0,160,120);try{cb(c.toDataURL('image/jpeg',.72));}catch(e){cb('');}};im.onerror=()=>cb('');im.src=src;},
+ profSay(p,e){const m=p.main,t=m.tags,pick=a=>this.L(a[(Math.random()*a.length)|0]);let line,tip=null;
+  if(t.includes('secret'))line=pick(PROF_LINES.secret);else if(m.pose===5)line=pick(PROF_MORE.campose);else if(t.includes('money')&&m.c==='pooh')line=pick(PROF_MORE.money);else if(m.pose===3)line=pick(PROF_MORE.surprise);else if(m.pose===4||t.includes('eat'))line=pick(PROF_MORE.snack);
+  else if(m.pose===2)line=pick(PROF_MORE.special);else if(t.includes('sleep'))line=pick(PROF_MORE.sleep);else if(m.hidden)line=pick(PROF_MORE.hidden);else if(m.crop&&m.size<500)line=pick(PROF_MORE.crop);else if(p.count>=2)line=pick(PROF_MORE.group);
+  else{const tier=e.total>=3000?'high':e.total>=1300?'mid':'low';line=pick(PROF_LINES[tier]);}
+  if(m.hidden)tip=PROF_TIPS.hidden;else if(m.size<330)tip=PROF_TIPS.small;else if(m.crop)tip=PROF_TIPS.crop;else if(!m.center)tip=PROF_TIPS.center;else if(m.pose<2)tip=Math.random()<.5?PROF_TIPS.pose:PROF_TIPS.lure;
+  return{line,tip:tip?this.L(tip):''};},
  // ---------- title ----------
  titleSub(){const s=this.state;const c=$('tCont');c.disabled=!s.started;$('tContSub').textContent=s.started?(this.T('points')+' '+s.pts.toLocaleString()):this.T('nosave');},
  titleTap(){AU.unlock();AU.playMusic('title');AU.play('yay');$('tStart').classList.add('hide');$('tMenu').classList.add('on');},
@@ -34,12 +48,12 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('iNext').onclick=()=>{AU.play('ui');i++;if(i>=INTRO.length){this.reg='la';this.show('sMap');}else step();};},
  // ---------- map ----------
  unlockedIdx(i){const co=COURSES[i],s=this.state;if(i===0||s.unlocked[co.id]||s.cheat)return true;if(s.pts>=co.need)return true;const prev=COURSES[i-1];return !!s.secrets[prev.id];},
- renderMap(){const s=this.state;$('mPts').textContent=s.pts.toLocaleString();
+ renderMap(){const s=this.state;$('mPts').textContent=s.pts.toLocaleString();$('mStars').textContent='★ '+this.starCount()+'/'+(COURSES.length*3);
   $('mRegs').innerHTML=REGIONS.map(r=>{const first=COURSES.findIndex(c=>c.reg===r.id);const ok=this.unlockedIdx(first);return`<button class="chip ${r.id===this.reg?'on':''} ${ok?'':'lock'}" data-reg="${r.id}">${ok?'':'🔒 '}${this.L(r)}</button>`;}).join('');
   $('mRegs').querySelectorAll('[data-reg]').forEach(b=>b.onclick=()=>{AU.play('ui');this.reg=b.dataset.reg;this.renderMap();});
   $('mList').innerHTML=COURSES.map((co,i)=>{if(co.reg!==this.reg)return'';const ok=this.unlockedIdx(i);const prev=COURSES[i-1];
-   return`<div class="ccard ${ok?'':'lock'}" data-i="${i}"><div class="cimg" style="background-image:url(art/th_${co.id}.webp)">${s.secrets[co.id]?'<span class="sec">★</span>':''}${co.fork?'<span class="fork">🔀</span>':''}</div>
-    <div class="cinfo"><b>${this.L(co)}</b><small>${ok?this.L(co.blurb):this.T('needPts',{n:co.need.toLocaleString(),c:prev?this.L(prev):''})}</small>${ok&&s.best[co.id]?`<em>${this.T('best')} ${s.best[co.id].toLocaleString()}</em>`:''}</div>
+   return`<div class="ccard ${ok?'':'lock'}" data-i="${i}"><div class="cimg" style="background-image:url(art/th_${co.id}.webp?v=${window.__BUILD__||""})">${s.secrets[co.id]?'<span class="sec">★</span>':''}${co.fork?'<span class="fork">🔀</span>':''}</div>
+    <div class="cinfo"><b>${this.L(co)}</b><small>${ok?this.L(co.blurb):this.T('needPts',{n:co.need.toLocaleString(),c:prev?this.L(prev):''})}</small><span class="cstars">${this.starsOf(co.id).map(x=>`<i class="${x?'on':''}">★</i>`).join('')}${ok&&s.best[co.id]?`<em>${this.T('best')} ${s.best[co.id].toLocaleString()}</em>`:''}</span></div>
     <button class="btn ${ok?'pink':''} go" ${ok?'':'disabled'}>${ok?this.T('go'):'🔒'}</button></div>`;}).join('');
   $('mList').querySelectorAll('.ccard').forEach(c=>{const i=+c.dataset.i;c.onclick=()=>{if(!this.unlockedIdx(i)){AU.play('back');return;}AU.play('ui');this.play(COURSES[i]);};});
   $('mList').scrollTop=0;},
@@ -49,6 +63,8 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   ['rPick','rEval','rSum'].forEach(x=>$(x).classList.remove('on'));
   const groups={};for(const p of photos){if(!p.main)continue;(groups[p.main.c]=groups[p.main.c]||[]).push(p);}
   this.rv.groups=groups;const keys=CAST_ORDER.filter(c=>groups[c]);
+  this.rv.newPoses=[];for(const ph of photos){const m=ph.main;if(!m||m.hidden||m.size<120)continue;const sc=G.evalPhoto(ph).total;const P=s.poses[m.c]=s.poses[m.c]||{};const cur=P[m.pose];if(!cur)this.rv.newPoses.push(this.cn(m.c)+' · '+this.poseName(m.c,m.pose));
+   if(!cur||sc>cur.s){P[m.pose]={s:sc,img:cur&&cur.img||''};const c0=m.c,p0=m.pose;this.thumb(ph.img,d=>{if(d&&s.poses[c0]&&s.poses[c0][p0]&&s.poses[c0][p0].s===sc){s.poses[c0][p0].img=d;this.save();}});}}
   if(!keys.length){this.summary();return;}
   for(const c of keys){let best=null,bv=-1;for(const p of groups[c]){const v=G.evalPhoto(p).total;if(v>bv){bv=v;best=p;}}this.rv.sel[c]=best.id;}
   $('rGroups').innerHTML=keys.map(c=>`<div class="rg"><div class="rgh"><img src="art/c_${c}_1.webp?v=${window.__BUILD__||''}" alt=""><b>${this.cn(c)}</b><small>×${groups[c].length}</small></div><div class="rrow">${groups[c].map(p=>`<button class="ph ${this.rv.sel[c]===p.id?'on':''}" data-c="${c}" data-id="${p.id}" style="background-image:url(${p.img})"></button>`).join('')}</div></div>`).join('');
@@ -57,8 +73,8 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('rShow').onclick=()=>{AU.play('ui');this.rv.items=CAST_ORDER.filter(c=>this.rv.sel[c]!==undefined).map(c=>photos[this.rv.sel[c]]);this.rv.k=0;$('rPick').classList.remove('on');$('rEval').classList.add('on');this.evalNext();};},
  evalNext(){const rv=this.rv;if(rv.k>=rv.items.length){$('rEval').classList.remove('on');this.summary();return;}
   const p=rv.items[rv.k++];const e=G.evalPhoto(p);const s=this.state;const c=p.main.c;rv.course+=e.total;
-  $('eImg').src=p.img;$('eName').textContent=this.cn(c);$('eStamp').className='stamp';$('eNext').disabled=true;
-  const tier=p.main.tags.includes('secret')?'secret':e.total>=3000?'high':e.total>=1300?'mid':'low';const lines=PROF_LINES[tier];$('eSay').textContent=this.L(lines[(Math.random()*lines.length)|0]);$('eProf').src='art/c_prof_'+(tier==='secret'?2:tier==='low'?0:1)+'.webp';
+  $('eImg').src=p.img;$('eName').innerHTML=`${this.cn(c)}<small>${this.poseName(c,p.main.pose)}</small>`;$('eStamp').className='stamp';$('eNext').disabled=true;
+  const tier=p.main.tags.includes('secret')?'secret':e.total>=3000?'high':e.total>=1300?'mid':'low';const say=this.profSay(p,e);$('eSay').innerHTML=`${say.line}${say.tip?`<em>💡 ${this.T('tipWord')}: ${say.tip}</em>`:''}`;$('eProf').src='art/c_prof_'+(tier==='secret'?2:tier==='low'?0:1)+'.webp';
   const rows=[[this.T('size'),e.size],[this.T('pose'),e.pose],[this.T('tech'),e.notes.length?e.notes.map(n=>n==='centered'?this.T('centered'):n==='cropped'?this.T('cropped'):'×0.5').join(' '):'—'],[this.T('friends'),e.friends?'+'+e.friends:'—'],[this.T('special'),e.special?'+'+e.special:'—']];
   $('eRows').innerHTML=rows.map(r=>`<div class="er"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')+`<div class="er tot"><span>${this.T('total')}</span><b id="eTot">0</b></div>`;
   const ers=[...$('eRows').querySelectorAll('.er')];ers.forEach((r,i)=>{setTimeout(()=>{r.classList.add('on');AU.play('tick');},250+i*260);});
@@ -70,20 +86,27 @@ const HS={KEY:'pincopoohsnap_v1',lang:'en',scr:'sTitle',reg:'la',
   $('eNext').onclick=()=>{AU.play('ui');this.evalNext();};},
  summary(){const rv=this.rv,s=this.state,co=rv.co;const before=COURSES.map((c,i)=>this.unlockedIdx(i));
   if(!s.req.r_all&&CAST_ORDER.every(c=>s.album[c])){s.req.r_all=true;const q=REQUESTS.find(q=>q.id==='r_all');rv.reqPts+=q.pts;rv.news.push(this.T('reqDone',{r:this.L(q),n:q.pts.toLocaleString()}));}
+  {const st=this.starsOf(co.id).slice();const got=[rv.course>=co.star,!!s.secrets[co.id],rv.photos.some(p=>this.chOk(co,p))];const L=this.starList(co);got.forEach((g,i)=>{if(g&&!st[i]){st[i]=1;rv.news.push(this.T('starGet',{s:L[i].t}));}});s.stars[co.id]=st;rv.starsNow=st;}
+  const mreq=(id,ok)=>{if(s.req[id]||!ok)return;s.req[id]=true;const q=REQUESTS.find(q=>q.id===id);rv.reqPts+=q.pts;rv.news.push(this.T('reqDone',{r:this.L(q),n:q.pts.toLocaleString()}));};
+  mreq('r_poses5',CAST_ORDER.filter(c=>s.poses[c]&&s.poses[c][5]).length>=5);mreq('r_page',CAST_ORDER.some(c=>s.poses[c]&&[0,1,2,3,4,5].every(k=>s.poses[c][k])));mreq('r_stars',this.starCount()>=15);
+  if(rv.newPoses&&rv.newPoses.length)rv.news.push('📸 '+this.T('newPose')+' '+rv.newPoses.slice(0,6).join(', ')+(rv.newPoses.length>6?' …':''));
   const earned=rv.course+rv.reqPts;s.pts+=earned;s.best[co.id]=Math.max(s.best[co.id]||0,rv.course);
   if(!s.money&&s.pts>=MONEY_AT){s.money=true;rv.news.push(this.T('moneyGet'));}
   COURSES.forEach((c,i)=>{if(!before[i]&&this.unlockedIdx(i)){s.unlocked[c.id]=true;rv.news.push(this.T('unlocked',{c:this.L(c)}));}});
   if(rv.flags.secret)rv.news.unshift('★ '+this.T('secretFound')+': '+this.L(co.secret));
   this.save();
   $('sRows').innerHTML=[[this.L(co),''],[this.T('photosTaken'),rv.photos.length],[this.T('earned'),'+'+rv.course.toLocaleString()],[this.T('requests'),rv.reqPts?'+'+rv.reqPts.toLocaleString():'—'],[this.T('points'),s.pts.toLocaleString()]].map((r,i)=>`<div class="er on ${i===4?'tot':''}"><span>${r[0]}</span><b>${r[1]}</b></div>`).join('')+(rv.items.length?'':`<div class="er on"><span>${this.L(PROF_LINES.none[0])}</span><b></b></div>`);
-  $('sNews').innerHTML=rv.news.map(n=>`<div>${n}</div>`).join('');$('rSum').classList.add('on');AU.jingle();
+  const stn=rv.starsNow||[0,0,0];$('sNews').innerHTML=`<div class="sumstars">${stn.map(x=>`<i class="${x?'on':''}">★</i>`).join('')}</div>`+rv.news.map(n=>`<div>${n}</div>`).join('');$('rSum').classList.add('on');AU.jingle();
   $('sDone').onclick=()=>{AU.play('ui');const ni=COURSES.findIndex((c,i)=>!before[i]&&this.unlockedIdx(i));if(ni>=0)this.reg=COURSES[ni].reg;this.show('sMap');};},
  // ---------- album / requests ----------
- renderAlbum(){const s=this.state;const cards=CAST_ORDER.map(c=>{const a=s.album[c];return`<button class="acard ${a?'':'empty'}" data-c="${c}">${a&&a.img?`<div class="aimg" style="background-image:url(${a.img})"></div>`:`<div class="aimg sil"><img src="art/c_${c}_1.webp?v=${window.__BUILD__||''}" alt=""></div>`}<b>${this.cn(c)}</b><small>${a?a.score.toLocaleString()+' '+this.T('pts'):this.T('unseen')}</small></button>`;}).join('');
+ renderAlbum(){const s=this.state;const cards=CAST_ORDER.map(c=>{const a=s.album[c];return`<button class="acard ${a?'':'empty'}" data-c="${c}">${a&&a.img?`<div class="aimg" style="background-image:url(${a.img})"></div>`:`<div class="aimg sil"><img src="art/c_${c}_1.webp?v=${window.__BUILD__||''}" alt=""></div>`}<b>${this.cn(c)}</b><small>${a?a.score.toLocaleString()+' '+this.T('pts'):this.T('unseen')}</small><span class="pc">📸 ${Object.keys(s.poses[c]||{}).length}/6</span></button>`;}).join('');
   const sp=COURSES.filter(co=>s.specials[co.id]).map(co=>{const x=s.specials[co.id];return`<button class="acard sp" data-s="${co.id}"><div class="aimg" style="background-image:url(${x.img})"></div><b>★ ${this.L(co.secret)}</b><small>${this.L(co)}</small></button>`;}).join('');
   $('aGrid').innerHTML=cards+`<h3 class="ah">${this.T('specials')} (${Object.keys(s.specials).length}/${COURSES.length})</h3>`+(sp||`<p class="hint">—</p>`);
-  $('aGrid').querySelectorAll('[data-c],[data-s]').forEach(b=>b.onclick=()=>{const a=b.dataset.c?s.album[b.dataset.c]:s.specials[b.dataset.s];if(!a||!a.img)return;AU.play('ui');const co=COURSES.find(c=>c.id===a.course||c.id===b.dataset.s);
+  $('aGrid').querySelectorAll('[data-c],[data-s]').forEach(b=>b.onclick=()=>{if(b.dataset.c)return this.posePage(b.dataset.c);const a=s.specials[b.dataset.s];if(!a||!a.img)return;AU.play('ui');const co=COURSES.find(c=>c.id===a.course||c.id===b.dataset.s);
    this.modal(`<div class="bigph"><img src="${a.img}" alt=""></div><h3>${b.dataset.c?this.T('recordOf',{c:this.cn(b.dataset.c)}):'★ '+this.L(co.secret)}</h3><p>${co?this.L(co):''} · ${a.score.toLocaleString()} ${this.T('pts')}</p>`,[{t:this.T('back')}]);});},
+ posePage(c){const s=this.state,a=s.album[c],P=s.poses[c]||{};AU.play('ui');const v=window.__BUILD__||'';
+  const tiles=[0,1,2,3,4,5].map(k=>{const x=P[k];return`<div class="pt ${x?'on':''}">${x&&x.img?`<div class="pti" style="background-image:url(${x.img})"></div>`:`<div class="pti sil"><img src="art/c_${c}_${k===0&&CHARS[c].noIdle0?1:k}.webp?v=${v}" alt=""></div>`}<b>${x?this.poseName(c,k):'？？？'}</b>${x?`<small>${x.s.toLocaleString()}</small>`:''}</div>`;}).join('');
+  this.modal(`${a&&a.img?`<div class="bigph sm"><img src="${a.img}" alt=""></div>`:''}<h3>${this.T('poseOf',{c:this.cn(c)})} ${Object.keys(P).length}/6</h3>${a?`<p>${this.T('best')} ${a.score.toLocaleString()} ${this.T('pts')}</p>`:''}<div class="pgrid">${tiles}</div>`,[{t:this.T('back')}]);},
  renderReq(){const s=this.state;$('qList').innerHTML=REQUESTS.map(q=>`<div class="rq ${s.req[q.id]?'done':''}"><i>${s.req[q.id]?'✓':'○'}</i><span>${this.L(q)}</span><b>+${q.pts.toLocaleString()}</b></div>`).join('');},
  // ---------- options ----------
  renderOpt(){const s=this.state.opt;const seg=(id,vals,cur,f)=>{$(id).innerHTML=vals.map(v=>`<button class="chip ${Math.abs(v[0]-cur)<.01?'on':''}" data-v="${v[0]}">${v[1]}</button>`).join('');$(id).querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{AU.play('ui');f(+b.dataset.v);this.save();this.renderOpt();});};

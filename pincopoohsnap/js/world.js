@@ -88,13 +88,16 @@ const W={tex:{},G:{},matCache:{},
  tanAt(curve,t){return curve.getTangentAt(Math.min(.999,Math.max(0,t)));},
  yawAt(curve,t){const tg=this.tanAt(curve,t);return Math.atan2(tg.x,tg.z);},
  // ---------------- curves ----------------
- makeCurves(co){const L=250,n=14;const ph=co.id.length*1.7;const A=[];
+ makeCurves(co){const L=250;const RF=typeof RAILS!=='undefined'&&RAILS[co.id];
+  if(RF){const n=40;const A=[],B=[];for(let i=0;i<=n;i++){const z=i*L/n;A.push(new V3(RF(z,0),0,z));if(co.fork)B.push(new V3(RF(z,1),0,z));}
+   return{A:new THREE.CatmullRomCurve3(A,false,'centripetal'),B:co.fork?new THREE.CatmullRomCurve3(B,false,'centripetal'):null,L};}
+  const n=14;const ph=co.id.length*1.7;const A=[];
   for(let i=0;i<=n;i++){const z=i*L/n;const x=Math.sin(z*.018+ph)*9+Math.sin(z*.041+ph*2)*4;A.push(new V3(x,0,z));}
   const ca=new THREE.CatmullRomCurve3(A,false,'centripetal');let cb=null;
   if(co.fork){const B=[];const fz=co.fork.t*L;for(let i=0;i<=n;i++){const p=A[i].clone();if(p.z>fz){const k=Math.min(1,(p.z-fz)/60);p.x+=co.fork.dir*k*k*(3-2*k)*34;}B.push(p);}cb=new THREE.CatmullRomCurve3(B,false,'centripetal');}
   return{A:ca,B:cb,L};},
  // approximate distance from the rails (cheap; used for terrain + scatter)
- pathX(z,b){const co=this.co;const ph=co.id.length*1.7;const zz=Math.max(0,Math.min(250,z));let x=Math.sin(zz*.018+ph)*9+Math.sin(zz*.041+ph*2)*4;if(b&&co.fork){const fz=co.fork.t*250;if(zz>fz){const k=Math.min(1,(zz-fz)/60);x+=co.fork.dir*k*k*(3-2*k)*34;}}return x;},
+ pathX(z,b){const co=this.co;const RF=typeof RAILS!=='undefined'&&RAILS[co.id];if(RF)return RF(Math.max(0,Math.min(250,z)),b&&co.fork?1:0);const ph=co.id.length*1.7;const zz=Math.max(0,Math.min(250,z));let x=Math.sin(zz*.018+ph)*9+Math.sin(zz*.041+ph*2)*4;if(b&&co.fork){const fz=co.fork.t*250;if(zz>fz){const k=Math.min(1,(zz-fz)/60);x+=co.fork.dir*k*k*(3-2*k)*34;}}return x;},
  pathDist(x,z){let d=Math.abs(x-this.pathX(z));if(this.co.fork)d=Math.min(d,Math.abs(x-this.pathX(z,1)));const dz=z<0?-z:z>250?z-250:0;return Math.hypot(d,dz);},
  shoreX(z){return 31+Math.sin(z*.045)*3.2+Math.sin(z*.13)*1.1;},
  waterD(x,z){const w=this.co.water;if(!w)return-99;return w*x-this.shoreX(z);},// >0 = in water
@@ -187,7 +190,7 @@ Object.assign(W,{
    alpha:new THREE.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.55,depthWrite:false,side:THREE.DoubleSide}),
   };M.far=M.std;M.cloud.renderOrder=-5;this.MATS=M;return M;},
  skyMat(){const V=this.VIS;return new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,fog:false,
-  uniforms:{uTop:{value:new THREE.Color(V.top)},uHor:{value:new THREE.Color(V.hor)},uSun:{value:new V3(...V.sun).normalize()},uSunC:{value:new THREE.Color(V.sunC)},uNight:{value:V.night?1:0}},
+  uniforms:{uTop:{value:new THREE.Color(V.top)},uHor:{value:new THREE.Color(V.hor)},uSun:{value:new V3(...V.sun).normalize()},uSunC:{value:new THREE.Color(V.sunC)},uNight:{value:V.night&&!V.dusk?1:0}},
   vertexShader:'varying vec3 vD;void main(){vD=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',
   fragmentShader:`uniform vec3 uTop,uHor,uSun,uSunC;uniform float uNight;varying vec3 vD;
    void main(){vec3 d=normalize(vD);float h=d.y;vec3 c=mix(uHor,uTop,pow(smoothstep(-.03,.75,h),.75));
@@ -235,7 +238,7 @@ Object.assign(W,{
   this.terrain(S);
   if(co.water){const wg=new THREE.PlaneGeometry(520,960,90,170);wg.rotateX(-Math.PI/2);const w=new THREE.Mesh(wg,this.waterMat());w.position.set(co.water*(24+260),-.15,125);w.receiveShadow=false;S.add(w);this.waterPlane=w;}
   // rails (paths)
-  this.ribbon(cv.A,S);if(cv.B){this.ribbon(cv.B,S);this.barrier=this.makeBarrier();const bp=this.place(cv.B,co.fork.t+.07,0,0);this.barrier.position.copy(bp);this.barrier.rotation.y=this.yawAt(cv.B,co.fork.t+.07);S.add(this.barrier);}else this.barrier=null;
+  this.ribbon(cv.A,S);if(cv.B){this.ribbon(cv.B,S);this.barrier=this.makeBarrier();const bt=co.fork.bt||co.fork.t+.07;const bp=this.place(cv.B,bt,0,0);this.barrier.position.copy(bp);this.barrier.rotation.y=this.yawAt(cv.B,bt);S.add(this.barrier);}else this.barrier=null;
   this.occG=new THREE.Group();S.add(this.occG);
   this.decor(co,S);
   if(typeof SETS!=='undefined'&&SETS[co.id])SETS[co.id](this,mb,co,cv);
@@ -257,7 +260,7 @@ Object.assign(W,{
   g.setAttribute('color',new THREE.Float32BufferAttribute(cols,3));g.computeVertexNormals();
   const uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,uv.getX(i)*SZ/9,uv.getY(i)*SZ/9);
   const t=this.groundTex(V.gr);const m=new THREE.Mesh(g,new THREE.MeshLambertMaterial({map:t,vertexColors:true}));m.receiveShadow=true;S.add(m);this.ground=m;},
- ribbon(curve,S){const V=this.VIS;const N=220,w=2.7;const pos=[],uv=[],idx=[];let len=0,prev=null;const t0=-.12,t1=1.2;
+ ribbon(curve,S){const V=this.VIS;const nocurb=!!V.nocurb;const N=220,w=2.7;const pos=[],uv=[],idx=[];let len=0,prev=null;const t0=-.12,t1=1.2;
   const cb=[],cbi=[];// curbs
   for(let i=0;i<=N;i++){const t=t0+(t1-t0)*i/N;const p=this.place(curve,t,0,0);const tg=this.tanAt(curve,t);const nx=new V3(tg.z,0,-tg.x).normalize();if(prev)len+=p.distanceTo(prev);prev=p;
    const a=p.clone().addScaledVector(nx,w),b=p.clone().addScaledVector(nx,-w);pos.push(a.x,.05,a.z,b.x,.05,b.z);uv.push(0,len/10.8,1,len/10.8);
@@ -268,7 +271,13 @@ Object.assign(W,{
   const t=this.pathTex(V.path);const m=new THREE.Mesh(g,new THREE.MeshLambertMaterial({map:t}));m.receiveShadow=true;S.add(m);
   const cg=new THREE.BufferGeometry();cg.setAttribute('position',new THREE.Float32BufferAttribute(cb,3));cg.setIndex(cbi);cg.computeVertexNormals();
   const ccol={board:0xc9bfae,bike:0xc4bcae,asphalt:0xa9acb6,road:0xb0b0b4,brick:0xa8583e,stone:0xaaa296,gravel:0xa8946e,tile:0xb48a5a,sandplank:0x8a5e36}[V.path]||0xdddddd;
-  const cm=new THREE.Mesh(cg,new THREE.MeshLambertMaterial({color:ccol}));cm.receiveShadow=true;S.add(cm);},
+  if(nocurb)return;const cm=new THREE.Mesh(cg,new THREE.MeshLambertMaterial({color:ccol}));cm.receiveShadow=true;S.add(cm);},
+ // flat textured strip following a curve (walkways, plazas); off = lateral offset fn(t) (+ = place() side s=-1), w = half width
+ strip(curve,t0,t1,off,w,y,mat,uvLen,N){N=N||Math.max(8,Math.round((t1-t0)*160));const pos=[],uv=[],idx=[];let len=0,prev=null;
+  for(let i=0;i<=N;i++){const t=t0+(t1-t0)*i/N;const o=typeof off==='function'?off(t):off||0;const ww=typeof w==='function'?w(t):w;const p=this.place(curve,t,-1,o);const tg=this.tanAt(curve,t);const nx=new V3(tg.z,0,-tg.x).normalize();if(prev)len+=p.distanceTo(prev);prev=p;
+   const a=p.clone().addScaledVector(nx,ww),b=p.clone().addScaledVector(nx,-ww);pos.push(a.x,y,a.z,b.x,y,b.z);uv.push(0,len/(uvLen||10),1,len/(uvLen||10));if(i<N){const j=i*2;idx.push(j,j+1,j+2,j+1,j+3,j+2);}}
+  const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(uv,2));g.setIndex(idx);g.computeVertexNormals();
+  const m=new THREE.Mesh(g,mat);m.receiveShadow=true;this.scene.add(m);return m;},
  makeBarrier(){const g=new THREE.Group();const mb=new MB();const I=new THREE.Matrix4();
   for(const x of[-2.9,2.9]){this.put(mb,I,this.cyl(10),x,0,0,0,.34,2.4,.34,0xffffff,'std',{chunk:false});this.put(mb,I,this.sph(10),x,2.45,0,0,.42,.42,.42,0xff5aa0,'std',{chunk:false});}
   for(let i=0;i<2;i++)for(let k=0;k<6;k++)this.put(mb,I,this.rbox(1,.42,.18,.06),-2.5+k,.75+i*.7,0,0,1,1,1,(k+i)%2?0xff5aa0:0xffffff,'std',{chunk:false});
@@ -326,7 +335,7 @@ Object.assign(W,{
    lane:{near:['planter','vending','lamp','bush','pole'],far:['tree','planter','tree']},
    market:{near:['stall','palm','flowers','hibiscus','tuktuk'],far:['palm','tree','palm']},
    jungle:{near:['fern','hibiscus','lavarock','palm','monstera'],far:['tree','palm','rock','monstera','palm']},
-   luau:{near:['torch','surf','umbrella','palm','hibiscus','tiki'],far:['palm','palm','tree']}}[co.theme]||{near:['bush'],far:['tree']};
+   luau:{near:['torch','surf','umbrella','palm','hibiscus','tiki'],far:['palm','palm','tree']}}[co.theme]||(typeof THEMES13!=='undefined'&&THEMES13[co.theme])||{near:['bush'],far:['tree']};
   const spawnPts=co.spawns.map(sp=>this.place(sp.path==='B'&&cv.B?cv.B:cv.A,sp.t,sp.s,sp.d));this.spawnPts=spawnPts;
   const segD=(p,a,b)=>{const ab=b.clone().sub(a);const t=Math.max(0,Math.min(1,p.clone().sub(a).dot(ab)/ab.lengthSq()));return a.clone().addScaledVector(ab,t).setY(0).distanceTo(p.clone().setY(0));};
   const sight=co.spawns.map((sp,i)=>{const c=sp.path==='B'&&cv.B?cv.B:cv.A;return[-.07,-.04,-.015,.015].map(dt=>[spawnPts[i],c.getPointAt(Math.max(0,Math.min(1,sp.t+dt)))]);}).flat();
