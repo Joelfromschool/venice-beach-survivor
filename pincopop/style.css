@@ -27,9 +27,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .meta{position:absolute;left:12px;right:76px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .who{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .who .av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#ffd84a;border:1.5px solid rgba(255,255,255,.9)}
-.who .h{font-weight:800;font-size:15px;display:flex;align-items:center;gap:4px}
+.who .h{font-weight:800;font-size:15px;display:flex;align-items:center;gap:4px;min-width:0;white-space:nowrap;overflow:hidden}
 .who .h .vb{width:14px;height:14px}
-.fol{border:1.5px solid rgba(255,255,255,.85);border-radius:9px;padding:4px 11px;font-size:13.5px;font-weight:700;text-shadow:none;transition:all .2s}
+.fol{white-space:nowrap;flex:none;border:1.5px solid rgba(255,255,255,.85);border-radius:9px;padding:4px 11px;font-size:13.5px;font-weight:700;text-shadow:none;transition:all .2s}
 .fol.on{border-color:rgba(255,255,255,.35);color:rgba(255,255,255,.8)}
 .cap{font-size:14.5px;line-height:1.35;max-height:1.4em;overflow:hidden;display:flex;gap:6px;align-items:flex-start}
 .cap .ct{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -62,7 +62,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .tab.on{color:#fff}
 .tab.on::after{content:'';position:absolute;left:50%;bottom:1px;width:18px;height:3px;margin-left:-9px;border-radius:3px;background:#fff}
 .tab.gold{color:#ffd84a}
-#soundPill{position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 60px);transform:translateX(-50%);z-index:11;background:rgba(20,20,24,.78);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:9px 16px 9px 12px;font-size:14px;font-weight:700;display:none;align-items:center;gap:8px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(0,0,0,.4)}
+#soundPill{white-space:nowrap;position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 60px);transform:translateX(-50%);z-index:11;background:rgba(20,20,24,.78);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:9px 16px 9px 12px;font-size:14px;font-weight:700;display:none;align-items:center;gap:8px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 4px 14px rgba(0,0,0,.4)}
 #soundPill.show{display:flex;animation:pin .35s ease-out}
 #soundPill svg{width:20px;height:20px}
 @keyframes pin{from{opacity:0;transform:translate(-50%,-8px)}to{opacity:1;transform:translate(-50%,0)}}

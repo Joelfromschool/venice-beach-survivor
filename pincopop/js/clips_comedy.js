@@ -8,8 +8,8 @@ CLIPS.push(
  com:[['pinco','the facepalm at the end 💀','最後の顔に手💀'],['pooh','are you ok','だいじょうぶ？']],
  shots:[
  {d:6,bg:'boardwalk',cam:[1,1.05,.5,.5,.55,.5],a:[['c_bronny_0',.25,.86,.48,'bob',{mv:[.55,.86],mvd:6,me:'lin'}]],tx:[[0,6,'me walking in confidently','自信満々で登場するぼく','sub',.2]],sx:[[0,'pop']]},
- {d:4,bg:'boardwalk',tr:'cut',cam:[1.2,1.3,.55,.55,.6,.6],a:[['bronny_comedy_0',.55,.7,.42,'shake',{rot:-10}]],fx:[['speed',0,1.5]],tx:[[0,4,'the floor:','床：','big',.18]],sx:[[0,'slip'],[1.6,'thud']],shake:[1.6,2.4,.025],pz:[1.6]},
- {d:4,bg:'boardwalk',tr:'cut',cam:[1.3,1.3,.55,.55,.7,.7],a:[['bronny_comedy_0',.55,.76,.42,'idle',{rot:-75,mid:1}]],fx:[['stars',0,4,{x:.5,y:.66}],['impact',0,1,{x:.55,y:.8,s:.22,t:'BONK'}]],tx:[[1,4,"it's fine. I'm fine.","だいじょうぶ。平気。",'sub',.3]],sx:[[0,'bonk']]},
+ {d:4,bg:'boardwalk',tr:'cut',cam:[1.2,1.3,.55,.55,.6,.6],a:[['bronny_comedy_0',.55,.8,.46,'shake']],fx:[['speed',0,1.5]],tx:[[0,4,'the floor:','床：','big',.18]],sx:[[0,'slip'],[1.6,'thud']],shake:[1.6,2.4,.025],pz:[1.6]},
+ {d:4,bg:'boardwalk',tr:'cut',cam:[1.3,1.3,.55,.55,.7,.7],a:[['c_bronny_1',.55,.74,.4,'idle',{rot:-88,mid:1}]],fx:[['stars',0,4,{x:.5,y:.66}],['impact',0,1,{x:.55,y:.8,s:.22,t:'BONK'}]],tx:[[1,4,"it's fine. I'm fine.","だいじょうぶ。平気。",'sub',.3]],sx:[[0,'bonk']]},
  {d:6,bg:'boardwalk',tr:'whip',a:[['bronny_comedy_1',.3,.86,.46,'shake'],['pinco_comedy_0',.72,.86,.46,'idle',{in:'r'}]],fx:[['emoji',1,6,{e:'😂',x:.5,y:.5,n:8}]],tx:[[0,6,'(he was not fine)','（平気じゃなかった）','pillk',.2]],sx:[[0,'laugh'],[2,'laugh']]}
 ]},
 {id:'c02',cat:'comedy',by:'pooh',song:'comedy',seed:202,bpm:126,likes:88700,cm:2905,

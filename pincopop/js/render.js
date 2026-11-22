@@ -9,7 +9,7 @@ const RD=(()=>{
  const FONT='system-ui,-apple-system,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Segoe UI",sans-serif';
  // ---------- assets ----------
  function load(name){if(IMG[name])return IMG[name].p;const im=new Image();im.decoding='async';const e={im,ok:false};
-  e.p=new Promise(res=>{im.onload=()=>{e.ok=true;res(im)};im.onerror=()=>res(null)});im.src='art/'+name+'.webp';IMG[name]=e;return e.p}
+  e.p=new Promise(res=>{im.onload=()=>{e.ok=true;res(im)};im.onerror=()=>res(null)});im.src='art/'+name+'.webp?v='+(window.__BUILD__||'');IMG[name]=e;return e.p}
  const get=n=>{const e=IMG[n];return e&&e.ok?e.im:null};
  function blurOf(n){if(BL[n])return BL[n];const im=get(n);if(!im)return null;const c=document.createElement('canvas');c.width=72;c.height=128;const x=c.getContext('2d');x.drawImage(im,0,0,72,128);const c2=document.createElement('canvas');c2.width=36;c2.height=64;c2.getContext('2d').drawImage(c,0,0,36,64);BL[n]=c2;return c2}
  function assets(clip){const s=new Set();const walk=sh=>{if(sh.bg&&sh.bg!=='video'&&!sh.bg.startsWith('#'))s.add('bg_'+sh.bg);(sh.a||[]).forEach(a=>{s.add(a[0]);const o=a[5]||{};(o.sw||[]).forEach(w=>s.add(w[1]))});(sh.panes||[]).forEach(walk)};clip.shots.forEach(walk);return [...s]}
@@ -57,7 +57,7 @@ const RD=(()=>{
  function bill(x,cx,cy,s,rot){x.save();x.translate(cx,cy);x.rotate(rot);x.fillStyle='#5dbb63';x.fillRect(-s,-s*.5,s*2,s);x.strokeStyle='#2e7d32';x.lineWidth=s*.1;x.strokeRect(-s*.85,-s*.38,s*1.7,s*.76);x.fillStyle='#2e7d32';x.font=`900 ${s*.7}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.fillText('$',0,s*.03);x.restore()}
  // ---------- fx ----------
  function drawFx(x,f,lt,R,T,front){const [k,t0,t1,o0]=f;const o=o0||{};if(lt<t0||lt>t1)return;const la=lt-t0,dur=t1-t0;const W=R.w,H=R.h;const cx=R.x+(o.x==null?.5:o.x)*W,cy=R.y+(o.y==null?.5:o.y)*H;const s=W*(o.s||1);
-  const back=['rays','glow','spot','vignette','bgtint'].includes(k);if(back===!!front)return;
+  const back=['rays','glow','spot','vignette','bgtint'].includes(k)||!!o.back||((k==='coins'||k==='money')&&!o.front);if(back===!!front)return;
   const fin=Math.min(1,la/.2),fout=Math.min(1,(t1-lt)/.25),A=Math.min(fin,fout);x.save();
   switch(k){
    case 'rays':{x.globalAlpha=.35*A;x.translate(cx,cy);x.rotate(la*.4);x.fillStyle=o.c||'#fff6c8';for(let i=0;i<14;i++){x.rotate(TAU/14);x.beginPath();x.moveTo(0,0);x.lineTo(H,-H*.12);x.lineTo(H,H*.12);x.closePath();x.fill()}break}
@@ -68,8 +68,8 @@ const RD=(()=>{
    case 'hearts':{const n=o.n||14;for(let i=0;i<n;i++){const sp=hr(i,1)*1.2,age=(la-sp*dur*.6);if(age<0)continue;const life=1.6,p=(age%life)/life;if(age>life&&!o.loop)continue;const hx=cx+(hr(i,2)-.5)*W*(o.w||.5)+Math.sin(p*6+i)*W*.03,hy=cy-p*H*.35;x.globalAlpha=(1-p)*A;x.fillStyle=['#ff4f9a','#ff2d55','#ff8fc4','#ffffff'][i%4];heart(x,hx,hy,W*.03*(.7+hr(i,3)));x.fill()}break}
    case 'sparkle':{const n=o.n||12;for(let i=0;i<n;i++){const ph=(la*1.6+hr(i,4))%1;const a=Math.sin(ph*PI);const r=(o.r||.25)*W;const sx=cx+(hr(i,5)-.5)*2*r,sy=cy+(hr(i,6)-.5)*2*r*1.3;x.globalAlpha=a*A;x.fillStyle=o.c||(i%3?'#fff':'#ffe27a');star4(x,sx,sy,W*.028*(.5+hr(i,7))*a);x.fill()}break}
    case 'confetti':{const n=o.n||50;const cols=['#ff4f9a','#ffd84a','#38dcb0','#5aa9ff','#b07bff','#ff8a3d'];for(let i=0;i<n;i++){const d=hr(i,8)*.6;const age=la-d;if(age<0)continue;const fy=R.y-H*.05+age*H*(.35+hr(i,9)*.3),fx=R.x+hr(i,10)*W+Math.sin(age*3+i)*W*.04;if(fy>R.y+H)continue;x.save();x.globalAlpha=A;x.translate(fx,fy);x.rotate(age*(3+i%5));x.scale(1,Math.cos(age*6+i));x.fillStyle=cols[i%6];x.fillRect(-W*.012,-W*.007,W*.024,W*.014);x.restore()}break}
-   case 'money':{const n=o.n||26;for(let i=0;i<n;i++){const d=hr(i,11)*.8;const age=la-d;if(age<0)continue;const fy=R.y-H*.06+age*H*(.4+hr(i,12)*.35),fx=R.x+hr(i,13)*W+Math.sin(age*2+i)*W*.05;if(fy>R.y+H*1.05)continue;x.globalAlpha=A;if(i%3===0)bill(x,fx,fy,W*.045,Math.sin(age*3+i)*.6);else coin(x,fx,fy,W*.028,age*7+i)}break}
-   case 'coins':{const n=o.n||10;for(let i=0;i<n;i++){const d=i*.05;const age=la-d;if(age<0)continue;const k2=Math.min(1,age/.9);const vx=(hr(i,14)-.5)*W*.9,vy=-H*(.35+hr(i,15)*.25);const px=cx+vx*k2,py=cy+vy*k2+H*1.1*k2*k2;x.globalAlpha=A*(1-Math.max(0,k2-.8)*5);coin(x,px,py,W*.03,age*9+i)}break}
+   case 'money':{const n=o.n||26;for(let i=0;i<n;i++){const d=hr(i,11)*.8;let age=la-d;if(age<0)continue;if(dur>3.2)age%=2.6;const fy=R.y-H*.06+age*H*(.4+hr(i,12)*.35),fx=R.x+hr(i,13)*W+Math.sin(age*2+i)*W*.05;if(fy>R.y+H*1.05)continue;x.globalAlpha=A;if(i%3===0)bill(x,fx,fy,W*.045,Math.sin(age*3+i)*.6);else coin(x,fx,fy,W*.028,age*7+i)}break}
+   case 'coins':{const n=o.n||10;for(let i=0;i<n;i++){const d=i*.05;const age=la-d;if(age<0)continue;const k2=Math.min(1,age/.9);const vx=(i%2?1:-1)*W*(.2+hr(i,14)*.3),vy=-H*(.3+hr(i,15)*.25);const px=cx+vx*k2,py=cy+vy*k2+H*1.1*k2*k2;x.globalAlpha=A*(1-Math.max(0,k2-.8)*5);coin(x,px,py,W*.03,age*9+i)}break}
    case 'steam':{const n=o.n||7;for(let i=0;i<n;i++){const p=((la*.5+hr(i,16))%1);const sx=cx+(hr(i,17)-.5)*W*.12+Math.sin(p*5+i)*W*.03,sy=cy-p*H*.2;x.globalAlpha=(1-p)*.45*A;x.fillStyle=o.c||'#fff';x.beginPath();x.arc(sx,sy,W*(.025+p*.05),0,TAU);x.fill()}break}
    case 'smoke':{const n=o.n||10;for(let i=0;i<n;i++){const p=((la*.45+hr(i,18))%1);const sx=cx+(hr(i,19)-.5)*W*.2+p*W*.06,sy=cy-p*H*.3;x.globalAlpha=(1-p)*.6*A;x.fillStyle=i%2?'#6b6b6b':'#8d8d8d';x.beginPath();x.arc(sx,sy,W*(.04+p*.08),0,TAU);x.fill()}break}
    case 'zzz':{for(let i=0;i<3;i++){const p=((la*.45+i/3)%1);x.globalAlpha=Math.sin(p*PI)*A;x.fillStyle=o.c||'#fff';x.strokeStyle='#3a3a7a';x.lineWidth=W*.008;x.font=`900 ${W*(.05+p*.05)}px ${FONT}`;x.textAlign='center';const zx=cx+p*W*.12+Math.sin(p*6)*W*.02,zy=cy-p*H*.14;x.strokeText('Z',zx,zy);x.fillText('Z',zx,zy)}break}
@@ -155,25 +155,38 @@ const RD=(()=>{
   acts.forEach(a=>drawActor(x,a,lt,sh.d,T,clip.bpm,R,false));
   (sh.fx||[]).forEach(f=>drawFx(x,f,lt,R,T,true));
   x.restore();
-  drawTexts(x,sh,lt,R)}
- let LANG='en',VIS=null;
+  if(!NOTXT)drawTexts(x,sh,lt,R)}
+ let LANG='en',VIS=null,NOTXT=false,SAFE=null;
  function drawTexts(x,sh,lt,R){if(!sh.tx)return;const vx0=Math.max(R.x,VIS?VIS.x:R.x),vx1=Math.min(R.x+R.w,VIS?VIS.x+VIS.w:R.x+R.w),vw=vx1-vx0;
-  for(const t of sh.tx){const [t0,t1,en,ja,st0,y0,o0]=t;if(lt<t0||lt>t1)continue;const o=o0||{};const st=st0||'pill';let str=LANG==='ja'&&ja?ja:en;if(!str)continue;
-   const base=vw*({big:.088,num:.2,title:.07,sub:.056,bub:.05,stamp:.1,tag:.042}[st]||.054)*(o.s||1);const fs=Math.round(base);
+  const placed=[];for(const t of sh.tx){const [t0,t1,en,ja,st0,y0,o0]=t;if(lt<t0||lt>t1)continue;const o=o0||{};const st=st0||'pill';let str=LANG==='ja'&&ja?ja:en;if(!str)continue;
+   const vh0=VIS?VIS.h:R.h;const base=vw*({big:.088,num:.2,title:.07,sub:.056,bub:.05,stamp:.1,tag:.042}[st]||.054)*(o.s||1);const fs=Math.round(base);
    const maxW=vw*(o.w||(st==='bub'?.6:.84));
    // progressive word reveal for big/sub
-   let shown=str;if((st==='big'||st==='sub')&&!o.all){const ws=LANG==='ja'?null:str.split(' ');if(ws&&ws.length>1){const per=o.wd||.16;const n=Math.min(ws.length,1+Math.floor((lt-t0)/per));shown=ws.slice(0,n).join(' ');if(n<ws.length){}}}
-   const tc=textCanvas(shown,st,fs,maxW,o);const full=shown===str?tc:textCanvas(str,st,fs,maxW,o);
+   // whole caption appears at once, wrapped and shrunk until it fits inside the visible screen
+   let f2=fs,tc=textCanvas(str,st,f2,maxW,o);for(let k=0;k<16&&(tc.w>vw*.94||tc.h>R.h*.3);k++){f2=Math.max(8,Math.round(f2*.88));tc=textCanvas(str,st,f2,maxW,o)}const full=tc;
    const la=lt-t0,rem=t1-lt;let sc=1,al=1,rot=(o.rot||0)*PI/180;
    if(st==='stamp'){const k=Math.min(1,la/.18);sc=lerp(2.2,1,E.out(k));al=k;rot+=-.18}
    else if(st==='num'||st==='big'){sc=la<.22?E.back(la/.22):1}
    else{sc=la<.2?lerp(.6,1,E.back(la/.2)):1;al=Math.min(1,la/.1)}
    if(rem<.12&&!o.hold){al*=rem/.12}
    let cx=vx0+vw*(o.x==null?.5:o.x),cy=R.y+R.h*(y0==null?.3:y0);
-   cx=clamp(cx,vx0+full.w/2+vw*.03,vx1-full.w/2-vw*.03);
-   if(st==='bub'&&o.tx!=null){const tx=R.x+R.w*o.tx,ty=R.y+R.h*o.ty;x.save();x.globalAlpha=al;x.fillStyle='#fff';x.beginPath();const bx=clamp(tx,cx-full.w*.35,cx+full.w*.35),by=cy+full.h*.5*sc-2;x.moveTo(bx-full.h*.22,by);x.lineTo(bx+full.h*.22,by);x.lineTo(lerp(bx,tx,.55),lerp(by,ty,.55));x.closePath();x.fill();x.restore()}
+   cx=clamp(cx,vx0+full.w/2+vw*.03,vx1-full.w/2-vw*.03);if(full.w>vw*.94)cx=vx0+vw/2;
+   const vy0=VIS?VIS.y:R.y;const SF=SAFE||{top:.062,railL:.86,railT:.53,railB:.9,metaT:.87};
+   const yTop=vy0+vh0*Math.max(.11,SF.top+.012),yBot=vy0+vh0*(SF.metaT-.01);
+   cy=Math.min(Math.max(cy,yTop+tc.h/2),yBot-tc.h/2);
+   if(st!=='bub'&&st!=='stamp'&&st!=='num')for(const q of placed){if(Math.abs(cx-q[0])<(tc.w+q[2])/2&&Math.abs(cy-q[1])<(tc.h+q[3])/2-1)cy=q[1]+q[3]/2+tc.h/2+vh0*.004}
+   // keep clear of the right-side button rail
+   const rl=vx0+vw*SF.railL-vw*.015,rT=vy0+vh0*SF.railT,rB=vy0+vh0*SF.railB;
+   if(cy+tc.h/2>rT&&cy-tc.h/2<rB&&cx+tc.w/2>rl){const L0=vx0+vw*.03,aw=rl-L0;
+    if(tc.w>aw){let f3=f2;for(let k=0;k<16&&tc.w>aw;k++){f3=Math.max(8,Math.round(f3*.9));tc=textCanvas(str,st,f3,Math.min(maxW,aw*.92),o)}}
+    // if it now sits clear of the rail band vertically, fine; else shift left
+    cx=Math.min(cx,rl-tc.w/2);cx=Math.max(cx,L0+tc.w/2);cy=Math.min(Math.max(cy,yTop+tc.h/2),yBot-tc.h/2)}
+   
+   if(st!=='bub'&&st!=='stamp'&&st!=='num')placed.push([cx,cy,tc.w,tc.h]);
+   if(st==='bub'&&o.tx!=null){const tx=R.x+R.w*o.tx,ty=R.y+R.h*o.ty;x.save();x.globalAlpha=al;x.fillStyle='#fff';x.beginPath();const bx=clamp(tx,cx-tc.w*.35,cx+tc.w*.35),by=cy+tc.h*.5*sc-2;x.moveTo(bx-tc.h*.22,by);x.lineTo(bx+tc.h*.22,by);x.lineTo(lerp(bx,tx,.55),lerp(by,ty,.55));x.closePath();x.fill();x.restore()}
+   if(window.__TXTCHK&&sc>=.999){const l=cx-tc.w/2,r=cx+tc.w/2,tp=cy-tc.h/2,bt=cy+tc.h/2;const V=VIS||R;const SF=SAFE||{top:.062,railL:.86,railT:.53,railB:.9,metaT:.87};const hitRail=r>V.x+V.w*SF.railL+1&&bt>V.y+V.h*SF.railT&&tp<V.y+V.h*SF.railB;if(l<V.x-1||r>V.x+V.w+1||tp<V.y+V.h*SF.top-1||bt>V.y+V.h*SF.metaT+1||hitRail)window.__TXTCHK.push([str,Math.round(l),Math.round(r),Math.round(tp),Math.round(bt),Math.round(V.w),Math.round(V.h)])}
    x.save();x.globalAlpha=al;x.translate(cx,cy);x.rotate(rot);x.scale(sc,sc);
-   if(st==='big'||st==='num'||st==='sub'){x.drawImage(tc.c,-full.w/2+(full.w-tc.w)/2,-full.h/2+(full.h-tc.h)/2*0)}else x.drawImage(tc.c,-tc.w/2,-tc.h/2);
+   x.drawImage(tc.c,-tc.w/2,-tc.h/2);
    x.restore()}}
  // ---------- transitions ----------
  const TR=.3;
@@ -182,7 +195,7 @@ const RD=(()=>{
   const s=Math.max(CW/9,CH/16),FW=9*s,FH=16*s;const R={x:(CW-FW)/2,y:(CH-FH)/2,w:FW,h:FH};VIS={x:0,y:0,w:CW,h:CH};
   x.fillStyle='#111';x.fillRect(0,0,CW,CH);
   const i=shotAt(clip,t),sh=clip.shots[i],lt=t-sh.t0;const tr=sh.tr||'cut';
-  if(i>0&&tr!=='cut'&&lt<TR){const p=lt/TR,pv=clip.shots[i-1],plt=pv.d-.0001+lt*0;
+  if(i>0&&tr!=='cut'&&lt<TR){NOTXT=true;const p=lt/TR,pv=clip.shots[i-1],plt=pv.d-.0001+lt*0;
    switch(tr){
     case 'whip':{const e=E.io(p);x.save();x.translate(-e*CW,0);drawScene(x,clip,pv,Math.min(pv.d,pv.d-.01),t,R);x.restore();x.save();x.translate((1-e)*CW,0);drawScene(x,clip,sh,lt,t,R);x.restore();
      x.save();x.globalAlpha=.35*Math.sin(p*PI);x.fillStyle='#fff';for(let k=0;k<9;k++){x.fillRect(0,hr(k,50)*CH,CW,CH*.012)}x.restore();break}
@@ -193,7 +206,8 @@ const RD=(()=>{
      x.save();x.strokeStyle='rgba(255,140,190,.9)';x.lineWidth=CW*.08;x.lineCap='round';x.beginPath();x.moveTo(px0,-CH*.1);x.lineTo(px0-CH*.6*1.05,CH*1.1);x.stroke();x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=CW*.02;x.stroke();x.restore();break}
     case 'glitch':{drawScene(x,clip,p<.5?pv:sh,p<.5?pv.d-.01:lt,t,R);x.save();for(let k=0;k<7;k++){const y=hr(k,Math.floor(p*20))*CH,h=CH*.05;const dx=(hr(k,60+Math.floor(p*20))-.5)*CW*.15;x.drawImage(x.canvas,0,y,CW,h,dx,y,CW,h)}x.globalCompositeOperation='screen';x.globalAlpha=.25*(1-Math.abs(p-.5)*2);x.fillStyle='#ff00aa';x.fillRect(0,0,CW,CH);x.restore();break}
     case 'flash':default:{drawScene(x,clip,sh,lt,t,R);x.save();x.globalAlpha=Math.pow(1-p,1.6);x.fillStyle='#fff';x.fillRect(0,0,CW,CH);x.restore()}}
+   NOTXT=false;x.save();drawTexts(x,sh,lt,R);x.restore();
   }else drawScene(x,clip,sh,lt,t,R);
   if(sh.post)sh.post(x,lt,R)}
- return {load,loadClip,ready,norm,draw,get,assets,textCanvas,set lang(l){LANG=l},get lang(){return LANG},VID,rr,heart}
+ return {load,loadClip,ready,norm,draw,get,assets,textCanvas,set lang(l){LANG=l},set safe(v){SAFE=v},get lang(){return LANG},VID,rr,heart}
 })();

@@ -73,9 +73,13 @@ const APP=(()=>{
   return s}
  for(let k=0;k<3;k++)slots.push(mkSlot(k));
  const slotFor=i=>slots[((i%3)+3)%3];
- function resize(){W=feedEl.clientWidth||innerWidth;H=feedEl.clientHeight||innerHeight;DPR=Math.min(2,devicePixelRatio||1);slots.forEach(s=>{s.cv.width=Math.round(W*DPR);s.cv.height=Math.round(H*DPR);s.drawnAt=-1});place(0,false)}
+ function measureSafe(){try{const s=slots[0];if(!s||!W||!H)return;const fr=feedEl.getBoundingClientRect(),rl=s.q.rail||s.el.querySelector('.rail'),mt=s.el.querySelector('.meta'),tp=$('top');const a=rl.getBoundingClientRect(),m=mt.getBoundingClientRect(),t=tp.getBoundingClientRect();const top0=s.el.getBoundingClientRect().top;
+  const sp=$('soundPill');let tb=t.bottom;if(sp.classList.contains('show')){const pr=sp.getBoundingClientRect();if(pr.height)tb=Math.max(tb,pr.bottom+4)}
+  RD.safe={top:Math.max(0,(tb-fr.top))/H,railL:(a.left-fr.left)/W,railT:(a.top-top0)/H,railB:(a.bottom-top0)/H,metaT:(m.top-top0)/H}}catch(e){}}
+ try{new MutationObserver(()=>{setTimeout(measureSafe,30);slots.forEach(s=>s.drawnAt=-1)}).observe($('soundPill'),{attributes:true,attributeFilter:['class']})}catch(e){}
+ function resize(){W=feedEl.clientWidth||innerWidth;H=feedEl.clientHeight||innerHeight;DPR=Math.min(2,devicePixelRatio||1);slots.forEach(s=>{s.cv.width=Math.round(W*DPR);s.cv.height=Math.round(H*DPR);s.drawnAt=-1});place(0,false);measureSafe()}
  function assign(s,i){if(s.i===i&&s.clip)return;s.i=i;const ci=feed[i];s.clip=ci==null?null:CL[ci];s.drawnAt=-1;s.t=0;s.el.classList.remove('paused');s.q.cap.classList.remove('open');
-  if(s.clip&&s.clip.vid){if(s.vd.dataset.v!==s.clip.vid){s.vd.dataset.v=s.clip.vid;s.vd.src='vid/'+s.clip.vid+'.mp4';s.vd.load()}s.poster=new Image();s.poster.src='vid/'+s.clip.vid+'.jpg';try{s.vd.pause();s.vd.currentTime=0}catch(e){}}
+  if(s.clip&&s.clip.vid){if(s.vd.dataset.v!==s.clip.vid){s.vd.dataset.v=s.clip.vid;s.vd.src='vid/'+s.clip.vid+'.mp4?v='+(window.__BUILD__||'');s.vd.load()}s.poster=new Image();s.poster.src='vid/'+s.clip.vid+'.jpg?v='+(window.__BUILD__||'');try{s.vd.pause();s.vd.currentTime=0}catch(e){}}
   else{if(s.vd.dataset.v){s.vd.removeAttribute('src');s.vd.dataset.v='';try{s.vd.load()}catch(e){}}s.poster=null}
   if(s.clip){RD.loadClip(s.clip).then(()=>{s.drawnAt=-1})}fill(s)}
  function fill(s){const c=s.clip;if(!c)return;const cr=CREATORS[c.by];const liked=!!st.liked[c.id];
@@ -195,7 +199,7 @@ const APP=(()=>{
    <div class="grid">${mine.map(i=>`<button type="button" data-i="${i}"><canvas width="180" height="320"></canvas><span class="gv">${GL.play}${fmt(CL[i].likes*7+1234)}</span></button>`).join('')}</div>`);
   $('pFol').onclick=()=>{st.fol[by]=!st.fol[by];save();$('pFol').classList.toggle('on',!!st.fol[by]);$('pFol').textContent=st.fol[by]?T('following'):T('follow');slots.forEach(fill);AU.sfx('pop')};
   sb.querySelectorAll('.grid button').forEach(b=>{const i=+b.dataset.i,c=CL[i];const cv=b.querySelector('canvas');
-   const paint=()=>{if(c.vid){const im=new Image();im.onload=()=>cv.getContext('2d').drawImage(im,0,0,180,320);im.src='vid/'+c.vid+'.jpg'}else{RD.VID.cur=null;RD.draw(cv.getContext('2d'),c,Math.min(c.dur*.45,4),180,320)}};
+   const paint=()=>{if(c.vid){const im=new Image();im.onload=()=>cv.getContext('2d').drawImage(im,0,0,180,320);im.src='vid/'+c.vid+'.jpg?v='+(window.__BUILD__||'')}else{RD.VID.cur=null;RD.draw(cv.getContext('2d'),c,Math.min(c.dur*.45,4),180,320)}};
    RD.loadClip(c).then(paint);
    b.onclick=()=>{closeSheet();feed.splice(idx+1,0,i);slots.forEach(s=>{if(s.i===idx+1)s.i=-999});ensure();lastFlingMs=320;go(1)}})}
  function openSettings(){const seg=(id,a,b,on)=>`<div class="seg" id="${id}"><button type="button" class="${on?'on':''}">${a}</button><button type="button" class="${on?'':'on'}">${b}</button></div>`;

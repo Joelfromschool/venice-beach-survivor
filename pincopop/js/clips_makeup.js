@@ -45,7 +45,7 @@ CLIPS.push(
  snd:['Promenade Date','プロムナード・デート'],
  com:[['pooh','the coins were the flowers 🌹','金貨が花束だよ🌹'],['party','WEDDING WHEN','結婚式いつ！？']],
  shots:[
- {d:5,bg:'vanity',a:[['pinco_comedy_2',.5,.9,.52,'talk']],fx:[['rec',0,5]],tx:[[0,5,'GRWM for date night 💕','デートの準備 GRWM 💕','big',.17],[2,5,'with… Pooh??','相手は…プー？？','pill',.27]],sx:[[0,'pop'],[2,'boing']]},
+ {d:5,bg:'vanity',a:[['pinco_comedy_2',.5,.9,.52,'talk']],fx:[['rec',0,5]],tx:[[0,5,'GRWM for date night 💕','デートの準備 GRWM 💕','big',.17],[2,5,'with… Pooh??','相手は…プー？？','pill',.31]],sx:[[0,'pop'],[2,'boing']]},
  {d:4,bg:'vanity',blur:1,tr:'whip',a:[['p_palette',.32,.6,.15,'float',{in:'pop',sh:0}],['p_perfume',.68,.62,.14,'float',{in:'pop',sh:0,t:[1,4]}]],fx:[['mist',1.5,4,{x:.64,y:.5,a:-2.4}]],tx:[[0,4,'eyeshadow ✔︎','アイシャドウ ✔︎','tag',.42,{x:.32}],[1,4,'perfume ✔︎','香水 ✔︎','tag',.42,{x:.68}]],sx:[[0,'pop'],[1,'pop'],[1.5,'spray']]},
  {d:4,bg:'vanity',tr:'wipe',a:[['pinco_makeup_2',.5,.92,.55,'bob']],fx:[['sparkle',0,4,{x:.5,y:.45,r:.25,n:14}]],tx:[[0,4,'ready ✨','準備OK ✨','big',.17]],sx:[[0,'sparkle']]},
  {d:8,bg:'promenade',tr:'zoom',a:[['c_pinco_5',.33,.86,.46,'bob'],['c_pooh_5',.7,.86,.44,'bob']],fx:[['coins',1,3,{x:.7,y:.5,n:12}],['hearts',2,8,{x:.5,y:.5,n:14}]],tx:[[0,8,'he brought gold coins instead of flowers','花のかわりに金貨をくれた','pill',.17],[3,8,'10/10 date 🥹','満点デート 🥹','big',.27,{c:'#ff8fc4'}]],sx:[[1,'cash'],[3,'aww']]}
@@ -98,7 +98,7 @@ CLIPS.push(
  snd:['Polka Dot Pop','ポルカドット・ポップ'],
  com:[['pinco','teach me this blend','このグラデーション教えて'],['asmon','…acceptable.','…悪くない。']],
  shots:[
- {d:4,bg:'vanity',a:[['c_party_0',.5,.9,.52,'bob']],tx:[[0,4,'rainbow eyeshadow 🌈','レインボーアイシャドウ 🌈','big',.17],[1,4,'on a polka-dot face','水玉の顔に','pill',.27]],sx:[[0,'pop']]},
+ {d:4,bg:'vanity',a:[['c_party_0',.5,.9,.52,'bob']],tx:[[0,4,'rainbow eyeshadow 🌈','レインボーアイシャドウ 🌈','big',.17],[1,4,'on a polka-dot face','水玉の顔に','pill',.31]],sx:[[0,'pop']]},
  {d:6,bg:'vanity',blur:1,tr:'whip',cam:[1.05,1.15,.5,.5,.55,.55],a:[['p_palette',.5,.62,.22,'pulse',{in:'pop',sh:0}],['p_brush',.76,.5,.18,'wiggle',{in:'pop',sh:0,t:[1,6]}]],fx:[['shine',0,3],['sparkle',2,6,{x:.5,y:.55,r:.15}]],tx:[[0,6,'every color. yes, every.','全色。そう、全色。','pill',.17]],sx:[[1,'swish'],[2,'swish'],[3,'swish']]},
  {d:6,bg:'#ff9fc2/#7fd8ff',tr:'wipe',a:[['c_party_1',.5,.88,.54,'dance']],fx:[['confetti',0,6,{n:60}],['sparkle',0,6,{x:.5,y:.45,r:.3}]],tx:[[0,6,'bold? yes. 🌈','大胆？もちろん 🌈','big',.17]],sx:[[0,'drop'],[1,'cheer']]}
 ]}
