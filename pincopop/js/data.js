@@ -1,0 +1,39 @@
+'use strict';
+// Creators, comment pools and UI strings (EN / JA)
+const CREATORS={
+ pooh:{h:'pooh.cooks',n:['Pooh','プー'],av:'c_pooh_3',f:1240000,bio:['Chef. Babysitter. Money enthusiast 💰 No legs, all vibes.','シェフ。ベビーシッター。お金が大好き💰 足はないけどノリはある。'],rep:[['Thank you!! 💰','ありがとう！！💰'],['you get a gold coin 🪙','金貨あげる🪙'],['more pancakes coming soon 🥞','パンケーキまだまだ作るよ🥞']]},
+ pinco:{h:'pinco.glam',n:['Pinco','ピンコ'],av:'c_pinco_5',f:2310000,bio:['Pink panther plush 💗 makeup, sushi, dance trends (failing at them)','ピンクのパンサーぬいぐるみ💗 メイク・寿司・ダンス（失敗中）'],rep:[['love you bestie 💕','大好き💕'],['tutorial part 2 soon!!','パート2もうすぐ！！'],['omg thank you 😭💗','うれしい😭💗']]},
+ bean:{h:'mr.bean.pod',n:['Mr Bean','ミスター・ビーン'],av:'c_bean_1',f:880000,bio:['Pea pod. One tooth. Zero arms. Professional snack critic 🫛','さやえんどう。歯は1本。腕はゼロ。プロのおやつ評論家🫛'],rep:[['🫛🫛🫛','🫛🫛🫛'],['I would high-five you if I could','できればハイタッチしたい'],['thank you (bows with whole body)','ありがとう（全身でおじぎ）']]},
+ pooping:{h:'dad.pooping',n:['Mr Pooping','ミスター・プーピング'],av:'c_pooping_1',f:650000,bio:['Dad of three tiny plushies. Dad jokes on Tuesdays and every other day.','ちびぬいぐるみ3人のパパ。ダジャレは毎日。'],rep:[['Thanks, champ 👍','ありがとう、チャンプ👍'],['that comment made my day','そのコメントで今日も元気'],['dad joke incoming…','ダジャレいくよ…']]},
+ bronny:{h:'bronny9',n:['Bronny','ブロニー'],av:'c_bronny_3',f:1980000,bio:['#9 🏀 Venice Beach courts. Pre-game burgers.','背番号9 🏀 ベニスビーチのコート。試合前はバーガー。'],rep:[['appreciate you 🙏','ありがとう🙏'],['ball is life 🏀','バスケがすべて🏀'],['see you at the courts','コートで会おう']]},
+ asmon:{h:'asmon.villain',n:['Asmon','アスモン'],av:'c_asmon_5',f:1450000,bio:['Former villain. Current skincare enthusiast. Joined the good guys (for the snacks).','元・悪役。今はスキンケア好き。おやつ目当てで仲間入り。'],rep:[['Your praise… is acceptable.','その称賛…受け取ろう。'],['MWAHAHA thank you','ムハハハ、ありがとう'],['villains need love too','悪役にも愛を']]},
+ max:{h:'max.the.pup',n:['Max','マックス'],av:'c_max_5',f:530000,bio:['Good boy. Professional babysitter. Will fetch anything (including babies).','いい子。プロのベビーシッター。なんでも取ってくる（赤ちゃんも）。'],rep:[['woof!! 🐶','ワン！！🐶'],['*wags tail*','*しっぽふりふり*'],['🦴🦴🦴','🦴🦴🦴']]},
+ mogu:{h:'mogu.digs',n:['Mogu','モグ'],av:'c_mogu_2',f:310000,bio:['Mole. Digs for snacks. Hide-and-seek world champion 😎','モグラ。おやつを掘る。かくれんぼ世界王者😎'],rep:[['😎','😎'],['*digs happily*','*うれしく掘る*'],['thank u from underground','地下からありがとう']]},
+ party:{h:'party.every.day',n:['Party','パーティー'],av:'c_party_1',f:420000,bio:['Every day is my birthday 🎉 confetti is a lifestyle','毎日が誕生日🎉 紙ふぶきは生き方'],rep:[['🎉🎉🎉','🎉🎉🎉'],['CONFETTI FOR YOU','あなたに紙ふぶき！'],['party at my place!!','うちでパーティー！！']]},
+ prof:{h:'prof.pooping',n:['Professor Pooping','プーピング教授'],av:'c_prof_0',f:270000,bio:['Science, snacks and the study of floating shoes 🧪','科学とおやつと、浮いてる靴の研究🧪'],rep:[['Fascinating comment.','興味深いコメントです。'],['peer reviewed ✅','査読済み✅'],['for science! 🧪','科学のために！🧪']]},
+};
+const POOL={
+ all:[['pinco','I watched this 14 times','これ14回見た'],['pooh','this made me hungry somehow','なぜかお腹すいた'],['party','🎉🎉🎉','🎉🎉🎉'],['max','woof (this is good)','ワン（これいい）'],['mogu','came out of my hole to watch this','穴から出てきて見た'],['bronny','the editing tho 🔥','編集すごい🔥'],['prof','I have reviewed this. It is good.','検証しました。良いです。'],['asmon','…fine. I laughed.','…まあ、笑った。'],['bean','sending this to everyone (with my face)','みんなに送る（顔で）'],['pooping','showing this to my kids','子どもたちに見せる']],
+ food:[['bean','I would eat this with no hands','手なしで食べたい'],['pooh','can you make it with coins','金貨で作れる？'],['pinco','recipe pls 🙏','レシピください🙏'],['bronny','pre-game meal unlocked','試合前メシ決定'],['mogu','I am burying this for later','あとで食べるために埋めとく'],['asmon','I could cook this. I simply choose not to.','俺も作れる。作らないだけだ。'],['max','is there any for me 🥺','ぼくのぶんある？🥺'],['prof','The ratio of butter is scientifically perfect','バターの比率が科学的に完璧']],
+ comedy:[['bronny','I’m crying 😭😭','泣いてる😭😭'],['pinco','NOT THE ENDING 💀','オチ💀'],['bean','the timing!!!','タイミング！！！'],['pooh','I fell off my chair (I have no legs)','いすから落ちた（足ないけど）'],['party','🤣🤣🤣🤣','🤣🤣🤣🤣'],['asmon','this is slander','これは名誉毀損だ'],['mogu','replaying this underground','地下でリピート中'],['prof','I have no notes. Only laughter.','言うことなし。笑いのみ。']],
+ parent:[['pooping','this is my house every day','うちの毎日そのもの'],['pinco','the babies 😭💕','赤ちゃんたち😭💕'],['pooh','babysitting is harder than cooking','ベビーシッターは料理より大変'],['max','I can help 🐶','手伝えるよ🐶'],['party','baby party when?','ベビーパーティーいつ？'],['bean','I was a baby once. tiny pea.','ぼくも昔は赤ちゃんだった。ちっちゃい豆。'],['prof','Parenting is 90% snacks, studies show','研究によると子育ての9割はおやつ'],['bronny','dad mode activated','パパモード起動']],
+ makeup:[['pinco','the blend 😍','このぼかし😍'],['asmon','I taught her that','それ俺が教えた'],['bean','I tried. it went everywhere.','やってみた。全部についた。'],['party','add more glitter','ラメもっと'],['pooh','do it on me next','次はぼくにやって'],['bronny','skin is glowing fr','肌つやつやだ'],['mogu','what if I contour my nose','鼻をシェーディングしたら？'],['prof','The shimmer refracts light beautifully','ラメの光の屈折が美しい']],
+};
+const STR={
+ en:{foryou:'For you',food:'Food',comedy:'Comedy',parent:'Parenting',makeup:'Makeup',secret:'Bloopers',
+  follow:'Follow',following:'Following',more:'more',less:'less',orig:'Original audio',sound:'Tap for sound',
+  comments:'Comments',addc:'Add a comment…',post:'Post',share:'Share',sendto:'Send to',copy:'Copy link',sharevia:'Share…',save:'Save',saved:'Saved',unsave:'Remove from saved',nope:'Not interested',
+  copied:'Link copied',sentto:'Sent to {n}',savedT:'Saved to your collection',unsavedT:'Removed from saved',nopeT:'Got it. You will see fewer like this.',
+  posts:'posts',followers:'followers',followingN:'following',settings:'Settings',lang:'Language',snd:'Sound',auto:'Auto-scroll',on:'On',off:'Off',cheat:'Cheat code',apply:'Apply',cheatOk:'GOLD MODE unlocked 💰 Double-tap rains money and the Bloopers tab is open!',cheatBad:'That code did nothing',
+  allgames:'All games',reset:'Reset likes and saves',resetT:'Likes and saves cleared',reply:'Reply',you:'you',now:'now',liked:'Liked',paused:'Paused',
+  about:'PincoPop is a LANZAGAMES app. Every clip stars the gang and is made in the app.',updated:'New clips are here. Tap to refresh',swipe:'Swipe up for more',loading:'Loading',
+  autoT:'Moves to the next clip when one ends',views:'views',creator:'Creator'},
+ ja:{foryou:'おすすめ',food:'フード',comedy:'お笑い',parent:'子育て',makeup:'メイク',secret:'NG集',
+  follow:'フォロー',following:'フォロー中',more:'続きを読む',less:'閉じる',orig:'オリジナル音源',sound:'タップで音声オン',
+  comments:'コメント',addc:'コメントを追加…',post:'投稿',share:'シェア',sendto:'送信先',copy:'リンクをコピー',sharevia:'共有…',save:'保存',saved:'保存済み',unsave:'保存を解除',nope:'興味なし',
+  copied:'リンクをコピーしました',sentto:'{n}に送信しました',savedT:'コレクションに保存しました',unsavedT:'保存を解除しました',nopeT:'了解です。似た動画を減らします。',
+  posts:'投稿',followers:'フォロワー',followingN:'フォロー中',settings:'設定',lang:'言語',snd:'サウンド',auto:'自動スクロール',on:'オン',off:'オフ',cheat:'チートコード',apply:'適用',cheatOk:'ゴールドモード解放💰 ダブルタップでお金がふる＆NG集タブが登場！',cheatBad:'何も起きなかった',
+  allgames:'ゲーム一覧',reset:'いいねと保存をリセット',resetT:'いいねと保存をリセットしました',reply:'返信',you:'あなた',now:'たった今',liked:'いいね済み',paused:'一時停止',
+  about:'PincoPopはLANZAGAMESのアプリです。すべての動画に仲間たちが登場し、アプリの中で作られています。',updated:'新しい動画があります。タップで更新',swipe:'上にスワイプ',loading:'読み込み中',
+  autoT:'動画が終わると次へ進みます',views:'回再生',creator:'クリエイター'},
+};
