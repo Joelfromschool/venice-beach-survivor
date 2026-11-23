@@ -240,7 +240,7 @@ const APP=(()=>{
   $('oReset').onclick=()=>{st.liked={};st.saved={};st.cl={};st.mine={};st.nope={};save();clearSecs();slots.forEach(fill);toast(T('resetT'))}}
  $('gear').onclick=e=>{e.stopPropagation();unlockAudio();openSettings()};
  // ---------- tabs / language ----------
- const CATS=['all','food','comedy','parent','makeup','preg'];
+ const CATS=['all','food','comedy','parent','makeup','preg','lng','couple'];
  function buildTabs(){const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
   $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;unlockAudio();setCat(b.dataset.c)});requestAnimationFrame(()=>placeInd(cat,cat,0,false))}
  function tabCenter(c){const b=$('tabs').querySelector('.tab[data-c="'+c+'"]');return b?b.offsetLeft+b.offsetWidth/2:0}

@@ -26,18 +26,20 @@ const RD=(()=>{
   clip.dur=clip.vid?(clip.vdur||T):T;ev.sort((a,b)=>a[0]-b[0]);clip._ev=ev;clip._n=1;return clip}
  // ---------- text cache ----------
  const TC=new Map();let tcN=0;
- function wrap(x,str,maxW){const cjk=/[\u3000-\u9fff\uff00-\uffef]/.test(str);const out=[];str.split('\n').forEach(par=>{
-  const toks=cjk?(par.match(/[\u3000-\u303f\uff01-\uff60、。！？」』）]+|[a-zA-Z0-9$%#@.'’:+\-/]+|\S/g)||[]):par.split(' ');let line='';
-  for(const tk of toks){const sep=cjk?'':(line?' ':'');let test=line+sep+tk;if(x.measureText(test).width>maxW&&line){out.push(line);line=tk}else line=test}
+ function wrap(x,str,maxW){const out=[];str.split('\n').forEach(par=>{const cjk=/[\u3000-\u9fff\uff00-\uffef]/.test(par);
+  // CJK lines break between characters but keep latin words (romaji, English) whole and keep their spaces
+  const toks=cjk?(par.match(/[\u3000-\u303f\uff01-\uff60、。！？」』）]+|[a-zA-Z0-9$%#@.'’:+\-/?!,\u00c0-\u024f]+| +|\S/g)||[]):par.split(' ');let line='';
+  for(const tk of toks){if(cjk&&/^ +$/.test(tk)){if(line)line+=' ';continue}const sep=cjk?'':(line?' ':'');let test=line+sep+tk;if(x.measureText(test.trimEnd()).width>maxW&&line.trim()&&!(cjk&&/^[、。！？」』）,.!?]+$/.test(tk))){out.push(line.trimEnd());line=tk}else line=test}
+  line=line.trimEnd();
   // keep closing punctuation on its line
   if(line)out.push(line)});return out}
  function textCanvas(str,st,fs,maxW,o){o=o||{};const key=st+'|'+fs+'|'+maxW+'|'+(o.c||'')+'|'+str;let r=TC.get(key);if(r)return r;
   if(TC.size>420){TC.clear()}
-  const c=document.createElement('canvas'),x=c.getContext('2d');const wt=st==='sub'||st==='bub'?800:st==='note'?700:900;
+  const c=document.createElement('canvas'),x=c.getContext('2d');const jp=/[\u3040-\u30ff\u4e00-\u9fff]/.test(str);try{if('lang' in x)x.lang=jp?'ja':'en';else c.setAttribute('lang',jp?'ja':'en')}catch(e){}const wt=st==='sub'||st==='bub'?800:st==='note'?700:900;
   x.font=`${wt} ${fs}px ${FONT}`;const lines=wrap(x,str,maxW);const lh=fs*1.24;
   const pad=st.startsWith('pill')||st==='note'||st==='pink'||st==='yel'||st==='mint'||st==='tag'?fs*.42:st==='bub'?fs*.62:st==='stamp'?fs*.5:fs*.2;
   const ws=lines.map(l=>x.measureText(l).width);const W=Math.ceil(Math.max(...ws,1)+pad*2+fs*.3),H=Math.ceil(lines.length*lh+pad*2+fs*.25);
-  c.width=W;c.height=H;x.font=`${wt} ${fs}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';
+  c.width=W;c.height=H;try{if('lang' in x)x.lang=jp?'ja':'en'}catch(e){}x.font=`${wt} ${fs}px ${FONT}`;x.textAlign='center';x.textBaseline='middle';x.lineJoin='round';
   const bgc={note:'rgba(20,10,20,.55)',pill:'#fff',pillk:'rgba(10,10,14,.78)',pink:'#ff4f9a',yel:'#ffd84a',mint:'#38dcb0',tag:'rgba(255,255,255,.92)'}[st];
   const fgc=o.c||({note:'#fff',pill:'#111',pillk:'#fff',pink:'#fff',yel:'#111',mint:'#0b2b22',tag:'#e0337a',bub:'#222',stamp:'#e82c4a'}[st]||'#fff');
   if(bgc){x.fillStyle=bgc;lines.forEach((l,i)=>{const w=ws[i]+pad*2,yy=pad*.5+i*lh;rr(x,(W-w)/2,yy,w,lh+pad*.9,fs*.38);x.fill()})}

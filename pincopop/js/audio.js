@@ -150,7 +150,7 @@ const AU=(()=>{
   yawn(t,b){const g=gain(0,b);env(g,t,.2,.22,.5,.8,.2,t+1.1);const f=filt('bandpass',800,4,g);f.frequency.linearRampToValueAtTime(400,t+1.1);const o=osc('sawtooth',260,t,t+1.2,f);o.frequency.linearRampToValueAtTime(170,t+1.1)},
   buzz(t,b){const g=gain(0,b);env(g,t,.005,.25,.4,.8,.05,t+.45);osc('square',110,t,t+.5,filt('lowpass',900,1,g));osc('square',116,t,t+.5,filt('lowpass',900,1,g))},
  };
- const VOICE={pooh:[220,1],pinco:[430,1.1],bean:[520,.8],pooping:[170,1],bronny:[150,.9],asmon:[130,1.2],max:[380,1],mogu:[600,.9],party:[700,1],prof:[190,1],babyp:[760,1],babyb:[820,1],babyh:[700,1],you:[330,1]};
+ const VOICE={pooh:[220,1],pinco:[430,1.1],bean:[520,.8],pooping:[170,1],bronny:[150,.9],asmon:[130,1.2],max:[380,1],mogu:[600,.9],party:[700,1],prof:[190,1],babyp:[760,1],babyb:[820,1],babyh:[700,1],you:[330,1],kaise:[390,1.05]};
  function voice(t,who,n,b){const v=VOICE[who]||[300,1];const r=rng(Math.floor(t*1000)%9973);n=Math.min(n,14);
   for(let i=0;i<n;i++){const tt=t+i*.075,g=gain(0,b);env(g,tt,.004,.17,.03,.4,.02,tt+.06);const f=filt('bandpass',v[0]*3,2,g);const o=osc(who==='bean'||who.startsWith('baby')?'triangle':'sawtooth',v[0]*(.85+r()*.45),tt,tt+.07,f);o.frequency.linearRampToValueAtTime(v[0]*(.9+r()*.3),tt+.06)}}
  // ---------- clip player ----------
