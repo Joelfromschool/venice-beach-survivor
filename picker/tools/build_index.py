@@ -20,8 +20,8 @@ def git_meta(game_id):
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
  dict(id='pincopop', new=True, cat='puz', pos='50% 50%',
-  en=('PincoPop','Short clips','Swipe through an endless feed of short clips starring Pinco, Pooh, Mr Bean and friends: food, comedy, parenting, makeup and pregnancy tips. Swipe sideways between sections, double-tap to like.'),
-  ja=('ピンコポップ','ショート動画','ピンコ、プー、ミスター・ビーンたちのショート動画を次々スワイプ。フード、お笑い、子育て、メイク、マタニティ。横スワイプでセクション移動、ダブルタップでいいね。')),
+  en=('PincoPop','Short clips','Swipe through an endless feed of short clips starring Pinco, Pooh, Mr Bean and friends: food (including Yoyogi Uehara café reviews), comedy, parenting, makeup, pregnancy tips, English/Japanese lessons and Asmon & Kaise couple clips. Swipe sideways between sections.'),
+  ja=('ピンコポップ','ショート動画','ピンコ、プー、ミスター・ビーンたちのショート動画を次々スワイプ。フード（代々木上原のカフェ紹介も）、お笑い、子育て、メイク、マタニティ、英語・日本語レッスン、アスモン＆カイセのカップル動画。横スワイプでセクション移動。')),
  dict(id='pincopoohsnap', new=True, cat='adv', pos='50% 50%',
   en=('Pinco Pooh Snap','Photo safari','Ride the Snap Buggy through Venice, Tokyo, Maui and more. Toss money and apples, blow the whistle and catch your friends doing something amazing.'),
   ja=('ピンコ・プー・スナップ','フォト・サファリ','スナップバギーでベニス、東京、マウイへ。お金やりんごを投げ、笛を吹いて、友だちのすごい瞬間を撮影しよう。')),
