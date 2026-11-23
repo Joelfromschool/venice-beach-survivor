@@ -1,7 +1,7 @@
 // Chunk mesher: face culling, per-vertex ambient occlusion and smooth sky/block light.
 import * as THREE from '../vendor/three.module.min.js';
-import {BLOCKS} from './blocks.js';
-import {TS,AT,PER} from './textures.js';
+import {BLOCKS} from './blocks.js?v=1.1.0';
+import {TS,AT,PER} from './textures.js?v=1.1.0';
 const FACES=[
  {n:[1,0,0],c:[[1,0,1],[1,0,0],[1,1,0],[1,1,1]],shade:.8,k:'side'},
  {n:[-1,0,0],c:[[0,0,0],[0,0,1],[0,1,1],[0,1,0]],shade:.8,k:'side'},

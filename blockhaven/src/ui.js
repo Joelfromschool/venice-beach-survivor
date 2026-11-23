@@ -1,11 +1,12 @@
 // Chunky pixel-style DOM UI for Blockhaven: HUD, hotbar, bag, crafting, kiln, chest, shop, dialog, menus.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js';
-import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js';
-import {T,tx,itemName} from './i18n.js';
-import {NPC,QUESTS,TRADES,PLACE} from './story.js';
-import {makeModel,animate} from './models.js';
-import {sfx,audioWake} from './audio.js';
+import {G,VERSION} from './state.js?v=1.1.0';
+import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.0';
+import {T,tx,itemName} from './i18n.js?v=1.1.0';
+import * as Tut from './tutorial.js?v=1.1.0';
+import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.0';
+import {makeModel,animate} from './models.js?v=1.1.0';
+import {sfx,audioWake} from './audio.js?v=1.1.0';
 const $=s=>document.querySelector(s);
 const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -55,6 +56,17 @@ root.innerHTML=`
 <div id="caption" class="hidden"><div class="ctext"></div><button class="btn skip">${'Skip'}</button></div>
 <div id="dialog" class="hidden"><div class="dbox"><div class="dport"><img></div><div class="dmain"><div class="dname"></div><div class="dtext"></div><div class="dextra"></div></div><button class="btn dnext"></button></div></div>
 <div id="panelwrap" class="hidden"><div id="panel"></div></div>
+<div id="lesson" class="hidden">
+  <div class="lstep"></div>
+  <div class="ltitle"></div>
+  <div class="lbody"></div>
+  <div class="lrow"><button class="btn lskip" type="button"></button><button class="btn go lnext hidden" type="button"></button></div>
+  <div class="lconfirm hidden"><div class="lskipq"></div><div class="lrow"><button class="btn lyes" type="button"></button><button class="btn go lno" type="button"></button></div></div>
+ </div>
+<div id="coachpulse" class="hidden"></div>
+<div id="coacharrow" class="hidden" data-dir="down"><span class="arr">▼</span><span class="alabel"></span></div>
+<div id="lookzone" class="hidden"><span class="lzlab"></span></div>
+<div id="tiplayer"></div>
 <div id="loading"><div class="lbox"><img class="llogo"><div class="ltrack"><div class="lfill"></div></div><div class="ltext"></div></div></div>
 <div id="title" class="hidden"></div>
 <div id="update" class="hidden"><span></span><button class="btn">Update</button></div>`;
@@ -62,6 +74,8 @@ $('#loading .llogo').src=logo('BLOCKHAVEN');
 const hotbar=$('#hotbar');for(let i=0;i<9;i++){const s=h('div','slot hb');s.dataset.i=i;s.addEventListener('click',()=>{A().P.sel=i;dirty()});s.addEventListener('touchstart',e=>{e.preventDefault();A().P.sel=i;dirty()},{passive:false});hotbar.appendChild(s)}
 const tapBtn=(id,fn)=>{const el=$(id);el.addEventListener('click',e=>{e.preventDefault();audioWake();sfx('ui');fn()});el.addEventListener('touchend',e=>{e.preventDefault();audioWake();sfx('ui');fn()},{passive:false})};
 tapBtn('#bPause',()=>pause());tapBtn('#bBag',()=>inventory('inv'));tapBtn('#bMap',()=>inventory('map'));tapBtn('#bView',()=>{G.view=(G.view+1)%3});tapBtn('#questbox',()=>inventory('quests'));
+Tut.attach({toast,inventory,isOpen:()=>!!panelKind,closePanel,dirty,banner,getPanelKind:()=>panelKind});
+Tut.bindLessonDom();
 // ---------- slot rendering ----------
 function slotHTML(s,extra=''){if(!s)return'';const d=def(s.id);let html=`<img src="${iconURL(s.id)}" draggable="false">`;if(s.count>1)html+=`<b class="cnt">${s.count}</b>`;if(d&&d.dur&&s.dur!==undefined&&s.dur<d.dur){const f=s.dur/d.dur;html+=`<span class="dur"><span style="width:${Math.round(f*100)}%;background:hsl(${Math.round(f*120)},80%,50%)"></span></span>`}return html+extra}
 // ---------- HUD ----------
@@ -71,7 +85,7 @@ let tickT=0;export function tick(dt){tickT-=dt;tickToasts(dt);if(!isDirty&&tickT
  $('#hunger').innerHTML=bar(Math.ceil(P.hunger),20,foodFull,foodEmpty);
  const ad=A().armorDef();$('#armorrow').innerHTML=ad>0?bar(ad,20,armorFull,armorEmpty):'';
  let need=10+P.level*4;$('#xpfill').style.width=Math.min(100,P.xp/need*100)+'%';$('#xplv').textContent=P.level>0?P.level:'';
- const q=A().curQuest();const qb=$('#questbox');if(q){const st=G.quest.stage;const away=(st==='offer'||st==='ready')&&!A().giverHere();const txt=away?T('meetin',{name:tx(NPC[q.giver].name),place:tx(PLACE[A().questWorld()])}):st==='offer'?T('talkto',{name:tx(NPC[q.giver].name)}):st==='ready'?T('returnto',{name:tx(NPC[q.giver].name)}):tx(q.hint);
+ const q=A().curQuest();const qb=$('#questbox');if(Tut.isActive()&&Tut.renderGoal(qb)){/* lesson owns the tracker */}else if(q){const st=G.quest.stage;const away=(st==='offer'||st==='ready')&&!A().giverHere();const txt=away?T('meetin',{name:tx(NPC[q.giver].name),place:tx(PLACE[A().questWorld()])}):st==='offer'?T('talkto',{name:tx(NPC[q.giver].name)}):st==='ready'?T('returnto',{name:tx(NPC[q.giver].name)}):tx(q.hint);
   const op=A().objectivePos();let arrow='';if(op){const dx=op.x+.5-P.pos.x,dz=op.z+.5-P.pos.z;const dist=Math.round(Math.hypot(dx,dz));const ang=Math.atan2(dx,dz);const rel=(ang-(P.yaw+Math.PI));arrow=`<span class="qarrow" style="transform:rotate(${(-rel)}rad)">▲</span><span class="qdist">${dist}m</span>`}
   qb.innerHTML=`<div class="qt">${esc(tx(q.title))}</div><div class="qh">${arrow}${esc(txt)}</div>`}else qb.innerHTML=`<div class="qt">${T('allquests')}</div><div class="qh">${T('day',{n:Math.floor(G.playtime/720)+1})}</div>`;
  const v=$('#vignette');v.style.opacity=P.hp<=6&&!P.dead?(.35+.25*Math.sin(G.time*5)).toFixed(2):'0'}
@@ -92,8 +106,8 @@ $('#caption .skip').addEventListener('click',()=>A().skipCinema());
 // ---------- panels ----------
 const wrap=$('#panelwrap'),P_=$('#panel');
 export function isOpen(){return!!panelKind}
-function openPanel(kind,build,refresh){audioWake();if(G.inGame&&G.mode==='play'){G.mode='menu';document.exitPointerLock?.()}panelKind=kind;wrap.classList.remove('hidden');P_.className='panel p-'+kind;panelRefresh=null;build(P_);panelRefresh=refresh||null;if(refresh)refresh()}
-export function closePanel(silent){if(!panelKind)return;panelKind=null;panelRefresh=null;wrap.classList.add('hidden');P_.innerHTML='';selSlot=null;if(!silent)sfx('ui');if(G.inGame&&(G.mode==='menu'||G.mode==='dead'&&false)){G.mode='play'}const f=afterClose;afterClose=null;f&&f();isDirty=true}
+function openPanel(kind,build,refresh){audioWake();if(G.inGame&&G.mode==='play'){G.mode='menu';document.exitPointerLock?.()}panelKind=kind;wrap.classList.remove('hidden');P_.className='panel p-'+kind;panelRefresh=null;build(P_);panelRefresh=refresh||null;if(refresh)refresh();Tut.onPanel(kind,true)}
+export function closePanel(silent){if(!panelKind)return;const was=panelKind;panelKind=null;panelRefresh=null;wrap.classList.add('hidden');P_.innerHTML='';selSlot=null;if(!silent)sfx('ui');if(G.inGame&&(G.mode==='menu'||G.mode==='dead'&&false)){G.mode='play'}Tut.onPanel(was,false);const f=afterClose;afterClose=null;f&&f();isDirty=true}
 wrap.addEventListener('click',e=>{if(e.target===wrap&&G.inGame&&panelKind&&panelKind!=='pause')closePanel()});
 const head=(title,tabs)=>{const d=h('div','phead');if(tabs){const t=h('div','tabs');for(const[k,label]of tabs){const b=h('button','btn tab'+(k===tabs.cur?' on':''),label);b.onclick=()=>{sfx('ui');tabs.go(k)};t.appendChild(b)}d.appendChild(t)}else d.appendChild(h('div','ptitle',esc(title)));const x=h('button','btn sq close','✕');x.onclick=()=>closePanel();d.appendChild(x);return d};
 const btn=(label,fn,cls='')=>{const b=h('button','btn '+cls,label);b.onclick=e=>{e.stopPropagation();sfx('ui');fn(b)};return b};
@@ -114,7 +128,7 @@ export function inventory(tab='inv'){const P=A().P;if(!G.inGame)return;
   const right=h('div','invright');const grid=h('div','grid main');for(let i=9;i<36;i++)grid.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{onDouble:()=>A().equipFromSlot(i)}));right.appendChild(grid);
   const hb=h('div','grid hot');for(let i=0;i<9;i++)hb.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{cls:'hb',onDouble:()=>{if(def(P.inv[i].id).armor!==undefined)A().equipFromSlot(i);else{P.sel=i;closePanel()}}}));right.appendChild(hb);
   const info=h('div','iteminfo');right.appendChild(info);right.appendChild(h('div','help',T('tapmove')));
-  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
+  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.0').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
   body.appendChild(right);p.appendChild(body);p._info=info},
  ()=>{P_.querySelectorAll('.slot').forEach(e=>e._draw&&e._draw());const info=P_._info;if(info){const s=selSlot&&selSlot.get();info.innerHTML=s?itemInfo(s):''}})}
 function itemInfo(s){const d=def(s.id);let t=`<b>${esc(itemName(s.id))}</b>`;if(d.dmg&&d.tool==='sword')t+=` · ⚔${d.dmg}`;if(d.def)t+=` · 🛡${d.def}`;if(d.food)t+=` · 🍎+${d.food[0]}`;if(d.dur&&s.dur!==undefined)t+=` · ${s.dur}/${d.dur}`;return t}
@@ -134,7 +148,7 @@ function craftPanel(){const P=A().P;openPanel('craft',p=>{p.innerHTML='';p.appen
 function questPanel(){openPanel('quests',p=>{p.innerHTML='';p.appendChild(head('',invTabs('quests')));const l=h('div','qlist');const qi=G.quest.i;
   QUESTS.forEach((q,i)=>{if(i>qi)return;const done=i<qi;const el=h('div','qitem'+(done?' done':' cur'),`<img src="${portrait(q.giver)}"><div><b>${done?'✔ ':'★ '}${esc(tx(q.title))}</b><div>${esc(done?T('done'):tx(q.hint))}</div></div>`);l.appendChild(el)});
   if(qi>=QUESTS.length)l.appendChild(h('div','qitem done',`<div><b>👑 ${T('allquests')}</b></div>`));
-  l.appendChild(h('div','help',isTouchUI()?T('touchhelp'):T('controls')));p.appendChild(l)})}
+  const row=h('div','row');row.appendChild(btn(T('howto'),()=>howToPlay(),'chip'));l.appendChild(row);p.appendChild(l)})}
 const isTouchUI=()=>A().isTouch;
 let mapCache=null;const tileAvg={};
 function avgTile(id){if(tileAvg[id])return tileAvg[id];const b=BLOCKS[id];if(!b||!b.tex)return'#000';const g=G.atlas.getContext('2d');const t=b.tex.top;const d=g.getImageData((t%16)*16,Math.floor(t/16)*16,16,16).data;let r=0,gg=0,bb=0,n=0;for(let i=0;i<d.length;i+=4)if(d[i+3]>100){r+=d[i];gg+=d[i+1];bb+=d[i+2];n++}n=n||1;return tileAvg[id]=[r/n|0,gg/n|0,bb/n|0]}
@@ -184,7 +198,7 @@ const fmtTime=s=>{s=Math.floor(s);const hh=Math.floor(s/3600),mm=Math.floor(s/60
 export function ending(){document.exitPointerLock?.();openPanel('ending',p=>{const cast=['pinco','bean','pooh','pooping','bronny','kermit','asmon'];p.innerHTML=`<img class="elogo" src="${logo('BLOCKHAVEN')}"><div class="deadt">${T('theend')}</div><div class="cast">${cast.map(c=>`<div><img src="${portrait(c)}"><span>${esc(tx(NPC[c].name))}</span></div>`).join('')}</div><div class="help">${T('credits')}</div><div class="help">${T('stats',{t:fmtTime(G.playtime),k:G.stats.kills,m:G.stats.mined,c:G.stats.crafted})}</div>`;
   p.appendChild(btn(T('keepplaying'),()=>{closePanel(true);G.mode='play';A().save()},'go big'));p.appendChild(btn(T('quit'),()=>{closePanel(true);A().toTitle()}))})}
 // ---------- pause & options ----------
-export function pause(){if(!G.inGame||panelKind==='pause'||G.mode==='dialog'||G.mode==='dead'||G.mode==='cinema')return;openPanel('pause',p=>{p.innerHTML='';p.appendChild(h('div','ptitle center',T('paused')));const col=h('div','col');col.appendChild(btn(T('resume'),()=>closePanel(),'go big'));col.appendChild(btn(T('inventory'),()=>inventory('inv'),'big'));col.appendChild(btn(T('quests'),()=>inventory('quests'),'big'));col.appendChild(btn(T('options'),()=>options(),'big'));col.appendChild(btn(T('quit'),()=>{closePanel(true);A().toTitle()},'big'));col.appendChild(pickerLink());col.appendChild(h('div','help',T('version',{v:VERSION})));p.appendChild(col)})}
+export function pause(){if(!G.inGame||panelKind==='pause'||G.mode==='dialog'||G.mode==='dead'||G.mode==='cinema')return;openPanel('pause',p=>{p.innerHTML='';p.appendChild(h('div','ptitle center',T('paused')));const col=h('div','col');col.appendChild(btn(T('resume'),()=>closePanel(),'go big'));col.appendChild(btn(T('inventory'),()=>inventory('inv'),'big'));col.appendChild(btn(T('quests'),()=>inventory('quests'),'big'));col.appendChild(btn(T('howto'),()=>howToPlay(),'big'));col.appendChild(btn(T('options'),()=>options(),'big'));col.appendChild(btn(T('quit'),()=>{closePanel(true);A().toTitle()},'big'));col.appendChild(pickerLink());col.appendChild(h('div','help',T('version',{v:VERSION})));p.appendChild(col)})}
 function pickerLink(){const a=h('a','btn big picker',T('picker'));a.href='https://joelfromschool.github.io/venice-beach-survivor/';a.onclick=()=>{try{A().save()}catch(e){}};return a}
 export function options(){const O=G.opt;const from=panelKind==='pause'?'pause':G.inGame?'pause':'title';openPanel('options',p=>{p.innerHTML='';p.appendChild(head(T('options')));const l=h('div','opts');
   const row=(label,ctrl)=>{const r=h('div','orow');r.appendChild(h('span','olab',label));r.appendChild(ctrl);l.appendChild(r)};
@@ -199,15 +213,44 @@ export function options(){const O=G.opt;const from=panelKind==='pause'?'pause':G
   row(T('autojump'),seg('autojump',[true,false],[T('on'),T('off')]));
   row(T('reduced'),seg('reduced',[true,false],[T('on'),T('off')]));
   const ch=h('div','cheat');if(O.cheat){ch.appendChild(h('div','help ok',T('cheatOn')));ch.appendChild(btn(T('cheatOff'),()=>{O.cheat=false;A().saveOptions();options()}))}else{const inp=h('input','cin');inp.placeholder=T('cheatPh');inp.autocapitalize='characters';inp.autocomplete='off';ch.appendChild(inp);ch.appendChild(btn(T('apply'),()=>{if(inp.value.trim().toUpperCase()==='AMSABABY'){confirmBox(T('cheatConfirm'),()=>{O.cheat=true;A().saveOptions();sfx('level');options()})}else{toast(T('cheatBad'));inp.value=''}}))}row(T('cheat'),ch);
-  p.appendChild(l);const r2=h('div','row');r2.appendChild(btn(T('intro'),()=>{closePanel(true);const was=G.inGame;if(was){A().save()}$('#title').classList.add('hidden');A().startCinema(()=>{if(was){A().enterPlay()}else{A().toTitle()}})}));r2.appendChild(pickerLink());r2.appendChild(btn(T('back'),()=>{if(from==='pause')pause();else{closePanel();title()}},'go'));p.appendChild(r2)})}
+  p.appendChild(l);const r2=h('div','row');r2.appendChild(btn(T('howto'),()=>howToPlay()));if(G.inGame)r2.appendChild(btn(T('howtoReplay'),()=>Tut.replay()));r2.appendChild(btn(T('intro'),()=>{closePanel(true);const was=G.inGame;if(was){A().save()}$('#title').classList.add('hidden');A().startCinema(()=>{if(was){A().enterPlay()}else{A().toTitle()}})}));r2.appendChild(pickerLink());r2.appendChild(btn(T('back'),()=>{if(from==='pause')pause();else{closePanel();title()}},'go'));p.appendChild(r2)})}
 function confirmBox(msg,yes){const prev=panelKind;openPanel('confirm',p=>{p.innerHTML=`<div class="ctxt">${esc(msg)}</div>`;const r=h('div','row');r.appendChild(btn(T('yes'),()=>{yes()},'go'));r.appendChild(btn(T('no'),()=>{if(prev==='options')options();else if(prev==='pause')pause();else{closePanel();title()}}));p.appendChild(r)})}
+
+export function howToPlay(){
+ const from=panelKind==='pause'?'pause':panelKind==='options'?'options':G.inGame?'pause':'title';
+ const ill={
+  look:`<div class="htp-ill"><div class="htp-phone"><span class="joy"><i></i></span><span class="swipe"></span></div></div>`,
+  buttons:`<div class="htp-ill htp-btns"><span class="hb"><b>⤒</b>${T('jump')}</span><span class="hb"><b>⛏</b>${T('mine')}</span><span class="hb"><b>✋</b>${T('use')}</span><span class="hb"><b>💬</b>${T('talk')}</span><span class="hb"><b>⇩</b>${T('sneak')}</span><span class="hb"><b>▦</b>${T('bag')}</span></div>`,
+  mine:`<div class="htp-ill"><div class="htp-cube crack"></div><b style="font-size:28px">⛏</b></div>`,
+  place:`<div class="htp-ill"><div class="htp-cube"></div><b style="font-size:28px">✋</b></div>`,
+  bag:`<div class="htp-ill"><div class="htp-grid">${'<i></i>'.repeat(6)}<i class="on"></i>${'<i></i>'.repeat(2)}</div><b>▦</b></div>`,
+  craft:`<div class="htp-ill"><div class="htp-grid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i></div><span class="carrow">➜</span><b style="font-size:28px">⛏</b></div>`,
+  vitals:`<div class="htp-ill"><span class="htp-hearts"><i></i><i></i><i></i><i></i></span><span class="htp-food"><i></i><i></i><i></i></span></div>`,
+  night:`<div class="htp-ill"><div class="htp-sky"><span class="sun"></span><span class="lamp"></span><span class="moon"></span></div></div>`,
+  save:`<div class="htp-ill htp-save"><b class="btn sq">❚❚</b><span class="badge">${T('saved')}</span></div>`,
+  quests:`<div class="htp-ill"><span class="qarrow">▲</span><b>💬</b><b class="btn sq">🗺</b></div>`,
+  coast:`<div class="htp-ill"><b style="font-size:36px">🔔</b></div>`
+ };
+ const keys=['look','buttons','mine','place','bag','craft','vitals','night','save','quests','coast'];
+ const titleOf={look:'htpLookT',buttons:'htpBtnT',mine:'htpMineT',place:'htpPlaceT',bag:'htpBagT',craft:'htpCraftT',vitals:'htpVitT',night:'htpNightT',save:'htpSaveT',quests:'htpQuestT',coast:'htpCoastT'};
+ const bodyOf={look:'htpLookB',buttons:'htpBtnB',mine:'htpMineB',place:'htpPlaceB',bag:'htpBagB',craft:'htpCraftB',vitals:'htpVitB',night:'htpNightB',save:'htpSaveB',quests:'htpQuestB',coast:'htpCoastB'};
+ openPanel('howto',p=>{
+  p.innerHTML='';p.appendChild(head(T('howto')));
+  const box=h('div','htp');
+  for(const k of keys){const sec=h('div','htp-sec',(ill[k]||'')+`<h3>${esc(T(titleOf[k]))}</h3><p>${esc(T(bodyOf[k]))}</p>`);box.appendChild(sec)}
+  const row=h('div','row');
+  if(G.inGame)row.appendChild(btn(T('howtoReplay'),()=>Tut.replay(),'go'));
+  row.appendChild(btn(T('back'),()=>{if(from==='pause')pause();else if(from==='options')options();else{closePanel();title()}}));
+  box.appendChild(row);p.appendChild(box);
+ });
+}
 // ---------- title ----------
 export function title(){const t=$('#title');t.classList.remove('hidden');const has=!!A().readSave();t.innerHTML='';const box=h('div','tbox');box.appendChild(h('img','tlogo'));box.querySelector('.tlogo').src=logo('BLOCKHAVEN');box.appendChild(h('div','tsub',T('subtitle')));
  const col=h('div','col');if(has)col.appendChild(btn(T('cont'),async()=>{t.classList.add('hidden');loading(.5,T('loading'));await A().continueGame();loading(1);A().enterPlay()},'go big'));
  col.appendChild(btn(T('newgame'),()=>{const go=async()=>{closePanel(true);t.classList.add('hidden');loading(.5,T('gen'));await A().newGame();loading(1);A().startCinema(()=>A().enterPlay())};if(has){t.classList.add('hidden');confirmBox(T('confirmNew'),go)}else go()},has?'big':'go big'));
- col.appendChild(btn(T('options'),()=>{t.classList.add('hidden');options()},'big'));col.appendChild(pickerLink());box.appendChild(col);
+ col.appendChild(btn(T('howto'),()=>{t.classList.add('hidden');howToPlay()},'big'));col.appendChild(btn(T('options'),()=>{t.classList.add('hidden');options()},'big'));col.appendChild(pickerLink());box.appendChild(col);
  const cast=h('div','tcast');for(const c of['pinco','bean','pooh','pooping','bronny','kermit'])cast.appendChild(h('img','',undefined)).src=portrait(c);box.appendChild(cast);
- box.appendChild(h('div','tver',T('version',{v:VERSION})+' · '+(isTouchUI()?T('touchhelp'):T('controls'))));t.appendChild(box)}
+ box.appendChild(h('div','tver',T('version',{v:VERSION})+' · '+T('touchhelp')));t.appendChild(box)}
 // ---------- version check ----------
 async function checkVersion(){try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j.version&&j.version!==VERSION){const u=$('#update');u.querySelector('span').textContent=T('update')+' ('+j.version+')';u.querySelector('button').textContent=T('reload');u.classList.remove('hidden')}}catch(e){}}
 $('#update button').addEventListener('click',()=>{try{A().save()}catch(e){}location.reload()});

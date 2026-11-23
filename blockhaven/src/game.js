@@ -1,20 +1,22 @@
 // Blockhaven main game: renderer, chunk streaming, player, interaction, survival, quests, saving, cinema.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js';
-import {buildAtlas,buildCracks} from './textures.js';
-import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js';
-import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js';
-import {meshChunk,makeMaterials} from './mesher.js';
-import {makeModel,animate,extrudeIcon} from './models.js';
-import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js';
-import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js';
-import * as E from './entities.js';
-import * as UI from './ui.js';
-import {T,tx,itemName} from './i18n.js';
-import {clamp,angleWrap,mulberry} from './util.js';
+import {G,VERSION} from './state.js?v=1.1.0';
+import {buildAtlas,buildCracks} from './textures.js?v=1.1.0';
+import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.0';
+import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.0';
+import {meshChunk,makeMaterials} from './mesher.js?v=1.1.0';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.0';
+import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.0';
+import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.0';
+import * as E from './entities.js?v=1.1.0';
+import * as UI from './ui.js?v=1.1.0';
+import {T,tx,itemName} from './i18n.js?v=1.1.0';
+import * as Tut from './tutorial.js?v=1.1.0';
+import {clamp,angleWrap,mulberry} from './util.js?v=1.1.0';
 const $=s=>document.querySelector(s);
 const QA=new URLSearchParams(location.search).has('qa');
-export const isTouch=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window&&navigator.maxTouchPoints>0);
+const forceTouch=new URLSearchParams(location.search).has('touch');
+export const isTouch=forceTouch||matchMedia('(pointer:coarse)').matches||('ontouchstart' in window&&navigator.maxTouchPoints>0);
 // ---------------- options ----------------
 const OPT_KEY='blockhaven-options-v1',SAVE_KEY='blockhaven-save-v1';
 const defaults={lang:(navigator.language||'').startsWith('ja')?'ja':'en',sound:true,music:true,difficulty:1,keepInv:true,view:isTouch?4:6,sens:1,autojump:true,reduced:false,cheat:false};
@@ -80,7 +82,7 @@ function useDurability(k=1){const s=heldStack();if(!s||!s.dur||G.opt.cheat)retur
 // ---------------- crafting / smelting ----------------
 export function nearBlock(ids,r=4){const w=G.world;const x0=Math.floor(P.pos.x),y0=Math.floor(P.pos.y),z0=Math.floor(P.pos.z);for(let y=y0-2;y<=y0+3;y++)for(let z=z0-r;z<=z0+r;z++)for(let x=x0-r;x<=x0+r;x++)if(ids.includes(w.get(x,y,z)))return true;return false}
 export function canCraft(r){if(r.bench&&!nearBlock([B.workbench]))return false;if(G.opt.cheat)return true;return r.ing.every(([id,n])=>countItem(id)>=n)}
-export function craft(r){if(!canCraft(r))return false;if(!G.opt.cheat)for(const[id,n]of r.ing)removeItem(id,n);const left=addItem(r.out,r.n);if(left>0)E.dropItem(r.out,left,P.pos.x,P.pos.y+1,P.pos.z);sfx('craft');G.stats.crafted++;questCheck();UI.dirty();return true}
+export function craft(r){if(!canCraft(r))return false;if(!G.opt.cheat)for(const[id,n]of r.ing)removeItem(id,n);const left=addItem(r.out,r.n);if(left>0)E.dropItem(r.out,left,P.pos.x,P.pos.y+1,P.pos.z);sfx('craft');G.stats.crafted++;questCheck();UI.dirty();Tut.onCraft(r);return true}
 export function kilnState(i){let k=G.world.meta.get('kiln:'+i);if(!k){k={q:[],out:[],prog:0};G.world.meta.set('kiln:'+i,k)}return k}
 export function fuelUnits(){if(G.opt.cheat)return 999;let u=0;for(const f of[101,8,7,35,49,100])u+=countItem(f)*fuelOf(f);return Math.floor(u)}
 export function smelt(i,inId,n){const out=SMELT[inId];if(!out)return false;n=Math.min(n,countItem(inId));if(n<=0)return false;
@@ -120,7 +122,7 @@ function canPlaceAt(x,y,z,id){const w=G.world;if(!w.inb(x,y,z))return false;cons
 function placeBlock(id){if(!target)return false;const x=target.x+target.face[0],y=target.y+target.face[1],z=target.z+target.face[2];let pid=id;const it=heldDef();if(it&&it.plants)pid=it.plants;
  if(BLOCKS[target.id].replace&&pid!==B.tallgrass)return placeAt(target.x,target.y,target.z,pid);return placeAt(x,y,z,pid)}
 export function placeAt(x,y,z,pid,free){if(!canPlaceAt(x,y,z,pid))return false;const w=G.world;w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
- if(!G.opt.cheat&&!free){const s=heldStack();if(s){s.count--;if(s.count<=0)P.inv[P.sel]=null}}sfx('place',pid);P.swing=.25;UI.dirty();questCheck();return true}
+ if(!G.opt.cheat&&!free){const s=heldStack();if(s){s.count--;if(s.count<=0)P.inv[P.sel]=null}}sfx('place',pid);P.swing=.25;UI.dirty();questCheck();Tut.onPlace(pid);return true}
 export function growAt(i,force){const w=G.world;const id=w.data[i];const b=BLOCKS[id];if(!b||id===undefined){G.growing.delete(i);return}const y=Math.floor(i/(w.W*w.D)),r=i-y*w.W*w.D,z=Math.floor(r/w.W),x=r-z*w.W;
  if(b.crop!==undefined){if(b.crop<3){w.set(x,y,z,force?33:id+1);if(force)E.glowBurst(x+.5,y+.5,z+.5,['#e9f7c8','#9ccf5a'],12,2)}if(BLOCKS[w.data[i]].crop===3)G.growing.delete(i)}
  else if(b.sapling){const h=4+Math.floor(Math.random()*2);for(let k=1;k<=h+1;k++)if(w.get(x,y+k,z)!==0)return;w.set(x,y,z,0);for(let k=0;k<h;k++)w.set(x,y+k,z,B.log);for(let ly=h-3;ly<=h+1;ly++){const rr=ly>=h?1:2;for(let dx=-rr;dx<=rr;dx++)for(let dz=-rr;dz<=rr;dz++){if(rr===2&&Math.abs(dx)===2&&Math.abs(dz)===2)continue;if(w.get(x+dx,y+ly,z+dz)===0)w.set(x+dx,y+ly,z+dz,B.leaves)}}G.growing.delete(i);if(force)E.glowBurst(x+.5,y+1,z+.5,['#e9f7c8','#9ccf5a'],16,3)}
@@ -133,7 +135,7 @@ function armorDef(){let d=0;for(const a of P.armor)if(a)d+=def(a.id).def;return 
 export function hurtPlayer(dmg,from,kb=5){if(P.dead||(G.mode!=='play'))return;if(G.opt.cheat||P.hurtCD>0||dmg<=0)return;const red=1-Math.min(.8,armorDef()*.04);const final=Math.max(.5,dmg*red);P.hp-=final;P.hurtCD=.5;sfx('hurt');UI.flash();
  for(let i=0;i<4;i++){const a=P.armor[i];if(a){a.dur--;if(a.dur<=0){P.armor[i]=null;UI.toast(T('broke',{item:itemName(a.id)}))}}}
  if(from){const dx=P.pos.x-from.x,dz=P.pos.z-from.z,d=Math.hypot(dx,dz)||1;P.vel.x+=dx/d*kb;P.vel.z+=dz/d*kb;P.vel.y=Math.max(P.vel.y,4.5)}
- P.exh+=.3;P.eating=null;UI.dirty();if(P.hp<=0)die()}
+ P.exh+=.3;P.eating=null;UI.dirty();Tut.onHurt();if(P.hp<=0)die()}
 export function aoe(pos,r,dmg){const d=Math.hypot(P.pos.x-pos.x,P.pos.z-pos.z),dy=Math.abs(P.pos.y-pos.y);if(d<r&&dy<2.6)hurtPlayer(dmg,pos,7)}
 export function explode(x,y,z,r,dmg){sfx('boom');E.burst(x,y,z,['#ffffff','#d8d8d8','#ffb86a','#f2e6c8'],40,9,.18,.9,4);G.shake=.6;const w=G.world;const d=Math.hypot(P.pos.x-x,P.pos.y+.9-y,P.pos.z-z);if(d<r*2)hurtPlayer(dmg*(1-d/(r*2))*dmgMul(),{x,y,z},12);
  for(const m of G.mobs){const md=Math.hypot(m.pos.x-x,m.pos.y-y,m.pos.z-z);if(md<r*1.6&&!m.boss)E.hurtMob(m,10*(1-md/(r*1.6)),{x,z})}
@@ -148,7 +150,7 @@ export function respawn(){P.dead=false;P.hp=maxHp();P.hunger=Math.max(P.hunger,1
  const sp=P.spawn&&validSpawn()?P.spawn:null;const dim=sp?P.spawnDim:G.dim==='coast'?'coast':'over';if(dim!==G.dim)switchDim(dim,false);
  const s=sp||(dim==='coast'?G.worlds.coast.pois.spawn:G.worlds.over.pois.spawn);P.pos.set(s.x,s.y,s.z);if(!sp)P.pos.y=G.world.surface(s.x,s.z);for(const m of[...G.mobs])if(m.d.hostile&&Math.hypot(m.pos.x-P.pos.x,m.pos.z-P.pos.z)<14)E.removeMob(m);G.mode='play';UI.closePanel(true);UI.dirty();save()}
 function validSpawn(){const w=G.worlds[P.spawnDim];if(!w)return false;return w.get(Math.floor(P.spawn.x),Math.floor(P.spawn.y)-1,Math.floor(P.spawn.z))===B.bed}
-function eat(s){const d=def(s.id);const f=d.food;P.hunger=Math.min(20,P.hunger+f[0]);P.sat=Math.min(P.hunger,P.sat+f[1]);if(d.heal)P.hp=Math.min(maxHp(),P.hp+d.heal);s.count--;if(s.count<=0)P.inv[P.sel]=null;sfx('burp');UI.dirty()}
+function eat(s){const d=def(s.id);const f=d.food;P.hunger=Math.min(20,P.hunger+f[0]);P.sat=Math.min(P.hunger,P.sat+f[1]);if(d.heal)P.hp=Math.min(maxHp(),P.hp+d.heal);s.count--;if(s.count<=0)P.inv[P.sel]=null;sfx('burp');UI.dirty();Tut.onEat()}
 // ---------------- NPCs ----------------
 function markerTex(ch,col){const c=document.createElement('canvas');c.width=8;c.height=12;const g=c.getContext('2d');g.fillStyle='#2a1d14';if(ch==='!'){g.fillRect(2,0,4,8);g.fillRect(2,9,4,3);g.fillStyle=col;g.fillRect(3,1,2,6);g.fillRect(3,10,2,1)}else{g.fillRect(1,0,6,2);g.fillRect(5,0,3,6);g.fillRect(2,5,4,4);g.fillRect(2,9,4,3);g.fillStyle=col;g.fillRect(2,1,5,1);g.fillRect(6,1,1,4);g.fillRect(3,5,3,1);g.fillRect(3,6,2,2);g.fillRect(3,10,2,1)}const t=new THREE.CanvasTexture(c);t.magFilter=t.minFilter=THREE.NearestFilter;t.generateMipmaps=false;return t}
 const MARK={'!':markerTex('!','#ffd23f'),'?':markerTex('?','#7fe07a')};
@@ -397,12 +399,12 @@ export async function bootWorld(progress){progress(.15,'gen');await frame();G.wo
 function findTreeSpot(){const w=G.worlds.over;let best=null,bd=1e9;for(let z=60;z<200;z+=2)for(let x=60;x<200;x+=2){const y=w.surface(x,z)-1;if(w.get(x,y,z)===B.leaves){const d=Math.hypot(x-128,z-128);if(d>30&&d<bd){bd=d;best={x,y:y-3,z}}}}G.treeSpot=best||{x:100,y:26,z:100}}
 function scanGrowing(){const w=G.worlds.over;for(let z=100;z<160;z++)for(let x=100;x<160;x++)for(let y=22;y<30;y++){const id=w.get(x,y,z);if(BLOCKS[id].crop!==undefined&&BLOCKS[id].crop<3)G.growing.add(w.idx(x,y,z))}}
 async function freshWorlds(){const w=G.worlds.over;E.clearEntities();if(G.dim!=='over'||w.edits.size||G.worlds.realm||G.worlds.coast){UI.loading(.3,T('gen'));await frame();disposeAllChunks();G.worlds={over:generateOverworld()};G.worlds.over.lightAll();G.cleanMeta=G.worlds.over.meta.size;findTreeSpot();UI.loading(1,'')}G.world=G.worlds.over;G.dim='over';ocean.visible=clouds.visible=true;G.growing=new Set();scanGrowing()}
-export async function newGame(){try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem(SAVE_KEY+'-backup')}catch(e){}pendingSave=null;await freshWorlds();Object.assign(P,{hp:20,hunger:20,sat:5,exh:0,xp:0,level:0,sel:0,spawn:null,spawnDim:'over',dead:false,poison:0,slow:0,fallStart:null});P.inv=new Array(36).fill(null);P.armor=[null,null,null,null];G.quest={i:0,stage:'offer'};G.flags={};G.bossesDown={};G.stats={kills:0,mined:0,crafted:0,deaths:0};G.clock=.03;G.playtime=0;const s=G.world.pois.spawn;P.pos.set(s.x,s.y,s.z);P.yaw=0;P.pitch=-.05;P.vel.set(0,0,0);addItem(111,2)}
+export async function newGame(){try{localStorage.removeItem(SAVE_KEY);localStorage.removeItem(SAVE_KEY+'-backup')}catch(e){}pendingSave=null;await freshWorlds();Object.assign(P,{hp:20,hunger:20,sat:5,exh:0,xp:0,level:0,sel:0,spawn:null,spawnDim:'over',dead:false,poison:0,slow:0,fallStart:null});P.inv=new Array(36).fill(null);P.armor=[null,null,null,null];G.quest={i:0,stage:'offer'};G.flags=G.opt.tutorialDone?{}:{needTut:true};G.bossesDown={};G.stats={kills:0,mined:0,crafted:0,deaths:0};G.clock=.03;G.playtime=0;const s=G.world.pois.spawn;P.pos.set(s.x,s.y,s.z);P.yaw=0;P.pitch=-.05;P.vel.set(0,0,0);addItem(111,2)}
 export async function continueGame(){const d=readSave();if(!d)return false;pendingSave=d;await freshWorlds();applySavedWorld('over');G.flags=d.flags||{};ensureGateState();G.worlds.over.lightAll();disposeAllChunks();G.growing=new Set(d.growing||[]);
  const p=d.player;P.pos.set(...p.pos);P.vel.set(0,0,0);P.yaw=p.yaw;P.pitch=p.pitch;P.hp=p.hp>0?p.hp:20;P.hunger=p.hunger;P.sat=p.sat;P.xp=p.xp;P.level=p.level;P.inv=p.inv.map(unpackStack);P.armor=p.armor.map(unpackStack);P.sel=p.sel;P.spawn=p.spawn;P.spawnDim=p.spawnDim||'over';P.dead=false;P.fallStart=null;
  G.quest=d.quest;G.bossesDown=d.bossesDown||{};G.stats=d.stats||G.stats;G.clock=d.clock;G.playtime=d.playtime||0;
  if(d.dim==='realm'||d.dim==='coast'){switchDim(d.dim,false);P.pos.set(...p.pos);P.yaw=p.yaw}return true}
-export function enterPlay(){G.mode='play';G.started=true;G.inGame=true;UI.hud(true);spawnNPCs();refreshSocketGems();updateChunks(400,P.pos.x,P.pos.z);UI.dirty();setMood(G.dim==='realm'?'realm':isNight()?'night':'day');if(!isTouch&&!QA)canvas.requestPointerLock?.();save()}
+export function enterPlay(){G.mode='play';G.started=true;G.inGame=true;UI.hud(true);spawnNPCs();refreshSocketGems();updateChunks(400,P.pos.x,P.pos.z);UI.dirty();setMood(G.dim==='realm'?'realm':isNight()?'night':'day');if(!isTouch&&!QA)canvas.requestPointerLock?.();save();Tut.maybeStart()}
 export function toTitle(){save();G.inGame=false;G.mode='title';UI.hud(false);E.clearEntities();if(G.dim!=='over')switchDim('over',false);spawnNPCs();document.exitPointerLock?.();setMood('title');UI.title()}
 // ---------------- cinema (in-engine intro) ----------------
 let cine=null;const castActors=[];
@@ -431,13 +433,13 @@ function updateTitleCam(){const a=G.time*.05;camera.position.set(128+Math.cos(a)
 let last=performance.now(),frames=0,fpsT=0;G.fps=0;G.time=0;G.view=0;G.day=1;G.growing=new Set();G.playtime=0;
 function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,(now-last)/1000));last=now;frames++;fpsT+=dt;if(fpsT>=1){G.fps=frames;frames=0;fpsT=0}
  try{G.time+=dt;
-  if(G.mode==='play'){G.playtime+=dt;G.clock=(G.clock+dt/DAY_LEN)%1;updatePlayer(dt);updateActions(dt);E.updateEntities(dt);updateNPCs(dt);updateSpawning(dt);updateBossTriggers();updateKilns(dt);updateGrowth(dt);updateCamera(dt);updateHand();UI.tick(dt);if(performance.now()-(G.lastSave||0)>30000)save();
+  if(G.mode==='play'){G.playtime+=dt;if(!Tut.isActive())G.clock=(G.clock+dt/DAY_LEN)%1;updatePlayer(dt);updateActions(dt);E.updateEntities(dt);updateNPCs(dt);if(!Tut.isActive())updateSpawning(dt);updateBossTriggers();updateKilns(dt);updateGrowth(dt);updateCamera(dt);updateHand();UI.tick(dt);Tut.tick(dt);if(performance.now()-(G.lastSave||0)>30000)save();
    setMood(G.activeBoss?'boss':G.dim==='realm'?'realm':P.pos.y<SEA-4&&G.world.skyAt(Math.floor(P.pos.x),Math.floor(P.pos.y+1.6),Math.floor(P.pos.z))<8?'cave':isNight()?'night':'day');
    const op=objectivePos();beam.visible=!!op;if(op){beam.position.set(op.x+.5,(op.y||30)+44,op.z+.5);beam.material.opacity=.22+Math.sin(G.time*3)*.08}}
   else{beam.visible=false;outline.visible=false;crack.visible=false;
    if(G.mode==='cinema'&&cine){updateCinema(dt);E.updateEntities(dt);updateNPCs(dt)}
    else if(G.mode==='title'){updateTitleCam();updateNPCs(dt)}
-   else if(G.inGame){updateCamera(0);updateKilns(dt);if(G.mode==='sleep'||G.mode==='ending'){E.updateEntities(dt);updateNPCs(dt)}}}
+   else if(G.inGame){updateCamera(0);updateKilns(dt);if(G.mode==='sleep'||G.mode==='ending'){E.updateEntities(dt);updateNPCs(dt)}if(Tut.isActive())Tut.tick(dt)}}
   updateSky(dt);updateChunks(G.mode==='loading'?30:G.mode==='play'?5:8);
   renderer.clear();renderer.render(scene,camera);if(G.mode==='play'&&G.view===0&&!P.dead){renderer.clearDepth();renderer.render(handScene,handCam)}}
  catch(err){console.error(err);G.lastError=String(err&&err.stack||err)}}
@@ -445,5 +447,5 @@ requestAnimationFrame(loop);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();audioSuspend(true);if(G.mode==='play')UI.pause()}else audioSuspend(false)});
 addEventListener('pagehide',()=>save());
 // ---------------- API for UI/entities ----------------
-G.api={giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch};
-if(QA){window.BH={G,P,E,B,I,BLOCKS,RECIPES,SMELT,addItem,countItem,removeItem,breakBlock,placeAt,craft,canCraft,smelt,collectKiln,kilnState,chestSlots,save,readSave,continueGame,newGame,enterPlay,toTitle,startCinema,skipCinema,switchDim,sail,interactBlock,QUESTS,AWAY,giverHere,questWorld,questCheck,talkTo,finishQuest,curQuest,objectivePos,hurtPlayer,respawn,updateChunks,target:()=>{updateTarget();return{target,ent:targetEnt&&(targetEnt.id||targetEnt.type)}},interactNearest,openGate,insertShard,growAt,isNight,explode,gainXP,UI,camera,renderer,scene,chunks,raycast,spawnNPCs,trySleep,onUse,doAttack,maxHp}}
+G.api={giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);Tut.onPickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch,tutorial:Tut};
+if(QA){window.BH={G,P,E,B,I,BLOCKS,RECIPES,SMELT,addItem,countItem,removeItem,breakBlock,placeAt,craft,canCraft,smelt,collectKiln,kilnState,chestSlots,save,readSave,continueGame,newGame,enterPlay,toTitle,startCinema,skipCinema,switchDim,sail,interactBlock,QUESTS,AWAY,giverHere,questWorld,questCheck,talkTo,finishQuest,curQuest,objectivePos,hurtPlayer,respawn,updateChunks,target:()=>{updateTarget();return{target,ent:targetEnt&&(targetEnt.id||targetEnt.type)}},interactNearest,openGate,insertShard,growAt,isNight,explode,gainXP,UI,camera,renderer,scene,chunks,raycast,spawnNPCs,trySleep,onUse,doAttack,maxHp,Tut}}

@@ -1,6 +1,6 @@
 // Voxel world: storage, authored-procedural generation, light propagation and edits.
-import {BLOCKS,B} from './blocks.js';
-import {makeNoise,mulberry,hash2,hash3,smooth,clamp} from './util.js';
+import {BLOCKS,B} from './blocks.js?v=1.1.0';
+import {makeNoise,mulberry,hash2,hash3,smooth,clamp} from './util.js?v=1.1.0';
 export const SEA=20;
 export class World{
  constructor(kind='over',W=256,D=256,H=64){this.kind=kind;this.W=W;this.D=D;this.H=H;const n=W*D*H;this.data=new Uint8Array(n);this.sky=new Uint8Array(n);this.blk=new Uint8Array(n);this.hm=new Uint8Array(W*D);this.edits=new Map();this.meta=new Map();this.pois={};this.dirty=new Set();this.urgent=new Set();this.biome=new Uint8Array(W*D);this.protect=[]}
