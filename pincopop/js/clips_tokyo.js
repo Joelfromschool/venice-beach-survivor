@@ -138,10 +138,10 @@ CLIPS.push(
  snd:['Bean Live Beat','ビーンのライブビート'],
  com:[['pinco','I was in the chat 💕','チャットにいたよ💕'],['prof','The fountain reopened Nov 13. Verified.','噴水は11/13にリニューアル。確認済み。']],
  shots:[
- {d:10,bg:'x_ginkgo',cam:[1.15,1.05,.5,.5,.6,.55],a:[['c_bean_1',.5,.9,.4,'sneak']],tx:[[0,10,'hi chat!! walking the ginkgo trees 🍂','チャットのみんなー！イチョウ並木を歩いてる🍂','bub',.26,{x:.5,tx:.5,ty:.52,who:'bean'}]],sx:[[0,'pop']]},
- {d:10,bg:'x_ginkgo',tr:'cut',cam:[1,1.15,.5,.5,.5,.6],a:[['c_bean_5',.5,.9,.4,'sneak',{mv:[.5,.84,.9],mvd:10}]],fx:[['sparkle',0,10,{x:.5,y:.4,r:.4,c:'#ffe27a'}]],tx:[[0,10,'they usually peak late Nov–mid Dec','見頃はだいたい11月下旬〜12月中旬','bub',.26,{x:.5,tx:.5,ty:.55,who:'bean'}]],sx:[[0,'chime']]},
- {d:10,bg:'x_yoyogi',tr:'whip',cam:[1.1,1.2,.5,.5,.55,.6],a:[['w_gang_1',.35,.92,.38,'hop']],fx:[['mist',0,10,{x:.6,y:.62,a:-1.6}]],tx:[[0,10,'the fountain is new! “Forest Fountain”, opened Nov 13 ⛲','噴水がリニューアル！「森の噴水」11/13オープン⛲','bub',.25,{x:.5,tx:.35,ty:.6,who:'bean'}]],sx:[[0,'whoosh']]},
- {d:10,bg:'x_yoyogi',tr:'cut',cam:[1.3,1.4,.6,.6,.6,.6],a:[['c_bean_2',.3,.92,.36,'dance']],fx:[['notes',0,10,{x:.6,y:.55}],['hearts',2,10,{x:.4,y:.6,n:10,loop:1}]],tx:[[0,10,'lit up 17:00–21:00, music shows 5x a night (10 min)','ライトアップ17〜21時、音楽付きは1晩5回（各10分）','bub',.25,{x:.55,tx:.3,ty:.62,who:'bean'}]],sx:[[0,'chime']]},
- {d:12,bg:'x_ginkgo',tr:'zoom',cam:[1,1.05,.5,.5,.6,.6],a:[['c_bean_1',.5,.9,.4,'bob']],fx:[['hearts',0,12,{n:12,loop:1}]],tx:[[0,12,'running till 23:00 through Jan 31. byeee chat 🫛','1/31までは23時まで運転。またねー🫛','bub',.26,{x:.5,tx:.5,ty:.52,who:'bean'}]],sx:[[0,'aww']]}
+ {d:10,bg:'x_ginkgo',cam:[1.15,1.05,.5,.5,.6,.55],a:[['xb_bean_1',.5,.9,.4,'sneak']],tx:[[0,10,'hi chat!! walking the ginkgo trees 🍂','チャットのみんなー！イチョウ並木を歩いてる🍂','bub',.26,{x:.5,tx:.5,ty:.52,who:'bean'}]],sx:[[0,'pop']]},
+ {d:10,bg:'x_ginkgo',tr:'cut',cam:[1,1.15,.5,.5,.5,.6],a:[['xb_bean_5',.5,.9,.4,'sneak',{mv:[.5,.84,.9],mvd:10}]],fx:[['sparkle',0,10,{x:.5,y:.4,r:.4,c:'#ffe27a'}]],tx:[[0,10,'they usually peak late Nov–mid Dec','見頃はだいたい11月下旬〜12月中旬','bub',.26,{x:.5,tx:.5,ty:.55,who:'bean'}]],sx:[[0,'chime']]},
+ {d:10,bg:'x_yoyogi',tr:'whip',cam:[1.1,1.2,.5,.5,.55,.6],a:[['xb_bean_0',.35,.92,.38,'hop']],fx:[['mist',0,10,{x:.6,y:.62,a:-1.6}]],tx:[[0,10,'the fountain is new! “Forest Fountain”, opened Nov 13 ⛲','噴水がリニューアル！「森の噴水」11/13オープン⛲','bub',.25,{x:.5,tx:.35,ty:.6,who:'bean'}]],sx:[[0,'whoosh']]},
+ {d:10,bg:'x_yoyogi',tr:'cut',cam:[1.3,1.4,.6,.6,.6,.6],a:[['xb_bean_1',.3,.92,.36,'dance']],fx:[['notes',0,10,{x:.6,y:.55}],['hearts',2,10,{x:.4,y:.6,n:10,loop:1}]],tx:[[0,10,'lit up 17:00–21:00, music shows 5x a night (10 min)','ライトアップ17〜21時、音楽付きは1晩5回（各10分）','bub',.25,{x:.55,tx:.3,ty:.62,who:'bean'}]],sx:[[0,'chime']]},
+ {d:12,bg:'x_ginkgo',tr:'zoom',cam:[1,1.05,.5,.5,.6,.6],a:[['xb_bean_1',.5,.9,.4,'bob']],fx:[['hearts',0,12,{n:12,loop:1}]],tx:[[0,12,'running till 23:00 through Jan 31. byeee chat 🫛','1/31までは23時まで運転。またねー🫛','bub',.26,{x:.5,tx:.5,ty:.52,who:'bean'}]],sx:[[0,'aww']]}
 ]}
 );
