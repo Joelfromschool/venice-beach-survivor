@@ -107,7 +107,7 @@ CLIPS.push(
  com:[['kaise','okay I cried 😭','泣いた😭'],['party','S TIER COUPLE 🎉','Sランクカップル🎉']],
  shots:[
  {d:5,bg:'stream',a:[['c_asmon_0',.5,.9,.5,'bob',{in:'pop'}]],tx:[[0,5,'Making HER a tier list for once 📋💕','今回は俺が彼女のために格付け 📋💕','big',.17]],sx:[[0,'pop']]},
- {d:8,bg:KBG,tr:'whip',a:[['p_tier',.5,.86,.16,'float',{sh:0}]],tx:[[0,8,'Reasons I love Kaise','カイセの好きなところ','pill',.18],[1.2,8,'her laugh: S','笑い声：S','tag',.28],[2.4,8,'her tier lists: S','格付けセンス：S','tag',.37],[3.6,8,'the watch: S','時計のプレゼント：S','tag',.46]],sx:[[1.2,'ding'],[2.4,'ding'],[3.6,'ding']]},
+ {d:8,bg:KBG,tr:'whip',a:[['p_tier',.5,.86,.16,'float',{sh:0}]],tx:[[0,8,'Reasons I love her','彼女の好きなところ','pill',.18],[1.2,8,'her laugh: S','笑い声：S','tag',.28],[2.4,8,'her tier lists: S','格付けセンス：S','tag',.37],[3.6,8,'the watch: S','時計のプレゼント：S','tag',.46]],sx:[[1.2,'ding'],[2.4,'ding'],[3.6,'ding']]},
  {d:6,bg:'stream',tr:'cut',a:[['c_asmon_5',.5,.9,.44,'talk']],tx:[[0,6,'B tier: …','Bランク：…','pill',.2],[2,6,'(there is no B tier)','（Bランクは存在しない）','bub',.32,{x:.5,tx:.5,ty:.46,who:'asmon'}]],sx:[[0,'crickets'],[2,'boing']]},
  {d:7,bg:'stream',tr:'zoom',a:[['asmon_couple_2',.3,.88,.42,'bob'],['kaise_3',.72,.88,.44,'hop']],fx:[['hearts',0,7,{x:.5,y:.5,n:12}],['confetti',.5,7,{n:30}]],tx:[[0,7,'Okay, that’s actually S tier 😭','これは本当にSランクだよ😭','bub',.28,{x:.62,tx:.72,ty:.46,who:'kaise'}]],sx:[[0,'aww'],[.5,'cheer']]}
 ]}

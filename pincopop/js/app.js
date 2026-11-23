@@ -260,7 +260,7 @@ const APP=(()=>{
  function exitMine(){stopSlot(cur());AU.stop();const c=col.prev||'all';cat='__';setCat(c);openMine(col.kind)}
  $('mineBtn').onclick=e=>{e.stopPropagation();unlockAudio();openMine()};
  // ---------- tabs / language ----------
- const CATS=['all','tokyo','food','comedy','parent','makeup','preg','lng','couple'];
+ const CATS=['all','tokyo','la','food','comedy','parent','makeup','preg','lng','couple'];
  function buildTabs(){if(cat==='mine'){$('tabs').innerHTML=`<button class="tab on mineb" type="button" data-c="__back">${GL.back}<span>${T(col.kind==='liked'?'likedV':'savedV')}</span></button><i id="tabInd"></i>`;$('tabs').querySelector('.tab').onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;exitMine()};requestAnimationFrame(()=>placeInd(cat,cat,0,false));return}
   const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
   $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;unlockAudio();setCat(b.dataset.c)});requestAnimationFrame(()=>placeInd(cat,cat,0,false))}
