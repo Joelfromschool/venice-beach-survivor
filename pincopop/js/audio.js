@@ -60,6 +60,8 @@ const AU=(()=>{
   lead(t,f,d,v,bus){const g=gain(0,bus);env(g,t,.008,v*.2,.2,.5,.08,t+d);const lp=filt('lowpass',f*5,1.4,g);osc('square',f,t,t+d,lp);osc('sine',f*2,t,t+d,gain(.4,lp));g.connect(verbIn)},
   harpsi(t,f,d,v,bus){const g=gain(0,bus);env(g,t,.001,v*.22,.22,0,.08,t+.6);const hp=filt('highpass',f*.8,.7,g);osc('sawtooth',f,t,t+.7,hp);osc('square',f*2.002,t,t+.7,gain(.3,hp));g.connect(verbIn)},
   pad(t,f,d,v,bus){const g=gain(0,bus);env(g,t,.35,v*.07,.6,.8,.4,t+d);const lp=filt('lowpass',1400,.5,g);[-9,0,9].forEach(dt=>osc('sawtooth',f,t,t+d,lp,dt));g.connect(verbIn)},
+  sleigh(t,v,bus){for(let i=0;i<3;i++){const tt=t+i*.018,g=gain(0,bus);env(g,tt,.001,v*.09,.03,0,.02,tt+.07);nz(tt,.08,filt('bandpass',8200+i*900,6,g))}},
+  vinyl(t,v,bus){const g=gain(0,bus);g.gain.value=.025*v;nz(t,1.4,filt('bandpass',2400,.4,g));for(let i=0;i<5;i++){const tt=t+Math.random()*1.4,g2=gain(0,bus);env(g2,tt,.001,.12*v,.004,0,.003,tt+.012);nz(tt,.012,filt('highpass',3000,.5,g2))}},
   whistle(t,f,d,v,bus){const g=gain(0,bus);env(g,t,.03,v*.2,.2,.7,.05,t+d*.9);const o=osc('sine',f,t,t+d,g);const vib=ctx.createOscillator();vib.frequency.value=5.5;const vg=ctx.createGain();vg.gain.value=f*.01;vib.connect(vg);vg.connect(o.frequency);vib.start(t);vib.stop(t+d+.2);g.connect(verbIn)},
  };
  // ---------- styles (all original patterns) ----------
@@ -78,6 +80,22 @@ const AU=(()=>{
    drums:{kick808:'x......x..x.....|x.........x.x...',clap:'........x.......',hat:'x.x.x.x.xxx.x.xx'},chord:'harpsi',crhythm:'x..x..x...x..x..',bass:'sub',brhythm:'x......x..x.....',lead:'harpsi',ldens:.35,half:1},
   sweet:{bpm:[96,104],swing:.1,scale:[MAJ],root:[55,57,59,60],progs:[[0,4,5,3],[3,4,2,5],[0,3,4,3]],
    drums:{kick:'x.......x.x.....',snare:'....x.......x...',hat:'x.x.x.x.x.x.x.x.',shaker:'.x.x.x.x.x.x.x.x'},chord:'keys',crhythm:'x...x...x...x...',bass:'bass',brhythm:'x..x....x..x....',lead:'whistle',ldens:.35},
+  xmas:{bpm:[104,114],swing:.18,scale:[MAJ],root:[55,57,60,62],progs:[[0,3,4,0],[0,5,3,4],[0,3,1,4]],
+   drums:{kick:'x.......x.......',snare:'....x.......x...',sleigh:'x.xxx.xxx.xxx.xx'},chord:'keys',crhythm:'x...x...x...x...',bass:'bass',brhythm:'x.......x...x...',lead:'bell',ldens:.5},
+  lofi:{bpm:[72,80],swing:.3,scale:[DOR,MAJ],root:[50,52,53],progs:[[1,4,0,5],[3,2,5,1],[0,5,3,4]],
+   drums:{kick:'x......x..x.....',snare:'....x.......x...',hat:'x.x.x.x.x.x.x.x.',vinyl:'x...............'},chord:'keys',crhythm:'x.......x.......',bass:'sub',brhythm:'x.........x.....',lead:'pluck',ldens:.3},
+  synth:{bpm:[96,104],swing:0,scale:[MIN,DOR],root:[50,52,53],progs:[[0,5,6,4],[5,3,0,4],[0,6,5,6]],
+   drums:{kick:'x...x...x...x...',snare:'....x.......x...',hat:'..x...x...x...x.'},chord:'stab',crhythm:'x.......x.......',bass:'bass',brhythm:'x.x.x.x.x.x.x.x.',lead:'lead',ldens:.4,pad:1},
+  anime:{bpm:[150,162],swing:0,scale:[MAJ,MIN],root:[57,59,60],progs:[[3,4,2,5],[5,3,4,0],[3,4,0,5]],
+   drums:{kick:'x...x...x...x...',snare:'....x.......x.x.',hat:'xxxxxxxxxxxxxxxx'},chord:'stab',crhythm:'x..x..x...x..x..',bass:'bass',brhythm:'x.x.x.x.x.x.x.x.',lead:'lead',ldens:.6},
+  asmr:{bpm:[64,70],swing:.1,scale:[MAJ],root:[60,62,64],progs:[[0,3,0,4],[0,5,3,4]],
+   drums:{shaker:'........x.......'},chord:'keys',crhythm:'x...............',bass:'sub',brhythm:'................',lead:'musicbox',ldens:.22,pad:1},
+  clay:{bpm:[108,118],swing:.12,scale:[MAJ,MIX],root:[53,55,57],progs:[[0,4,0,4],[0,3,4,0],[0,1,4,0]],
+   drums:{kick:'x.......x.......',wood:'x..x..x.x..x..x.'},chord:'pluck',crhythm:'..x...x...x...x.',bass:'tuba',brhythm:'x.......x.......',lead:'marimba',ldens:.5},
+  silent:{bpm:[122,132],swing:.05,scale:[MAJ],root:[55,57,58],progs:[[0,4,0,4],[0,3,4,0],[0,5,1,4]],
+   drums:{kick:'x.......x.......',rim:'....x.......x...'},chord:'harpsi',crhythm:'....x.......x...',bass:'bass',brhythm:'x.......x.......',lead:'harpsi',ldens:.65},
+  stream:{bpm:[138,146],swing:0,scale:[MIN,DOR],root:[50,53,55],progs:[[0,5,3,4],[0,6,5,4]],
+   drums:{kick808:'x.........x.....|x......x..x.....',clap:'........x.......',hat:'x.xxx.x.x.xxx.xx'},chord:'keys',crhythm:'x.......x.......',bass:'sub',brhythm:'x.........x.....',lead:'bell',ldens:.3,half:1},
  };
  function makeSong(style,seed,bpmOverride){
   const S=STY[style]||STY.food,r=rng(seed*13+7);
@@ -148,6 +166,12 @@ const AU=(()=>{
   coin(t,b){I.bell(t,NOTE(95),.3,.8,b);I.bell(t+.07,NOTE(100),.4,.9,b)},
   bonk(t,b){I.wood(t,1.3,b,520);FX.boing(t+.03,b)},
   yawn(t,b){const g=gain(0,b);env(g,t,.2,.22,.5,.8,.2,t+1.1);const f=filt('bandpass',800,4,g);f.frequency.linearRampToValueAtTime(400,t+1.1);const o=osc('sawtooth',260,t,t+1.2,f);o.frequency.linearRampToValueAtTime(170,t+1.1)},
+  bells(t,b){for(let i=0;i<8;i++){const tt=t+i*.05;I.sleigh(tt,1.4,b)}I.bell(t,NOTE(91),.6,.8,b)},
+  type(t,b){for(let i=0;i<6;i++){const tt=t+i*.07+Math.random()*.02,g=gain(0,b);env(g,tt,.001,.3,.01,0,.008,tt+.025);nz(tt,.025,filt('bandpass',2500+Math.random()*1500,2,g))}},
+  tape(t,b){FX.thud(t,b);const g=gain(0,b);env(g,t+.05,.001,.25,.05,0,.04,t+.2);nz(t+.05,.15,filt('bandpass',1200,2,g))},
+  pour(t,b){const g=gain(0,b);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.25,t+.1);g.gain.linearRampToValueAtTime(0,t+1.2);const f=filt('bandpass',900,3,g);f.frequency.linearRampToValueAtTime(1800,t+1.1);nz(t,1.25,f)},
+  notif(t,b){const g=gain(0,b);env(g,t,.002,.12,.05,0,.03,t+.12);osc('sine',1320,t,t+.12,g)},
+  gift(t,b){FX.sparkle(t,b);FX.coin(t+.1,b)},
   buzz(t,b){const g=gain(0,b);env(g,t,.005,.25,.4,.8,.05,t+.45);osc('square',110,t,t+.5,filt('lowpass',900,1,g));osc('square',116,t,t+.5,filt('lowpass',900,1,g))},
  };
  const VOICE={pooh:[220,1],pinco:[430,1.1],bean:[520,.8],pooping:[170,1],bronny:[150,.9],asmon:[130,1.2],max:[380,1],mogu:[600,.9],party:[700,1],prof:[190,1],babyp:[760,1],babyb:[820,1],babyh:[700,1],you:[330,1],kaise:[390,1.05]};

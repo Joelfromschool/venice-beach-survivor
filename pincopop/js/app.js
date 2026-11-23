@@ -45,7 +45,7 @@ const APP=(()=>{
  let cat='all',feed=[],idx=0,H=innerHeight,W=innerWidth,DPR=Math.min(2,devicePixelRatio||1);
  function rngS(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
  let shuffleSeed=(Date.now()%100000)+7;
- function pool(){return CL.map((c,i)=>i).filter(i=>{const c=CL[i];if(st.nope[c.id])return false;if(c.cat==='secret')return st.gold&&(cat==='secret'||cat==='all');return cat==='all'||c.cat===cat})}
+ function pool(){return CL.map((c,i)=>i).filter(i=>{const c=CL[i];if(st.nope[c.id])return false;if(c.cat==='secret')return st.gold&&(cat==='secret'||cat==='all');return cat==='all'||c.cat===cat||(c.also||[]).includes(cat)})}
  function extend(){const P=pool();if(!P.length)return;const r=rngS(shuffleSeed++);
   let arr=P.slice();for(let i=arr.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
   if(cat==='all'){// spread categories and put a real video clip early
@@ -89,7 +89,7 @@ const APP=(()=>{
   s.q.sav.classList.toggle('on',!!st.saved[c.id]);s.q.savN.textContent=fmt(Math.round(c.likes*.12)+(st.saved[c.id]?1:0));
   const av=avatar(cr.av);s.q.av.dataset.av=cr.av;s.q.av.src=av;s.q.disc.dataset.av=cr.av;s.q.disc.src=av;
   s.q.h.innerHTML=esc(cr.h)+(st.gold?GL.badgeG:GL.badge);s.q.fol.textContent=st.fol[c.by]?T('following'):T('follow');s.q.fol.classList.toggle('on',!!st.fol[c.by]);
-  s.q.ct.textContent=L(c.cap)+(c.cat==='preg'?'  ⓘ '+T('nomed'):'');s.q.more.textContent=s.q.cap.classList.contains('open')?T('less'):T('more');
+  s.q.ct.textContent=L(c.cap)+(c.cat==='preg'?'  ⓘ '+T('nomed'):c.note?'  ⓘ '+T('chk'):'');s.q.more.textContent=s.q.cap.classList.contains('open')?T('less'):T('more');
   const a=L(c.snd)+' · '+cr.h+' · '+T('orig');s.q.mq.textContent=a+'    •    '+a+'    •    '}
  let drag=0,animating=false;
  function place(dy,anim){slots.forEach(s=>{const off=(s.i-idx)*H+dy;const jump=s.lastOff==null||Math.abs(off-s.lastOff)>H*1.5;s.lastOff=off;s.el.style.transition=anim&&!jump?'transform '+anim+'ms cubic-bezier(.22,.8,.3,1)':'none';s.el.style.transform=`translate3d(0,${off}px,0)`;s.el.style.visibility=Math.abs(s.i-idx)>1?'hidden':'visible'})}
@@ -240,7 +240,7 @@ const APP=(()=>{
   $('oReset').onclick=()=>{st.liked={};st.saved={};st.cl={};st.mine={};st.nope={};save();clearSecs();slots.forEach(fill);toast(T('resetT'))}}
  $('gear').onclick=e=>{e.stopPropagation();unlockAudio();openSettings()};
  // ---------- tabs / language ----------
- const CATS=['all','food','comedy','parent','makeup','preg','lng','couple'];
+ const CATS=['all','tokyo','food','comedy','parent','makeup','preg','lng','couple'];
  function buildTabs(){const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
   $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;unlockAudio();setCat(b.dataset.c)});requestAnimationFrame(()=>placeInd(cat,cat,0,false))}
  function tabCenter(c){const b=$('tabs').querySelector('.tab[data-c="'+c+'"]');return b?b.offsetLeft+b.offsetWidth/2:0}
