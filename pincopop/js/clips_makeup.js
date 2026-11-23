@@ -89,7 +89,7 @@ CLIPS.push(
  {d:2,bg:'lair',tr:'flash',a:[['asmon_makeup_2',.5,.94,.6,'pulse']],fx:[['sparkle',0,2,{x:.5,y:.4,r:.25}]],tx:[[0,2,'Asmon','アスモン','tag',.2]],sx:[[0,'drop']]},
  {d:2,bg:'#ffe08a/#ff9fc2',tr:'flash',a:[['c_bean_5',.5,.86,.5,'pulse']],tx:[[0,2,'Mr Bean','ミスター・ビーン','tag',.2]],sx:[[0,'drop']]},
  {d:2,bg:'promenade',tr:'flash',a:[['c_pooh_5',.5,.86,.5,'pulse']],fx:[['coins',0,2,{x:.5,y:.5}]],tx:[[0,2,'Pooh','プー','tag',.2]],sx:[[0,'drop']]},
- {d:2,bg:'park',tr:'flash',a:[['c_mogu_2',.5,.86,.46,'pulse']],tx:[[0,2,'Mogu','モグ','tag',.2]],sx:[[0,'drop']]},
+ {d:2,bg:'park',tr:'flash',a:[['c_mogu_2',.5,.86,0.391,'pulse']],tx:[[0,2,'Mogu','モグ','tag',.2]],sx:[[0,'drop']]},
  {d:2,bg:'boardwalk',tr:'flash',a:[['c_bronny_5',.5,.86,.52,'pulse']],tx:[[0,2,'Bronny','ブロニー','tag',.2]],sx:[[0,'drop']]},
  {d:6,bg:'#2a0f3d/#ff4f9a',tr:'zoom',a:[['c_party_5',.5,.86,.52,'dance']],fx:[['confetti',0,6,{n:80}],['rays',0,6,{x:.5,y:.55}]],tx:[[0,6,'who did it best? 👇','いちばんは誰？👇','big',.17]],sx:[[0,'cheer']]}
 ]},

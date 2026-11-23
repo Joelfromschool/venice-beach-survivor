@@ -24,11 +24,11 @@ CLIPS.push(
  snd:['Next Stop Fluent','次はペラペラ駅'],
  com:[['bronny','"I\'m getting off!" saved me on the Yamanote','「I\'m getting off!」に山手線で救われた'],['prof','Platform numbers: always worth asking.','番線は聞いて損なし。']],
  shots:[
- {d:5,bg:'train',a:[['c_mogu_1',.5,.88,.42,'hop',{in:'pop'}]],tx:[[0,5,'English on the train 🚃','電車で使える英語 🚃','big',.17]],sx:[[0,'pop']]},
+ {d:5,bg:'train',a:[['c_mogu_1',.5,.88,0.357,'hop',{in:'pop'}]],tx:[[0,5,'English on the train 🚃','電車で使える英語 🚃','big',.17]],sx:[[0,'pop']]},
  {d:7,bg:'train',blur:1,tr:'whip',a:[['p_ic',.5,.84,.13,'float',{in:'pop',sh:0}]],tx:[LB(0,7,'Does this train go to Shinjuku?\nこの電車は新宿に行きますか？','pill',.2),[1.5,7,'just swap in any station name','駅名を入れかえるだけ','tag',.34]],sx:[[0,'pop'],[1.5,'ding']]},
- {d:7,bg:'train',tr:'cut',a:[['c_mogu_3',.5,.88,.4,'tremble']],tx:[LB(0,7,"What's the next stop?\n次の駅はどこですか？",'pill',.2),LB(1.8,7,'Where do I transfer?\nどこで乗り換えですか？','pillk',.33)],sx:[[0,'pop'],[1.8,'pop']]},
- {d:7,bg:'train',tr:'whip',cam:[1,1.1,.5,.6,.5,.6],a:[['c_bean_3',.22,.88,.34,'idle'],['c_mogu_5',.52,.88,.36,'shake'],['c_pooping_0',.82,.88,.34,'idle']],tx:[LB(0,7,"Excuse me, I'm getting off!\nすみません、降ります！",'bub',.3,{x:.5,tx:.52,ty:.52,who:'mogu'}),[2,7,'works on crowded trains','満員電車でも使える','tag',.45]],sx:[[0,'squeak'],[2,'ding']]},
- {d:5,bg:'train',tr:'zoom',a:[['c_mogu_2',.5,.88,.44,'dance']],fx:[['sparkle',0,5,{x:.5,y:.5,r:.25}]],tx:[[0,5,'next stop: fluent 😎','次は〜ペラペラ駅 😎','big',.18]],sx:[[0,'chime']]}
+ {d:7,bg:'train',tr:'cut',a:[['c_mogu_3',.5,.88,0.34,'tremble']],tx:[LB(0,7,"What's the next stop?\n次の駅はどこですか？",'pill',.2),LB(1.8,7,'Where do I transfer?\nどこで乗り換えですか？','pillk',.33)],sx:[[0,'pop'],[1.8,'pop']]},
+ {d:7,bg:'train',tr:'whip',cam:[1,1.1,.5,.6,.5,.6],a:[['c_bean_3',.22,.88,.34,'idle'],['c_mogu_5',.52,.88,0.306,'shake'],['c_pooping_0',.82,.88,.34,'idle']],tx:[LB(0,7,"Excuse me, I'm getting off!\nすみません、降ります！",'bub',.3,{x:.5,tx:.52,ty:.52,who:'mogu'}),[2,7,'works on crowded trains','満員電車でも使える','tag',.45]],sx:[[0,'squeak'],[2,'ding']]},
+ {d:5,bg:'train',tr:'zoom',a:[['c_mogu_2',.5,.88,0.374,'dance']],fx:[['sparkle',0,5,{x:.5,y:.5,r:.25}]],tx:[[0,5,'next stop: fluent 😎','次は〜ペラペラ駅 😎','big',.18]],sx:[[0,'chime']]}
 ]},
 {id:'l03',cat:'lng',by:'prof',song:'sweet',seed:803,bpm:98,likes:88900,cm:2700,
  cap:['"I\'m fine, thank you, and you?" — what people actually say 🗣️ #English #eikaiwa','「I\'m fine, thank you」以外の答え方🗣️ ネイティブがよく使う返事 #英会話'],
@@ -46,11 +46,11 @@ CLIPS.push(
  snd:['Love You Too (original)','ラブ・ユー・トゥー（オリジナル）'],
  com:[['pinco','"You mean a lot to me" 🥹','「You mean a lot to me」🥹'],['asmon','Sending this to Kaise. For research.','カイセに送る。研究のために。']],
  shots:[
- {d:5,bg:'promenade',a:[['c_mogu_4',.5,.88,.44,'bob',{in:'pop'}]],fx:[['hearts',1,5,{x:.5,y:.5,n:6}]],tx:[[0,5,'English for couples 💕','カップルの英語 💕','big',.17]],sx:[[0,'aww']]},
+ {d:5,bg:'promenade',a:[['c_mogu_4',.5,.88,0.374,'bob',{in:'pop'}]],fx:[['hearts',1,5,{x:.5,y:.5,n:6}]],tx:[[0,5,'English for couples 💕','カップルの英語 💕','big',.17]],sx:[[0,'aww']]},
  {d:7,bg:LBG,tr:'whip',a:[['p_heart',.5,.84,.14,'pulse',{in:'pop',sh:0}]],tx:[LB(0,7,'Are you free on Friday?\n金曜日、空いてる？','pill',.2),LB(1.8,7,'Want to grab dinner?\nご飯行かない？','pill',.33)],sx:[[0,'pop'],[1.8,'pop']]},
  {d:7,bg:'promenade',tr:'cut',a:[['c_mogu_0',.5,.88,.3,'sway']],tx:[LB(0,7,'I miss you.\n会いたいな／さみしいよ','pill',.2),[1.8,7,'"miss" = sad you can’t be together','「miss」は会えなくてさみしい気持ち','tag',.32]],sx:[[0,'aww'],[1.8,'ding']]},
- {d:7,bg:'promenade',tr:'whip',a:[['c_mogu_1',.3,.88,.38,'bob'],['c_pinco_1',.72,.88,.42,'hop']],tx:[LB(0,7,'You mean a lot to me.\nあなたは私にとって大切な人','pill',.2),[1.8,7,'softer than "I love you" — still sweet','「I love you」よりやわらかいけど十分あまい','tag',.34]],sx:[[0,'pop'],[1.8,'aww']]},
- {d:5,bg:'promenade',tr:'zoom',a:[['c_mogu_4',.3,.88,.38,'bob'],['c_pinco_5',.72,.88,.42,'dance']],fx:[['hearts',0,5,{x:.5,y:.5,n:10}]],tx:[LB(0,5,'Love you! ❤️  /  Love you too!\n大好き！／私も！','pill',.2)],sx:[[0,'kiss']]}
+ {d:7,bg:'promenade',tr:'whip',a:[['c_mogu_1',.3,.88,0.323,'bob'],['c_pinco_1',.72,.88,.42,'hop']],tx:[LB(0,7,'You mean a lot to me.\nあなたは私にとって大切な人','pill',.2),[1.8,7,'softer than "I love you" — still sweet','「I love you」よりやわらかいけど十分あまい','tag',.34]],sx:[[0,'pop'],[1.8,'aww']]},
+ {d:5,bg:'promenade',tr:'zoom',a:[['c_mogu_4',.3,.88,0.323,'bob'],['c_pinco_5',.72,.88,.42,'dance']],fx:[['hearts',0,5,{x:.5,y:.5,n:10}]],tx:[LB(0,5,'Love you! ❤️  /  Love you too!\n大好き！／私も！','pill',.2)],sx:[[0,'kiss']]}
 ]},
 {id:'l05',cat:'lng',by:'prof',song:'parent',seed:805,bpm:94,likes:58700,cm:1600,
  cap:['Baby & pregnancy English 👶 due date, diapers, baby shower #English #baby','赤ちゃん・妊娠の英語👶 予定日、おむつ、ベビーシャワー #英会話 #子育て'],
@@ -68,11 +68,11 @@ CLIPS.push(
  snd:['Low-Key Banger','ひそかな名曲'],
  com:[['bronny','"that\'s fire" is approved 🔥','「that\'s fire」公認🔥'],['prof','Please do not say "my bad" in your thesis defense.','論文発表で「my bad」は控えましょう。']],
  shots:[
- {d:5,bg:'boardwalk',a:[['c_mogu_2',.5,.88,.44,'bob',{in:'pop'}]],tx:[[0,5,'English slang 😎','ネイティブのスラング 😎','big',.17]],sx:[[0,'scratch']]},
+ {d:5,bg:'boardwalk',a:[['c_mogu_2',.5,.88,0.374,'bob',{in:'pop'}]],tx:[[0,5,'English slang 😎','ネイティブのスラング 😎','big',.17]],sx:[[0,'scratch']]},
  {d:7,bg:'boardwalk',tr:'whip',a:[['c_bronny_1',.5,.9,.32,'hop']],tx:[LB(0,7,'No way!\nうそでしょ！／まさか！','pill',.2),LB(1.8,7,"I'm down!\nいいね、乗った！",'pill',.32)],sx:[[0,'pop'],[1.8,'pop']]},
- {d:7,bg:LBG,tr:'cut',a:[['c_mogu_3',.5,.9,.3,'tremble']],tx:[LB(0,7,'My bad.\nごめん、私のミス','pill',.2),LB(1.5,7,'low-key\nひそかに／ちょっと','pill',.32),[3,7,'"I low-key love this song"','「I low-key love this song」＝この曲ひそかに好き','tag',.44]],sx:[[0,'pop'],[1.5,'pop'],[3,'ding']]},
+ {d:7,bg:LBG,tr:'cut',a:[['c_mogu_3',.5,.9,0.255,'tremble']],tx:[LB(0,7,'My bad.\nごめん、私のミス','pill',.2),LB(1.5,7,'low-key\nひそかに／ちょっと','pill',.32),[3,7,'"I low-key love this song"','「I low-key love this song」＝この曲ひそかに好き','tag',.44]],sx:[[0,'pop'],[1.5,'pop'],[3,'ding']]},
  {d:7,bg:'boardwalk',tr:'whip',a:[['c_pooh_5',.5,.9,.32,'bob']],fx:[['sparkle',0,7,{x:.5,y:.6,r:.2}]],tx:[LB(0,7,"That's fire! 🔥\n最高！めっちゃいい！",'pill',.2),[1.8,7,'casual — for friends, not your boss','カジュアルなので友だち同士で。上司にはNG','tag',.33]],sx:[[0,'pop'],[1.8,'buzz']]},
- {d:5,bg:'boardwalk',tr:'zoom',a:[['c_mogu_5',.5,.88,.44,'dance']],tx:[LB(0,5,'See ya! ✌️\nまたね！','big',.18)],sx:[[0,'cheer']]}
+ {d:5,bg:'boardwalk',tr:'zoom',a:[['c_mogu_5',.5,.88,0.374,'dance']],tx:[LB(0,5,'See ya! ✌️\nまたね！','big',.18)],sx:[[0,'cheer']]}
 ]},
 // ---------- Japanese for English viewers ----------
 {id:'l07',cat:'lng',by:'pooh',song:'food',seed:807,bpm:100,likes:83600,cm:2400,
@@ -94,7 +94,7 @@ CLIPS.push(
  {d:5,bg:'train',a:[['c_bronny_0',.5,.88,.48,'bob',{in:'pop'}]],tx:[[0,5,'Japanese for the train 🚃','電車の日本語 🚃','big',.17],[1,5,'for English speakers','英語を話す人向け','pillk',.31]],sx:[[0,'pop']]},
  {d:7,bg:'train',blur:1,tr:'whip',a:[['p_ic',.5,.86,.12,'float',{in:'pop',sh:0}]],tx:[LB(0,7,'新宿に行きますか？\nShinjuku ni ikimasu ka?','pill',.2),[1.5,7,'= "Does this go to Shinjuku?"','＝ "Does this go to Shinjuku?"','tag',.32]],sx:[[0,'pop'],[1.5,'ding']]},
  {d:7,bg:LBG,tr:'cut',a:[['c_bronny_5',.5,.9,.3,'nod']],tx:[LB(0,7,'乗り換え\nnorikae','pill',.2),[1,7,'= transfer','＝ transfer','tag',.3],LB(2.5,7,'〜番線\n~bansen','pill',.41),[3.5,7,'= platform number','＝ platform number','tag',.51]],sx:[[0,'pop'],[2.5,'pop']]},
- {d:7,bg:'train',tr:'whip',cam:[1,1.1,.5,.6,.5,.6],a:[['c_mogu_1',.2,.88,.32,'idle'],['c_bronny_3',.52,.88,.4,'shake'],['c_pooping_0',.84,.88,.32,'idle']],tx:[LB(0,7,'降ります！\norimasu!','bub',.28,{x:.52,tx:.52,ty:.45,who:'bronny'}),[1.8,7,'= "I\'m getting off!" — great on packed trains','＝ "I\'m getting off!" 満員電車で便利','tag',.43]],sx:[[0,'squeak'],[1.8,'ding']]},
+ {d:7,bg:'train',tr:'whip',cam:[1,1.1,.5,.6,.5,.6],a:[['c_mogu_1',.2,.88,0.272,'idle'],['c_bronny_3',.52,.88,.4,'shake'],['c_pooping_0',.84,.88,.32,'idle']],tx:[LB(0,7,'降ります！\norimasu!','bub',.28,{x:.52,tx:.52,ty:.45,who:'bronny'}),[1.8,7,'= "I\'m getting off!" — great on packed trains','＝ "I\'m getting off!" 満員電車で便利','tag',.43]],sx:[[0,'squeak'],[1.8,'ding']]},
  {d:6,bg:'train',tr:'zoom',a:[['c_bronny_0',.5,.88,.44,'nod']],tx:[[0,6,'train manners: talk softly, skip phone calls 🤫','マナー：小声で、通話はひかえめに 🤫','pill',.2]],sx:[[0,'chime']]}
 ]},
 {id:'l09',cat:'lng',by:'pooh',song:'food',seed:809,bpm:98,likes:77500,cm:2000,
@@ -137,7 +137,7 @@ CLIPS.push(
  shots:[
  {d:5,bg:'boardwalk',a:[['c_bronny_1',.5,.88,.48,'hop',{in:'pop'}]],tx:[[0,5,'Japanese slang 🔥','日本語スラング 🔥','big',.17],[1,5,'for English speakers','英語を話す人向け','pillk',.31]],sx:[[0,'scratch']]},
  {d:7,bg:LBG,tr:'whip',a:[['c_bronny_3',.5,.9,.3,'shake']],tx:[LB(0,7,'やばい\nyabai','pill',.2),[1.2,7,'= "crazy" — amazing OR terrible 😳','＝ 最高にも最悪にも使える 😳','tag',.31]],sx:[[0,'pop'],[1.2,'boing']]},
- {d:6,bg:LBG,tr:'cut',a:[['c_mogu_3',.5,.9,.28,'tremble']],tx:[LB(0,6,'マジで？\nmaji de?','pill',.2),[1.2,6,'= seriously? / for real?','＝ seriously? / for real?','tag',.31]],sx:[[0,'pop'],[1.2,'ding']]},
+ {d:6,bg:LBG,tr:'cut',a:[['c_mogu_3',.5,.9,0.238,'tremble']],tx:[LB(0,6,'マジで？\nmaji de?','pill',.2),[1.2,6,'= seriously? / for real?','＝ seriously? / for real?','tag',.31]],sx:[[0,'pop'],[1.2,'ding']]},
  {d:8,bg:'kitchen',tr:'whip',a:[['p_ramen',.5,.87,.13,'float',{sh:0}]],tx:[LB(0,8,'うまい！\numai!','pill',.2),[1,8,'= tasty! (casual)','＝ tasty!（カジュアル）','tag',.3],LB(2.5,8,'おいしい\noishii','pillk',.41),[3.5,8,'= delicious (polite, works anywhere)','＝ delicious（どこでも使える）','tag',.51]],sx:[[0,'slurp'],[2.5,'pop']]},
  {d:5,bg:'boardwalk',tr:'whip',a:[['c_bronny_5',.5,.9,.32,'bob']],fx:[['sparkle',0,5,{x:.5,y:.6,r:.2}]],tx:[LB(0,5,'すごい！\nsugoi!','pill',.2),[1.2,5,'= amazing!','＝ amazing!','tag',.31]],sx:[[0,'cheer']]},
  {d:5,bg:'boardwalk',tr:'zoom',a:[['c_bronny_0',.5,.88,.44,'nod']],tx:[[0,5,'slang = friends only. polite words for strangers 🙇','スラングは友だち同士で。初対面にはていねいに 🙇','pill',.2]],sx:[[0,'chime']]}

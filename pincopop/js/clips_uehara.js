@@ -51,10 +51,10 @@ CLIPS.push(
  snd:['Croissant Tunnel','クロワッサン・トンネル'],
  com:[['max','the terrace looks perfect for dogs 🐶','テラスが犬にもよさそう🐶'],['pooh','I would carry 12 baguettes','バゲット12本持てる']],
  shots:[
- {d:5,bg:'u_bakery',a:[['c_mogu_1',.5,.88,.42,'hop',{in:'pop'}]],tx:[[0,5,'Paris vibes, 1 min from the station 🥖','駅1分でパリ気分 🥖','big',.17],UH(['Main Mano','マンマーノ'])],sx:[[0,'pop'],[.6,'ding']]},
+ {d:5,bg:'u_bakery',a:[['c_mogu_1',.5,.88,0.357,'hop',{in:'pop'}]],tx:[[0,5,'Paris vibes, 1 min from the station 🥖','駅1分でパリ気分 🥖','big',.17],UH(['Main Mano','マンマーノ'])],sx:[[0,'pop'],[.6,'ding']]},
  {d:7,bg:'u_bakery',blur:1,tr:'whip',a:[['p_baguette',.5,.7,.26,'float',{in:'pop',sh:0}]],fx:[['sparkle',.5,7,{x:.5,y:.58,r:.22}]],tx:[[0,7,'boulangerie & café','ブーランジェリー＆カフェ','pill',.2],[1.8,7,'Paris-inspired storefront and breads','パリをイメージした外観とパン','tag',.32]],sx:[[0,'pop'],[1.8,'ding']]},
- {d:7,bg:'u_bakery',tr:'cut',a:[['c_mogu_5',.5,.9,.32,'bob']],tx:[[0,7,'a few terrace seats outside ☀️','外にはテラス席も ☀️','pill',.2],[1.8,7,'closed Tue & Wed — check before you go','火・水は定休。行く前にチェック','tag',.32]],sx:[[0,'pop'],[1.8,'tick']]},
- {d:6,bg:'u_bakery',tr:'zoom',a:[['c_mogu_4',.5,.88,.42,'bob']],fx:[['hearts',0,6,{x:.5,y:.5,n:8}]],tx:[[0,6,'I dug a tunnel straight to the croissants 🥐','クロワッサンまでトンネル掘った 🥐','bub',.3,{x:.5,tx:.5,ty:.5,who:'mogu'}],[1.5,6,UOP[0],UOP[1],'tag',.45]],sx:[[0,'cheer']]}
+ {d:7,bg:'u_bakery',tr:'cut',a:[['c_mogu_5',.5,.9,0.272,'bob']],tx:[[0,7,'a few terrace seats outside ☀️','外にはテラス席も ☀️','pill',.2],[1.8,7,'closed Tue & Wed — check before you go','火・水は定休。行く前にチェック','tag',.32]],sx:[[0,'pop'],[1.8,'tick']]},
+ {d:6,bg:'u_bakery',tr:'zoom',a:[['c_mogu_4',.5,.88,0.357,'bob']],fx:[['hearts',0,6,{x:.5,y:.5,n:8}]],tx:[[0,6,'I dug a tunnel straight to the croissants 🥐','クロワッサンまでトンネル掘った 🥐','bub',.3,{x:.5,tx:.5,ty:.5,who:'mogu'}],[1.5,6,UOP[0],UOP[1],'tag',.45]],sx:[[0,'cheer']]}
 ]},
 {id:'u06',cat:'food',by:'max',song:'sweet',seed:906,bpm:96,likes:54800,cm:1300,
  cap:['The "Paris breakfast" morning set ☀️🥐 breads, butter, jam, a drink. 📍 Katane Bakery · Yoyogi Uehara #breakfast #tokyobakery','「パリの朝食」モーニング☀️🥐 📍 カタネベーカリー・代々木上原 #モーニング #代々木上原'],

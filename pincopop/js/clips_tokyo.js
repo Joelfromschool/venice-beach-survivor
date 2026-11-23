@@ -24,7 +24,7 @@ CLIPS.push(
  snd:['Snow & Blue Walk (lofi)','スノー＆ブルー散歩（lofi）'],
  com:[['asmon','I took 212 photos. one of them is good.','212枚撮った。1枚だけ良いのがある。'],['pinco','the tip about the road 🙏 so real','車道のマナーの話、大事🙏']],
  shots:[
- {d:4,bg:'x_keyaki',cam:[1.15,1.05,.5,.5,.4,.45],a:[['w_couple_0',.5,.9,.46,'idle',{in:'pop'}]],fx:[['rec',0,4],['snow',0,4,{n:40}]],tx:[[0,4,'POV: your date says “let’s just walk” 💙','POV：彼が「ちょっと歩こう」って 💙','big',.18]],sx:[[0,'shutter']]},
+ {d:4,bg:'x_keyaki',cam:[1.15,1.05,.5,.5,.4,.45],a:[['w_couple_0',.5,.9,.46,'idle',{in:'pop'}]],fx:[['rec',0,4],['snow',0,4,{n:40}]],tx:[[0,4,'POV: your date says “let’s just walk” 💙','POV：彼が「ちょっと歩こう」って 💙','big',.27]],sx:[[0,'shutter']]},
  {d:5,bg:'x_keyaki',tr:'cut',cam:[1.3,1.3,.3,.35,.5,.5],a:[['w_couple_2',.35,.9,.44,'bob'],['w_couple_1',.68,.9,.44,'idle']],fx:[['snow',0,5,{n:40}],['bokeh',0,5,{cols:['#9fd0ff','#ffffff']}]],tx:[[0,5,'about 970,000 LEDs on a ~400 m slope','約400mの坂に約97万灯のLED','type',.22,{cps:24}]],sx:[[0,'type']]},
  {d:5,bg:'x_keyaki',tr:'cut',pz:[0],cam:[1.6,1.7,.75,.75,.4,.38],fx:[['sparkle',0,5,{x:.73,y:.4,r:.08}]],tx:[[0,5,'that orange tower peeking in = the shot 📸','オレンジのタワーが入る構図が正解 📸','type',.22,{cps:24}]],sx:[[0,'shutter'],[.4,'type']]},
  {d:5,bg:'x_keyaki',tr:'cut',a:[['w_couple_2',.5,.9,.46,'talk']],fx:[['snow',0,5]],tx:[[0,5,'please stay on the sidewalk for photos 🚦 (the official page asks this too)','写真は歩道から🚦（公式サイトのお願いでもあります）','type',.22,{cps:26}]],sx:[[0,'type']]},

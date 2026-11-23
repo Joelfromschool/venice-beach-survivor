@@ -3,6 +3,8 @@
 const APP=(()=>{
  const $=id=>document.getElementById(id);
  const GL={
+  me:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8.2" r="3.8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4.5 20.2c.9-3.9 3.9-6 7.5-6s6.6 2.1 7.5 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  back:'<svg viewBox="0 0 24 24"><path d="M15 4.5L7.5 12l7.5 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   heart:'<svg viewBox="0 0 24 24"><path d="M12 20.6s-7.6-4.5-9.4-9.3C1.3 7.9 3.3 4.4 6.8 4.4c2.1 0 3.7 1.2 5.2 3.2 1.5-2 3.1-3.2 5.2-3.2 3.5 0 5.5 3.5 4.2 6.9-1.8 4.8-9.4 9.3-9.4 9.3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>',
   heartF:'<svg viewBox="0 0 24 24"><defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7ab6"/><stop offset="1" stop-color="#ff2d6f"/></linearGradient></defs><path d="M12 20.6s-7.6-4.5-9.4-9.3C1.3 7.9 3.3 4.4 6.8 4.4c2.1 0 3.7 1.2 5.2 3.2 1.5-2 3.1-3.2 5.2-3.2 3.5 0 5.5 3.5 4.2 6.9-1.8 4.8-9.4 9.3-9.4 9.3z" fill="url(#hg)"/><path d="M7 8.2c.8-1 2-1.2 2.8-.9" stroke="#fff" stroke-width="1.4" stroke-linecap="round" fill="none" opacity=".7"/></svg>',
   cmt:'<svg viewBox="0 0 24 24"><path d="M6 3.8h12a3.2 3.2 0 0 1 3.2 3.2v7.6a3.2 3.2 0 0 1-3.2 3.2h-6.6l-4.9 3.6v-3.6H6a3.2 3.2 0 0 1-3.2-3.2V7A3.2 3.2 0 0 1 6 3.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.6 10.6q3.4 3.1 6.8 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
@@ -45,9 +47,12 @@ const APP=(()=>{
  let cat='all',feed=[],idx=0,H=innerHeight,W=innerWidth,DPR=Math.min(2,devicePixelRatio||1);
  function rngS(seed){let s=seed%2147483647;if(s<=0)s+=2147483646;return()=>(s=s*16807%2147483647)/2147483647}
  let shuffleSeed=(Date.now()%100000)+7;
- function pool(){return CL.map((c,i)=>i).filter(i=>{const c=CL[i];if(st.nope[c.id])return false;if(c.cat==='secret')return st.gold&&(cat==='secret'||cat==='all');return cat==='all'||c.cat===cat||(c.also||[]).includes(cat)})}
+ let col={kind:'saved',list:[],prev:'all'};
+ function pool(){if(cat==='mine')return col.list.filter(i=>CL[i]);return CL.map((c,i)=>i).filter(i=>{const c=CL[i];if(cat==='all'&&c.noFY)return false;if(cat==='tokyo'&&c.noTok)return false;if(st.nope[c.id])return false;if(c.cat==='secret')return st.gold&&(cat==='secret'||cat==='all');return cat==='all'||c.cat===cat||(c.also||[]).includes(cat)})}
  function extend(){const P=pool();if(!P.length)return;const r=rngS(shuffleSeed++);
+  if(cat==='mine'){feed.push(...P);return}
   let arr=P.slice();for(let i=arr.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
+  if(cat==='all'){const wk=i=>{const c=CL[i];const w=c.w!=null?c.w:(c.bb?2.2:c.cat==='parent'?1.7:1);return -Math.log(Math.max(1e-9,r()))/w};const K=new Map(arr.map(i=>[i,wk(i)]));arr.sort((a,b)=>K.get(a)-K.get(b))}
   if(cat==='all'){// spread categories and put a real video clip early
    const out=[];const rest=arr.slice();while(rest.length){const last=out.length?CL[out[out.length-1]].cat:null;let k=rest.findIndex(i=>CL[i].cat!==last);if(k<0)k=0;out.push(rest.splice(k,1)[0])}arr=out;
    if(!feed.length){const vi=arr.findIndex(i=>CL[i].vid);if(vi>1){const v=arr.splice(vi,1)[0];arr.splice(1,0,v)}const fi=arr.findIndex(i=>CL[i].id==='f01');if(fi>0&&!st.seen){const f=arr.splice(fi,1)[0];arr.unshift(f)}}}
@@ -147,7 +152,7 @@ const APP=(()=>{
  let lastXY=[0,0],samplesX=[];
  // ---------- horizontal swipe between sections ----------
  let hz=null,hzAnim=false;
- function tabList(){return st.gold?CATS.concat('secret'):CATS}
+ function tabList(){if(cat==='mine')return ['mine'];return st.gold?CATS.concat('secret'):CATS}
  function hzStart(){const cs=tabList();hz={cs,i:cs.indexOf(cat),nb:null,d:0};hideHint()}
  function preparePeek(c){const sc=secFor(c);const ci=sc.feed[sc.idx];const clip=CL[ci];pk.clip=clip;pk.i=-1;pk.el.classList.remove('paused');pk.q.cap.classList.remove('open');fill(pk);pk.q.prog.style.width='0%';
   const t=Math.min(sc.t||Math.min(1.1,clip.dur*.12),clip.dur-.05);const paint=()=>{if(pk.clip!==clip)return;const x=pk.x;if(clip.vid){RD.VID.cur=null;const im=new Image();im.onload=()=>{if(pk.clip===clip){RD.VID.poster=im;RD.draw(x,clip,t,pk.cv.width,pk.cv.height)}};im.src='vid/'+clip.vid+'.jpg?v='+(window.__BUILD__||'')}else{RD.VID.cur=null;RD.draw(x,clip,t,pk.cv.width,pk.cv.height)}pk.el.classList.remove('loading')};
@@ -171,8 +176,8 @@ const APP=(()=>{
   pb.addEventListener('pointerdown',e=>{e.stopPropagation();on=true;pb.classList.add('drag');seek(e.clientX);try{pb.setPointerCapture(e.pointerId)}catch(er){}});
   pb.addEventListener('pointermove',e=>{if(on)seek(e.clientX)});pb.addEventListener('pointerup',()=>{on=false;pb.classList.remove('drag')})});
  // ---------- likes / saves ----------
- function toggleLike(s,fromDouble){const c=s.clip;if(!c)return;st.liked[c.id]=!st.liked[c.id];if(!st.liked[c.id])delete st.liked[c.id];save();fill(s);s.q.like.classList.remove('pop');void s.q.like.offsetWidth;s.q.like.classList.add('pop');if(st.liked[c.id])AU.sfx(st.gold?'coin':'pop')}
- function toggleSave(s){const c=s.clip;st.saved[c.id]=!st.saved[c.id];if(!st.saved[c.id])delete st.saved[c.id];save();fill(s);s.q.sav.classList.remove('pop');void s.q.sav.offsetWidth;s.q.sav.classList.add('pop');toast(T(st.saved[c.id]?'savedT':'unsavedT'))}
+ function toggleLike(s,fromDouble){const c=s.clip;if(!c)return;if(st.liked[c.id])delete st.liked[c.id];else st.liked[c.id]=Date.now();save();fill(s);s.q.like.classList.remove('pop');void s.q.like.offsetWidth;s.q.like.classList.add('pop');if(st.liked[c.id])AU.sfx(st.gold?'coin':'pop')}
+ function toggleSave(s){const c=s.clip;if(st.saved[c.id])delete st.saved[c.id];else st.saved[c.id]=Date.now();save();fill(s);s.q.sav.classList.remove('pop');void s.q.sav.offsetWidth;s.q.sav.classList.add('pop');toast(T(st.saved[c.id]?'savedT':'unsavedT'))}
  function burst(x,y){const b=$('bursts');const r=$('feed').getBoundingClientRect();x-=r.left;y-=r.top;const d=document.createElement('div');d.className='burst';d.style.left=x+'px';d.style.top=y+'px';d.style.setProperty('--r',(Math.random()*30-15).toFixed(0)+'deg');d.innerHTML=st.gold?GL.coin:GL.heartF;b.appendChild(d);setTimeout(()=>d.remove(),950);
   if(st.gold){for(let i=0;i<10;i++){const c=document.createElement('div');c.className='coinb';c.style.left=x+'px';c.style.top=y+'px';c.style.setProperty('--dx',(Math.random()*240-120).toFixed(0)+'px');c.style.setProperty('--dy',(Math.random()*-160-40).toFixed(0)+'px');c.style.animationDelay=(i*25)+'ms';c.innerHTML=GL.coin;b.appendChild(c);setTimeout(()=>c.remove(),1300)}AU.sfx('cash')}else AU.sfx('pop')}
  // ---------- audio unlock ----------
@@ -239,11 +244,27 @@ const APP=(()=>{
   $('oCheatGo').onclick=()=>{const v=($('oCheat').value||'').trim().toUpperCase();if(v==='AMSABABY'){st.gold=true;save();clearSecs();AU.sfx('cash');toast(T('cheatOk'));buildTabs();slots.forEach(fill);closeSheet()}else{AU.sfx('buzz');toast(T('cheatBad'))}};
   $('oReset').onclick=()=>{st.liked={};st.saved={};st.cl={};st.mine={};st.nope={};save();clearSecs();slots.forEach(fill);toast(T('resetT'))}}
  $('gear').onclick=e=>{e.stopPropagation();unlockAudio();openSettings()};
+ // ---------- your collection: Saved / Liked grid ----------
+ function colIds(kind){const m=kind==='liked'?st.liked:st.saved;return Object.keys(m).map(id=>[id,+m[id]||0]).sort((a,b)=>b[1]-a[1]).map(x=>CL.findIndex(c=>c.id===x[0])).filter(i=>i>=0&&(CL[i].cat!=='secret'||st.gold))}
+ function openMine(kind){kind=kind||col.kind;col.kind=kind;const L=colIds(kind);
+  openSheet('mine',`<div class="sh-title mine-t"><button type="button" class="sh-back" id="mBack" aria-label="${T('back')}">${GL.back}</button>${T('mine')}</div>
+   <div class="mtabs"><button type="button" data-k="saved" class="${kind==='saved'?'on':''}">${GL.star}<span>${T('savedV')}</span><b>${colIds('saved').length}</b></button><button type="button" data-k="liked" class="${kind==='liked'?'on':''}">${GL.heart}<span>${T('likedV')}</span><b>${colIds('liked').length}</b></button></div>
+   ${L.length?`<div class="grid" id="mGrid">${L.map((i,n)=>`<button type="button" data-n="${n}"><canvas width="180" height="320"></canvas><span class="gv">${GL.play}${fmt(CL[i].likes)}</span></button>`).join('')}</div>`:`<div class="mempty">${kind==='liked'?GL.heart:GL.star}<p>${T(kind==='liked'?'noLiked':'noSaved')}</p></div>`}`);
+  $('mBack').onclick=e=>{e.stopPropagation();closeSheet()};
+  sb.querySelectorAll('.mtabs button').forEach(b=>b.onclick=e=>{e.stopPropagation();AU.sfx('pop');openMine(b.dataset.k)});
+  sb.querySelectorAll('#mGrid button').forEach(b=>{const n=+b.dataset.n,c=CL[L[n]];const cv=b.querySelector('canvas');
+   const paint=()=>{if(c.vid){const im=new Image();im.onload=()=>cv.getContext('2d').drawImage(im,0,0,180,320);im.src='vid/'+c.vid+'.jpg?v='+(window.__BUILD__||'')}else{RD.VID.cur=null;RD.draw(cv.getContext('2d'),c,Math.min(c.dur*.45,4),180,320)}};
+   RD.loadClip(c).then(paint);b.onclick=e=>{e.stopPropagation();closeSheet();enterMine(kind,L,n)}})}
+ function enterMine(kind,L,n){if(cat!=='mine'){saveSec();col.prev=cat}stopSlot(cur());AU.stop();cat='mine';col.kind=kind;col.list=L.slice(n).concat(L.slice(0,n));feed=[];idx=0;extend();
+  buildTabs();slots.forEach(s=>{s.i=-999});ensure();place(0,false);playing=true;startCur(0)}
+ function exitMine(){stopSlot(cur());AU.stop();const c=col.prev||'all';cat='__';setCat(c);openMine(col.kind)}
+ $('mineBtn').onclick=e=>{e.stopPropagation();unlockAudio();openMine()};
  // ---------- tabs / language ----------
  const CATS=['all','tokyo','food','comedy','parent','makeup','preg','lng','couple'];
- function buildTabs(){const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
+ function buildTabs(){if(cat==='mine'){$('tabs').innerHTML=`<button class="tab on mineb" type="button" data-c="__back">${GL.back}<span>${T(col.kind==='liked'?'likedV':'savedV')}</span></button><i id="tabInd"></i>`;$('tabs').querySelector('.tab').onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;exitMine()};requestAnimationFrame(()=>placeInd(cat,cat,0,false));return}
+  const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
   $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;unlockAudio();setCat(b.dataset.c)});requestAnimationFrame(()=>placeInd(cat,cat,0,false))}
- function tabCenter(c){const b=$('tabs').querySelector('.tab[data-c="'+c+'"]');return b?b.offsetLeft+b.offsetWidth/2:0}
+ function tabCenter(c){const b=c==='mine'?$('tabs').querySelector('.tab'):$('tabs').querySelector('.tab[data-c="'+c+'"]');return b?b.offsetLeft+b.offsetWidth/2:0}
  function placeInd(a,b,p,anim){const el=$('tabInd');if(!el)return;const x=tabCenter(a)+(tabCenter(b)-tabCenter(a))*p;el.style.transition=anim?'transform '+anim+'ms cubic-bezier(.22,.8,.3,1)':'none';el.style.transform='translate3d('+(x-9).toFixed(1)+'px,0,0)'}
  // ---------- sections: each tab keeps its own feed + position ----------
  const secs={};
@@ -255,7 +276,7 @@ const APP=(()=>{
   buildTabs();slots.forEach(s=>{s.i=-999});ensure();place(0,false);playing=true;startCur(at);if(cur().clip&&at>=cur().clip.dur)startCur(0);
   const t=$('tabs').querySelector('.tab.on');if(t&&t.scrollIntoView)t.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}
  function setLang(l){st.lang=l;save();RD.lang=l;document.documentElement.lang=l;buildTabs();applyStatic();slots.forEach(s=>{fill(s);s.drawnAt=-1})}
- function applyStatic(){$('home').innerHTML=GL.home;$('gear').innerHTML=GL.gear;$('home').setAttribute('aria-label',T('allgames'));$('gear').setAttribute('aria-label',T('settings'));$('soundPill').innerHTML=GL.mute+'<span>'+T('sound')+'</span>'}
+ function applyStatic(){$('home').innerHTML=GL.home;$('gear').innerHTML=GL.gear;$('mineBtn').innerHTML=GL.me;$('mineBtn').setAttribute('aria-label',T('mine'));$('home').setAttribute('aria-label',T('allgames'));$('gear').setAttribute('aria-label',T('settings'));$('soundPill').innerHTML=GL.mute+'<span>'+T('sound')+'</span>'}
  let toastT=0;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2200)}
  let hintEl=null;function hideHint(){if(hintEl){hintEl.remove();hintEl=null}}
  // ---------- boot ----------

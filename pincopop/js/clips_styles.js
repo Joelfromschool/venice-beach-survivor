@@ -22,10 +22,10 @@ CLIPS.push(
  snd:['Clay Chase','ねんどの追いかけっこ'],
  com:[['pooh','the onigiri moved on its own??','おにぎり勝手に動いた？'],['party','8 fps of pure stress 🎉','8fpsのストレス🎉']],
  shots:[
- {d:6,bg:'kitchen',a:[['c_mogu_0',.35,.9,.42,'bob'],['p_onigiri',.75,.86,.12,'idle']],tx:[[0,6,'the last onigiri.','最後のおにぎり。','cap',.25]],sx:[[0,'pop']]},
- {d:6,bg:'kitchen',tr:'cut',a:[['c_mogu_1',.5,.9,.42,'hop',{mv:[.65,.9],mvd:6}],['p_onigiri',.8,.86,.12,'idle',{mv:[.92,.86],mvd:6}]],tx:[[0,6,'it… slid away?','…すべって逃げた？','cap',.25]],sx:[[0,'squeak'],[3,'squeak']]},
- {d:6,bg:'kitchen',tr:'cut',a:[['p_onigiri',.5,.6,.16,'hop',{sh:0}],['c_mogu_3',.3,.9,.42,'shake']],fx:[['lines',0,6]],tx:[[0,6,'it’s a clay movie. anything can happen.','クレイアニメだから何でもアリ。','cap',.25]],sx:[[0,'boing']]},
- {d:6,bg:'kitchen',tr:'zoom',a:[['c_mogu_5',.5,.9,.44,'hop']],fx:[['hearts',0,6,{n:8}]],tx:[[0,6,'(we shared it)','（はんぶんこした）','cap',.25]],sx:[[0,'chime']]}
+ {d:6,bg:'kitchen',a:[['c_mogu_0',.35,.9,.34,'bob'],['p_onigiri',.75,.86,.12,'idle']],tx:[[0,6,'the last onigiri.','最後のおにぎり。','cap',.25]],sx:[[0,'pop']]},
+ {d:6,bg:'kitchen',tr:'cut',a:[['c_mogu_1',.5,.9,0.357,'hop',{mv:[.65,.9],mvd:6}],['p_onigiri',.8,.86,.12,'idle',{mv:[.92,.86],mvd:6}]],tx:[[0,6,'it… slid away?','…すべって逃げた？','cap',.25]],sx:[[0,'squeak'],[3,'squeak']]},
+ {d:6,bg:'kitchen',tr:'cut',a:[['p_onigiri',.5,.6,.16,'hop',{sh:0}],['c_mogu_3',.3,.9,0.357,'shake']],fx:[['lines',0,6]],tx:[[0,6,'it’s a clay movie. anything can happen.','クレイアニメだから何でもアリ。','cap',.25]],sx:[[0,'boing']]},
+ {d:6,bg:'kitchen',tr:'zoom',a:[['c_mogu_5',.5,.9,0.374,'hop']],fx:[['hearts',0,6,{n:8}]],tx:[[0,6,'(we shared it)','（はんぶんこした）','cap',.25]],sx:[[0,'chime']]}
 ]},
 // comedy: VHS home video 1998
 {id:'y03',cat:'comedy',by:'bronny',song:'synth',seed:3103,bpm:104,likes:198000,cm:8400,look:'vhs',vhsDate:'DEC.24 1998',

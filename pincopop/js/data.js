@@ -25,7 +25,7 @@ const POOL={
  makeup:[['pinco','the blend 😍','このぼかし😍'],['asmon','I taught her that','それ俺が教えた'],['bean','I tried. it went everywhere.','やってみた。全部についた。'],['party','add more glitter','ラメもっと'],['pooh','do it on me next','次はぼくにやって'],['bronny','skin is glowing fr','肌つやつやだ'],['mogu','what if I contour my nose','鼻をシェーディングしたら？'],['prof','The shimmer refracts light beautifully','ラメの光の屈折が美しい']],
 };
 const STR={
- en:{foryou:'For you',food:'Food',comedy:'Comedy',parent:'Parenting',makeup:'Makeup',preg:'Pregnancy',lng:'Language',couple:'Couples',tokyo:'Tokyo',chk:'Dates, hours and menus can change. Check the official site or the shop before you go.',nomed:'Not medical advice. Ask your doctor or midwife.',secret:'Bloopers',
+ en:{mine:'Your collection',savedV:'Saved',likedV:'Liked',noSaved:'Nothing saved yet. Tap ☆ on a video to save it here.',noLiked:'No liked videos yet. Tap ♡ or double-tap a video to like it.',back:'Back',foryou:'For you',food:'Food',comedy:'Comedy',parent:'Parenting',makeup:'Makeup',preg:'Pregnancy',lng:'Language',couple:'Couples',tokyo:'Tokyo',chk:'Dates, hours and menus can change. Check the official site or the shop before you go.',nomed:'Not medical advice. Ask your doctor or midwife.',secret:'Bloopers',
   follow:'Follow',following:'Following',more:'more',less:'less',orig:'Original audio',sound:'Tap for sound',
   comments:'Comments',addc:'Add a comment…',post:'Post',share:'Share',sendto:'Send to',copy:'Copy link',sharevia:'Share…',save:'Save',saved:'Saved',unsave:'Remove from saved',nope:'Not interested',
   copied:'Link copied',sentto:'Sent to {n}',savedT:'Saved to your collection',unsavedT:'Removed from saved',nopeT:'Got it. You will see fewer like this.',
@@ -33,7 +33,7 @@ const STR={
   allgames:'All games',reset:'Reset likes and saves',resetT:'Likes and saves cleared',reply:'Reply',you:'you',now:'now',liked:'Liked',paused:'Paused',
   about:'PincoPop is a LANZAGAMES app. Every clip stars the gang and is made in the app.',updated:'New clips are here. Tap to refresh',swipe:'Swipe up for more',loading:'Loading',
   autoT:'Moves to the next clip when one ends',views:'views',creator:'Creator'},
- ja:{foryou:'おすすめ',food:'フード',comedy:'お笑い',parent:'子育て',makeup:'メイク',preg:'マタニティ',lng:'語学',couple:'カップル',tokyo:'東京',chk:'日程・営業時間・メニューは変わることがあります。お出かけ前に公式サイトやお店でご確認ください。',nomed:'医療アドバイスではありません。医師・助産師にご相談ください。',secret:'NG集',
+ ja:{mine:'コレクション',savedV:'保存済み',likedV:'いいね',noSaved:'まだ保存した動画はありません。動画の☆をタップするとここに保存されます。',noLiked:'まだ「いいね」した動画はありません。♡をタップするか、ダブルタップでいいね。',back:'戻る',foryou:'おすすめ',food:'フード',comedy:'お笑い',parent:'子育て',makeup:'メイク',preg:'マタニティ',lng:'語学',couple:'カップル',tokyo:'東京',chk:'日程・営業時間・メニューは変わることがあります。お出かけ前に公式サイトやお店でご確認ください。',nomed:'医療アドバイスではありません。医師・助産師にご相談ください。',secret:'NG集',
   follow:'フォロー',following:'フォロー中',more:'続きを読む',less:'閉じる',orig:'オリジナル音源',sound:'タップで音声オン',
   comments:'コメント',addc:'コメントを追加…',post:'投稿',share:'シェア',sendto:'送信先',copy:'リンクをコピー',sharevia:'共有…',save:'保存',saved:'保存済み',unsave:'保存を解除',nope:'興味なし',
   copied:'リンクをコピーしました',sentto:'{n}に送信しました',savedT:'コレクションに保存しました',unsavedT:'保存を解除しました',nopeT:'了解です。似た動画を減らします。',

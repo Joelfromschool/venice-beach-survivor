@@ -76,10 +76,10 @@ CLIPS.push(
  snd:['Ready Or Not (mole mix)','もういいかい（モグラMIX）'],
  com:[['max','I was SO close','あとちょっとだったのに'],['party','the sunglasses 😂','サングラス😂']],
  shots:[
- {d:4,bg:'park',a:[['c_mogu_1',.5,.86,.42,'bob']],tx:[[0,4,'Mogu is the hide and seek champion','モグはかくれんぼチャンピオン','pill',.2]],sx:[[0,'pop']]},
+ {d:4,bg:'park',a:[['c_mogu_1',.5,.86,0.357,'bob']],tx:[[0,4,'Mogu is the hide and seek champion','モグはかくれんぼチャンピオン','pill',.2]],sx:[[0,'pop']]},
  {d:4,bg:'park',tr:'cut',a:[['c_max_0',.5,.86,.36,'idle']],fx:[['count',0,4,{x:.5,y:.35,from:3}]],tx:[[0,4,'Max is counting…','マックスが数えてる…','pillk',.17]],sx:[[0,'tick'],[1.33,'tick'],[2.66,'tick']]},
  {d:6,bg:'park',tr:'whip',a:[['c_mogu_0',.25,.9,.24,'idle',{mv:[.25,.98],mvd:1}],['c_max_3',.75,.86,.36,'sneak',{mv:[.4,.86],mvd:5}]],tx:[[0,6,'*sniff sniff*','*くんくん*','sub',.6]],fx:[['sweat',2,6,{x:.33,y:.82}]],sx:[[1,'tick'],[2,'tick'],[3,'tick']]},
- {d:6,bg:'park',tr:'flash',a:[['c_max_3',.38,.86,.36,'shake'],['c_mogu_2',.76,.86,.4,'bob',{in:'b'}]],fx:[['sparkle',0,6,{x:.76,y:.55}]],tx:[[0,6,'undefeated 😎','無敗 😎','big',.2]],sx:[[0,'boing'],[1,'laugh']]}
+ {d:6,bg:'park',tr:'flash',a:[['c_max_3',.38,.86,.36,'shake'],['c_mogu_2',.76,.86,0.34,'bob',{in:'b'}]],fx:[['sparkle',0,6,{x:.76,y:.55}]],tx:[[0,6,'undefeated 😎','無敗 😎','big',.2]],sx:[[0,'boing'],[1,'laugh']]}
 ]},
 {id:'c09',cat:'comedy',by:'pinco',song:'sweet',seed:209,bpm:112,likes:83400,cm:2260,
  cap:['Beach day: expectation vs reality 🌴🛹 #expectationvsreality','ビーチの日：理想と現実🌴🛹'],

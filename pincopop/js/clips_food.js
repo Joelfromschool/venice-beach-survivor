@@ -83,10 +83,10 @@ CLIPS.push(
  snd:['Underground Snack Club','地下おやつ同好会'],
  com:[['max','sorry not sorry 🐶','ごめん、でも後悔してない🐶'],['prof','Scientifically, dogs can smell rice','科学的に、犬はお米の匂いがわかる']],
  shots:[
- {d:4,bg:'park',a:[['c_mogu_1',.5,.84,.42,'bob',{in:'b'}]],tx:[[0,4,'Life hack 💡','ライフハック 💡','big',.18],[1,4,'bury your snacks so nobody steals them','おやつは埋めれば盗まれない','pill',.27]],sx:[[0,'pop']]},
+ {d:4,bg:'park',a:[['c_mogu_1',.5,.84,0.357,'bob',{in:'b'}]],tx:[[0,4,'Life hack 💡','ライフハック 💡','big',.18],[1,4,'bury your snacks so nobody steals them','おやつは埋めれば盗まれない','pill',.27]],sx:[[0,'pop']]},
  {d:4,bg:'park',tr:'cut',a:[['p_onigiri',.5,.72,.12,'idle',{mv:[.5,.92],mt:2,mvd:1.5,sh:0}],['c_mogu_0',.5,.88,.3,'idle',{t:[0,4]}]],tx:[[0,4,'*dig dig*','*ほりほり*','sub',.6]],sx:[[0,'tick'],[.5,'tick'],[1,'tick'],[2.2,'thud']]},
  {d:4,bg:'park',tr:'whip',a:[['c_max_3',.7,.84,.36,'sneak',{in:'r',mv:[.42,.84],mvd:3}]],fx:[['sweat',0,4,{x:.25,y:.6}]],tx:[[0,4,'meanwhile...','そのころ…','pillk',.18]],sx:[[0,'tick'],[.5,'tick'],[1,'tick'],[1.5,'tick']]},
- {d:6,bg:'park',tr:'flash',a:[['c_max_2',.4,.84,.36,'hop',{mv:[1.4,.84],mt:1.5,mvd:2}],['c_mogu_3',.2,.86,.34,'shake',{in:'b',t:[1,6]}]],fx:[['speed',1.5,3.5]],tx:[[0,6,'the snack:','おやつ：','pill',.18],[2,6,'GONE','消えた','big',.3,{c:'#ff3b4e',s:1.3}],[3.5,6,'results may vary','個人差があります','sub',.64]],sx:[[1.5,'whoosh'],[2,'buzz'],[3,'laugh']]}
+ {d:6,bg:'park',tr:'flash',a:[['c_max_2',.4,.84,.36,'hop',{mv:[1.4,.84],mt:1.5,mvd:2}],['c_mogu_3',.2,.8,0.289,'shake',{in:'b',t:[1,6]}]],fx:[['speed',1.5,3.5]],tx:[[0,6,'the snack:','おやつ：','pill',.18],[2,6,'GONE','消えた','big',.3,{c:'#ff3b4e',s:1.3}],[3.5,6,'results may vary','個人差があります','sub',.64]],sx:[[1.5,'whoosh'],[2,'buzz'],[3,'laugh']]}
 ]},
 {id:'f08',cat:'food',by:'pooh',song:'comedy',seed:88,bpm:128,likes:73900,cm:1730,
  cap:['Rating my egg flips 🍳 flip #2 is still missing #cookingfail','目玉焼きフリップを採点🍳 2回目の卵はまだ行方不明'],
