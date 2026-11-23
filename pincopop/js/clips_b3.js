@@ -34,11 +34,11 @@ CLIPS.push(
  snd:['Palm Tree Skate','ヤシの木スケート'],
  com:[['pooh','Bronny fell 0 times (he says)','ブロニー転倒0回（本人談）'],['pinco','supervisor bean 🫛📋','監督ビーン🫛📋']],
  shots:[
- {d:5,bg:'la_lights',a:[['c_bronny_1',.38,.9,.44,'bob'],['bbean_0',.74,.84,.24,'idle']],fx:[['snow',0,5,{n:14}]],tx:[[0,5,'ice skating… in LA ⛸️🌴','LAで…スケート ⛸️🌴','big',.18]],sx:[[0,'bells']]},
+ {d:5,bg:'la_rink',a:[['c_bronny_1',.38,.9,.44,'bob'],['bbean_0',.74,.84,.24,'idle']],fx:[['snow',0,5,{n:14}]],tx:[[0,5,'ice skating… in LA ⛸️🌴','LAで…スケート ⛸️🌴','big',.18]],sx:[[0,'bells']]},
  {d:6,bg:B3I,dots:0,tr:'whip',a:[['p_snowflake',.5,.62,.14,'float',{sh:0}]],tx:[[0,6,'📍 Holiday Ice Rink Pershing Square','📍 パーシング・スクエアのホリデー・アイスリンク','loc',.2,{s:.85}],[1.5,6,'open daily Nov 12 – Jan 3','11/12〜1/3 毎日営業','tag',.32]],sx:[[0,'whoosh']]},
  {d:6,bg:B3I,dots:0,tr:'whip',a:[['p_calendar',.5,.62,.14,'float',{sh:0}]],tx:[[0,6,'Mon–Fri 3–10 pm · Sat–Sun noon–10 pm','月〜金15〜22時・土日12〜22時','tag',.22],[1.5,6,'holiday break Dec 21 – Jan 3: noon–10 pm daily','12/21〜1/3は毎日12〜22時','tag',.32]],sx:[[0,'ding']]},
  {d:5,bg:B3I,dots:0,tr:'whip',a:[['p_mittens',.5,.62,.14,'float',{sh:0}]],tx:[[0,5,'60-minute sessions, starting every 1.5 hours','1回60分・1.5時間ごとにスタート','tag',.22]],sx:[[0,'ding']]},
- {d:6,bg:'la_lights',tr:'zoom',a:[['c_bronny_4',.35,.9,.42,'wiggle'],['bbean_1',.74,.84,.24,'hop']],fx:[['sparkle',0,6],['emoji',1,6,{e:'👏',x:.74,y:.55,n:4}]],tx:[[0,6,'supervisor rating: giggles ⭐','監督の評価：にっこり ⭐','big',.2]],sx:[[0,'cheer']]}
+ {d:6,bg:'la_rink',tr:'zoom',a:[['c_bronny_4',.35,.9,.42,'wiggle'],['bbean_1',.74,.84,.24,'hop']],fx:[['sparkle',0,6],['emoji',1,6,{e:'👏',x:.74,y:.55,n:4}]],tx:[[0,6,'supervisor rating: giggles ⭐','監督の評価：にっこり ⭐','big',.2]],sx:[[0,'cheer']]}
 ]},
 // bb21 GLOW + TYPE: Baby Bean's first word
 {id:'bb21',cat:'parent',also:['comedy'],bb:1,by:'bean',song:'sweet',seed:5304,bpm:100,likes:273000,cm:12900,look:'glow',
