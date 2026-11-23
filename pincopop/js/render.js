@@ -18,7 +18,7 @@ const RD=(()=>{
  // ---------- normalize: beats -> seconds, compute event list ----------
  function norm(clip){if(clip._n)return clip;const spb=60/clip.bpm;let T=0;const ev=[];
   const cv=sh=>{sh.d*=spb;(sh.a||[]).forEach(a=>{const o=a[5];if(!o)return;if(o.t)o.t=o.t.map(x=>x*spb);if(o.sw)o.sw.forEach(w=>w[0]*=spb);if(o.mvd)o.mvd*=spb;if(o.mt)o.mt=o.mt*spb});
-   (sh.tx||[]).forEach(t=>{t[0]*=spb;t[1]*=spb});(sh.fx||[]).forEach(f=>{f[1]*=spb;f[2]*=spb});(sh.sx||[]).forEach(s=>{s[0]*=spb});if(sh.pz)sh.pz=sh.pz.map(x=>x*spb);if(sh.shake)sh.shake=[sh.shake[0]*spb,sh.shake[1]*spb,sh.shake[2]];(sh.panes||[]).forEach(p=>{p.d=sh.d/spb;cv(p);p.d=sh.d})};
+   (sh.tx||[]).forEach(t=>{t[0]*=spb;t[1]*=spb});(sh.fx||[]).forEach(f=>{f[1]*=spb;f[2]*=spb;if(f[0]==='tier'&&f[3]&&f[3].items)f[3].items=f[3].items.map(it=>[it[0],it[1],it[2]*spb])});(sh.sx||[]).forEach(s=>{s[0]*=spb});if(sh.pz)sh.pz=sh.pz.map(x=>x*spb);if(sh.shake)sh.shake=[sh.shake[0]*spb,sh.shake[1]*spb,sh.shake[2]];(sh.panes||[]).forEach(p=>{p.d=sh.d/spb;cv(p);p.d=sh.d})};
   if(clip.live){clip.live.chat.forEach(c=>{c[0]*=spb;ev.push([c[0],'notif'])});(clip.live.gifts||[]).forEach((g,i,a)=>{a[i]=g*spb;ev.push([a[i],'gift'])})}
   clip.shots.forEach(sh=>{cv(sh);sh.t0=T;
    const add=s=>{(s.sx||[]).forEach(x=>ev.push([T+x[0],x[1],x[2]]));(s.tx||[]).forEach(t=>{const o=t[6]||{};if(t[4]==='bub'&&o.who){const w=(t[2]||'').split(/\s+/).length;ev.push([T+t[0]+.04,'voice',o.who,Math.max(3,Math.min(12,Math.round(w*1.6)))])}});(s.panes||[]).forEach(add)};
