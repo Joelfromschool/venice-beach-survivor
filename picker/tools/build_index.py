@@ -20,8 +20,8 @@ def git_meta(game_id):
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
  dict(id='pincopop', new=True, cat='puz', pos='50% 50%',
-  en=('PincoPop','Short clips','Swipe through an endless feed of short clips starring Pinco, Pooh, Mr Bean and friends: Tokyo holiday light-ups, a Mr Bean live stream from Yoyogi Park, local scone and lunch reviews, Baby Bean, comedy, parenting, makeup, pregnancy tips and English/Japanese lessons, in styles from ASMR to anime and silent film. Swipe sideways between sections, and find your saved and liked clips in your collection.'),
-  ja=('ピンコポップ','ショート動画','ピンコ、プー、ミスター・ビーンたちのショート動画を次々スワイプ。東京のクリスマスイルミネーション、代々木公園からのビーンのライブ配信、近所のスコーン＆ランチ紹介、ベビー・ビーン、お笑い、子育て、メイク、マタニティ、英語・日本語レッスン。ASMRやアニメ風、サイレント映画風など色々なスタイルで。横スワイプでセクション移動、保存・いいねした動画はコレクションで見られます。')),
+  en=('PincoPop','Short clips','Swipe through an endless feed of short clips starring Pinco, Pooh, Mr Bean and friends: Tokyo and LA holiday events, Sawtelle and LA café picks, a Mr Bean live stream from Yoyogi Park, local scone and lunch reviews, Baby Bean, comedy, parenting, makeup, pregnancy tips and English/Japanese lessons, in styles from ASMR to anime and silent film. Swipe sideways between sections, and find your saved and liked clips in your collection.'),
+  ja=('ピンコポップ','ショート動画','ピンコ、プー、ミスター・ビーンたちのショート動画を次々スワイプ。東京とLAのホリデーイベント、ソーテルやLAのカフェ紹介、代々木公園からのビーンのライブ配信、近所のスコーン＆ランチ紹介、ベビー・ビーン、お笑い、子育て、メイク、マタニティ、英語・日本語レッスン。ASMRやアニメ風、サイレント映画風など色々なスタイルで。横スワイプでセクション移動、保存・いいねした動画はコレクションで見られます。')),
  dict(id='pincopoohsnap', new=True, cat='adv', pos='50% 50%',
   en=('Pinco Pooh Snap','Photo safari','Ride the Snap Buggy through Venice, Tokyo, Maui and more. Toss money and apples, blow the whistle and catch your friends doing something amazing.'),
   ja=('ピンコ・プー・スナップ','フォト・サファリ','スナップバギーでベニス、東京、マウイへ。お金やりんごを投げ、笛を吹いて、友だちのすごい瞬間を撮影しよう。')),
