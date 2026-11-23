@@ -1,5 +1,5 @@
 // Original WebAudio sound effects and generative ambient music (no samples, no speech).
-import {G} from './state.js?v=1.1.0';
+import {G} from './state.js?v=1.1.1';
 let ctx=null,master,sfxBus,musicBus,verb,started=false;
 export function audioWake(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.9;master.connect(ctx.destination);sfxBus=ctx.createGain();sfxBus.connect(master);musicBus=ctx.createGain();musicBus.gain.value=.0;musicBus.connect(master);
  // simple feedback-delay "room" for music

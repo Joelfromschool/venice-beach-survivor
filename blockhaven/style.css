@@ -81,9 +81,9 @@ body:not(.touch) #bView{display:none}
 /* panels */
 #panelwrap{position:fixed;inset:0;background:rgba(16,16,16,.55);display:flex;align-items:center;justify-content:center;padding:max(8px,env(safe-area-inset-top)) 6px max(8px,env(safe-area-inset-bottom))}
 .panel{background:var(--pan);color:var(--txt);border:3px solid #000;box-shadow:inset 3px 3px 0 var(--panL),inset -3px -3px 0 var(--panD);padding:12px;max-width:min(560px,100%);width:100%;max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
-.phead{display:flex;align-items:center;gap:6px;margin-bottom:8px}.phead .close{margin-left:auto}
+.phead{display:flex;align-items:center;gap:4px;margin-bottom:8px}.phead .close{margin-left:auto;flex:none}
 .ptitle{font-size:20px;color:var(--txt)}.ptitle.center{text-align:center;width:100%;margin-bottom:10px}
-.tabs{display:flex;gap:4px;flex-wrap:wrap}.btn.tab{min-height:40px;padding:6px 9px;font-size:14px}
+.tabs{display:flex;flex:1;min-width:0;gap:3px;flex-wrap:nowrap}.btn.tab{flex:1 1 0;min-width:0;min-height:40px;padding:6px 6px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.col{display:flex;flex-direction:column;gap:8px}
 .help{font-size:12px;color:#555;margin-top:6px;line-height:1.35}.help.ok{color:#2f6a1c}
 .grid{display:grid;grid-template-columns:repeat(9,var(--slot));gap:0;justify-content:center}.grid.hot{margin-top:8px}
@@ -142,7 +142,7 @@ body.talking #status,body.talking #xp,body.talking #hotbarwrap,body.talking #tou
 .dmain{padding-bottom:40px}
 
 /* ---- first-play lesson & how-to-play ---- */
-#lesson{position:absolute;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 56px);margin:0 auto;max-width:440px;background:rgba(16,14,24,.86);border:3px solid #000;box-shadow:inset 3px 3px 0 #6a5a8a,inset -3px -3px 0 #120e1a;padding:8px 10px 10px;z-index:12;color:#fff;text-shadow:2px 2px 0 #000;pointer-events:auto}
+#lesson{position:absolute;left:8px;right:8px;top:calc(env(safe-area-inset-top,0px) + 76px);margin:0 auto;max-width:440px;background:rgba(16,14,24,.86);border:3px solid #000;box-shadow:inset 3px 3px 0 #6a5a8a,inset -3px -3px 0 #120e1a;padding:8px 10px 10px;z-index:12;color:#fff;text-shadow:2px 2px 0 #000;pointer-events:auto}
 #lesson .lstep{font-size:11px;color:#ffd25a;letter-spacing:.04em;margin-bottom:2px}
 #lesson .ltitle{font-size:16px;color:#ffe9a8;margin-bottom:3px}
 #lesson .lbody{font-size:13px;line-height:1.35;color:#fff}
@@ -154,7 +154,7 @@ body.talking #status,body.talking #xp,body.talking #hotbarwrap,body.talking #tou
 @keyframes pulseRing{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(1.06)}}
 #coacharrow,#coacharrow *{pointer-events:none!important}
 #coacharrow{position:fixed;z-index:11;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(2px 2px 0 #000)}
-#coacharrow .arr{font-size:32px;color:#ffd25a;line-height:1;animation:arrBob 0.7s steps(4) infinite}
+#coacharrow .arr{font-size:22px;color:#ffd25a;line-height:1;animation:arrBob 0.7s steps(4) infinite}
 #coacharrow .alabel{background:rgba(0,0,0,.75);border:2px solid #000;color:#ffd25a;font-size:12px;padding:2px 6px;white-space:nowrap;margin-top:2px;text-shadow:2px 2px 0 #000}
 #coacharrow[data-dir="down"]{transform:translate(-50%,-100%)}
 #coacharrow[data-dir="down"] .arr{transform:rotate(0deg)}
@@ -180,14 +180,18 @@ body.lesson #questbox{visibility:hidden}
 #lesson.compact .lbody{font-size:12px;max-height:5.6em;overflow:auto}
 #lesson.compact .ltitle{font-size:14px;margin-bottom:2px}
 #lesson.compact .lrow .btn{min-height:36px}
-#panelwrap{z-index:8}
+#panelwrap{z-index:16}
 #dialog{z-index:14}
-#title,#loading,#update{z-index:15}
+#title{z-index:15}#loading,#update{z-index:17}
 
 body.lesson #panelwrap{padding-top:max(8px,calc(env(safe-area-inset-top,0px) + 8px))}
 /* how to play */
-.p-howto{max-width:min(560px,100%)}
-.htp{display:flex;flex-direction:column;gap:12px}
+.p-howto{max-width:min(560px,100%);display:flex;flex-direction:column;max-height:100%;overflow:hidden}
+.htp{display:flex;flex-direction:column;gap:10px;flex:1;min-height:0}
+.htp-stage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.htp-nav{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.htp-nav .btn{flex:0 0 auto;min-width:72px}
+.htp-pg{flex:1;text-align:center;font-size:14px;color:#3f3f3f}
 .htp-sec{background:#b3b3b3;border:2px solid;border-color:#fff #555 #555 #fff;padding:8px}
 .htp-sec h3{margin:0 0 6px;font-size:16px;color:#3f3f3f}
 .htp-sec p{margin:0;font-size:13px;line-height:1.4;color:#333;font-weight:700}
@@ -219,4 +223,8 @@ body.lesson #panelwrap{padding-top:max(8px,calc(env(safe-area-inset-top,0px) + 8
  #lesson .ltitle{font-size:14px}
  #lesson .lrow .btn{min-height:36px;font-size:12px}
  body.lesson #questbox{display:none}
+}
+@media (max-width:400px){
+ .btn.tab{font-size:12px;padding:6px 3px;min-height:38px}
+ .phead{gap:3px}
 }

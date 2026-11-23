@@ -1,12 +1,12 @@
 // Chunky pixel-style DOM UI for Blockhaven: HUD, hotbar, bag, crafting, kiln, chest, shop, dialog, menus.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.0';
-import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.0';
-import {T,tx,itemName} from './i18n.js?v=1.1.0';
-import * as Tut from './tutorial.js?v=1.1.0';
-import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.0';
-import {makeModel,animate} from './models.js?v=1.1.0';
-import {sfx,audioWake} from './audio.js?v=1.1.0';
+import {G,VERSION} from './state.js?v=1.1.1';
+import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.1';
+import {T,tx,itemName} from './i18n.js?v=1.1.1';
+import * as Tut from './tutorial.js?v=1.1.1';
+import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.1';
+import {makeModel,animate} from './models.js?v=1.1.1';
+import {sfx,audioWake} from './audio.js?v=1.1.1';
 const $=s=>document.querySelector(s);
 const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -113,7 +113,7 @@ const head=(title,tabs)=>{const d=h('div','phead');if(tabs){const t=h('div','tab
 const btn=(label,fn,cls='')=>{const b=h('button','btn '+cls,label);b.onclick=e=>{e.stopPropagation();sfx('ui');fn(b)};return b};
 // ---------- inventory / crafting / quests / map ----------
 let selSlot=null,lastTap={k:null,t:0},craftCat='all',craftSel=0;
-function invTabs(cur){const tabs=[['inv',T('inventory')],['craft',T('craft')],['quests',T('quests')],['map',T('map')]];tabs.cur=cur;tabs.go=k=>inventory(k);return tabs}
+function invTabs(cur){const tabs=[['inv',T('tabInv')],['craft',T('tabCraft')],['quests',T('tabQuests')],['map',T('tabMap')]];tabs.cur=cur;tabs.go=k=>inventory(k);return tabs}
 function slotEl(get,set,key,opts={}){const el=h('div','slot'+(opts.cls?' '+opts.cls:''));const draw=()=>{el.innerHTML=slotHTML(get())+(opts.ghost&&!get()?`<span class="ghost">${opts.ghost}</span>`:'');el.classList.toggle('picked',selSlot&&selSlot.key===key)};el._draw=draw;draw();
  el.onclick=()=>{const now=performance.now();const dbl=lastTap.k===key&&now-lastTap.t<350;lastTap={k:key,t:now};
   if(dbl&&opts.onDouble&&get()){selSlot=null;opts.onDouble();dirty();return}
@@ -128,7 +128,7 @@ export function inventory(tab='inv'){const P=A().P;if(!G.inGame)return;
   const right=h('div','invright');const grid=h('div','grid main');for(let i=9;i<36;i++)grid.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{onDouble:()=>A().equipFromSlot(i)}));right.appendChild(grid);
   const hb=h('div','grid hot');for(let i=0;i<9;i++)hb.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{cls:'hb',onDouble:()=>{if(def(P.inv[i].id).armor!==undefined)A().equipFromSlot(i);else{P.sel=i;closePanel()}}}));right.appendChild(hb);
   const info=h('div','iteminfo');right.appendChild(info);right.appendChild(h('div','help',T('tapmove')));
-  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.0').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
+  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.1').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
   body.appendChild(right);p.appendChild(body);p._info=info},
  ()=>{P_.querySelectorAll('.slot').forEach(e=>e._draw&&e._draw());const info=P_._info;if(info){const s=selSlot&&selSlot.get();info.innerHTML=s?itemInfo(s):''}})}
 function itemInfo(s){const d=def(s.id);let t=`<b>${esc(itemName(s.id))}</b>`;if(d.dmg&&d.tool==='sword')t+=` · ⚔${d.dmg}`;if(d.def)t+=` · 🛡${d.def}`;if(d.food)t+=` · 🍎+${d.food[0]}`;if(d.dur&&s.dur!==undefined)t+=` · ${s.dur}/${d.dur}`;return t}
@@ -234,14 +234,35 @@ export function howToPlay(){
  const keys=['look','buttons','mine','place','bag','craft','vitals','night','save','quests','coast'];
  const titleOf={look:'htpLookT',buttons:'htpBtnT',mine:'htpMineT',place:'htpPlaceT',bag:'htpBagT',craft:'htpCraftT',vitals:'htpVitT',night:'htpNightT',save:'htpSaveT',quests:'htpQuestT',coast:'htpCoastT'};
  const bodyOf={look:'htpLookB',buttons:'htpBtnB',mine:'htpMineB',place:'htpPlaceB',bag:'htpBagB',craft:'htpCraftB',vitals:'htpVitB',night:'htpNightB',save:'htpSaveB',quests:'htpQuestB',coast:'htpCoastB'};
+ const goBack=()=>{if(from==='pause')pause();else if(from==='options')options();else{closePanel();title()}};
+ document.querySelector('#title')?.classList.add('hidden');
  openPanel('howto',p=>{
   p.innerHTML='';p.appendChild(head(T('howto')));
   const box=h('div','htp');
-  for(const k of keys){const sec=h('div','htp-sec',(ill[k]||'')+`<h3>${esc(T(titleOf[k]))}</h3><p>${esc(T(bodyOf[k]))}</p>`);box.appendChild(sec)}
-  const row=h('div','row');
-  if(G.inGame)row.appendChild(btn(T('howtoReplay'),()=>Tut.replay(),'go'));
-  row.appendChild(btn(T('back'),()=>{if(from==='pause')pause();else if(from==='options')options();else{closePanel();title()}}));
-  box.appendChild(row);p.appendChild(box);
+  const stage=h('div','htp-stage');
+  const nav=h('div','htp-nav');
+  const foot=h('div','row');
+  box.appendChild(stage);box.appendChild(nav);box.appendChild(foot);p.appendChild(box);
+  let page=0;
+  const render=()=>{
+   const k=keys[page];
+   stage.innerHTML=`<div class="htp-sec">${ill[k]||''}<h3>${esc(T(titleOf[k]))}</h3><p>${esc(T(bodyOf[k]))}</p></div>`;
+   stage.scrollTop=0;
+   nav.innerHTML='';
+   const prev=btn('◀',()=>{if(page>0){page--;render()}},page===0?'dis':'');
+   prev.setAttribute('aria-label',T('back'));
+   const next=btn(page===keys.length-1?T('close'):T('next'),()=>{if(page<keys.length-1){page++;render()}else goBack()},'go');
+   nav.appendChild(prev);
+   nav.appendChild(h('div','htp-pg',T('htpPage',{n:String(page+1),m:String(keys.length)})));
+   nav.appendChild(next);
+   foot.innerHTML='';
+   if(G.inGame)foot.appendChild(btn(T('howtoReplay'),()=>Tut.replay(),'go'));
+  };
+  // horizontal swipe between pages
+  let sx=0,sy=0;
+  stage.addEventListener('touchstart',e=>{const t=e.changedTouches[0];sx=t.clientX;sy=t.clientY},{passive:true});
+  stage.addEventListener('touchend',e=>{const t=e.changedTouches[0];const dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.2){if(dx<0&&page<keys.length-1){page++;render()}else if(dx>0&&page>0){page--;render()}}},{passive:true});
+  render();
  });
 }
 // ---------- title ----------

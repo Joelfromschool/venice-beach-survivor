@@ -1,7 +1,7 @@
 // First-play guided lesson and contextual tips for Blockhaven. Touch-only wording.
-import {G} from './state.js?v=1.1.0';
-import {T,itemName} from './i18n.js?v=1.1.0';
-import {B,def,isBlock} from './blocks.js?v=1.1.0';
+import {G} from './state.js?v=1.1.1';
+import {T,itemName} from './i18n.js?v=1.1.1';
+import {B,def,isBlock} from './blocks.js?v=1.1.1';
 
 const LOGS=[7,35,49,62];
 const TOOLS=[120,121,122,123,124,125,126,127,128,129,130,131]; // wood/stone/iron tools
@@ -212,17 +212,31 @@ function pointAt(sel){
  pulse.style.width=Math.max(24,pw)+'px';pulse.style.height=Math.max(24,ph)+'px';
  const cx=r.left+r.width/2, cy=r.top+r.height/2;
  const spaceAbove=r.top, spaceBelow=innerHeight-(r.bottom);
- let dir='down', ax=cx, ay=r.top-6;
- if(sel==='#bMine'||sel==='#bUse'||sel==='#bTalk'||sel==='#bSneak'){dir='up';ay=r.bottom+8;ax=cx}
- else if(sel==='#bPause'){dir='left';ay=Math.max(r.bottom+2, r.top+r.height/2);ax=r.right+8}
- else if(sel==='#bJump'&&r.right>innerWidth-90){dir='left';ay=r.top+10;ax=r.left-6}
- else if(spaceAbove<70&&spaceBelow>70){dir='up';ay=r.bottom+6}
- else if(spaceAbove<70){dir=cx>innerWidth/2?'right':'left';ay=cy;ax=dir==='right'?r.left-6:r.right+6}
+ let candidates=[];
+ if(sel==='#bMine'||sel==='#bUse'||sel==='#bTalk'||sel==='#bSneak'){
+  candidates.push(['right',r.left-10,cy],['left',r.right+10,cy],['down',cx,r.top-6],['up',cx,r.bottom+8]);
+ }else if(sel==='#bPause'){
+  candidates.push(['up',cx,r.bottom+8],['left',r.right+10,r.bottom+2],['left',r.right+10,cy]);
+ }else if(sel==='#bJump'&&r.right>innerWidth-90){
+  candidates.push(['right',r.left-8,cy],['down',cx,r.top-6],['up',cx,r.bottom+8]);
+ }else{
+  if(spaceAbove>=70)candidates.push(['down',cx,r.top-6]);
+  if(spaceBelow>70)candidates.push(['up',cx,r.bottom+6]);
+  candidates.push([cx>innerWidth/2?'right':'left',cx>innerWidth/2?r.left-6:r.right+6,cy]);
+ }
+ const avoidSels=['#status','#hunger','#hotbarwrap','#hotbar','#xp','#lesson','#stick','#bJump','#bTalk','#bSneak','#bBag','#bPause','#bMine','#bUse','#bMap','#bView'].filter(s=>s!==sel);
+ const avoid=avoidSels.map($).filter(e=>e&&!e.classList.contains('hidden')&&e.getClientRects().length).map(e=>e.getBoundingClientRect());
+ const boxOf=(dir,ax,ay)=>{const s=34;return dir==='down'?{left:ax-s/2,right:ax+s/2,top:ay-s,bottom:ay}:dir==='up'?{left:ax-s/2,right:ax+s/2,top:ay,bottom:ay+s}:dir==='left'?{left:ax,right:ax+s+4,top:ay-s/2,bottom:ay+s/2}:{left:ax-s-4,right:ax,top:ay-s/2,bottom:ay+s/2}};
+ const hits=box=>avoid.some(a=>box.left<a.right-2&&box.right>a.left+2&&box.top<a.bottom-2&&box.bottom>a.top+2)
+  ||box.top<2||box.left<2||box.right>innerWidth-2||box.bottom>innerHeight-2;
+ const pick=candidates.find(([d,x,y])=>!hits(boxOf(d,x,y)));
+ if(!pick){arrow.classList.add('hidden');return}
+ const[dir,ax,ay]=pick;
  arrow.classList.remove('hidden');
  arrow.dataset.dir=dir;
  arrow.style.left=ax+'px';arrow.style.top=ay+'px';
  const lab=arrow.querySelector('.alabel');
- if(lab){const tx=labelFor(sel);lab.textContent=tx;lab.style.display=(sel==='#bMine'||sel==='#bUse'||sel==='#bPause')?'none':'block'}
+ if(lab){const tx=labelFor(sel);lab.textContent=tx;lab.style.display=(sel==='#bMine'||sel==='#bUse'||sel==='#bPause'||sel==='#bTalk'||sel==='#bSneak')?'none':'block'}
 }
 function layoutLookZone(z){
  const tbtns=$('#tbtns');const hudBottom=(tbtns?tbtns.getBoundingClientRect().top:innerHeight-120)-10;

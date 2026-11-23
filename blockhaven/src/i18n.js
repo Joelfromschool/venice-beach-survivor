@@ -1,6 +1,6 @@
 // English + Japanese strings for Blockhaven UI, items and the intro captions.
-import {G} from './state.js?v=1.1.0';
-import {def} from './blocks.js?v=1.1.0';
+import {G} from './state.js?v=1.1.1';
+import {def} from './blocks.js?v=1.1.1';
 const S={
  title:['Blockhaven','ブロックヘイブン'],subtitle:['A voxel adventure in Honeyvale','ハニーヴェイルのボクセル冒険'],
  newgame:['New Adventure','新しい冒険'],cont:['Continue','つづきから'],options:['Options','設定'],picker:['◀ Game Picker','◀ ゲーム選択'],intro:['Watch Intro','オープニング'],
@@ -47,7 +47,8 @@ const S={
  touchhelp:['Drag to look · left stick to move · hold Mine to break a block · Use to place or eat','ドラッグで視点・左スティックで移動・掘るを長押しでブロックをこわす・使うで置く/食べる'],
  version:['Version {v}','バージョン {v}'],nosave:['No saved game yet.','セーブデータがありません。'],
  objective:['Objective','目標'],done:['Done','完了'],allquests:['Campaign complete!','キャンペーン完了！'],
- howto:['How to Play','あそびかた'],howtoReplay:['Replay guided lesson','レッスンをもう一度'],tutSkip:['Skip lesson','レッスンをスキップ'],tutSkipQ:['Skip the lesson? You can open How to Play from Options anytime.','レッスンをスキップしますか？あそびかたはいつでも設定から開けます。'],tutSkipYes:['Skip','スキップ'],tutSkipNo:['Keep going','つづける'],tutGotIt:['Got it','わかった'],tutStep:['Lesson {n} of {m}','レッスン {n} / {m}'],tutNext:['What to do next','つぎにやること'],tutDone:['Lesson complete! Talk to the villagers when you are ready.','レッスン完了！準備ができたら村の人と話そう。'],tutDoneTitle:['You are ready!','準備OK！'],tutDoneSub:['Talk to Mr Bean to start your first quest.','ミスター・ビーンに話しかけて、最初のクエストを始めよう。'],tutSkipped:['Lesson skipped. Open How to Play from Options anytime.','レッスンをスキップしました。あそびかたは設定からいつでも開けます。'],
+ tabInv:['Items','持ち物'],tabCraft:['Craft','クラフト'],tabQuests:['Quests','クエスト'],tabMap:['Map','地図'],
+ howto:['How to Play','あそびかた'],htpPage:['{n} / {m}','{n} / {m}'],howtoReplay:['Replay guided lesson','レッスンをもう一度'],tutSkip:['Skip lesson','レッスンをスキップ'],tutSkipQ:['Skip the lesson? You can open How to Play from Options anytime.','レッスンをスキップしますか？あそびかたはいつでも設定から開けます。'],tutSkipYes:['Skip','スキップ'],tutSkipNo:['Keep going','つづける'],tutGotIt:['Got it','わかった'],tutStep:['Lesson {n} of {m}','レッスン {n} / {m}'],tutNext:['What to do next','つぎにやること'],tutDone:['Lesson complete! Talk to the villagers when you are ready.','レッスン完了！準備ができたら村の人と話そう。'],tutDoneTitle:['You are ready!','準備OK！'],tutDoneSub:['Talk to Mr Bean to start your first quest.','ミスター・ビーンに話しかけて、最初のクエストを始めよう。'],tutSkipped:['Lesson skipped. Open How to Play from Options anytime.','レッスンをスキップしました。あそびかたは設定からいつでも開けます。'],
  tutDragHere:['Drag here to look','ここをドラッグして視点を動かす'],tutLblMove:['Move','移動'],tutLblHotbar:['Hotbar','ホットバー'],tutLblStatus:['Health & hunger','体力と満腹度'],
  tut_look_t:['Look around','まわりを見よう'],tut_look_b:['Drag your finger on the open part of the screen (not the buttons) to look around. The crosshair in the middle is what you are looking at.','ボタン以外の画面を指でドラッグして、まわりを見渡そう。画面まん中の十字が、今見ている場所だよ。'],
  tut_move_t:['Walk with the stick','スティックで歩こう'],tut_move_b:['The round stick on the left is how you walk. Slide it in the direction you want to go.','左のまるいスティックで歩くよ。行きたい方向へスライドしてね。'],
