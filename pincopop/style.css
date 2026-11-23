@@ -170,3 +170,35 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mtabs button.on{color:#fff;border-bottom-color:#ff4f9a}.mtabs svg{width:18px;height:18px}.mtabs b{font-size:12px;opacity:.7;font-weight:700}
 .mempty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:24px;text-align:center;color:rgba(255,255,255,.7);font-size:14px;line-height:1.5}
 .mempty svg{width:44px;height:44px;opacity:.5}
+/* v1.5 explore */
+#exploreBtn{margin-left:auto}#exploreBtn+#mineBtn{margin-left:0}
+#top.exhide{opacity:0;pointer-events:none}
+#explore{position:absolute;inset:0;z-index:30;background:#0b0b10;display:none;flex-direction:column;padding-top:env(safe-area-inset-top)}
+#explore.on{display:flex;animation:exin .18s ease-out}
+@keyframes exin{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.exhead{display:flex;align-items:center;gap:6px;padding:8px 10px 6px 4px;flex:none}
+.exback{width:40px;height:40px;display:grid;place-items:center;color:#fff;flex:none}.exback svg{width:24px;height:24px}
+.exsearch{flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 12px;border-radius:12px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.exsearch svg{width:18px;height:18px;flex:none}
+.exsearch input{flex:1;min-width:0;background:none;border:0;outline:0;color:#fff;font:inherit;font-size:16px}
+.exsearch input::placeholder{color:rgba(255,255,255,.45)}
+.exsearch input::-webkit-search-cancel-button{display:none}
+#exX{width:30px;height:30px;color:rgba(255,255,255,.6);font-size:22px;line-height:1;flex:none}
+.exchips{display:flex;gap:8px;overflow-x:auto;padding:4px 10px 8px;flex:none;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.exchips::-webkit-scrollbar{display:none}
+.exchips button{flex:none;padding:7px 13px;border-radius:999px;background:rgba(255,255,255,.1);color:#fff;font-weight:700;font-size:13px;white-space:nowrap}
+.exchips button.on{background:#fff;color:#111}
+.excount{flex:none;padding:0 12px 6px;font-size:11px;color:rgba(255,255,255,.45)}
+#exGrid{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+.exgrid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:calc((min(100vw,56.25vh) - 4px)/3*1.25);gap:2px;grid-auto-flow:row dense;align-content:start;padding-bottom:calc(env(safe-area-inset-bottom) + 20px)}
+@media (max-width:599px){.exgrid{grid-auto-rows:calc((100vw - 4px)/3*1.25)}}
+.ext{position:relative;overflow:hidden;background:linear-gradient(135deg,#1c1c28,#2a2235);display:block;padding:0}
+.ext.t{grid-row:span 2}.ext.t.r{grid-column:3}.ext.t.l{grid-column:1}
+.ext img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 40%;opacity:0;transition:opacity .25s}
+.ext img.ok{opacity:1}
+.ext .gv{position:absolute;left:6px;bottom:5px;display:flex;align-items:center;gap:3px;font-size:11px;font-weight:800;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.8)}.ext .gv svg{width:12px;height:12px}
+.exbb{position:absolute;right:5px;top:4px;font-style:normal;font-size:14px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.ext:active{filter:brightness(.8)}
+.exempty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;text-align:center;color:rgba(255,255,255,.7);font-size:14px;line-height:1.5}
+.exempty svg{width:46px;height:46px;opacity:.5}
+.exempty button{padding:8px 18px;border-radius:999px;background:#fff;color:#111;font-weight:800}
