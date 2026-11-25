@@ -19,6 +19,9 @@ def git_meta(game_id):
 
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
+ dict(id='honeytrails', new=True, cat='adv', pos='50% 50%',
+  en=('Honey Trails','Walk-and-catch adventure','Walk your real neighborhood or explore with a joystick. Find Pinco, Pooh, Mr Bean and 25 more pals on the map, flick honey jars to befriend them, spin Hive Stops, hatch eggs and beat Asmon at boss parties.'),
+  ja=('ハニートレイル','歩いて集めるアドベンチャー','近所を歩いても、スティックで探検してもOK。ピンコ、プー、ミスター・ビーンなど28のなかまをマップで見つけて、ハニージャーを投げてなかよくなろう。ハイブストップ、タマゴ、アズモンとのボスバトルも。')),
  dict(id='pincopop', new=True, cat='puz', pos='50% 50%',
   en=('PincoPop','Short clips','Swipe through an endless feed of short clips starring Pinco, Pooh, Mr Bean and friends: Tokyo and LA holiday events, Sawtelle and LA café picks, a Mr Bean live stream from Yoyogi Park, local scone and lunch reviews, Baby Bean, comedy, parenting, makeup, pregnancy tips and English/Japanese lessons, in styles from ASMR to anime and silent film. Swipe sideways between sections, search and browse everything in Explore, and find your saved and liked clips in your collection.'),
   ja=('ピンコポップ','ショート動画','ピンコ、プー、ミスター・ビーンたちのショート動画を次々スワイプ。東京とLAのホリデーイベント、ソーテルやLAのカフェ紹介、代々木公園からのビーンのライブ配信、近所のスコーン＆ランチ紹介、ベビー・ビーン、お笑い、子育て、メイク、マタニティ、英語・日本語レッスン。ASMRやアニメ風、サイレント映画風など色々なスタイルで。横スワイプでセクション移動、「発見」で検索・一覧、保存・いいねした動画はコレクションで見られます。')),
@@ -81,11 +84,11 @@ UI = {
  'en': dict(play='Play', open_secret='Unlock', newb='New', jump='Jump back in', last='Last played',
             lang='日本語', lang_label='Switch to Japanese', hint='Swipe the rows · tap a tile twice to play',
             pw_title='Secret Project', pw_sub='Enter the password', pw_wrong='Wrong password', pw_open='Open', pw_cancel='Cancel',
-            skip='Skip to games', count='17 games'),
+            skip='Skip to games', count='18 games'),
  'ja': dict(play='あそぶ', open_secret='ひらく', newb='NEW', jump='つづきから', last='さいごにあそんだ',
             lang='English', lang_label='英語に切り替え', hint='横にスワイプ · タイルを2回タップであそぶ',
             pw_title='シークレット・プロジェクト', pw_sub='パスワードを入力', pw_wrong='パスワードがちがいます', pw_open='ひらく', pw_cancel='キャンセル',
-            skip='ゲーム一覧へ', count='17タイトル'),
+            skip='ゲーム一覧へ', count='18タイトル'),
 }
 E = html.escape
 
