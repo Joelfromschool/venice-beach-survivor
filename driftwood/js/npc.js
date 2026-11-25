@@ -87,7 +87,7 @@ const NPC={
  async kermit(n){const ja=LANG==='ja';const unid=S.bag.filter(s=>s&&s.id==='fossil_u').length;
   const opts=[T('tk_donate'),T('tk_museum')];if(unid)opts.unshift(T('assess'));opts.push(T('tk_bye'));
   const c=await UI.ask('kermit',N(this.line('kermit')),opts);const k=opts[c];
-  if(k===T('assess')){for(let i=0;i<S.bag.length;i++){const s=S.bag[i];if(s&&s.id==='fossil_u'){const pool=FOSSILS.map(f=>f[0]);const notDon=pool.filter(f=>!(S.museum.fossil||{})[f]);const pick=(notDon.length&&Math.random()<.7?notDon:pool)[(Math.random()*(notDon.length&&Math.random()<.7?notDon.length:pool.length))|0]||pool[0];S.bag[i]={id:'fo_'+pick,q:1};(S.pedia.fossil||(S.pedia.fossil={}))[pick]=1}}
+  if(k===T('assess')){for(let i=0;i<S.bag.length;i++){const s=S.bag[i];if(s&&s.id==='fossil_u'){const pool=FOSSILS.map(f=>f[0]);const notDon=pool.filter(f=>!(S.museum.fossil||{})[f]);const src=notDon.length&&Math.random()<.7?notDon:pool;const pick=src[(Math.random()*src.length)|0]||pool[0];S.bag[i]={id:'fo_'+pick,q:1};(S.pedia.fossil||(S.pedia.fossil={}))[pick]=1}}
    SFX.play('jingle');await UI.say('kermit',ja?'ふむふむ…鑑定できたよ！ポケットを見てごらん。':'Hmm, hmm… All assessed! Check your pockets.');return this.kermit(n)}
   if(k===T('tk_donate'))await UI.donate();else if(k===T('tk_museum'))UI.museum()},
  async kaise(n){const c=await UI.ask('kaise',N(this.line('kaise')),[T('buy'),T('tk_bye')]);if(c===0)UI.shop('kaise')},
