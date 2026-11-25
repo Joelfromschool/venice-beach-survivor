@@ -5,7 +5,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Pinco">
 <meta name="theme-color" content="#ff7eb6"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png">
-<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.10.1"</script>
+<title>Pinco Pretty Princess</title><script>window.__BUILD__="v2.11.0"</script>
 <style>
 :root{--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);--pk:#ff3d8b;--pk2:#ff7eb6;--pu:#8e44ec;--F:ui-rounded,"SF Pro Rounded","Arial Rounded MT Bold","Nunito",system-ui,sans-serif}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;height:100%;overflow:hidden;background:#ffd6ea;font-family:var(--F);color:#5a2a6a;user-select:none;-webkit-user-select:none;touch-action:manipulation;overscroll-behavior:none}
@@ -186,7 +186,7 @@ button{font-family:var(--F);cursor:pointer;border:0;color:inherit}
  <div class="topbar" style="width:100%"><span class="pill"><i class="coinic"></i><span class="coins">0</span></span><button class="mute" data-a="mute">🔊</button></div>
  <div class="logo"><b>Pinco</b><i data-i18n="logo2">Pretty Princess</i></div>
  <div class="tbtns"><span id="t-best"></span><button class="big" data-a="story" data-i18n="story">📖 STORY</button><button class="big pink2" data-a="play" data-i18n="play">▶ RUNWAY</button><div class="trow"><button class="big alt" data-a="closet" data-i18n="closet">👗 MY CLOSET</button><button class="big gold" data-a="bank" data-i18n="bank">🍯 POOH BANK</button></div><button class="big ghost sm" data-a="opts" data-i18n="options">⚙️ OPTIONS</button></div>
- <div class="ver">v2.10.1</div>
+ <div class="ver">v2.11.0</div>
 </div>
 <div class="scr" id="s-theme"><div class="card0"><button class="hm incard" data-a="gohome" aria-label="Main menu">🏠</button><small data-i18n="todaytheme">TODAY'S THEME</small><div class="e" id="th-e"></div><h2 id="th-n"></h2><p id="th-h"></p><div id="th-p"></div>
  <div id="th-who"></div><div class="rule" id="th-rule" data-i18n="rule"></div><div class="rule" id="th-goal"></div><button class="big" data-a="start" style="width:100%" data-i18n="letsstyle"></button></div></div>
@@ -572,7 +572,7 @@ const STR={
  // story ui
  tap:['tap ▶','タップ ▶'],skipall:['Skip ⏭','スキップ ⏭'],chapter:['Chapter {0}','第{0}話'],goal:['Goal: {0}★ or more','目標：{0}★以上'],
  newgame:['New story','はじめから'],cont:['Continue · Ch.{0}','つづきから ・ 第{0}話'],storytitle:['📖 Story Mode','📖 ストーリーモード'],
- pass:['🎉 You did it!','🎉 やったね！'],fail:['So close! 💕','おしい！💕'],failmsg:['Need {0}★ — you got {1}★. Every princess stumbles. Try again!','目標{0}★ — 今回{1}★。プリンセスだってつまずくよ。もう一回！'],
+ pass:['🎉 You did it!','🎉 やったね！'],fail:['So close! 💕','おしい！💕'],failmsg:['Need {0}★ — you got {1}★. So close! Next try the goal drops a little 💕','目標{0}★ — 今回{1}★。おしい！次は目標が少し下がるよ 💕'],
  retry:['↻ Try again','↻ もう一回'],toshift:['🍢 Work a shift first','🍢 先にバイトする'],continue:['▶ Continue','▶ つづける'],
  shop:['🛍️ Boutique','🛍️ ブティック'],shopnext:['▶ Next show','▶ つぎのショーへ'],buy:['Buy','買う'],owned:['Owned','持ってる'],
  shopnote:['✨ = matches the next theme: {0}','✨ = つぎのテーマ「{0}」にぴったり'],
@@ -893,33 +893,36 @@ addEventListener('pointerdown',()=>{const first=!AC;audio();if(AC&&AC.state==='s
 const JIMG={};['bean','kermit','pooh','king'].forEach(n=>{const i=new Image();i.src='art/j_'+n+'.png?v2';JIMG[n]=i;});
 JUDGES.length=0;JUDGES.push(
  {n:'Emo Bean',nj:'エモ・ビーン',img:'bean',r:'Vibes',rj:'バイブス',c:'#8fd14f',h:150,
-  lines:[["It's okay… the void hugs us both","My heart is a rainy pod… but I believe in you"],["Kinda dark… kinda cute… like me","It hurts, but softly. Good try"],["This look gets my sad little soul","Nice vibes… I'm almost not sad"],["I wrote a sad poem about it. It's beautiful","Ugh. I'm crying. In a good way"],["You healed my emo heart 🖤💚","Perfect vibes… even my bangs are happy"]],
-  lj:[['だいじょうぶ…闇がふたりを包むよ','心は雨のさや…でも信じてる'],['ちょっと暗い…ちょっとかわいい…ぼくみたい','痛いけど、やさしい。がんばったね'],['このコーデ、ぼくの悲しい魂にひびく','いいバイブス…ちょっと元気出た'],['悲しい詩を書いたよ。美しいんだ','うっ…泣いてる。いい意味で'],['エモい心が癒された 🖤💚','完璧なバイブス…前髪までうれしい']]},
+  lines:[["The void hugs us both… keep going! 💚","My heart is a rainy pod… but I believe in you"],["Kinda dark… kinda cute… like me","Soft and sweet. I like it"],["This look gets my sad little soul","Nice vibes… I'm almost not sad"],["I wrote a sad poem about it. It's beautiful","Ugh. I'm crying. In a good way"],["You healed my emo heart 🖤💚","Perfect vibes… even my bangs are happy"]],
+  lj:[['闇がふたりを包むよ…つづけて！💚','心は雨のさや…でも信じてる'],['ちょっと暗い…ちょっとかわいい…ぼくみたい','やさしくて、かわいい。いいね'],['このコーデ、ぼくの悲しい魂にひびく','いいバイブス…ちょっと元気出た'],['悲しい詩を書いたよ。美しいんだ','うっ…泣いてる。いい意味で'],['エモい心が癒された 🖤💚','完璧なバイブス…前髪までうれしい']]},
  {n:'Dark Kermit',nj:'ダーク・カーミット',img:'kermit',r:'Critique',rj:'辛口',c:'#2b2233',h:150,
-  lines:[['A TRAGEDY.','I must lie down.','Hideous. Next!'],['Mediocre. Ugh.','The swamp weeps.'],['Acceptable… barely.','Hmph. Fine.'],['I am… almost moved.','Not terrible. Shocking.'],['MAGNIFICENT! *faints*','I take back every word!']],
-  lj:[['悲劇だ。','横にならせてくれ…','ひどい。次！'],['平凡。うぅ。','沼が泣いている。'],['まあ…ギリ合格。','ふん。いいだろう。'],['私が…感動しかけた。','悪くない。おどろいた。'],['すばらしい！*気絶*','前言撤回だ！']]},
+  lines:[['A bold start! I sense potential.','Darling… GREATNESS is brewing.','A rough gem! Polish it and SHINE!'],['Intriguing… the swamp nods.','A spark! Fan it into a FLAME!'],['Ooh. The swamp approves.','*cape swish* Very nice!'],['I am… genuinely moved.','My cloak trembles. Stunning!'],['MAGNIFICENT! *faints*','BRAVO! The swamp sings!']],
+  lj:[['大胆なスタート！才能を感じる。','ふふ…才能の気配がするぞ。','原石だな！みがけば光る！'],['興味深い…沼がうなずいた。','火花が見える。もっと燃やせ！'],['ほう。沼が気に入ったぞ。','*マントひらり* なかなかだ！'],['私は…心から感動した。','マントがふるえる。見事だ！'],['すばらしい！*気絶*','ブラボー！沼が歌っている！']]},
  {n:'Pooh',nj:'プーさん',img:'pooh',r:'Cha-Ching',rj:'もうかり度',c:'#ffcc33',h:160,
-  lines:[['Ew. I wouldn\'t even SELL that!','Refund please!!','My piggy bank is crying'],['Hmm… like three coins of pretty.','Can I have it? I\'m gonna sell it!'],['Ooh! That\'s worth a LOT of coins!','Not bad! I\'d charge two coins to look!'],['That\'s a MILLION coins of pretty!','I\'d pay to see that… no wait, YOU pay ME!'],['CHA-CHING!! Best outfit EVER!','Mom says I\'m a business genius. YOU are too! 💰']],
-  lj:[['うえ〜。これ売れないよ！','おかね返して〜！！','ぼくのブタさん貯金箱が泣いてる'],['うーん…3コインぶんのかわいさかな','それちょうだい！売るから！'],['わあ！それ、すっごい高く売れるよ！','いいね！見るだけで2コインね！'],['100万コインぶんかわいい！','お金はらって見たい…やっぱりキミがはらって！'],['チャリーン！！さいこうのコーデ！','ママがね、ぼくは商売の天才だって。キミも天才！💰']]});
+  lines:[['Starter look! Add more for BIG coins!','Millionaires start with one coin!','My piggy bank says: keep going!'],['Hmm… like three coins of pretty.','Can I have it? I\'m gonna sell it!'],['Ooh! That\'s worth a LOT of coins!','Not bad! I\'d charge two coins to look!'],['That\'s a MILLION coins of pretty!','I\'d pay to see that… no wait, YOU pay ME!'],['CHA-CHING!! Best outfit EVER!','Mom says I\'m a business genius. YOU are too! 💰']],
+  lj:[['はじめの一歩！もっと足すと高く売れる！','大金持ちも1コインから！','ブタさん貯金箱が「もっと！」って'],['うーん…3コインぶんのかわいさかな','それちょうだい！売るから！'],['わあ！それ、すっごい高く売れるよ！','いいね！見るだけで2コインね！'],['100万コインぶんかわいい！','お金はらって見たい…やっぱりキミがはらって！'],['チャリーン！！さいこうのコーデ！','ママがね、ぼくは商売の天才だって。キミも天才！💰']]});
 const BUNDLES_JA=['おためし壺','はちみつびん','人気No.1','いちばんお得','メガ巣箱','王家の宝物庫'];
 const KING_LINES_JA=['王さまのコインで王さまのファッション！…2回かぞえたよ！','王さまの命令：タダだよ！（ぼくの貯金箱にはないしょね）','プリンセスはコインを切らしちゃダメ。コインはさいこう！','あげる！コインのお部屋があるの！そこで泳いでるの！','チャリーン！それが王さまの音だよ！','ぜんぶ使って！そしてまた来てね！リピーター大歓迎！'];const _KJ_OLD=['王家のファッションには王家のコインを！','王の命令じゃ：タダである！','プリンセスたるもの、コイン切れはならぬ。','持っていきなさい、宝物庫は底なしじゃ！','はちみつもコインも？ なんという王国！','かしこく使うのじゃ…いや、使っちゃえ！ホッホー！'];
 const KL=()=>LANG()==='ja'?KING_LINES_JA:KING_LINES;
 const pk=a=>a[Math.floor(Math.random()*a.length)];
 score=function(o,t){const worn=CATS.map(c=>o[c[0]]).filter(Boolean);let match=0;
- for(const id of worn){const it=IT[id];const w=it.c==='bg'?2:1;if(it.tags.includes(t.id))match+=w;else if(it.tags.includes('sparkle')&&['royal','pop','space','swamp'].includes(t.id))match+=.4*w;}
- const themeS=Math.min(1,match/8);
- const cl=worn.filter(id=>IT[id].c!=='bg');let cs=0;for(const id of cl){const d=Math.min(...t.p.map(p=>hexd(col(o,id),p)));cs+=d<60?1:d<120?.5:0;}
- const colorS=cl.length?cs/cl.length*Math.min(1,cl.length/5):0;
+ // v2.11 kinder judging: generous theme credit, colour credit for near-palette tints, base points for a complete look, floor of 3★ per judge
+ for(const id of worn){const it=IT[id];const w=it.c==='bg'?2:1;if(it.tags.includes(t.id))match+=w;else if(it.tags.includes('sparkle')&&['royal','pop','space','swamp','sweet'].includes(t.id))match+=.5*w;else if(it.c!=='bg'&&Math.min(...t.p.map(p=>hexd(col(o,id),p)))<90)match+=.35;}
+ const themeS=Math.min(1,match/5);
+ const cl=worn.filter(id=>IT[id].c!=='bg');let cs=0;for(const id of cl){const d=Math.min(...t.p.map(p=>hexd(col(o,id),p)));cs+=d<90?1:d<150?.65:.3;}
+ const colorS=cl.length?cs/cl.length*Math.min(1,cl.length/3):0;
  const tinted=cl.filter(id=>o.tint[id]&&o.tint[id]!==IT[id].col).length;
- const creS=.35*(worn.length/8)+.4*Math.min(1,o.stamps.length/12)+.25*(cl.length?Math.min(1,tinted/Math.max(3,cl.length*.6)):0);
+ const creS=.45*Math.min(1,worn.length/6)+.35*Math.min(1,o.stamps.length/8)+.2*Math.min(1,tinted/2);
+ const complete=Math.min(1,worn.length/4);
  const sweet=worn.filter(id=>IT[id].tags.some(g=>g==='honey'||g==='sweet')).length;
- const raw=[.45*colorS+.3*themeS+.25*creS, .4*themeS+.35*creS+.25*colorS-(o.stamps.length<10?.08:0)-(tinted<3?.08:0), .5*themeS+.25*colorS+.25*creS+(sweet>=2?.1:0)];
- const base=[.7,-.45,.8],mul=[4.4,4.8,4.2];
- const stars=raw.map((v,i)=>Math.max(1,Math.min(5,Math.round(base[i]+v*mul[i]+(Math.random()-.5)*.3))));
- const tot=stars[0]+stars[1]+stars[2];const coins=5+tot*2+(tot>=13?10:0);
+ const raw=[.45*colorS+.3*themeS+.25*creS, .4*themeS+.35*creS+.25*colorS, .5*themeS+.25*colorS+.25*creS+(sweet>=2?.08:0)];
+ const base=[1.45,1.3,1.45],floor=worn.length>=3?3:2;
+ const stars=raw.map((v,i)=>Math.max(floor,Math.min(5,Math.round(base[i]+.5*complete+v*3+(Math.random()-.5)*.3))));
+ const tot=stars[0]+stars[1]+stars[2];const coins=COINS(tot,0);
  const low=Math.min(themeS,colorS,creS);const tip=low===themeS?T('tiptheme',THN(t)):low===colorS?T('tipcol'):T('tipcre');
  const say=stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[s-1]));
  return{stars,coins,tip,say,themeS,colorS,creS};};
+function COINS(tot,pc){return 10+tot*2+(tot>=12?10:0)+(pc||0);}
 drawJudge=function(x,j,cx,cy,s,t,stars,shown,say,idx){const im=JIMG[j.img];const H0=j.h*s,ratio=im.naturalWidth?im.naturalWidth/im.naturalHeight:.7,W0=H0*ratio;
  const rev=RUN&&RUN.jt&&RUN.jt[idx]?Math.max(0,1-(t-RUN.jt[idx])*3):0;
  const harsh=idx===1&&stars&&shown>.9&&stars<=2;const jit=harsh?Math.sin(t*40)*3:0;
@@ -934,7 +937,7 @@ drawJudge=function(x,j,cx,cy,s,t,stars,shown,say,idx){const im=JIMG[j.img];const
  if(im.naturalWidth)x.drawImage(im,-W0/2,-H0,W0,H0);x.restore();
  x.save();x.font='800 '+Math.round(11.5*s/.85)+'px ui-rounded,"Arial Rounded MT Bold",system-ui';x.textAlign='center';x.fillStyle=idx===1?'#2b2233':'#5a2a6a';x.fillText(LANG()==='ja'?j.nj:j.n,cx,cy+90*s);x.restore();
  if(say){x.save();let fs=Math.round(12*s/.85);x.font='800 '+fs+'px '+FONT;let ls=wrapT(x,say,W/3-22);while(ls.length>3&&fs>9){fs--;x.font='800 '+fs+'px '+FONT;ls=wrapT(x,say,W/3-22);}
-  const lh=fs+3,tw=Math.max(...ls.map(l=>x.measureText(l).width))+14,bh=ls.length*lh+9,bx=Math.max(4,Math.min(W-tw-4,cx-tw/2)),by=Math.min(H-bh-6,cy+96*s);x.fillStyle=idx===1?'#2b2233':'#fff';x.strokeStyle=idx===1?'#8fd14f':'#ff7eb6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,by,tw,bh,12):x.rect(bx,by,tw,bh);x.fill();x.stroke();
+  const lh=fs+3,tw=Math.max(...ls.map(l=>x.measureText(l).width))+14,bh=ls.length*lh+9,bx=Math.max(4,Math.min(W-tw-4,cx-tw/2)),by=Math.min(H-bh-6,cy+96*s);(window.SAYB=window.SAYB||[])[idx]=by+bh;x.fillStyle=idx===1?'#2b2233':'#fff';x.strokeStyle=idx===1?'#8fd14f':'#ff7eb6';x.lineWidth=3;x.beginPath();x.roundRect?x.roundRect(bx,by,tw,bh,12):x.rect(bx,by,tw,bh);x.fill();x.stroke();
   const tx=Math.max(bx+12,Math.min(bx+tw-12,cx));x.beginPath();x.moveTo(tx-6,by+1);x.lineTo(tx+(cx<tx?-8:8),by-8);x.lineTo(tx+6,by+1);x.fill();x.fillStyle=idx===1?'#8fd14f':'#8e44ec';x.textAlign='center';ls.forEach((l,j)=>x.fillText(l,bx+tw/2,by+4+fs+j*lh-1));x.restore();}};
 judging=function(t){if(HW())hwBG(t,H*.36);else bgDraw(X,O,W,H,t);X.fillStyle='rgba(30,0,50,.35)';X.fillRect(0,0,W,H);
  const pl=place(W*.2,H*.05,W*.6,H*.44);X.save();X.translate(pl.ox,pl.oy);X.scale(pl.s,pl.s);drawPinco(X,O);X.restore();
@@ -944,7 +947,7 @@ judging=function(t){if(HW())hwBG(t,H*.36);else bgDraw(X,O,W,H,t);X.fillStyle='rg
   const prev=RUN.jn[i]||0,nowN=Math.min(st,Math.floor(shown*6));if(nowN>prev){for(let q=prev;q<nowN;q++)SFX.judge(q);RUN.jn[i]=nowN;if(nowN===st){RUN.jt[i]=t;burst(W*(i+.5)/3,H*.66,st*4,i===1?['#8fd14f','#2b2233']:['#ffcc33','#fff'],120);buzz(10);if(i===1&&st<=2)SFX.boo();}}
   drawJudge(X,JUDGES[i],W*(i+.5)/3,H*.74,s,t,jt>0?st:0,shown,jt>1?RESULT.say[i]:null,i);
   const pa=(RESULT.padd||[0,0,0])[i];if(pa&&jt>1.3){const ct=jt-1.3;if(!RUN.pch)RUN.pch={};if(!RUN.pch[i]){RUN.pch[i]=1;SFX.sparkle();burst(W*(i+.5)/3,H*.74+126*s,10,['#ffcc33','#b39dff','#fff'],120);}
-   const sc=ct<.25?ct/.25*1.25:ct<.4?1.25-(ct-.25)/.15*.25:1,txt=T('p_chip',pa);X.save();X.translate(W*(i+.5)/3,H*.74+(RESULT.say&&RESULT.say[i]&&jt>1?150:128)*s+Math.sin(t*4+i)*2);X.scale(sc,sc);X.font='900 '+Math.round(13*s/.85)+'px '+FONT;const tw=X.measureText(txt).width+18;
+   const sc=ct<.25?ct/.25*1.25:ct<.4?1.25-(ct-.25)/.15*.25:1,txt=T('p_chip',pa);X.save();const cy0=H*.74+(RESULT.say&&RESULT.say[i]&&jt>1?150:128)*s,sb=(RESULT.say&&RESULT.say[i]&&jt>1&&window.SAYB&&SAYB[i])||0;X.translate(W*(i+.5)/3,Math.min(H-16,Math.max(cy0,sb+15))+Math.sin(t*4+i)*2);X.scale(sc,sc);X.font='900 '+Math.round(13*s/.85)+'px '+FONT;const tw=X.measureText(txt).width+18;
    X.fillStyle='#8e44ec';X.strokeStyle='#ffcc33';X.lineWidth=3;X.beginPath();X.roundRect?X.roundRect(-tw/2,-12,tw,24,12):X.rect(-tw/2,-12,tw,24);X.fill();X.stroke();X.fillStyle='#fff';X.textAlign='center';X.fillText(txt,0,5);X.restore();}}
  if(RESULT.bonus!=null&&t>4.2){const tot=RESULT.stars.reduce((a,b)=>a+b,0);X.save();X.textAlign='center';X.font='900 '+Math.round(W*.045)+'px '+FONT;X.fillStyle='#ff3d8b';const tx=T('p_sum',tot,RESULT.bonus||0,tot+(RESULT.bonus||0));X.fillText(tx,W/2,H*.5+W*.14);X.restore();}};
 // ---------- home buttons + leave confirm ----------
@@ -1099,7 +1102,7 @@ const CAMEO_CATS=['hat','bow','acc','wand'];
 function pickCameo(){if(Math.random()>(window.__CAMEO??.15))return null;const who=pk(['party','holiday','baller','mole','tad','leaf','max']);
  let pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c)&&!i.gift&&!OWN()[i.id]&&!['cape','wings'].includes(i.k));if(!pool.length)pool=ITEMS.filter(i=>CAMEO_CATS.includes(i.c)&&!i.gift);
  const pref=pool.filter(i=>i.tags.some(t=>CAST[who].vibe.includes(t)));const it=pk(pref.length?pref:pool);return{who,id:it.id,side:Math.random()<.5?0:1};}
-function cameoLikes(c,o,t,tot){const goal=ST.on?CH[S.story.ch].goal:10;if(tot<Math.max(9,goal))return false;const it=IT[c.id],cs=CAST[c.who];
+function cameoLikes(c,o,t,tot){const goal=ST.on?GOAL():10;if(tot<Math.max(9,goal))return false;const it=IT[c.id],cs=CAST[c.who];
  if(it.tags.includes(t.id)||cs.vibe.includes(t.id))return true;const worn=CATS.map(q=>o[q[0]]).filter(Boolean);
  return worn.some(id=>cs.cols.some(cc=>hexd(col(o,id),cc)<80))||worn.some(id=>IT[id].tags.some(g=>cs.vibe.includes(g)));}
 function drawItemOn(x,id,cx,cy,w){const it=IT[id],[bx,by,bw,bh]=BOX[it.c];const s=w/bw;x.save();x.translate(cx-(bx+bw/2)*s,cy-(by+bh/2)*s);x.scale(s,s);const o=newOutfit();o[it.c]=id;itemDraw(x,id,o,false);x.restore();}
@@ -1156,7 +1159,7 @@ function newRun(){const vi=ST.on?CH[S.story.ch].v:2;return{fl:[],white:0,posed:0
 function startRhythm(){const beat=60/126,easy=!!S.easy,n=easy?4:5,t0=AC?AC.currentTime+.25:performance.now()/1000+.25;const cs=[];
  let lx=W/2,ly=H*.45;const slots=n===4?[2,3,4,6]:[2,3,4,5,6];
  for(let i=0;i<n;i++){let px,py,g=0;do{px=W*(.22+Math.random()*.56);py=H*(.28+Math.random()*.38);g++;}while(Math.hypot(px-lx,py-ly)<W*.34&&g<30);lx=px;ly=py;cs.push({x:px,y:py,bt:t0+slots[i]*beat,g:null,n:i+1});}
- RUN.rh={t0,beat,cs,easy,slots,pw:easy?.17:.112,gw:easy?.34:.24,app:beat*(easy?3.6:3),r0:W*(easy?.12:.11),hz:W*(easy?.21:.19)};stopSong();sting(t0,beat);}
+ RUN.rh={t0,beat,cs,easy,slots,pw:easy?.24:.18,gw:easy?.5:.4,app:beat*(easy?3.6:3),r0:W*(easy?.12:.11),hz:W*(easy?.28:.25)};stopSong();sting(t0,beat);}
 function nowA(){return AC?AC.currentTime:performance.now()/1000;}
 function sting(t0,b){if(!AC)return;const bus=MG;for(let i=0;i<8;i++){const t=t0+i*b;tone(140,t,.18,'sine',.6,bus,45);if(i%2)noise(t,.1,.3,1700,bus);noise(t+b/2,.03,.12,9000,bus,'highpass');
   const ch=i<4?[69,73,76]:[74,78,81];ch.forEach(n=>tone(mf(n),t,b*.6,'square',.03,bus));tone(mf((i<4?45:50)),t,b*.9,'sawtooth',.06,bus);if(i>=2)tone(mf([81,83,85,86,88,90][i-2]),t,b*.5,'triangle',.14,bus);}
@@ -1167,9 +1170,9 @@ function hitCircle(cx,cy){const R=RUN.rh;if(!R||R.over)return;const now=nowA();l
  if(best.g!=='miss'){RUN.white=best.g==='perfect'?.35:.2;SFX.click();SFX.ooh(.5);burst(best.x,best.y,best.g==='perfect'?22:10,['#fff','#ffcc33','#ff7eb6'],180);RUN.fl.push({x:best.x,y:best.y,t:0,r:30});buzz(15);}else SFX.bad();}
 function rhythmTick(){const R=RUN.rh,now=nowA();for(const c of R.cs)if(!c.g&&now>c.bt+R.gw){c.g='miss';c.gt=now;}
  if(!R.over&&R.cs.every(c=>c.g)){R.over=now;const pts=R.cs.reduce((a,c)=>a+(c.g==='perfect'?2:c.g==='good'?1:0),0)/(2*R.cs.length);
-  let tier=pts>=.999?'princess':pts>=.75?'kiss':pts>=.45?(Math.random()<.5?'hip':'twirl'):'wave';if(HW()&&(tier==='kiss'||((tier==='hip'||tier==='twirl')&&Math.random()<.5)))tier='candy';RUN.pose=tier;RUN.poseT=now;
-  const add={princess:[1,1,1],kiss:[1,0,1],hip:[0,0,1],twirl:[0,0,1],wave:[0,0,0],candy:[1,0,1]}[tier];RESULT.padd=add;RESULT.bonus=add.reduce((a,b)=>a+b,0);
-  RESULT.pcoins={princess:12,kiss:8,hip:4,twirl:4,wave:0,candy:8}[tier];const tot=RESULT.stars.reduce((a,b)=>a+b,0)+RESULT.bonus;RESULT.coins=5+tot*2+(tot>=13?10:0)+RESULT.pcoins;
+  let tier=pts>=.85?'princess':pts>=.6?'kiss':pts>=.25?(Math.random()<.5?'hip':'twirl'):'wave';if(HW()&&(tier==='kiss'||((tier==='hip'||tier==='twirl')&&Math.random()<.5)))tier='candy';RUN.pose=tier;RUN.poseT=now;
+  const add={princess:[1,1,1],kiss:[1,0,1],hip:[0,0,1],twirl:[0,0,1],wave:[0,1,0],candy:[1,0,1]}[tier];RESULT.padd=add;RESULT.bonus=add.reduce((a,b)=>a+b,0);
+  RESULT.pcoins={princess:12,kiss:8,hip:5,twirl:5,wave:3,candy:8}[tier];const tot=RESULT.stars.reduce((a,b)=>a+b,0)+RESULT.bonus;RESULT.coins=COINS(tot,RESULT.pcoins);
   RESULT.say=RESULT.stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[Math.min(5,s+add[i])-1]));SFX.coin&&setTimeout(()=>SFX.sparkle(),500);RESULT.pose=tier;RESULT.say=RESULT.stars.map((s,i)=>pk((LANG()==='ja'?JUDGES[i].lj:JUDGES[i].lines)[s-1]));
   if(tier==='princess'){SFX.cheer();burst(W/2,H*.4,90,['#fff','#ffcc33','#ff7eb6','#b39dff'],320);}else if(tier==='kiss'){SFX.clap(24,1.5);SFX.ooh(1);for(let i=0;i<14;i++)RUN.hearts.push({x:W/2+(Math.random()-.5)*60,y:H*.4,vx:(Math.random()-.5)*160,vy:-80-Math.random()*120,t:0});}else{SFX.clap(tier==='wave'?8:16,1);}
   for(let i=0;i<6;i++)setTimeout(()=>{if(RUN){RUN.fl.push({x:Math.random()*W,y:H*(.3+Math.random()*.5),t:0,r:26});SFX.flash();RUN.white=.3;}},i*120);}}
@@ -1249,7 +1252,7 @@ const CH=[
    ['holiday',"Yakitori needs a second on the grill. Fast service means tips. Streaks mean COMBOS!",'やきとりは焼くのにちょっと時間がかかるよ。早いとチップ、連続でコンボ！'],
    ['holiday',"But if they wait too long they get HUNGRY… and if they starve they turn into little ghosts! Ho ho… don't let that happen.",'でも待たせすぎるとおなかペコペコに…そして飢えるとちっちゃいおばけになっちゃう！ホッホー…気をつけてね。'],
    ['pinco',"Skewers for sparkles! Let's go!",'串でキラキラをかせぐぞ！いくよ！']]}},
- {v:0,th:'beach',goal:7,title:['Sticks & Sparkles','串とキラキラ'],
+ {v:0,th:'beach',goal:6,title:['Sticks & Sparkles','串とキラキラ'],
   pre:{bg:'alley',cast:['pinco','tad','party'],lines:[
    ['tad',"An alley show? With FOLDING chairs? How… quaint. I'm Mr Pooping. Yes, MISTER.",'路地裏ショー？折りたたみイスで？なんて…素朴なんだ。ぼくはミスター・プーピング。そう、ミスターだよ。'],
    ['tad',"I've walked in the MALL. With real lights. Try to keep up, sweetie.",'ぼくはモールで歩いたことがあるのさ。本物のライトでね。ついてこられるかな。'],
@@ -1259,7 +1262,7 @@ const CH=[
    ['mole',"…h-hi. *pops up from the ground* …that was really pretty. …bye.",'…こ、こんにちは。*地面からぽこっ* …すごくきれいだった。…じゃあね。'],
    ['pinco',"Wait, who was that?!",'まって、今のだれ！？'],
    ['party',"That's Mogu Mogu. Super shy. If she popped up, you're doing GREAT. Next stop… the MALL!",'もぐもぐだよ。すごく人見知り。顔を出したってことは、すごくいい感じってこと！次は…モールだ！']]}},
- {v:1,th:'pop',goal:8,title:['Mall Pop-Up','モールのポップアップ'],
+ {v:1,th:'pop',goal:7,title:['Mall Pop-Up','モールのポップアップ'],
   pre:{bg:'mall',cast:['pinco','max','tad'],lines:[
    ['max',"WELCOME TO THE MALL!!! I'm Max! I hold the door! I LOVE the door! Do you love the door?!",'モールへようこそーー！！ぼくマックス！ドアを開けるのがしごと！ドア大好き！きみもドア好き！？'],
    ['pinco',"I… do now!",'…いま好きになった！'],
@@ -1271,7 +1274,7 @@ const CH=[
    ['party',"The crowd LOVED you! I got you a new job too — at a SUSHI CART! Fancy!",'お客さん大喜び！新しいバイトも見つけたよ — おすし屋台！おしゃれ！'],
    ['max',"I'll carry the rice! I LOVE rice! I love everything!",'ごはんはぼくが運ぶ！ごはん大好き！ぜんぶ大好き！'],
    ['pinco',"I've never rolled sushi… but I've rolled out of bed!",'おすしは巻いたことないけど…ベッドから転がり落ちたことはある！']]}},
- {v:1,th:'royal',goal:8,title:['Wardrobe Malfunction!','衣装トラブル！'],
+ {v:1,th:'royal',goal:7,title:['Wardrobe Malfunction!','衣装トラブル！'],
   pre:{bg:'backstage',cast:['pinco','leaf','max'],lines:[
    ['pinco',"Oh no oh no oh NO! My dress ripped! Five minutes to showtime!",'どうしよう！ドレスがやぶれた！本番まであと5分！','shake'],
    ['leaf',"Don't panic! I brought TAPE! Fashion is ninety percent tape!",'あわてないで！テープ持ってきた！ファッションの9割はテープだよ！'],
@@ -1281,7 +1284,7 @@ const CH=[
    ['kermit',"The visible tape. Was it… a statement? A critique of fast fashion?",'見えているテープ。あれは…主張か？ファストファッションへの批評か？'],
    ['pinco',"…Yes. Totally. On purpose.",'…うん。そう。わざとだよ。'],
    ['leaf',"(It was not on purpose.) 🤫",'（わざとじゃないよ）🤫']]}},
- {v:2,th:'space',goal:9,title:['Big City Lights','都会のスポットライト'],
+ {v:2,th:'space',goal:8,title:['Big City Lights','都会のスポットライト'],
   pre:{bg:'city',cast:['pinco','baller','party'],lines:[
    ['baller',"Yo! Bronny here. Nine-time All-Plush. My sneaker brand sponsors this show!",'よう！ブロニーだ。オールぬいぐるみ9回選出。このショーのスポンサーさ！'],
    ['baller',"I saw your mall walk. You've got GAME. Space theme tonight — shoot for the stars!",'モールのウォーク見たぜ。センスある！今夜は宇宙テーマ — 星までシュートだ！'],
@@ -1292,7 +1295,7 @@ const CH=[
    ['pooh',"Ooh! Can I have them? I'm gonna sell them!",'わあ！それちょうだい！売るから！'],
    ['pinco',"No! …Thank you, Bronny!",'だめ！…ありがとう、ブロニー！'],
    ['baller',"Champions practise. Go work at the ramen shop — fast hands, fast feet!",'チャンピオンは練習する。ラーメン屋で働け — 速い手、速い足！']]}},
- {v:2,th:'spooky',goal:9,title:['The Fall','まさかの転倒'],
+ {v:2,th:'spooky',goal:8,title:['The Fall','まさかの転倒'],
   pre:{bg:'city',cast:['pinco','tad','bean'],lines:[
    ['tad',"Spooky night, kid. Don't trip in those shoes. It would be SO embarrassing.",'おばけの夜だね。そのくつで転ぶなよ。すごく恥ずかしいからね。'],
    ['bean',"Falling is just… flying, but sad.",'転ぶってさ…悲しい飛行なんだよ。'],
@@ -1301,7 +1304,7 @@ const CH=[
    ['pinco',"I… I FELL. On the runway. In front of EVERYONE.",'わたし…転んだ。ランウェイで。みんなの前で。','shake'],
    ['kermit',"And then you got up and POSED. That was the most honest moment in fashion this year.",'そして立ち上がってポーズした。あれは今年いちばん正直なファッションの瞬間だった。'],
    ['tad',"…Fine. That was iconic. I hate it. Teach me how to fall like that.",'…いいだろう。あれは伝説だ。くやしい。あの転び方、教えてくれ。']]}},
- {v:3,th:'honey',goal:10,title:['Tokyo Calling','トーキョー・コーリング'],
+ {v:3,th:'honey',goal:9,title:['Tokyo Calling','トーキョー・コーリング'],
   pre:{bg:'tokyo',cast:['pinco','party','pooh'],lines:[
    ['party',"PINCO. We got invited to… TOKYO FASHION WEEK!!",'ピンコ。招待が来た…東京ファッションウィーク！！','shake'],
    ['pinco',"TOKYO?! Neon! Kawaii! Tiny desserts!",'東京！？ネオン！カワイイ！ちっちゃいスイーツ！'],
@@ -1310,7 +1313,7 @@ const CH=[
   post:{bg:'cafe',cast:['pinco','pooh','holiday'],lines:[
    ['holiday',"Ho ho! I opened a café in Tokyo! Want a shift? Lattes and cupcakes!",'ホッホー！東京にカフェを開いたよ！バイトする？ラテとカップケーキ！'],
    ['pooh',"I'll be your best customer! I'll pay you in… high fives!",'ぼく、いちばんのお客さんになる！おだいは…ハイタッチで！']]}},
- {v:3,th:'pea',goal:10,title:['Almost Quitting','もうやめたい'],
+ {v:3,th:'pea',goal:9,title:['Almost Quitting','もうやめたい'],
   pre:{bg:'night',cast:['pinco','leaf','mole','bean'],lines:[
    ['pinco',"Mr Pooping got a magazine cover. I got a cold. I miss my blanket… Maybe I'm not a princess.",'ミスター・プーピングは雑誌の表紙。わたしは風邪。毛布が恋しい…わたし、プリンセスじゃないのかも。','rain'],
    ['leaf',"Pinco… you're MY princess. Since the alley. Since the sign!",'ピンコ…きみはぼくのプリンセスだよ。路地裏のときから。看板のときから！'],
@@ -1320,7 +1323,7 @@ const CH=[
   post:{bg:'tokyo',cast:['pinco','leaf','mole'],lines:[
    ['pinco',"I'm NOT quitting! Next stop… PARIS!",'やめない！次は…パリ！'],
    ['mole',"…yay. *hides again, happily*",'…やったぁ。*しあわせそうにまたかくれる*']]}},
- {v:4,th:'swamp',goal:11,title:['Bonjour, Paris','ボンジュール、パリ'],
+ {v:4,th:'swamp',goal:10,title:['Bonjour, Paris','ボンジュール、パリ'],
   pre:{bg:'paris',cast:['pinco','kermit','tad'],lines:[
    ['kermit',"Welcome to MY event. The Paris Swamp Gala. Lily pads. Midnight. DRAMA.",'わたしのイベントへようこそ。パリ沼のガラ。スイレン。真夜中。ドラマ。'],
    ['tad',"Pinco… I saved you the good mirror backstage. Don't make it weird.",'ピンコ…楽屋のいい鏡、きみにとっておいたよ。変な空気にするなよ。'],
@@ -1330,7 +1333,7 @@ const CH=[
    ['max',"PINCO! I followed you to Paris! On a boat! I made you a crown! It's paper! I only chewed it a little!",'ピンコ！パリまでついてきた！船で！王冠つくったよ！紙だよ！ちょっとだけかじった！','gift:papercrown'],
    ['pinco',"Max… it's perfect. A Paper Crown!",'マックス…かんぺき。ペーパークラウンだ！'],
    ['party',"Paris loves you! Quick, a bistro needs help tonight. Crêpes, soup, baguettes!",'パリが君にメロメロ！今夜はビストロのお手伝い。クレープ、スープ、バゲット！']]}},
- {v:4,th:'pop',goal:11,title:['The Blanket Thief','毛布どろぼう'],
+ {v:4,th:'pop',goal:10,title:['The Blanket Thief','毛布どろぼう'],
   pre:{bg:'backstage',cast:['pinco','party','leaf'],lines:[
    ['pinco',"Wait. That curtain backstage. Pink. Fluffy. A little stain shaped like a heart…",'まって。楽屋のあのカーテン。ピンクで、ふわふわで、ハートの形のシミ…'],
    ['pinco',"THAT'S MY BLANKET!!!",'それ、わたしの毛布！！！','shake'],
@@ -1343,7 +1346,7 @@ const CH=[
   post:{bg:'paris',cast:['pinco','party'],lines:[
    ['party',"Here. Your blanket. Washed. Twice.",'はい。君の毛布。洗ったよ。2回。'],
    ['pinco',"Keep it as our curtain. For every show. It's lucky now.",'カーテンとして使って。毎回のショーで。もうラッキーアイテムだから。']]}},
- {v:5,th:'space',goal:11,title:['Road to London','ロンドンへの道'],
+ {v:5,th:'space',goal:10,title:['Road to London','ロンドンへの道'],
   pre:{bg:'london',cast:['pinco','tad','baller'],lines:[
    ['tad',"Pinco. I have to tell you something. I was mean because… you scared me. You're GOOD.",'ピンコ。言わなきゃいけないことがある。意地悪したのは…こわかったからだ。きみ、すごいよ。'],
    ['pinco',"You're good too! Let's be scary-good together!",'ミスター・プーピングもすごいよ！いっしょに最強になろう！'],
@@ -1351,7 +1354,7 @@ const CH=[
   post:{bg:'london',cast:['pinco','holiday','party'],lines:[
    ['holiday',"One last shift before the finale! A FINE DINING restaurant. Plating! Wine! Picky critics!",'決勝前の最後のバイト！高級レストラン。盛りつけ！ワイン！うるさい評論家！'],
    ['party',"Remember: garnish EVERYTHING. Critics love a little leaf on top.",'忘れずに：ぜんぶに飾りつけ。評論家は葉っぱがのってるのが好きなんだ。']]}},
- {v:5,th:'royal',goal:12,title:['LONDON FASHION WEEK','ロンドン・ファッションウィーク'],
+ {v:5,th:'royal',goal:11,title:['LONDON FASHION WEEK','ロンドン・ファッションウィーク'],
   pre:{bg:'london',cast:['pinco','party','max','mole','tad'],lines:[
    ['party',"This is it. London Fashion Week. The biggest runway in the world.",'ついにきた。ロンドン・ファッションウィーク。世界一のランウェイ。'],
    ['max',"I'm on CURTAIN DUTY! The lucky blanket curtain! Best job EVER!",'ぼく、カーテン係！ラッキー毛布のカーテン！さいこうのしごと！'],
@@ -1383,14 +1386,16 @@ function storyGo(){ST.on=true;const ss=S.story;save();setSCoins();
  if(ss.stage==='post')return playDialog(C.post,()=>{if(ss.ch>=CH.length-1){ss.done=1;ss.stage='pre';save();return ending();}ss.stage='shift';storyGo();});
  if(ss.stage==='shift'){const k=STALL_FOR(ss.ch);if(!k){ss.stage='shop';return storyGo();}return startServe(k);}
  if(ss.stage==='shop')return openShop();}
+// each 'So close' retry lowers the chapter goal by 1 (never below 5★)
+function GOAL(){const g=CH[S.story.ch].goal;return Math.max(5,g-(S.story.miss||0));}
 function storyTheme(){theme=THEMES.find(t=>t.id===CH[S.story.ch].th);scene='theme';st=0;show('s-theme');$('th-e').textContent=theme.e;$('th-n').textContent=THN(theme);$('th-h').textContent=THH(theme);
- $('th-p').innerHTML=theme.p.map(c=>'<i style="background:'+c+'"></i>').join('');$('th-rule').textContent=T('venue_'+VENUES[CH[S.story.ch].v])+' · '+T('chapter',S.story.ch+1);$('th-goal').textContent=T('goal',CH[S.story.ch].goal);SFX.sparkle();}
+ $('th-p').innerHTML=theme.p.map(c=>'<i style="background:'+c+'"></i>').join('');$('th-rule').textContent=T('venue_'+VENUES[CH[S.story.ch].v])+' · '+T('chapter',S.story.ch+1);$('th-goal').textContent=T('goal',GOAL());SFX.sparkle();}
 const _goTheme=goTheme;goTheme=function(){ST.on=false;_goTheme();$('th-rule').textContent=T('rule');$('th-goal').textContent='';};
 const _goDress=goDress;goDress=function(){const keep=ST.on&&S.story.retry&&ST.lastO;_goDress();if(keep){O=JSON.parse(JSON.stringify(ST.lastO));Object.keys(O).forEach(k=>{if(CATS.some(c=>c[0]===k)&&O[k]&&!OWN()[O[k]])O[k]=null;});renderTabs();renderItems();renderTools();}S.story.retry=0;};
 // ---- score hook: story buttons, gift event ----
 function afterScore(R,tot){const free=!ST.on;$('sc-free').style.display=free?'':'none';$('sc-story').style.display=free?'none':'';setSCoins();
  document.querySelectorAll('.coins').forEach(e=>e.textContent=ST.on?S.story.coins:S.coins);
- if(ST.on){const g=CH[S.story.ch].goal,ok=tot>=g;ST.lastO=JSON.parse(JSON.stringify(O));S.story.lastO=ST.lastO;save();
+ if(ST.on){const g=GOAL(),ok=tot>=g;S.story.miss=ok?0:(S.story.miss||0)+1;ST.lastO=JSON.parse(JSON.stringify(O));S.story.lastO=ST.lastO;save();
   $('sc-unl').textContent=ok?T('pass'):T('fail');$('sc-tip').textContent=ok?R.tip:T('failmsg',g,tot)+' '+R.tip;
   $('sc-story').innerHTML=ok?'<button class="big ghost" data-a="photo">'+T('photo')+'</button><button class="big" data-a="spass">'+T('continue')+'</button>':'<button class="big ghost" data-a="sshift">'+T('toshift')+'</button><button class="big" data-a="sretry">'+T('retry')+'</button>';}
  if(RUN&&RUN.cameo&&!RUN.giftDone){RUN.giftDone=1;if(cameoLikes(RUN.cameo,O,theme,tot))setTimeout(()=>giftEvent(RUN.cameo),700);}}
