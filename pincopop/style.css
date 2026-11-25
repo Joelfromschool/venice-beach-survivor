@@ -24,7 +24,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .disc img{width:24px;height:24px;border-radius:50%;object-fit:cover;background:#ffd84a}
 .paused-all .disc,.disc.stop{animation-play-state:paused}
 @keyframes spin{to{transform:rotate(360deg)}}
-.meta{position:absolute;left:12px;right:76px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.meta{position:absolute;left:12px;right:76px;bottom:calc(26px + env(safe-area-inset-bottom));z-index:3;text-shadow:0 1px 2px rgba(0,0,0,.6)}
 .who{display:flex;align-items:center;gap:9px;margin-bottom:9px}
 .who .av{width:34px;height:34px;border-radius:50%;object-fit:cover;background:#ffd84a;border:1.5px solid rgba(255,255,255,.9)}
 .who .h{font-weight:800;font-size:15px;display:flex;align-items:center;gap:4px;min-width:0;white-space:nowrap;overflow:hidden}
@@ -42,9 +42,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mq{overflow:hidden;white-space:nowrap;flex:1;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 88%,transparent)}
 .mq span{display:inline-block;padding-left:6%;animation:mq 9s linear infinite}
 @keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-.prog{position:absolute;left:0;right:0;bottom:env(safe-area-inset-bottom);height:3px;background:rgba(255,255,255,.18);z-index:4}
+.prog{position:absolute;left:0;right:0;bottom:env(safe-area-inset-bottom);height:26px;z-index:6;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.prog .tr{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22);transition:height .12s}
 .prog i{display:block;height:100%;width:0;background:#fff;border-radius:0 2px 2px 0}
-.prog.drag{height:6px}
+.prog b{position:absolute;top:50%;left:0;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.5);transform:scale(0);transition:transform .12s;pointer-events:none}
+.paused .prog .tr,.prog.drag .tr{height:5px}
+.paused .prog b{transform:scale(.8)}.prog.drag b{transform:scale(1.25)}
+.prog .tl{position:absolute;bottom:20px;left:0;width:96px;text-align:center;font:800 14px/1 system-ui,-apple-system,sans-serif;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.8);opacity:0;pointer-events:none;font-variant-numeric:tabular-nums}
+.prog .pv{position:absolute;bottom:42px;left:0;width:96px;height:170px;border-radius:8px;border:2px solid #fff;box-shadow:0 4px 16px rgba(0,0,0,.5);background:#111;opacity:0;pointer-events:none}
+.prog.drag .tl,.prog.drag .pv{opacity:1}
+.scrubbing .ov .rail,.scrubbing .ov .meta,.scrubbing #top{opacity:0;transition:opacity .15s}
+.scrubbing .ov .pz{opacity:0!important}
 .pz{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:rgba(0,0,0,.38);display:grid;place-items:center;opacity:0;transform:scale(.7);transition:all .18s;pointer-events:none;z-index:2}
 .pz svg{width:38px;height:38px;margin-left:5px}
 .paused .pz{opacity:1;transform:scale(1)}
@@ -202,3 +210,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .exempty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:30px;text-align:center;color:rgba(255,255,255,.7);font-size:14px;line-height:1.5}
 .exempty svg{width:46px;height:46px;opacity:.5}
 .exempty button{padding:8px 18px;border-radius:999px;background:#fff;color:#111;font-weight:800}
+
+/* v1.5.6 comments + profiles */
+.cm .nm b{color:#fff;font-weight:800}
+.cm .pfl{cursor:pointer}
+.cm .tx .mt{color:#9fd0ff;font-weight:700;cursor:pointer}.cm .tx .mt0{font-weight:700}
+.cm button.rp{display:inline-block;padding:4px 10px 4px 0;min-height:28px;background:none;border:0;color:rgba(255,255,255,.55);font:inherit;font-size:12.5px;font-weight:700}
+.pf-t{position:relative}
+.pft{margin-top:10px}.pft svg{width:16px;height:16px}
+.prof .ph img{flex:none}
+.grid{grid-auto-rows:max-content;min-height:0}
+.grid button{aspect-ratio:auto;height:0;padding:0 0 177.78%}
+.grid button canvas,.grid button img{position:absolute;inset:0}
+.slide .prog canvas.pv{top:auto;bottom:44px;height:170px;width:96px;inset:auto auto 44px 0}
+.prog .tl{bottom:24px}

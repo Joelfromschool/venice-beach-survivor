@@ -36,9 +36,8 @@ const APP=(()=>{
  const byId={};CL.forEach((c,i)=>byId[c.id]=i);
  // ---------- avatars (head crops from cut-outs) ----------
  const AV={};
- function avatar(name){if(AV[name])return AV[name];const ph='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#ffd84a"/></svg>');
-  AV[name]=ph;RD.load(name).then(im=>{if(!im)return;const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');const s=Math.min(im.width,im.height*.42);const sx=(im.width-s)/2,sy=im.height*.02;
-   x.fillStyle='#ffe9a8';x.fillRect(0,0,96,96);x.drawImage(im,sx,sy,s,s,0,0,96,96);AV[name]=c.toDataURL('image/jpeg',.85);document.querySelectorAll('img[data-av="'+name+'"]').forEach(e=>e.src=AV[name])});return ph}
+ function avatar(name){if(AV[name])return AV[name];if(name.startsWith('em:')){const [,e,a,b]=name.split(':');AV[name]='data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="96" height="96" fill="url(#g)"/><text x="48" y="64" font-size="46" text-anchor="middle">${e}</text></svg>`);return AV[name]}const ph='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 10"><rect width="10" height="10" fill="#ffd84a"/></svg>');
+  AV[name]=ph;RD.load(name).then(im=>{if(!im)return;const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.fillStyle='#ffe9a8';x.fillRect(0,0,96,96);if(/^c_mogu_/.test(name)){const k=Math.min(84/im.width,84/im.height);const w=im.width*k,h=im.height*k;x.drawImage(im,(96-w)/2,96-h-4,w,h)}else{const s=Math.min(im.width,im.height*.42);const sx=(im.width-s)/2,sy=im.height*.02;x.drawImage(im,sx,sy,s,s,0,0,96,96)}AV[name]=c.toDataURL('image/jpeg',.85);document.querySelectorAll('img[data-av="'+name+'"]').forEach(e=>e.src=AV[name])});return ph}
  const avImg=(name,cls)=>`<img ${cls?'class="'+cls+'"':''} data-av="${name}" src="${avatar(name)}" alt="">`;
  // ---------- formatting ----------
  function fmt(n){if(st.lang==='ja'){if(n>=1e8)return (n/1e8).toFixed(1).replace(/\.0$/,'')+'億';if(n>=1e4)return (n/1e4).toFixed(n>=1e5?0:1).replace(/\.0$/,'')+'万';return n.toLocaleString('ja-JP')}
@@ -65,9 +64,9 @@ const APP=(()=>{
   el.innerHTML=`<canvas></canvas><video playsinline webkit-playsinline muted loop preload="auto"></video><div class="shadeT"></div><div class="loadc"></div><div class="ov"><div class="shade"></div>
    <div class="rail"><button class="rb like" type="button">${GL.heart}<span class="n"></span></button><button class="rb cmt" type="button">${GL.cmt}<span class="n"></span></button><button class="rb shr" type="button">${GL.share}<span class="n"></span></button><button class="rb sav" type="button">${GL.star}<span class="n"></span></button><button class="disc" type="button"><img alt=""></button></div>
    <div class="meta"><div class="who"><img class="av" alt=""><b class="h"></b><button class="fol" type="button"></button></div><div class="cap"><span class="ct"></span><button class="more" type="button"></button></div><div class="aud">${GL.note}<div class="mq"><span></span></div></div></div>
-   <div class="pz">${GL.play}</div></div><div class="prog"><i></i></div>`;
+   <div class="pz">${GL.play}</div></div><div class="prog" role="slider" aria-valuemin="0"><div class="tr"><i></i><b></b></div><div class="tl"></div><canvas class="pv" width="96" height="170"></canvas></div>`;
   feedEl.appendChild(el);const s={k,el,cv:el.querySelector('canvas'),vd:el.querySelector('video'),i:-999,clip:null,drawnAt:-1,poster:null};s.x=s.cv.getContext('2d',{alpha:false});
-  const q=c=>el.querySelector(c);s.q={like:q('.like'),likeN:q('.like .n'),cmtN:q('.cmt .n'),shrN:q('.shr .n'),sav:q('.sav'),savN:q('.sav .n'),disc:q('.disc img'),discB:q('.disc'),av:q('.who .av'),h:q('.who .h'),fol:q('.fol'),cap:q('.cap'),ct:q('.ct'),more:q('.more'),mq:q('.mq span'),prog:q('.prog i'),progB:q('.prog')};
+  const q=c=>el.querySelector(c);s.q={like:q('.like'),likeN:q('.like .n'),cmtN:q('.cmt .n'),shrN:q('.shr .n'),sav:q('.sav'),savN:q('.sav .n'),disc:q('.disc img'),discB:q('.disc'),av:q('.who .av'),h:q('.who .h'),fol:q('.fol'),cap:q('.cap'),ct:q('.ct'),more:q('.more'),mq:q('.mq span'),prog:q('.prog i'),progB:q('.prog'),thumb:q('.prog b'),tl:q('.prog .tl'),pv:q('.prog .pv')};
   q('.like').onclick=e=>{e.stopPropagation();toggleLike(s,false)};
   q('.cmt').onclick=e=>{e.stopPropagation();openComments(s.clip)};
   q('.shr').onclick=e=>{e.stopPropagation();openShare(s.clip)};
@@ -101,7 +100,7 @@ const APP=(()=>{
  function place(dy,anim){slots.forEach(s=>{const off=(s.i-idx)*H+dy;const jump=s.lastOff==null||Math.abs(off-s.lastOff)>H*1.5;s.lastOff=off;s.el.style.transition=anim&&!jump?'transform '+anim+'ms cubic-bezier(.22,.8,.3,1)':'none';s.el.style.transform=`translate3d(0,${off}px,0)`;s.el.style.visibility=Math.abs(s.i-idx)>1?'hidden':'visible'})}
  function ensure(){if(idx>feed.length-4)extend();for(let d=-1;d<=1;d++){const i=idx+d;if(i<0){const s=slotFor(i);s.i=i;s.clip=null;continue}assign(slotFor(i),i)}}
  // ---------- playback ----------
- let playing=true,hold=false,lastNow=performance.now();const cur=()=>slotFor(idx);
+ let playing=true,hold=false,scrub=null,lastNow=performance.now();const cur=()=>slotFor(idx);
  function startCur(at){const s=cur();if(!s.clip)return;s.t=at||0;s.loops=0;s.el.classList.remove('paused');
   if(s.clip.vid){try{s.vd.currentTime=s.t;const p=s.vd.play();if(p)p.catch(()=>{})}catch(e){}}
   if(playing&&!hold)AU.start(s.clip,s.t);else AU.stop()}
@@ -119,11 +118,11 @@ const APP=(()=>{
  let fpsAcc=0,fpsN=0,slowFrames=0;
  function frame(now){requestAnimationFrame(frame);const dt=Math.min(.1,(now-lastNow)/1000);lastNow=now;
   const s=cur();if(!s.clip)return;
-  if(playing&&!hold){let t;if(s.clip.vid){t=s.vd.currentTime||0;if(t+.25<(s.t||0)){AU.start(s.clip,t);s.loops++}}else{const at=AU.time();t=at!=null?at:s.t+dt;}
+  if(playing&&!hold&&!scrub){let t;if(s.clip.vid){t=s.vd.currentTime||0;if(t+.25<(s.t||0)){AU.start(s.clip,t);s.loops++}}else{const at=AU.time();t=at!=null?at:s.t+dt;}
    if(t>=s.clip.dur){t=t%s.clip.dur;s.loops=(s.loops||0)+1;if(st.auto&&!sheetOpen){go(1);return}if(!s.clip.vid)AU.start(s.clip,t)}
    s.t=t}
   const ok=drawSlot(s,s.t||0);s.el.classList.toggle('loading',!ok);
-  s.q.prog.style.width=(Math.min(1,(s.t||0)/s.clip.dur)*100).toFixed(2)+'%';
+  {const f=Math.min(1,(s.t||0)/s.clip.dur);s.q.prog.style.width=(f*100).toFixed(2)+'%';s.q.thumb.style.left=(f*100).toFixed(2)+'%'}
   // neighbours: draw one still frame once ready (instant preview while swiping)
   for(const d of [-1,1]){const n=slotFor(idx+d);if(n.i!==idx+d||!n.clip)continue;if(n.drawnAt<0&&drawSlot(n,Math.min(1.1,n.clip.dur*.12))){n.drawnAt=now;n.el.classList.remove('loading');n.q.prog.style.width='0%'}}
   // adaptive resolution: drop DPR if we are slow
@@ -172,10 +171,24 @@ const APP=(()=>{
  // wheel / keys for desktop testing (no instructions shown; mobile is the target)
  let wheelLock=0;feedEl.addEventListener('wheel',e=>{e.preventDefault();const now=performance.now();if(now<wheelLock||Math.abs(e.deltaY)<12)return;wheelLock=now+520;lastFlingMs=300;go(e.deltaY>0?1:-1)},{passive:false});
  addEventListener('keydown',e=>{if(sheetOpen||EX.open||e.target.tagName==='INPUT')return;if(e.key==='ArrowDown'){lastFlingMs=300;go(1)}else if(e.key==='ArrowUp'){lastFlingMs=300;go(-1)}else if(e.key===' '){e.preventDefault();setPlaying(!playing,true)}});
- // scrub on the progress bar
- slots.forEach(s=>{const pb=s.q.progB;let on=false;const seek=x=>{const c=s.clip;if(!c)return;s.t=Math.max(0,Math.min(c.dur-.05,x/W*c.dur));if(c.vid)try{s.vd.currentTime=s.t}catch(e){}if(playing)AU.start(c,s.t)};
-  pb.addEventListener('pointerdown',e=>{e.stopPropagation();on=true;pb.classList.add('drag');seek(e.clientX);try{pb.setPointerCapture(e.pointerId)}catch(er){}});
-  pb.addEventListener('pointermove',e=>{if(on)seek(e.clientX)});pb.addEventListener('pointerup',()=>{on=false;pb.classList.remove('drag')})});
+ // scrub on the progress bar (Reels-style): touch the bar, drag or tap to any moment; pauses while held, resumes on release
+ const mmss=t=>{t=Math.max(0,Math.floor(t+1e-6));return Math.floor(t/60)+':'+String(t%60).padStart(2,'0')};
+ slots.forEach(s=>{const pb=s.q.progB;let pvq=0;
+  const label=()=>{const c=s.clip;if(!c)return;s.q.tl.textContent=mmss(s.t)+' / '+mmss(c.dur);pb.setAttribute('aria-valuenow',Math.round(s.t));pb.setAttribute('aria-valuemax',Math.round(c.dur));pb.setAttribute('aria-label',st.lang==='ja'?'再生位置':'Seek')};
+  const preview=()=>{pvq=0;const c=s.clip;if(!c||!scrub||c.vid||!RD.ready(c))return;try{RD.VID.cur=null;RD.draw(s.q.pv.getContext('2d'),c,s.t,96,170)}catch(e){}};
+  const seek=x=>{const c=s.clip;if(!c)return;const r=pb.getBoundingClientRect();const f=Math.max(0,Math.min(1,(x-r.left)/Math.max(1,r.width)));s.t=Math.min(c.dur-.05,f*c.dur);
+   if(c.vid)try{s.vd.currentTime=s.t}catch(e){}
+   s.q.prog.style.width=(f*100).toFixed(2)+'%';s.q.thumb.style.left=(f*100).toFixed(2)+'%';
+   const pw=96,px=Math.max(6,Math.min(r.width-pw-6,x-r.left-pw/2));s.q.pv.style.left=px+'px';s.q.tl.style.left=Math.max(6,Math.min(r.width-96,x-r.left-48))+'px';label();if(!pvq)pvq=requestAnimationFrame(preview)};
+  const end=e=>{if(!scrub||scrub.s!==s||(e&&e.pointerId!==scrub.id))return;const was=scrub.was;scrub=null;pb.classList.remove('drag');document.body.classList.remove('scrubbing');
+   if(was){setPlaying(true,false)}else{s.el.classList.add('paused')}};
+  pb.addEventListener('pointerdown',e=>{e.stopPropagation();if(sheetOpen||animating||hzAnim||!s.clip||slotFor(idx)!==s)return;unlockAudio();
+   scrub={s,id:e.pointerId,was:playing};pb.classList.add('drag');document.body.classList.add('scrubbing');
+   AU.stop();if(s.clip.vid)try{s.vd.pause()}catch(er){}playing=false;s.q.discB.classList.add('stop');s.el.classList.remove('paused');
+   seek(e.clientX);try{pb.setPointerCapture(e.pointerId)}catch(er){}});
+  pb.addEventListener('pointermove',e=>{if(scrub&&scrub.s===s&&e.pointerId===scrub.id)seek(e.clientX)});
+  pb.addEventListener('pointerup',end);pb.addEventListener('pointercancel',end);pb.addEventListener('lostpointercapture',end);
+  pb.addEventListener('click',e=>e.stopPropagation())});
  // ---------- likes / saves ----------
  function toggleLike(s,fromDouble){const c=s.clip;if(!c)return;if(st.liked[c.id])delete st.liked[c.id];else st.liked[c.id]=Date.now();save();fill(s);s.q.like.classList.remove('pop');void s.q.like.offsetWidth;s.q.like.classList.add('pop');if(st.liked[c.id])AU.sfx(st.gold?'coin':'pop')}
  function toggleSave(s){const c=s.clip;if(st.saved[c.id])delete st.saved[c.id];else st.saved[c.id]=Date.now();save();fill(s);s.q.sav.classList.remove('pop');void s.q.sav.offsetWidth;s.q.sav.classList.add('pop');toast(T(st.saved[c.id]?'savedT':'unsavedT'))}
@@ -199,8 +212,10 @@ const APP=(()=>{
  function commentsFor(c){const r=rngS(c.id.split('').reduce((a,ch)=>a*31+ch.charCodeAt(0),7));const pc=POOL[c.cat]||POOL.all;const out=[];
   (c.com||[]).forEach(x=>out.push(x));const used=new Set();while(out.length<10){const src=r()<.6?pc:POOL.all;const k=Math.floor(r()*src.length);const key=(src===pc?'c':'a')+k;if(used.has(key))continue;used.add(key);out.push(src[k])}
   return out.map((x,i)=>({by:x[0],t:[x[1],x[2]],lk:Math.round(Math.pow(r(),2)*c.likes*.03)+3,ago:[['2h','2時間前'],['5h','5時間前'],['1d','1日前'],['3d','3日前'],['1w','1週間前']][Math.floor(r()*5)],id:c.id+'_'+i}))}
- function cmRow(m,mine){const cr=CREATORS[m.by];const liked=st.cl[m.id];const name=mine?T('you'):cr.h;const av=mine?'<div class="yav">★</div>':avImg(cr.av);
-  return `<div class="cm" data-id="${m.id}">${av}<div class="bd"><div class="nm">${esc(name)}<small>${esc(L(m.ago))}</small></div><div class="tx">${esc(L(m.t))}</div><div class="rp">${T('reply')}</div></div><button class="lk ${liked?'on':''}" type="button">${GL.heart}<span>${fmt(m.lk+(liked?1:0))}</span></button></div>`}
+ const HANDLE={};Object.keys(CREATORS).forEach(k=>HANDLE[CREATORS[k].h]=k);
+ const mention=t=>esc(t).replace(/@([a-z0-9._]+[a-z0-9_])/gi,(w,h)=>HANDLE[h]?`<b class="mt" data-by="${HANDLE[h]}">@${h}</b>`:`<b class="mt0">${w}</b>`);
+ function cmRow(m,mine){const cr=CREATORS[m.by]||CREATORS.pinco;const liked=st.cl[m.id];const name=mine?T('you'):cr.h;const av=mine?'<div class="yav">★</div>':avImg(cr.av,'pfl" data-by="'+m.by);
+  return `<div class="cm" data-id="${m.id}">${av}<div class="bd"><div class="nm"><b class="${mine?'':'pfl'}" ${mine?'':'data-by="'+m.by+'"'}>${esc(name)}</b><small>${esc(L(m.ago))}</small></div><div class="tx">${mention(L(m.t))}</div><button type="button" class="rp" ${mine?'':'data-h="'+esc(cr.h)+'"'}>${T('reply')}</button></div><button class="lk ${liked?'on':''}" type="button">${GL.heart}<span>${fmt(m.lk+(liked?1:0))}</span></button></div>`}
  function openComments(c){if(!c)return;const list=commentsFor(c);const mine=(st.mine[c.id]||[]);
   openSheet('cm',`<div class="sh-title">${T('comments')} · ${fmt(c.cm+mine.length)}</div><div class="clist" id="cList">${mine.map(m=>cmRow(m,m.by==='you')).join('')}${list.map(m=>cmRow(m)).join('')}</div>
    <div class="cbar"><div class="emo">${['❤️','😂','🔥','👏','😍','🥺','💰','🫛'].map(e=>`<button type="button">${e}</button>`).join('')}</div><div class="cin">${'<div class="yav" style="width:34px;height:34px;border-radius:50%;flex:none;background:linear-gradient(135deg,#ff4f9a,#ffb36b);display:grid;place-items:center;font-weight:900">★</div>'}<input id="cInp" maxlength="140" enterkeyhint="send" placeholder="${T('addc')}"><button id="cPost" type="button" disabled>${T('post')}</button></div></div>`);
@@ -209,9 +224,11 @@ const APP=(()=>{
   const send=()=>{const v=inp.value.trim();if(!v)return;const m={by:'you',t:[v,v],lk:0,ago:[T('now'),T('now')],id:c.id+'_u'+Date.now()};(st.mine[c.id]=st.mine[c.id]||[]).unshift(m);save();inp.value='';post.disabled=true;
    $('cList').insertAdjacentHTML('afterbegin',cmRow(m,true));$('cList').scrollTop=0;bindLikes();slots.forEach(fill);AU.sfx('pop');
    setTimeout(()=>{if(sheetOpen!=='cm')return;const cr=CREATORS[c.by];const rep=cr.rep[Math.floor(Math.random()*cr.rep.length)];const rm={by:c.by,t:['@'+T('you')+' '+rep[0],'@'+T('you')+' '+rep[1]],lk:1,ago:[T('now'),T('now')],id:c.id+'_r'+Date.now()};st.mine[c.id].unshift(rm);save();const row=cmRow(rm);const l=$('cList');if(l){l.insertAdjacentHTML('afterbegin',row);bindLikes();AU.sfx('ding')}},1700)};
-  post.onclick=send;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();send()}};bindLikes()}
+  post.onclick=send;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();send()}};bindLikes();
+  $('cList').addEventListener('click',e=>{const p=e.target.closest('.pfl,.mt');if(p&&p.dataset.by){e.stopPropagation();AU.sfx('pop');openProfile(p.dataset.by,()=>openComments(c));return}
+   const r=e.target.closest('.rp');if(r&&r.dataset.h){inp.value='@'+r.dataset.h+' ';post.disabled=false;inp.focus();try{inp.setSelectionRange(inp.value.length,inp.value.length)}catch(er){}}})}
  function bindLikes(){sb.querySelectorAll('.cm .lk').forEach(b=>b.onclick=()=>{const id=b.closest('.cm').dataset.id;st.cl[id]=!st.cl[id];if(!st.cl[id])delete st.cl[id];save();b.classList.toggle('on',!!st.cl[id]);const n=b.querySelector('span');const v=parseInt(n.dataset.b||n.textContent.replace(/[^0-9]/g,''))||0;n.dataset.b=n.dataset.b||(st.cl[id]?v:v-1);n.textContent=fmt(+n.dataset.b+(st.cl[id]?1:0));if(st.cl[id])AU.sfx('pop')})}
- function openShare(c){if(!c)return;const ppl=Object.keys(CREATORS).filter(k=>k!==c.by);
+ function openShare(c){if(!c)return;const ppl=Object.keys(CREATORS).filter(k=>k!==c.by&&k!=='kaise'&&!CREATORS[k].fan);
   openSheet('sh',`<div class="sh-title">${T('share')}</div><div class="srow">${ppl.map(k=>`<button class="sp" type="button" data-k="${k}">${avImg(CREATORS[k].av)}<span>${esc(L(CREATORS[k].n))}</span></button>`).join('')}</div>
    <div class="acts"><button class="act" type="button" id="aCopy"><i>${GL.link}</i>${T('copy')}</button><button class="act" type="button" id="aShare"><i>${GL.share}</i>${T('sharevia')}</button><button class="act" type="button" id="aSave"><i>${GL.star}</i>${st.saved[c.id]?T('unsave'):T('save')}</button><button class="act" type="button" id="aNope"><i>${GL.no}</i>${T('nope')}</button></div>`,true);
   sb.querySelectorAll('.sp').forEach(b=>b.onclick=()=>{b.classList.add('sent');AU.sfx('swish');toast(T('sentto',{n:L(CREATORS[b.dataset.k].n)}))});
@@ -220,15 +237,29 @@ const APP=(()=>{
   $('aShare').onclick=()=>{if(navigator.share)navigator.share({title:'PincoPop',text:L(c.cap),url}).catch(()=>{});else{try{navigator.clipboard.writeText(url)}catch(e){}toast(T('copied'))}closeSheet()};
   $('aSave').onclick=()=>{closeSheet();toggleSave(cur())};
   $('aNope').onclick=()=>{st.nope[c.id]=1;save();closeSheet();toast(T('nopeT'));lastFlingMs=300;go(1)}}
- function openProfile(by){const cr=CREATORS[by];const mine=CL.map((c,i)=>i).filter(i=>CL[i].by===by&&(CL[i].cat!=='secret'||st.gold));
-  openSheet('pf',`<div class="prof"><div class="ph">${avImg(cr.av)}<div class="stats"><div><b>${mine.length}</b><span>${T('posts')}</span></div><div><b>${fmt(cr.f+(st.fol[by]?1:0))}</b><span>${T('followers')}</span></div><div><b>${8+by.length}</b><span>${T('followingN')}</span></div></div></div>
-   <div class="pn">${esc(L(cr.n))} ${st.gold?GL.badgeG:GL.badge}</div><div class="pb">@${esc(cr.h)} · ${esc(L(cr.bio))}</div><button class="pfol ${st.fol[by]?'on':''}" type="button" id="pFol">${st.fol[by]?T('following'):T('follow')}</button></div>
-   <div class="grid">${mine.map(i=>`<button type="button" data-i="${i}"><canvas width="180" height="320"></canvas><span class="gv">${GL.play}${fmt(CL[i].likes*7+1234)}</span></button>`).join('')}</div>`);
-  $('pFol').onclick=()=>{st.fol[by]=!st.fol[by];save();$('pFol').classList.toggle('on',!!st.fol[by]);$('pFol').textContent=st.fol[by]?T('following'):T('follow');slots.forEach(fill);AU.sfx('pop')};
-  sb.querySelectorAll('.grid button').forEach(b=>{const i=+b.dataset.i,c=CL[i];const cv=b.querySelector('canvas');
+ // ---------- profiles (Instagram-style) ----------
+ const L_=L;Object.assign(GL,{lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>',grid:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18M3 9h18M3 15h18"/></svg>'});
+ const ACT={c_pooh_:'pooh',c_pinco_:'pinco',c_bean_:'bean',c_pooping_:'pooping',pooping_parent_:'pooping',c_bronny_:'bronny',c_asmon_:'asmon',c_max_:'max',c_mogu_:'mogu',c_party_:'party',kaise_:'kaise',c_prof_:'prof',bbean_:'bbean',babies_1:'bbean'};
+ const castOf=c=>{if(c._cast)return c._cast;const set=new Set();const walk=sh=>{(sh.a||[]).forEach(a=>{for(const k in ACT)if(String(a[0]).startsWith(k))set.add(ACT[k])});(sh.panes||[]).forEach(walk)};(c.shots||[]).forEach(walk);if(c.bb)set.add('bbean');return c._cast=set};
+ const hsh=t=>{let h=7;for(const ch of t)h=(h*31+ch.charCodeAt(0))>>>0;return h};
+ const okClip=i=>CL[i].cat!=='secret'||st.gold;
+ function pfLists(by){const cr=CREATORS[by];const all=CL.map((c,i)=>i).filter(okClip);const byL=(a,b)=>CL[b].likes-CL[a].likes;
+  if(cr.fan){if(cr.priv)return {posts:[],second:[],sk:'pfReposts'};const r=rngS(hsh(by));const pool=all.filter(i=>{const c=CL[i];return c.by!=='kaise'&&!castOf(c).has('kaise')&&(cr.picks||[]).some(p=>p==='bb'?c.bb:(c.cat===p||(c.also||[]).includes(p)))});const pick=[];while(pool.length&&pick.length<6){pick.push(pool.splice(Math.floor(r()*pool.length),1)[0])}return {posts:[],second:pick,sk:'pfReposts'}}
+  const posts=all.filter(i=>CL[i].by===by).sort(byL);const tagged=all.filter(i=>CL[i].by!==by&&castOf(CL[i]).has(by)).sort(byL);return {posts,second:tagged,sk:'pfTagged'}}
+ function openProfile(by,back,tab){const cr=CREATORS[by];if(!cr)return;const Ls=pfLists(by);tab=tab||(Ls.posts.length||cr.fan&&!Ls.second.length?'posts':'second');const L=tab==='posts'?Ls.posts:Ls.second;
+  const fol=!!st.fol[by];const followingN=cr.fan?40+hsh(by)%260:12+hsh(by)%180;
+  const emp=cr.priv&&!fol?`<div class="mempty">${GL.lock||'🔒'}<p><b>${T('pfPriv')}</b><br>${T('pfPrivT')}</p></div>`:!L.length?`<div class="mempty">${GL.play}<p><b>${T(tab==='posts'?'pfNoPosts':'pfNoTag')}</b>${tab==='posts'?'<br>'+esc(T('pfNoPostsT',{n:L_(cr.n)})):''}</p></div>`:'';
+  openSheet('pf',`<div class="sh-title pf-t">${back?`<button type="button" class="sh-back" id="pBack" aria-label="${T('back')}">${GL.back}</button>`:''}@${esc(cr.h)}</div><div class="prof"><div class="ph">${avImg(cr.av)}<div class="stats"><div><b>${Ls.posts.length}</b><span>${T('posts')}</span></div><div><b>${fmt(cr.f+(fol?1:0))}</b><span>${T('followers')}</span></div><div><b>${followingN}</b><span>${T('followingN')}</span></div></div></div>
+   <div class="pn">${esc(L_(cr.n))} ${cr.fan?'':(st.gold?GL.badgeG:GL.badge)}</div>${L_(cr.bio)?`<div class="pb">${esc(L_(cr.bio))}</div>`:''}<button class="pfol ${fol?'on':''}" type="button" id="pFol">${fol?T('following'):T('follow')}</button></div>
+   ${cr.priv&&!fol?'':`<div class="mtabs pft"><button type="button" data-t="posts" class="${tab==='posts'?'on':''}">${GL.grid||''}<span>${T('pfPosts')}</span></button><button type="button" data-t="second" class="${tab==='second'?'on':''}"><span>${T(Ls.sk)}</span></button></div>`}
+   ${emp||`<div class="grid" id="pGrid">${L.map((i,n)=>`<button type="button" data-n="${n}"><canvas width="180" height="320"></canvas><span class="gv">${GL.play}${fmt(CL[i].likes*7+1234)}</span></button>`).join('')}</div>`}`);
+  if(back)$('pBack').onclick=e=>{e.stopPropagation();AU.sfx('pop');back()};
+  $('pFol').onclick=()=>{st.fol[by]=!st.fol[by];save();slots.forEach(fill);AU.sfx('pop');if(cr.priv)openProfile(by,back,tab);else{$('pFol').classList.toggle('on',!!st.fol[by]);$('pFol').textContent=st.fol[by]?T('following'):T('follow');sb.querySelector('.stats div:nth-child(2) b').textContent=fmt(cr.f+(st.fol[by]?1:0))}};
+  sb.querySelectorAll('.pft button').forEach(b=>b.onclick=e=>{e.stopPropagation();AU.sfx('pop');openProfile(by,back,b.dataset.t)});
+  sb.querySelectorAll('#pGrid button').forEach(b=>{const n=+b.dataset.n,c=CL[L[n]];const cv=b.querySelector('canvas');
    const paint=()=>{if(c.vid){const im=new Image();im.onload=()=>cv.getContext('2d').drawImage(im,0,0,180,320);im.src='vid/'+c.vid+'.jpg?v='+(window.__BUILD__||'')}else{RD.VID.cur=null;RD.draw(cv.getContext('2d'),c,Math.min(c.dur*.45,4),180,320)}};
    RD.loadClip(c).then(paint);
-   b.onclick=()=>{closeSheet();feed.splice(idx+1,0,i);slots.forEach(s=>{if(s.i===idx+1)s.i=-999});ensure();lastFlingMs=320;go(1)}})}
+   b.onclick=e=>{e.stopPropagation();closeSheet();col.pf={by,tab};enterMine('profile',L,n)}})}
  function openSettings(){const seg=(id,a,b,on)=>`<div class="seg" id="${id}"><button type="button" class="${on?'on':''}">${a}</button><button type="button" class="${on?'':'on'}">${b}</button></div>`;
   openSheet('set',`<div class="sh-title">${T('settings')}</div><div class="opts">
    <div class="orow"><span>${T('lang')}</span>${seg('oLang','English','日本語',st.lang==='en')}</div>
@@ -258,7 +289,7 @@ const APP=(()=>{
    RD.loadClip(c).then(paint);b.onclick=e=>{e.stopPropagation();closeSheet();enterMine(kind,L,n)}})}
  function enterMine(kind,L,n){if(cat!=='mine'){saveSec();col.prev=cat}stopSlot(cur());AU.stop();cat='mine';col.kind=kind;col.list=L.slice(n).concat(L.slice(0,n));feed=[];idx=0;extend();
   buildTabs();slots.forEach(s=>{s.i=-999});ensure();place(0,false);playing=true;startCur(0)}
- function exitMine(){stopSlot(cur());AU.stop();const c=col.prev||'all';const k=col.kind;cat='__';setCat(c);if(k==='explore')exOpen(true);else openMine(k)}
+ function exitMine(){stopSlot(cur());AU.stop();const c=col.prev||'all';const k=col.kind;cat='__';setCat(c);if(k==='explore')exOpen(true);else if(k==='profile')openProfile(col.pf.by,null,col.pf.tab);else openMine(k)}
  $('mineBtn').onclick=e=>{e.stopPropagation();unlockAudio();openMine()};
  // ---------- explore (v1.5) ----------
  const EX={q:'',chip:'',scroll:0,open:false,idx:null,order:null,thumbs:new Map(),queue:[],busy:false,io:null};
@@ -310,7 +341,7 @@ const APP=(()=>{
  $('exploreBtn').onclick=e=>{e.stopPropagation();unlockAudio();closeSheet();exOpen(false)};
  // ---------- tabs / language ----------
  const CATS=['all','tokyo','la','food','comedy','parent','makeup','preg','lng','couple'];
- function buildTabs(){if(cat==='mine'){$('tabs').innerHTML=`<button class="tab on mineb" type="button" data-c="__back">${GL.back}<span>${T(col.kind==='liked'?'likedV':col.kind==='explore'?'explore':'savedV')}</span></button><i id="tabInd"></i>`;$('tabs').querySelector('.tab').onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;exitMine()};requestAnimationFrame(()=>placeInd(cat,cat,0,false));return}
+ function buildTabs(){if(cat==='mine'){$('tabs').innerHTML=`<button class="tab on mineb" type="button" data-c="__back">${GL.back}<span>${col.kind==='profile'?'@'+esc(CREATORS[col.pf.by].h):T(col.kind==='liked'?'likedV':col.kind==='explore'?'explore':'savedV')}</span></button><i id="tabInd"></i>`;$('tabs').querySelector('.tab').onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;exitMine()};requestAnimationFrame(()=>placeInd(cat,cat,0,false));return}
   const cs=st.gold?CATS.concat('secret'):CATS;$('tabs').innerHTML=cs.map(k=>`<button class="tab ${k===cat?'on':''} ${k==='secret'?'gold':''}" type="button" role="tab" data-c="${k}">${T(k==='all'?'foryou':k)}</button>`).join('')+'<i id="tabInd"></i>';
   $('tabs').querySelectorAll('.tab').forEach(b=>b.onclick=e=>{e.stopPropagation();if(hzAnim||ptr)return;unlockAudio();setCat(b.dataset.c)});requestAnimationFrame(()=>placeInd(cat,cat,0,false))}
  function tabCenter(c){const b=c==='mine'?$('tabs').querySelector('.tab'):$('tabs').querySelector('.tab[data-c="'+c+'"]');return b?b.offsetLeft+b.offsetWidth/2:0}
