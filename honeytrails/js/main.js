@@ -1,11 +1,11 @@
 // Honey Trails: game controller and UI.
-import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.0';
-import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.0';
-import {AU} from './audio.js?v=1.0.0';
-import * as MAP from './map.js?v=1.0.0';
-import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.0';
-import * as ENC from './encounter.js?v=1.0.0';
-import * as BAT from './battle.js?v=1.0.0';
+import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.1';
+import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.1';
+import {AU} from './audio.js?v=1.0.1';
+import * as MAP from './map.js?v=1.0.1';
+import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.1';
+import * as ENC from './encounter.js?v=1.0.1';
+import * as BAT from './battle.js?v=1.0.1';
 const V=window.__V;const $=id=>document.getElementById(id);
 window.__art=(sp,shiny,hat)=>hat&&HATS.has(sp)?`art/${sp==='bean'?'beanx':sp+'_h'}.webp?v=${V}`:`art/${sp}${shiny&&SHINY.has(sp)?'_s':''}.webp?v=${V}`;
 const art=window.__art;
@@ -15,7 +15,7 @@ const G={view:'title',hints:{},last:performance.now(),refreshT:0,nightT:0,nearKe
 const YOYOGI=project(35.6717,139.6949);
 let gpsWatch=null,origin=null,lastFix=null;
 // ---------- helpers ----------
-function toast(msg,ms=2200){const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),ms)}
+function toast(msg,ms=2200){const om=document.querySelector('#scr #oMsg');if(om){om.textContent=msg;om.classList.add('on');clearTimeout(om._h);om._h=setTimeout(()=>om.classList.remove('on'),ms+800);return}const t=$('toast');t.textContent=msg;t.classList.add('on');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('on'),ms)}
 function popup({title,img,html,lines,buttons,cls}){const p=$('pop');p.innerHTML=`<div class="pbox ${cls||''}">${title?`<h3>${esc(title)}</h3>`:''}${img?`<img class="big" src="${img}" alt="">`:''}${html||''}${lines?`<div class="lines">${lines.map(l=>`<span>${esc(l)}</span>`).join(' ')}</div>`:''}<div class="bt"></div></div>`;
  const bt=p.querySelector('.bt');return new Promise(res=>{(buttons||[{t:T('sendOK')}]).forEach((b,i)=>{const e=document.createElement('button');e.className='btn '+(b.c||(i?'ghost':'honey'));e.textContent=b.t;e.onclick=()=>{AU.play('tap');p.classList.remove('on');p.innerHTML='';res(b.v??i)};bt.appendChild(e)});p.classList.add('on')})}
 function screen(html,cls=''){const s=$('scr');s.innerHTML=`<div class="screen ${cls}">${html}</div>`;return s.firstChild}
@@ -90,15 +90,16 @@ function frame(t){const dt=Math.min(.05,(t-G.last)/1000);G.last=t;requestAnimati
 function spawnLevel(s){return 1+Math.floor(s.lvR*Math.min(30,S.lv+3))}
 function bgFor(ter,night){const r=Math.random();if(night)return r<.5?'shrine_night':'keyaki';if(ter==='water')return ['yoyogi','la_harbor','boardwalk'][Math.floor(r*3)];if(ter==='park')return ['park','yoyogi','lawn','ginkgo','shrine'][Math.floor(r*5)];return ['la_sawtelle','promenade','lawn'][Math.floor(r*3)]}
 function encounter(s,bonus){if(!S.dex[s.sp])S.dex[s.sp]={seen:1,caught:0};const lv=bonus?bonus.lv:spawnLevel(s);const cp=calcCP(s.sp,lv,s.iv);
- G.view='enc';$('hud').classList.remove('on');ENC.resize();const n=(S.encN=(S.encN||0)+1);
+ $('scr').innerHTML='';G.view='enc';$('hud').classList.remove('on');ENC.resize();const n=(S.encN=(S.encN||0)+1);
  $('eHint').textContent=n<=3?T('flick'):(n===5||n===9)?T('curveHint'):'';setTimeout(()=>$('eHint').textContent='',6000);
- ENC.startEncounter({sp:s.sp,lv,iv:s.iv,shiny:s.shiny,hat:s.hat,cp,name:T(s.sp,1),bg:bonus?'lawn':bgFor(s.ter,MAP.M.night),T,toast,raid:!!bonus,bonus,
+ const tutorial=!S.tutCatch&&!bonus;if(tutorial)$('eHint').textContent=T('flick');
+ ENC.startEncounter({tutorial,sp:s.sp,lv,iv:s.iv,shiny:s.shiny,hat:s.hat,cp,name:T(s.sp,1),bg:bonus?'lawn':bgFor(s.ter,MAP.M.night),T,toast,raid:!!bonus,bonus,
   onEnd:r=>afterEncounter(s,lv,r,bonus)})}
 async function afterEncounter(s,lv,r,bonus){AU.song(MAP.M.night?'night':'map');G.view='map';$('hud').classList.add('on');
  if(r.ran){save();return}
  S.gone[s.key]=Date.now()+3600000;if(bonus)S.raidsDone[bonus.key]=1;
  if(r.fled){save();if(bonus)toast(T('fled'));return}
- if(r.caught){const isNew=!S.dex[s.sp].caught;S.dex[s.sp].caught=(S.dex[s.sp].caught||0)+1;if(s.shiny)S.dex[s.sp].shiny=1;if(s.hat)S.dex[s.sp].hat=1;
+ if(r.caught){S.tutCatch=1;const isNew=!S.dex[s.sp].caught;S.dex[s.sp].caught=(S.dex[s.sp].caught||0)+1;if(s.shiny)S.dex[s.sp].shiny=1;if(s.hat)S.dex[s.sp].hat=1;
   const p=newPal(s.sp,lv,s.iv,s.shiny,{hat:!!s.hat});S.pals.push(p);
   let xp=100+(r.bonus==='excellent'?100:r.bonus==='great'?50:r.bonus==='nice'?10:0)+(r.curve?10:0)+(r.first?50:0)+(isNew?500:0);let gl=100+(s.shiny?400:0),tr=3+(SP[s.sp].rar==='r'?2:0);
   const lines=[`+${xp} ${T('xp')}`,`+${gl} ${T('glitter')}`,`+${tr} ${T('treats')}`];
@@ -119,7 +120,7 @@ function openStop(st){G.view='screen';$('hud').classList.remove('on');const used
 async function spin(st,disc,dir){disc.style.transition='transform 1s cubic-bezier(.2,.8,.3,1)';disc.style.transform=`rotateY(${dir*720}deg)`;
  if(S.spun[st.id]>Date.now()){AU.play('back');setTimeout(()=>{disc.style.transition='';disc.style.transform=''},1000);return}
  AU.play('spin');S.spun[st.id]=Date.now()+5*60000;disc.querySelector('.hex').classList.add('used');
- const r=Math.random,got={};const n=3+Math.floor(r()*3)+(S.lv>=10?1:0);const add=(k,c=1)=>got[k]=(got[k]||0)+c;
+ const r=Math.random,got={};const n=4+Math.floor(r()*3)+(S.lv>=10?1:0);const add=(k,c=1)=>got[k]=(got[k]||0)+c;
  if(bagCount()>=BAG_MAX&&!S.cheat){toast(T('bagFull'))}else for(let i=0;i<n;i++){const x=r();if(S.lv>=18&&x<.12)add('rjar');else if(S.lv>=10&&x<.3)add('gjar');else if(S.lv>=6&&x<.45)add('drop');else if(S.lv>=14&&x<.52)add('bun');else add('jar')}
  let egg=null;if(S.eggs.length<9&&r()<.22){const e=r();egg={id:Date.now(),km:e<.5?2:e<.85?5:10};S.eggs.push(egg)}
  for(const k in got)S.items[k]+=got[k];let xp=50;const lines=Object.entries(got).map(([k,c])=>`${ITEMS[k][S.lang]} ×${c}`);if(egg)lines.push(`${T('egg')} ${egg.km}${T('km')}`);
@@ -141,7 +142,7 @@ function openArena(a){G.view='screen';$('hud').classList.remove('on');const now=
  el.querySelector('#ax').onclick=()=>{AU.play('back');closeScreen()};
  el.querySelector('#af').onclick=()=>{AU.play('tap');fight(a,rd)}}
 function fight(a,rd){$('scr').innerHTML='';G.view='bat';BAT.resize();const tier=rd?rd.tier:a.tier;
- const opp=rd?{sp:rd.sp,lv:{1:20,3:25,5:30}[tier],hpMax:{1:420,3:800,5:1300}[tier],tier}:{sp:a.def,lv:Math.min(35,S.lv+4+tier*2),hpMax:Math.round(calcHP(a.def,Math.min(35,S.lv+4+tier*2),[15,15,15])*9),tier};
+ const opp=rd?{sp:rd.sp,lv:{1:20,3:25,5:30}[tier],hpMax:{1:260,3:450,5:650}[tier],tier}:{sp:a.def,lv:Math.min(35,S.lv+4+tier*2),hpMax:Math.round(calcHP(a.def,Math.min(35,S.lv+4+tier*2),[15,15,15])*9),tier};
  $('bHint').textContent=T('tapAtk')+' · '+T('swipeDodge');setTimeout(()=>$('bHint').textContent='',5500);
  BAT.startBattle({team:team(),opp,raid:!!rd,bg:rd?'keyaki':'lawn',T,onEnd:r=>afterBattle(a,rd,r)})}
 async function afterBattle(a,rd,r){G.view='map';$('hud').classList.add('on');AU.song(MAP.M.night?'night':'map');
@@ -226,7 +227,7 @@ function openOptions(fromMap){const seg=(id,opts,cur)=>`<div class="seg" id="${i
  <div class="optrow">${esc(T('sfx'))}${seg('oS',[['1',T('on')],['0',T('off')]],S.sfx?'1':'0')}</div>
  <div class="optrow">${esc(T('mode'))}${seg('oG',[['gps',T('gps')],['explore',T('explore')]],S.mode==='gps'?'gps':'explore')}</div>
  <div class="optrow">${esc(T('arDef'))}${seg('oA',[['1',T('on')],['0',T('off')]],S.arDef?'1':'0')}</div>
- <div class="optrow">${esc(T('cheat'))}<span style="display:flex;gap:6px"><input id="oC" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="btn" id="oCb" style="min-height:44px;padding:0 14px">${esc(T('apply'))}</button></span></div>
+ <div class="optrow">${esc(T('cheat'))}<span style="display:flex;gap:6px"><input id="oC" autocomplete="off" autocapitalize="characters" spellcheck="false"><button class="btn" id="oCb" style="min-height:44px;padding:0 14px">${esc(T('apply'))}</button></span></div><div id="oMsg" class="omsg" role="status"></div>
  <p class="privacy">🔒 ${esc(T('privacy'))}</p>
  <div style="text-align:center;margin-top:16px"><button class="btn ghost" id="oR">${esc(T('reset'))}</button></div><div class="ver">Honey Trails v${V} · LANZAGAMES</div>`;
  const el=fromMap?sheet(T('opt'),body,()=>openMenu()):screen(`<div class="sheet"><div class="shead"><h2>${esc(T('opt'))}</h2><button class="xbtn" id="sx">✕</button></div><div class="sbody">${body}</div></div>`,'');
@@ -273,26 +274,28 @@ function pickAvatar(){const el=screen(`<h2>${esc(T('pickTitle'))}</h2><p class="
  el.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{S.avatar=b.dataset.a;AU.play('tap');el.querySelectorAll('[data-a]').forEach(x=>x.classList.toggle('on',x===b))});
  el.querySelector('#ag').onclick=()=>{AU.play('tap');intro()}}
 function intro(){let i=1;const el=screen(`<img src="${art('prof')}" alt=""><div class="dlg"><b>${esc(T('prof',1))}</b><p id="it"></p><button class="btn honey" id="in">${esc(T('next'))}</button></div>`,'intro');
- const show=()=>{el.querySelector('#it').textContent=T('i'+i)};show();el.querySelector('#in').onclick=()=>{AU.play('tap');i++;if(i>4){S.started=true;S.items.jar=Math.max(S.items.jar,20);save();enterMap()}else show()}}
+ const show=()=>{el.querySelector('#it').textContent=T('i'+i)};show();el.querySelector('#in').onclick=()=>{AU.play('tap');i++;if(i>4){S.started=true;S.items.jar=Math.max(S.items.jar,30);save();enterMap()}else show()}}
 async function enterMap(){$('scr').innerHTML='';G.view='map';$('hud').classList.add('on');if(!MAP.M.ready){MAP.initMap($('map'))}MAP.setAvatar(S.avatar);
  const n=isNight();MAP.setNight(n);AU.song(n?'night':'map');if(!G.started||!origin){G.started=true;startLoc()}updHud();G.refreshT=0;
  await daily();await flushLevelUps();setTimeout(()=>{hint('drag',5500);if(S.mode!=='gps')setTimeout(()=>hint('walkTo',5000),6000)},800)}
 // ---------- version banner ----------
 async function checkVersion(){try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)return;const j=await r.json();if(j.version&&j.version!==V){const u=$('update');u.querySelector('span').textContent=T('update')+' (v'+j.version+')';u.querySelector('button').textContent=T('reload');u.classList.remove('hidden');u.querySelector('button').onclick=()=>{save();location.replace(location.pathname+'?v='+j.version)}}}catch(e){}}
 // ---------- boot ----------
-function boot(){load();AU.music=S.music;AU.sfx=S.sfx;applyI18n();
+function boot(){load();if(!S.g101){S.g101=1;if(S.started)S.items.jar+=20;}AU.music=S.music;AU.sfx=S.sfx;applyI18n();
  const mc=$('map');mc.addEventListener('pointerdown',mapDown);addEventListener('pointermove',mapMove);addEventListener('pointerup',mapUp);addEventListener('pointercancel',mapUp);
  const j=$('joy');j.addEventListener('pointerdown',joyDown);j.addEventListener('pointermove',joyMove);j.addEventListener('pointerup',joyUp);j.addEventListener('pointercancel',joyUp);
  $('hHome').onclick=()=>{AU.play('back');save();showTitle(true)};$('hMenu').onclick=()=>openMenu();$('hMe').onclick=()=>{AU.play('tap');openMe()};$('hNear').onclick=()=>{AU.play('tap');const n=MAP.M.spawns.filter(s=>Math.hypot(s.x-MAP.M.ax,s.y-MAP.M.ay)<220).length;toast(n?`${T('nearby')}: ${n}`:T('nobody'))};
  $('hCompass').onclick=()=>{MAP.M.tyaw=Math.round(MAP.M.yaw/(Math.PI*2))*Math.PI*2;AU.play('tap')};
  // encounter input
- const ec=$('enc');ec.addEventListener('pointerdown',e=>{if(ENC.onDown(e.clientX,e.clientY))ec.setPointerCapture(e.pointerId);$('eSheet').classList.remove('on')});ec.addEventListener('pointermove',e=>ENC.onMove(e.clientX,e.clientY));ec.addEventListener('pointerup',e=>ENC.onUp(e.clientX,e.clientY));ec.addEventListener('pointercancel',e=>ENC.onUp(e.clientX,e.clientY));
+ const ec=$('enc');ec.addEventListener('pointerdown',e=>{if(ENC.onDown(e.clientX,e.clientY))ec.setPointerCapture(e.pointerId);$('eSheet').classList.remove('on')});ec.addEventListener('pointermove',e=>ENC.onMove(e.clientX,e.clientY));ec.addEventListener('pointerup',e=>ENC.onUp(e.clientX,e.clientY));ec.addEventListener('pointercancel',e=>ENC.onUp(e.clientX,e.clientY,true));ec.addEventListener('lostpointercapture',e=>ENC.onUp(e.clientX,e.clientY,true));
  $('eRun').onclick=()=>ENC.run();$('eAR').onclick=()=>{AU.play('tap');ENC.toggleAR()};$('eJar').onclick=()=>ENC.cycleJar();
  $('eDrop').onclick=()=>{AU.play('tap');const sh=$('eSheet');if(sh.classList.contains('on')){sh.classList.remove('on');return}
   sh.innerHTML=['drop','bun'].map(k=>`<button data-b="${k}" ${(S.items[k]>0||S.cheat)?'':'disabled'}><img src="art/${k}.png?v=${V}" alt=""><span>${esc(ITEMS[k][S.lang])} ×${S.cheat?'∞':S.items[k]}<small>${esc(T(k==='drop'?'dropHint':'bunHint'))}</small></span></button>`).join('');
   sh.querySelectorAll('[data-b]').forEach(b=>b.onclick=()=>{ENC.useBerry(b.dataset.b);sh.classList.remove('on')});sh.classList.add('on')};
  const bc=$('bat');bc.addEventListener('pointerdown',e=>BAT.onDown(e.clientX,e.clientY));bc.addEventListener('pointerup',e=>BAT.onUp(e.clientX,e.clientY));$('bSpec').onclick=()=>BAT.special();
  addEventListener('resize',()=>{MAP.resize();ENC.resize();BAT.resize()});
+ document.addEventListener('touchmove',e=>{if(!e.target.closest('.sbody,.pdb,.arena,.setup,.pbox'))e.preventDefault()},{passive:false});
+ ['enc','bat','map'].forEach(id=>$(id).addEventListener('touchstart',e=>e.preventDefault(),{passive:false}));
  document.addEventListener('visibilitychange',()=>{if(document.hidden){save();AU.suspend()}else{AU.resume();checkVersion()}});
  addEventListener('pagehide',()=>save());
  document.addEventListener('gesturestart',e=>e.preventDefault());

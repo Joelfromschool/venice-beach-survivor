@@ -124,7 +124,7 @@ export const STR={
   wonIt:'Defended!',arenaWin:'You beat the arena!',arenaHold:'Arena champion',
   bunHint:'Sweet Bun calms it down',dropHint:'Honey Drop makes it easier to befriend',
   sortCp:'CP',sortNew:'Newest',sortNo:'Number',
-  nightTime:'Night pals are out',tapPal:'A pal is nearby! Tap it on the map.',nearbyHint:'The Nearby box shows who is close by.',
+  nightTime:'Night pals are out',tapPal:'A pal is nearby! Tap it on the map.',missHint:'Flick up toward the pal',nearbyHint:'The Nearby box shows who is close by.',
  },
  ja:{
   brand:'LANZAGAMES のゲーム',sub:'歩いて、見つけて、なかよくなろう。',tap:'タップしてスタート',cont:'つづきから',newg:'はじめから',options:'オプション',allgames:'ゲーム一覧',
@@ -163,5 +163,5 @@ export const STR={
   wonIt:'まもった！',arenaWin:'アリーナで勝った！',arenaHold:'アリーナチャンピオン',
   bunHint:'スイートバンで落ち着く',dropHint:'ハニードロップでなかよくなりやすい',
   sortCp:'CP',sortNew:'あたらしい順',sortNo:'番号',
-  nightTime:'夜のなかまが出てきた',tapPal:'近くになかまがいる！マップでタップしよう。',nearbyHint:'「近く」の箱に、近くにいるなかまが出るよ。',
+  nightTime:'夜のなかまが出てきた',tapPal:'近くになかまがいる！マップでタップしよう。',missHint:'なかまに向かって上にはじこう',nearbyHint:'「近く」の箱に、近くにいるなかまが出るよ。',
  }};

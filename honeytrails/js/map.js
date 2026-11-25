@@ -1,8 +1,8 @@
 // 3D map view (Three.js). Soft, bright stylized world drawn from world.js; nothing loaded from the network.
-import * as THREE from '../vendor/three.module.min.js?v=1.0.0';
-import {CELL,parkV,waterV,cellRoads,cellPaths,cellStops,cellArena,cellSpawns,raidAt,terrain,hash,rng} from './world.js?v=1.0.0';
-import {SP} from './data.js?v=1.0.0';
-import {S} from './state.js?v=1.0.0';
+import * as THREE from '../vendor/three.module.min.js?v=1.0.1';
+import {CELL,parkV,waterV,cellRoads,cellPaths,cellStops,cellArena,cellSpawns,raidAt,terrain,hash,rng} from './world.js?v=1.0.1';
+import {SP} from './data.js?v=1.0.1';
+import {S} from './state.js?v=1.0.1';
 const TP=192,SAMP=33; // texture px per cell, noise samples per side
 export const M={yaw:0,dist:90,tyaw:0,tdist:90,px:0,py:0,ax:0,ay:0,moving:0,face:1,night:false,spawns:[],stops:[],arenas:[],ready:false};
 let R,scene,cam,ground,ox=0,oy=0,chunks=new Map(),queue=[],texCache={},avatar,avShadow,ring,ring2,sun,hemi,clock=0;

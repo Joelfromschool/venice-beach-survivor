@@ -1,6 +1,6 @@
 // Arena / boss party battle: tap to attack, fill energy for a special, swipe left/right to dodge.
-import {SP,cpm} from './data.js?v=1.0.0';
-import {AU} from './audio.js?v=1.0.0';
+import {SP,cpm} from './data.js?v=1.0.1';
+import {AU} from './audio.js?v=1.0.1';
 let cv,g,W,H,DPR,st=null,raf=0;const imgs={};
 const L=src=>{if(!imgs[src]){const i=new Image();i.src=src;imgs[src]=i}return imgs[src]};
 export function startBattle(o){// o:{team:[pal], opp:{sp,lv,hpMax,tier}, raid, bg, T, onEnd}
@@ -16,7 +16,7 @@ export function endBattle(){if(!st)return;cancelAnimationFrame(raf);cv.classList
 function me(){return st.team[st.cur]}
 function upd(){if(!st)return;const u=document.getElementById('batUI');const m=me();const T=st.o.T;
  u.querySelector('#bOppN').textContent=T(st.opp.sp,1);u.querySelector('#bOppHp').style.width=(st.opp.hp/st.opp.max*100)+'%';
- u.querySelector('#bMeN').textContent=m?T(m.p.sp,1)+'  CP '+m.p.cp:'';u.querySelector('#bMeHp').style.width=(m?m.hp/m.max*100:0)+'%';
+ u.querySelector('#bMeN').innerHTML=m?`<span>${T(m.p.sp,1)}</span><small>CP ${m.p.cp}</small>`:'';u.querySelector('#bMeHp').style.width=(m?m.hp/m.max*100:0)+'%';
  u.querySelector('#bEn').style.width=st.energy+'%';u.querySelector('#bSpec').classList.toggle('ready',st.energy>=100);
  u.querySelector('#bTime').textContent=Math.ceil(Math.max(0,st.time));
  u.querySelector('#bTeam').innerHTML=st.team.map((x,i)=>`<i class="${x.hp<=0?'ko':i===st.cur?'cur':''}" style="background-image:url(${x.img.src})"></i>`).join('')}
@@ -28,13 +28,13 @@ export function onUp(x,y){if(!st||st.over||!down)return;const dx=x-down.x,dy=y-d
 export function special(){if(!st||st.over||st.energy<100||st.intro>0||!me()||me().hp<=0)return;st.energy=0;const dmg=dmgTo(st.opp,me().A,6);st.opp.hp=Math.max(0,st.opp.hp-dmg);st.oppHit=.5;st.shake=.5;AU.play('big');
  st.msg.push({k:'special',t:0});for(let i=0;i<30;i++){const a=Math.random()*7;st.fx.push({x:W/2,y:H*.33,vx:Math.cos(a)*400,vy:Math.sin(a)*400,l:1,c:['#ffd23a','#ff7ad9','#fff'][i%3]})}upd();checkEnd()}
 function dmgTo(t,A,mult){return Math.max(1,Math.round(mult*4.2*A/t.D*(0.9+Math.random()*.2)))}
-function attack(){if(st.intro>0||st.cd>0||!me()||me().hp<=0||st.swap>0)return;st.cd=.32;const dmg=dmgTo(st.opp,me().A,1);st.opp.hp=Math.max(0,st.opp.hp-dmg);st.energy=Math.min(100,st.energy+9);st.myHit=.18;st.oppHit=.2;AU.play('atk');
+function attack(){if(st.intro>0||st.cd>0||!me()||me().hp<=0||st.swap>0)return;st.cd=.25;const dmg=dmgTo(st.opp,me().A,1);st.opp.hp=Math.max(0,st.opp.hp-dmg);st.energy=Math.min(100,st.energy+9);st.myHit=.18;st.oppHit=.2;AU.play('atk');
  st.fx.push({x:W/2+(Math.random()-.5)*W*.2,y:H*.3+(Math.random()-.5)*H*.1,vx:0,vy:-60,l:.7,txt:'-'+dmg});upd();checkEnd()}
 function dodge(d){if(st.intro>0)return;st.dodgeT=st.t;st.slide=d;AU.play('dodge')}
 function step(dt){if(!st)return;st.t+=dt;if(st.intro>0){st.intro-=dt;return}
  if(!st.over){st.time-=dt;st.cd-=dt;st.next-=dt;st.swap=Math.max(0,st.swap-dt);
   if(st.next<.8&&!st.warn){st.warn=1;AU.play('warn')}
-  if(st.next<=0){st.warn=0;st.next=2+Math.random()*1.4-(st.o.raid?st.o.opp.tier*.08:0);const m=me();if(m&&m.hp>0&&st.swap<=0){const dodged=st.t-st.dodgeT<.75;let dmg=dmgTo(m,st.opp.A,st.o.raid?2.6:2.1);if(dodged){dmg=Math.ceil(dmg*.2);st.msg.push({k:'dodge',t:0})}
+  if(st.next<=0){st.warn=0;st.next=2+Math.random()*1.4-(st.o.raid?st.o.opp.tier*.08:0);const m=me();if(m&&m.hp>0&&st.swap<=0){const dodged=st.t-st.dodgeT<.75;let dmg=dmgTo(m,st.opp.A,st.o.raid?1.4:1.6);if(dodged){dmg=Math.ceil(dmg*.2);st.msg.push({k:'dodge',t:0})}
    m.hp=Math.max(0,m.hp-dmg);st.shake=dodged?0:.35;AU.play(dodged?'dodge':'hurt');st.fx.push({x:W*.3,y:H*.68,vx:0,vy:-60,l:.8,txt:'-'+dmg,c:'#ff6a6a'});
    if(m.hp<=0){const n=st.team.findIndex(x=>x.hp>0);if(n>=0){st.cur=n;st.swap=1}else{st.over=true;AU.play('lose');setTimeout(()=>fin(false),1400)}}upd()}}
   if(st.time<=0&&!st.over){st.over=true;st.timeUp=true;AU.play('lose');setTimeout(()=>fin(false),1400)}

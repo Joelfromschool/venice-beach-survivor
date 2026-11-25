@@ -1,8 +1,8 @@
-import {SP,ITEMS,XP_LV,calcCP,calcHP} from './data.js?v=1.0.0';
+import {SP,ITEMS,XP_LV,calcCP,calcHP} from './data.js?v=1.0.1';
 const KEY='honeytrails_v1';
 export const S={};
 export function defaults(){return {v:1,lang:(navigator.language||'').startsWith('ja')?'ja':'en',started:false,mode:'',avatar:'pinco',music:true,sfx:true,arDef:false,
- xp:0,lv:1,glitter:0,treats:{},items:{jar:20,gjar:0,rjar:0,drop:0,bun:0},pals:[],dex:{},eggs:[],inc:null,dist:0,
+ xp:0,lv:1,glitter:0,treats:{},items:{jar:30,gjar:0,rjar:0,drop:0,bun:0},pals:[],dex:{},eggs:[],inc:null,dist:0,
  gone:{},spun:{},arenaWins:{},raidsDone:{},daily:{day:'',streak:0,catch:'',spin:''},cheat:false,nid:1,lastPos:null,boostUntil:0,sort:'cp'}}
 export function load(){let d=null;try{d=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
  Object.assign(S,defaults(),d||{});S.items=Object.assign(defaults().items,S.items||{});prune();return !!d}

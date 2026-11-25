@@ -79,7 +79,12 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .bbar.en i{background:linear-gradient(90deg,#4aa9ff,#9fe2ff)}
 .btime{position:absolute;right:0;top:-4px;font-family:Chewy,sans-serif;font-size:22px;color:#fff;text-shadow:0 2px 5px rgba(0,0,0,.5)}
 .bbot{position:absolute;left:calc(14px + var(--sl));width:56%;bottom:calc(14px + var(--sb));text-align:left}
-.bbot .bname{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bbot .bname{font-size:16px;line-height:1.15}.bbot .bname span{display:block;word-break:keep-all;overflow-wrap:anywhere}.bbot .bname small{display:block;font-size:13px;font-family:-apple-system,sans-serif;font-weight:800}
+.bbot{width:calc(100% - 140px)}
+.btop .bname{padding:0 46px;line-height:1.15}
+#enc,#bat,#map{touch-action:none}
+body:has(.sheet) #toast,body:has(.pd) #toast{top:auto;bottom:calc(36px + var(--sb));transform:translateX(-50%) translateY(20px)}
+body:has(.sheet) #toast.on,body:has(.pd) #toast.on{transform:translateX(-50%)}
 .bbot .bbar{margin-left:0}
 .bteam{display:flex;gap:6px;margin-bottom:4px}
 .bteam i{width:36px;height:36px;border-radius:50%;background:#fff center 20%/cover no-repeat;border:2px solid #fff;opacity:.7}
@@ -250,3 +255,6 @@ button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:poin
 .ver{text-align:center;color:#b0a0c0;font-size:12px;margin-top:18px;font-weight:700}
 @media (max-height:640px){.tcast{height:26%;bottom:calc(130px + var(--sb))}.tlogo{margin-top:calc(54px + var(--st))}.tlogo h1{font-size:46px}.pdtop{min-height:250px}.arena .boss{height:24%}.arena h2{margin-top:calc(54px + var(--st))}.arena .tm img{height:48px}.stop h2{margin-top:calc(54px + var(--st))}.intro img{height:36%}}
 @media (min-aspect-ratio:1/1){.tcast{height:30%}}
+
+.omsg{display:none;margin:-2px 0 10px;padding:10px 12px;border-radius:14px;background:#3a2f55;color:#fff;font-weight:800;font-size:14px;text-align:center;line-height:1.3}.omsg.on{display:block;animation:omIn .25s ease-out}@keyframes omIn{from{opacity:0;transform:translateY(-6px)}}
+@media(max-width:340px){#oC{width:104px;min-width:0}}
