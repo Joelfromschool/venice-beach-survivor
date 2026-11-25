@@ -19,6 +19,9 @@ def git_meta(game_id):
 
 # id, href, new, rows, focus(object-position), EN, JA
 GAMES = [
+ dict(id='driftwood', new=True, cat='adv', pos='50% 50%',
+  en=('Driftwood Days','Cozy island life','Start a new life on a tiny island in real time with Mr Bean, Baby Bean, Pinco, Bronny, Mogu Mogu and grumpy Asmon. Shake trees, fish, catch bugs, dig fossils, craft DIY recipes, fill the museum, grow and cross-breed flowers, pay off your tent and decorate your home.'),
+  ja=('ドリフトウッド・デイズ','のんびり島ぐらし','ミスター・ビーン、ベビー・ビーン、ピンコ、ブロニー、モグモグ、ちょっと気むずかしいアズモンと、小さな島でリアルタイムの島ぐらし。木をゆすって、魚つり、虫とり、化石ほり、DIYでクラフト、博物館に寄贈、花の交配、テントのローンを返して家をかざろう。')),
  dict(id='honeytrails', new=True, cat='adv', pos='50% 50%',
   en=('Honey Trails','Walk-and-catch adventure','Walk your real neighborhood or explore with a joystick. Find Pinco, Pooh, Mr Bean and 25 more pals on the map, flick honey jars to befriend them, spin Hive Stops, hatch eggs and beat Asmon at boss parties.'),
   ja=('ハニートレイル','歩いて集めるアドベンチャー','近所を歩いても、スティックで探検してもOK。ピンコ、プー、ミスター・ビーンなど28のなかまをマップで見つけて、ハニージャーを投げてなかよくなろう。ハイブストップ、タマゴ、アズモンとのボスバトルも。')),

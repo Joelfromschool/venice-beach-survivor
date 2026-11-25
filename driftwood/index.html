@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#59b36b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Driftwood Days</title>
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+<body>
+<div id="view"></div>
+<div id="touch"></div>
+
+<!-- TITLE -->
+<section id="sTitle" class="screen on">
+ <a class="chip tgames" href="../" data-t="allgames">All games</a>
+ <div class="tlang"><button class="chip" data-lang="en">English</button><button class="chip" data-lang="ja">日本語</button></div>
+ <div class="tlogo">
+  <div class="tkick" data-t="brand">A LANZAGAMES game</div>
+  <h1 class="logo"><span class="l1">Driftwood</span><span class="l2">Days</span></h1>
+  <div class="logo-ja">ドリフトウッド・デイズ</div>
+  <div class="tsub" data-t="sub">Cozy island life with friends</div>
+ </div>
+ <div class="tcast">
+  <img src="art/pinco_1.webp?v=1.0.0" alt="" class="c1"><img src="art/bean_1.webp?v=1.0.0" alt="" class="c2"><img src="art/pooh_0.webp?v=1.0.0" alt="" class="c3"><img src="art/bbean_0.webp?v=1.0.0" alt="" class="c4"><img src="art/kermit_0.webp?v=1.0.0" alt="" class="c5">
+ </div>
+ <button id="tStart" class="tstart" data-t="tap">Tap to start</button>
+ <div id="tMenu" class="tmenu">
+  <button class="btn big pri" id="tCont"><span data-t="cont">Continue</span><small id="tContSub"></small></button>
+  <button class="btn big" id="tNew"><span data-t="newg">New island</span></button>
+  <button class="chip" id="tOpt" data-t="options">Options</button>
+ </div>
+</section>
+
+<!-- CREATE -->
+<section id="sCreate" class="screen">
+ <div class="cpanel"><h2 data-t="createT">Make your islander</h2><div id="cBody"></div><button class="btn big pri" id="cGo" data-t="letsGo">Let's go!</button></div>
+</section>
+
+<!-- HUD -->
+<section id="hud" class="screen">
+ <div class="clockcard"><div class="tm"><b id="hTime">12:00</b><small id="hAmpm"></small></div><div id="hDate"></div><div id="hSeason" class="season"></div></div>
+ <div class="wallets"><span class="pill"><i class="coin"></i><b id="hCoins">0</b></span><span class="pill st"><i class="stp"></i><b id="hStamps">0</b></span></div>
+ <div class="topbtns"><button id="bBag" class="rb"><span>🎒</span><small data-t="bag">Pocket</small></button><button id="bPad" class="rb"><span>🍃</span><small data-t="phone">Leaf Pad</small></button></div>
+ <div id="tut" class="tutcard"><div class="trow"><span class="tn">1/8</span><p class="tt"></p></div><p class="th"></p><div class="tb"><button class="thb chip">Hint</button><button class="tsk chip">Skip step</button></div></div>
+ <div id="joy" class="joy"><div id="joyK" class="joyk"></div></div>
+ <div id="sneak" class="sneak" data-t="sneak">Sneaking…</div>
+ <button id="bTool" class="toolbtn"></button>
+ <button id="bAct" class="actbtn"><span id="bActI" class="ai">✋</span><small id="bActL">—</small></button>
+ <div id="tray" class="tray"></div>
+ <div id="ntag" class="ntag"></div>
+ <div id="excl" class="excl">!</div>
+</section>
+<section id="houseHud" class="screen">
+ <div class="hbtns"><button id="hDeco" class="chip big" data-t="decorate">Decorate</button><button id="hStore" class="chip big" data-t="storage">Storage</button><button id="hOut" class="chip big" data-t="act_exit">Go outside</button></div>
+ <div id="decoBar" class="decobar"></div>
+ <div id="decoSel" class="decosel"></div>
+</section>
+
+<div id="dlg" class="dlg"><img id="dArt" class="dart" alt=""><div class="dbox"><span id="dName" class="dname"></span><p id="dText"></p><i id="dNext" class="dnext">▼</i></div><div id="dCh" class="dch"></div></div>
+<div id="panel" class="panel"></div>
+<div id="pop" class="pop"></div>
+<div id="toasts" class="toasts"></div>
+<div id="upd" class="upd"><span></span><button></button></div>
+<div id="rot" class="rot"></div>
+
+<script src="js/three.min.js?v=1.0.0"></script>
+<script src="js/i18n.js?v=1.0.0"></script>
+<script src="js/data.js?v=1.0.0"></script>
+<script src="js/island.js?v=1.0.0"></script>
+<script src="js/models.js?v=1.0.0"></script>
+<script src="js/world.js?v=1.0.0"></script>
+<script src="js/audio.js?v=1.0.0"></script>
+<script src="js/game.js?v=1.0.0"></script>
+<script src="js/act.js?v=1.0.0"></script>
+<script src="js/npc.js?v=1.0.0"></script>
+<script src="js/house.js?v=1.0.0"></script>
+<script src="js/tut.js?v=1.0.0"></script>
+<script src="js/ui.js?v=1.0.0"></script>
+<script src="js/main.js?v=1.0.0"></script>
+</body></html>
