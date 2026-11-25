@@ -1,5 +1,5 @@
 // Original WebAudio sound effects and generative ambient music (no samples, no speech).
-import {G} from './state.js?v=1.1.2';
+import {G} from './state.js?v=1.1.3';
 let ctx=null,master,sfxBus,musicBus,verb,started=false;
 export function audioWake(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.9;master.connect(ctx.destination);sfxBus=ctx.createGain();sfxBus.connect(master);musicBus=ctx.createGain();musicBus.gain.value=.0;musicBus.connect(master);
  // simple feedback-delay "room" for music
@@ -11,7 +11,7 @@ function noise(dur){const n=ctx.sampleRate*dur|0,b=ctx.createBuffer(1,n,ctx.samp
 function nz(t,dur,freq,q,vol,type='bandpass'){const s=noise(dur),f=ctx.createBiquadFilter(),g=ctx.createGain();f.type=type;f.frequency.value=freq;f.Q.value=q;s.connect(f);f.connect(g);g.connect(sfxBus);env(g,t,.004,dur,vol);s.start(t);s.stop(t+dur+.05)}
 function tone(t,freq,dur,vol,type='sine',slide=0,bus=sfxBus){const o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(freq,t);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(20,freq*slide),t+dur);o.connect(g);g.connect(bus);env(g,t,.006,dur,vol);o.start(t);o.stop(t+dur+.05)}
 const MAT={stone:[1800,1.2],wood:[700,2.5],dirt:[420,.9],sand:[2600,.6],glass:[4200,3],plant:[3000,.5],wool:[500,.4],metal:[2400,6]};
-export function matOf(id){if([3,4,6,15,16,17,18,19,20,21,24,37,42,52,54,61,59,60,14].includes(id))return'stone';if([7,8,23,25,35,49,41].includes(id))return'wood';if([5,12].includes(id))return'sand';if([10,47].includes(id))return'glass';if([9,36,50,27,28,29,30,31,32,33,51,53,57,58,34,55].includes(id))return'plant';if([22,43,44,45,46].includes(id))return'wool';if([39,40,56].includes(id))return'metal';return'dirt'}
+export function matOf(id){if([3,4,6,15,16,17,18,19,20,21,24,37,42,52,54,61,59,60,14].includes(id))return'stone';if([7,8,23,25,35,49,41,78,79].includes(id))return'wood';if([5,12].includes(id))return'sand';if([10,47].includes(id))return'glass';if([9,36,50,27,28,29,30,31,32,33,51,53,57,58,34,55].includes(id))return'plant';if([22,43,44,45,46].includes(id))return'wool';if([39,40,56].includes(id))return'metal';return'dirt'}
 export function sfx(name,arg){if(!ctx||!G.opt.sound)return;const t=ctx.currentTime;const r=Math.random();
  switch(name){
  case'hit_block':{const[m,q]=MAT[matOf(arg)];nz(t,.06,m*(.9+r*.2),q,.25);break}
@@ -32,6 +32,7 @@ export function sfx(name,arg){if(!ctx||!G.opt.sound)return;const t=ctx.currentTi
  case'bow':nz(t,.25,600,.6,.15,'lowpass');tone(t,180,.2,.1,'triangle',1.6);break;
  case'shoot':nz(t,.12,2400,1,.25,'highpass');tone(t,600,.1,.08,'sine',.5);break;
  case'thunk':nz(t,.06,500,2,.3);break;
+ case'door':if(arg){nz(t,.18,700,1.5,.22);tone(t+.02,210,.16,.12,'triangle',1.3)}else{nz(t,.1,380,1.2,.4);tone(t+.06,120,.12,.3,'sine',.6)}break;
  case'fuse':nz(t,1.4,5000,.5,.12,'highpass');break;
  case'boom':{nz(t,.9,160,.5,.9,'lowpass');nz(t,.4,900,.6,.4);tone(t,70,.6,.5,'sine',.4);break}
  case'roar':tone(t,90,.9,.35,'sawtooth',.6);tone(t,135,.8,.2,'sawtooth',.7);nz(t,.7,400,.8,.25,'lowpass');break;

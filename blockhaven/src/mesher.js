@@ -1,7 +1,7 @@
 // Chunk mesher: face culling, per-vertex ambient occlusion and smooth sky/block light.
 import * as THREE from '../vendor/three.module.min.js';
-import {BLOCKS} from './blocks.js?v=1.1.2';
-import {TS,AT,PER} from './textures.js?v=1.1.2';
+import {BLOCKS} from './blocks.js?v=1.1.3';
+import {TS,AT,PER} from './textures.js?v=1.1.3';
 const FACES=[
  {n:[1,0,0],c:[[1,0,1],[1,0,0],[1,1,0],[1,1,1]],shade:.8,k:'side'},
  {n:[-1,0,0],c:[[0,0,0],[0,0,1],[0,1,1],[0,1,0]],shade:.8,k:'side'},
@@ -24,6 +24,11 @@ export function meshChunk(w,cx,cz){const solid=new Buf(),water=new Buf();const x
    const su=[[u0+7*du,v0],[u0+9*du,v0],[u0+9*du,v0+10*dv],[u0+7*du,v0+10*dv]];
    solid.quad([[a,y,zc],[c,y,zc],[c,top,zc],[a,top,zc]],su,L);solid.quad([[c,y,za],[a,y,za],[a,top,za],[c,top,za]],su,L);solid.quad([[c,y,zc],[c,y,za],[c,top,za],[c,top,zc]],su,L);solid.quad([[a,y,za],[a,y,zc],[a,top,zc],[a,top,za]],su,L);
    const tu=[[u0+7*du,v0+10*dv],[u0+9*du,v0+10*dv],[u0+9*du,v0+12*dv],[u0+7*du,v0+12*dv]];solid.quad([[a,top,zc],[c,top,zc],[c,top,za],[a,top,za]],tu,L);continue}
+  if(b.door){const ly=b.door===2?y-1:y;const m=w.meta.get('door:'+w.idx(x,ly,z))||{f:0,o:0};const e=(m.f+(m.o?1:0))%4;const t=3/16;
+   let x0=0,x1=1,z0=0,z1=1;if(e===0)z1=t;else if(e===1)x0=1-t;else if(e===2)z0=1-t;else x1=t;
+   const sl=w.skyAt(x,y,z)/15,bl=w.blkAt(x,y,z)/15;const[u0,v0,u1,v1]=tileUV(b.tex.side);
+   for(const f of FACES){const ps=[],uvs=[],ls=[];for(let k=0;k<4;k++){const c=f.c[k];ps.push([x+(c[0]?x1:x0),y+c[1],z+(c[2]?z1:z0)]);uvs.push([UVC[k][0]?u1:u0,UVC[k][1]?v1:v0]);ls.push([sl,bl,f.shade])}solid.quad(ps,uvs,ls)}
+   continue}
   const isWater=b.liquid;const target=isWater?water:solid;
   for(const f of FACES){const nx=x+f.n[0],ny=y+f.n[1],nz=z+f.n[2];const nid=w.get(nx,ny,nz),nb=BLOCKS[nid];
    if(isWater){if(nb.liquid||nb.opaque)continue}else{if(nb.opaque)continue;if(nid===id&&(b.cutout&&id!==9&&id!==36&&id!==50))continue}

@@ -1,7 +1,7 @@
 // First-play guided lesson and contextual tips for Blockhaven. Touch-only wording.
-import {G} from './state.js?v=1.1.2';
-import {T,itemName} from './i18n.js?v=1.1.2';
-import {B,def,isBlock} from './blocks.js?v=1.1.2';
+import {G} from './state.js?v=1.1.3';
+import {T,itemName} from './i18n.js?v=1.1.3';
+import {B,def,isBlock} from './blocks.js?v=1.1.3';
 
 const LOGS=[7,35,49,62];
 const TOOLS=[120,121,122,123,124,125,126,127,128,129,130,131]; // wood/stone/iron tools
@@ -364,18 +364,22 @@ export function onBreak(){/* mined is checked in tick */}
 export function onPlace(id){
  if(active&&stepStart){stepStart.placed=true;stepT=Math.max(stepT,0.9)}
  if(id===B.workbench)firstTip('benchplaced',T('tipBenchPlaced'));
+ if(id===B.door)firstTip('doorplaced',T('tipDoorPlaced'));
+ else if(!active){const t=tips();t._placed=(t._placed||0)+1;if(t._placed>=6&&!api().countItem(B.door))firstTip('housedoor',T('tipHouseDoor'))}
  if(id===B.torch)firstTip('torch',T('tipTorch'));
  if(id===B.bed)firstTip('bed',T('tipBed'));
 }
 export function onCraft(r){
  if(active&&stepStart){stepStart.crafted=true;if(r&&TOOLS.includes(r.out))stepT=Math.max(stepT,0.9)}
  if(r&&r.out===23)firstTip('benchcraft',T('tipBenchCraft'));
+ if(r&&r.out===8&&!active)firstTip('housedoor',T('tipHouseDoor'));
  if(r&&TOOLS.includes(r.out))firstTip('tool',T('tipTool'));
 }
 export function onEat(){
  if(active&&stepStart){stepStart.ate=true;stepT=Math.max(stepT,0.9)}
  firstTip('ate',T('tipAte'));
 }
+export function onDoor(open){firstTip('door1',T('tipDoorUse'))}
 export function onHurt(){firstTip('hurt',T('tipHurt'))}
 
 function tickTips(dt){
@@ -426,4 +430,4 @@ export function bindLessonDom(){
 }
 
 // How-to-play section data (illustrated in ui.js)
-export const HTP_SECTIONS=['look','buttons','mine','place','bag','craft','vitals','night','save','quests','coast'];
+export const HTP_SECTIONS=['look','buttons','mine','place','bag','craft','house','vitals','night','save','quests','coast'];

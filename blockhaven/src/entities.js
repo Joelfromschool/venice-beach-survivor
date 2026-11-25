@@ -1,13 +1,14 @@
 // Entities: shared voxel physics, mobs + AI, bosses, projectiles, item drops, particles.
 import * as THREE from '../vendor/three.module.min.js';
-import {G} from './state.js?v=1.1.2';
-import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.2';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.2';
-import {tileUV} from './mesher.js?v=1.1.2';
-import {sfx} from './audio.js?v=1.1.2';
-import {clamp,angleWrap} from './util.js?v=1.1.2';
+import {G} from './state.js?v=1.1.3';
+import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.3';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.3';
+import {tileUV} from './mesher.js?v=1.1.3';
+import {sfx} from './audio.js?v=1.1.3';
+import {clamp,angleWrap} from './util.js?v=1.1.3';
 // ---------- physics ----------
-export function solidCell(x,y,z){return BLOCKS[G.world.get(x,y,z)].solid}
+export function doorOpen(x,y,z){const w=G.world,b=BLOCKS[w.get(x,y,z)];if(!b||!b.door)return false;const m=w.meta.get('door:'+w.idx(x,b.door===2?y-1:y,z));return!!(m&&m.o)}
+export function solidCell(x,y,z){const b=BLOCKS[G.world.get(x,y,z)];if(b.door)return!doorOpen(x,y,z);return b.solid}
 export function boxHits(px,py,pz,w,h){const x0=Math.floor(px-w),x1=Math.floor(px+w-1e-7),y0=Math.floor(py),y1=Math.floor(py+h-1e-7),z0=Math.floor(pz-w),z1=Math.floor(pz+w-1e-7);for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++)if(solidCell(x,y,z))return true;return false}
 export function boxHas(px,py,pz,w,h,test){const x0=Math.floor(px-w),x1=Math.floor(px+w-1e-7),y0=Math.floor(py),y1=Math.floor(py+h-1e-7),z0=Math.floor(pz-w),z1=Math.floor(pz+w-1e-7);for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++){const id=G.world.get(x,y,z);if(test(id,x,y,z))return id}return 0}
 export function moveBody(e,dt){const w=e.w,h=e.h;let steps=Math.max(1,Math.ceil(Math.max(Math.abs(e.vel.x),Math.abs(e.vel.y),Math.abs(e.vel.z))*dt/.4));const sdt=dt/steps;e.hitX=e.hitZ=false;e.onGround=false;

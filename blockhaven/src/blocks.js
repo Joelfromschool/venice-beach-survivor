@@ -1,5 +1,5 @@
 // Blocks, items, recipes, smelting and icons for Blockhaven.
-import {TILE,TS,AT,PER} from './textures.js?v=1.1.2';
+import {TILE,TS,AT,PER} from './textures.js?v=1.1.3';
 export const B={};export const BLOCKS=[];
 const t=n=>TILE[n];
 function blk(id,key,o){const d=Object.assign({id,key,solid:true,opaque:true,cross:false,liquid:false,light:0,hard:1,tool:null,tier:0,cutout:false,drop:id,stack:64},o);if(typeof d.tex==='string')d.tex={top:t(d.tex),bottom:t(d.tex),side:t(d.tex)};else{const x=d.tex;d.tex={top:t(x.top||x.side),bottom:t(x.bottom||x.top||x.side),side:t(x.side),front:t(x.front||x.side)}}BLOCKS[id]=d;B[key]=id;return d}
@@ -73,6 +73,9 @@ blk(73,'awning',{tex:'awning',hard:.8});
 blk(74,'felt_red',{tex:'felt_red',hard:.8});blk(75,'felt_white',{tex:'felt_white',hard:.8});
 blk(76,'ferry_bell',{tex:{top:'planks',side:'ferry_bell'},hard:-1,light:7,bell:true});
 blk(77,'neon',{tex:'neon',hard:.8,light:13});
+// Doors (v1.1.3): two cells tall; facing/open state lives in world meta 'door:'+lowerIdx
+blk(78,'door',{tex:'door_lo',solid:false,opaque:false,cutout:true,hard:1.5,tool:'axe',door:1});
+blk(79,'door_top',{tex:'door_hi',solid:false,opaque:false,cutout:true,hard:1.5,tool:'axe',door:2,drop:78});
 // Items (ids >= 100)
 export const ITEMS={};export const I={};
 function item(id,key,o={}){const d=Object.assign({id,key,stack:64},o);ITEMS[id]=d;I[key]=id;return d}
@@ -89,7 +92,7 @@ export const isBlock=id=>id>0&&id<100;
 export const def=id=>id<100?BLOCKS[id]:ITEMS[id];
 export const maxStack=id=>def(id)?.stack||64;
 export const foodOf=id=>def(id)?.food;
-export const fuelOf=id=>id===101?8:id===I.stick?.5:[7,8,35,49,23,25,62,67].includes(id)?1.5:0;
+export const fuelOf=id=>id===101?8:id===I.stick?.5:[7,8,35,49,23,25,62,67,78].includes(id)?1.5:0;
 // Recipes: ingredients plus a display grid (letters map to ingredient order). bench = needs a workbench nearby.
 const R=[];export const RECIPES=R;
 function rc(out,n,ing,grid,bench=true,cat='blocks'){R.push({out,n,ing,grid,bench,cat})}
@@ -100,6 +103,7 @@ rc(23,1,[[8,4]],'aa.aa',false);
 rc(26,4,[[101,1],[100,1]],'a..b',false);
 rc(24,1,[[4,8]],'aaaa.aaaa');
 rc(25,1,[[8,8]],'aaaa.aaaa');
+rc(78,3,[[8,6]],'aa.aa.aa.');
 rc(41,1,[[22,3],[8,3]],'aaabbb');
 rc(6,4,[[5,4]],'aa.aa',false);rc(52,4,[[3,4]],'aa.aa',false);rc(21,2,[[3,2],[5,2]],'ab.ba',false);
 rc(43,1,[[22,1],[113,1]],'ab',false);rc(44,1,[[22,1],[58,1]],'ab',false);rc(45,1,[[22,1],[28,1]],'ab',false);rc(46,1,[[22,1],[9,1]],'ab',false);
@@ -167,6 +171,7 @@ function drawItem(id){const d=ITEMS[id];if(!d)return null;const k=d.key;return p
  default:disc(P,8,8,4,'#ccc')}})}
 function drawBlockIcon(id){const d=BLOCKS[id];const c=document.createElement('canvas');c.width=c.height=32;const g=c.getContext('2d');g.imageSmoothingEnabled=false;const tile=i=>[(i%PER)*TS,Math.floor(i/PER)*TS];
  if(d.cross||d.torch){const[sx,sy]=tile(d.tex.side);g.drawImage(atlasCanvas,sx,sy,16,16,0,0,32,32);return c}
+ if(d.door){const hi=BLOCKS[B.door_top].tex.side,lo=BLOCKS[B.door].tex.side;let[sx,sy]=tile(hi);g.drawImage(atlasCanvas,sx,sy,16,16,8,0,16,16);[sx,sy]=tile(lo);g.drawImage(atlasCanvas,sx,sy,16,16,8,16,16,16);return c}
  const face=(ti,a,b,cc,dd,e,f,shade)=>{const[sx,sy]=tile(ti);g.setTransform(a,b,cc,dd,e,f);g.drawImage(atlasCanvas,sx,sy,16,16,0,0,16,16);if(shade){g.fillStyle=`rgba(0,0,0,${shade})`;g.fillRect(0,0,16,16)}};
  face(d.tex.top,14/16,7/16,-14/16,7/16,16,2,0);face(d.tex.front??d.tex.side,14/16,7/16,0,15/16,2,9,.22);face(d.tex.side,14/16,-7/16,0,15/16,16,16,.4);g.setTransform(1,0,0,1,0,0);return c}
 export function iconCanvas(id){if(iconCache[id])return iconCache[id];let c;if(id<100){c=drawBlockIcon(id)}else{const s=drawItem(id);c=document.createElement('canvas');c.width=c.height=32;const g=c.getContext('2d');g.imageSmoothingEnabled=false;if(s)g.drawImage(s,0,0,32,32)}iconCache[id]=c;return c}

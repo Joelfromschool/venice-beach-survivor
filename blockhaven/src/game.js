@@ -1,18 +1,18 @@
 // Blockhaven main game: renderer, chunk streaming, player, interaction, survival, quests, saving, cinema.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.2';
-import {buildAtlas,buildCracks} from './textures.js?v=1.1.2';
-import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.2';
-import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.2';
-import {meshChunk,makeMaterials} from './mesher.js?v=1.1.2';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.2';
-import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.2';
-import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.2';
-import * as E from './entities.js?v=1.1.2';
-import * as UI from './ui.js?v=1.1.2';
-import {T,tx,itemName} from './i18n.js?v=1.1.2';
-import * as Tut from './tutorial.js?v=1.1.2';
-import {clamp,angleWrap,mulberry} from './util.js?v=1.1.2';
+import {G,VERSION} from './state.js?v=1.1.3';
+import {buildAtlas,buildCracks} from './textures.js?v=1.1.3';
+import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.3';
+import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.3';
+import {meshChunk,makeMaterials} from './mesher.js?v=1.1.3';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.3';
+import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.3';
+import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.3';
+import * as E from './entities.js?v=1.1.3';
+import * as UI from './ui.js?v=1.1.3';
+import {T,tx,itemName} from './i18n.js?v=1.1.3';
+import * as Tut from './tutorial.js?v=1.1.3';
+import {clamp,angleWrap,mulberry} from './util.js?v=1.1.3';
 const $=s=>document.querySelector(s);
 const QA=new URLSearchParams(location.search).has('qa');
 const forceTouch=new URLSearchParams(location.search).has('touch');
@@ -107,14 +107,15 @@ let breaking=null;
 function breakTime(id){const b=BLOCKS[id];if(b.hard<0)return Infinity;if(b.hard===0)return .05;const t=heldDef();const right=t&&t.tool&&t.tool===b.tool;const harvest=!b.tier||(right&&t.tier>=b.tier);let time=b.hard*(harvest?1.5:5)/(right?t.speed:1);if(t&&t.tool==='sword'&&(id===B.leaves||id===B.web))time*=.3;if(G.opt.cheat)time*=.08;return Math.max(.05,time)}
 function harvestable(id){const b=BLOCKS[id];if(!b.tier)return true;const t=heldDef();return!!(t&&t.tool===b.tool&&t.tier>=b.tier)}
 function dropsFor(id){const b=BLOCKS[id];const r=Math.random();if(b.drop===0)return[];if(b.drop==='leaves'){const out=[];if(r<.07)out.push([B.sapling,1]);if(id===B.leaves&&Math.random()<.06)out.push([111,1]);return out}if(b.drop==='grass')return r<.14?[[115,1]]:[];if(b.drop==='wheat')return b.crop===3?[[114,1],[115,1+Math.floor(Math.random()*2)]]:[[115,1]];if(b.drop==='berries')return[[113,2]];return[[b.drop,1]]}
-export function breakBlock(x,y,z,byPlayer=true){const w=G.world;const id=w.get(x,y,z);if(!id)return;
+export function breakBlock(x,y,z,byPlayer=true){const w=G.world;let id=w.get(x,y,z);if(!id)return;
+ if(BLOCKS[id].door){const ly=BLOCKS[id].door===2?y-1:y;w.meta.delete('door:'+w.idx(x,ly,z));const other=BLOCKS[id].door===2?ly:ly+1;if(BLOCKS[w.get(x,other,z)].door)w.set(x,other,z,0);if(BLOCKS[id].door===2){y=ly;id=B.door;w.set(x,y+1,z,0);w.set(x,y,z,id)}}
  const drops=!byPlayer||harvestable(id)?dropsFor(id):[];w.set(x,y,z,0);for(const[d,n]of drops)E.dropItem(d,n,x+.5,y+.4,z+.5);
  const i=w.idx(x,y,z);const ch=w.meta.get('chest:'+i);if(ch){for(const s of chestSlots(i))if(s)E.dropItem(s.id,s.count,x+.5,y+.5,z+.5,null,s.dur);w.meta.delete('chest:'+i)}
  const kl=w.meta.get('kiln:'+i);if(kl){for(const[a,n]of kl.out)E.dropItem(a,n,x+.5,y+.5,z+.5);for(const[a,n]of kl.q)E.dropItem(a,n,x+.5,y+.5,z+.5);w.meta.delete('kiln:'+i)}
  if(id===B.bed&&P.spawn&&Math.floor(P.spawn.x)===x&&Math.floor(P.spawn.z)===z)P.spawn=null;
  sfx('break',id);E.burst(x+.5,y+.5,z+.5,E.blockColors(id),14,3);
  if(byPlayer){G.stats.mined++;const xp={15:1,16:1,17:2,18:5,37:2}[id];if(xp&&harvestable(id))gainXP(xp)}
- const up=w.get(x,y+1,z);if(up&&(BLOCKS[up].cross||BLOCKS[up].torch))breakBlock(x,y+1,z,false);
+ const up=w.get(x,y+1,z);if(up&&(BLOCKS[up].cross||BLOCKS[up].torch||up===B.door))breakBlock(x,y+1,z,false);
  if(id===B.cactus&&w.get(x,y+1,z)===B.cactus)breakBlock(x,y+1,z,false);
  G.growing.delete(i);questCheck()}
 function canPlaceAt(x,y,z,id){const w=G.world;if(!w.inb(x,y,z))return false;const cur=w.get(x,y,z);if(cur&&!BLOCKS[cur].liquid&&!BLOCKS[cur].replace)return false;const b=BLOCKS[id];
@@ -124,7 +125,10 @@ function canPlaceAt(x,y,z,id){const w=G.world;if(!w.inb(x,y,z))return false;cons
 function placeable(s){if(!s)return false;const d=def(s.id);return isBlock(s.id)||!!(d&&d.plants)}
 // Where Use would put the held block. Aimed face first; if that is out of reach, blocked by the player (looking at own feet) or the
 // crosshair is on nothing (sky / far away), fall back to the spot just in front of the player's feet so phone players are never stuck.
-function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.plants)pid=it.plants;
+const overlapsBody=(x,y,z)=>{if(x+1>P.pos.x-PW&&x<P.pos.x+PW&&z+1>P.pos.z-PW&&z<P.pos.z+PW&&y+1>P.pos.y&&y<P.pos.y+PH)return true;for(const m of G.mobs)if(x+1>m.pos.x-m.w&&x<m.pos.x+m.w&&z+1>m.pos.z-m.w&&z<m.pos.z+m.w&&y+1>m.pos.y&&y<m.pos.y+m.h)return true;return false};
+function canPlaceSpot(x,y,z,pid){if(pid!==B.door)return canPlaceAt(x,y,z,pid);const w=G.world;const below=w.get(x,y-1,z);if(!below||!BLOCKS[below].solid)return false;return canPlaceAt(x,y,z,pid)&&canPlaceAt(x,y+1,z,B.door_top)&&!overlapsBody(x,y,z)&&!overlapsBody(x,y+1,z)}
+function facingEdge(){const sx=-Math.sin(P.yaw),sz=-Math.cos(P.yaw);return Math.abs(sz)>=Math.abs(sx)?(sz<0?2:0):(sx<0?1:3)}
+function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.plants)pid=it.plants;const canPlaceAt=canPlaceSpot;
  if(target){if(BLOCKS[target.id].replace&&pid!==B.tallgrass&&canPlaceAt(target.x,target.y,target.z,pid))return{x:target.x,y:target.y,z:target.z,pid};
   const x=target.x+target.face[0],y=target.y+target.face[1],z=target.z+target.face[2];if(canPlaceAt(x,y,z,pid))return{x,y,z,pid}}
  if(!allowFallback||targetEnt)return null;
@@ -138,8 +142,8 @@ function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.
  return null}
 function placeBlock(id,allowFallback=true){const sp=placeSpot(id,allowFallback);if(!sp)return false;return placeAt(sp.x,sp.y,sp.z,sp.pid)}
 let placeHintT=0;
-function updateGhost(dt){placeHintT=Math.max(0,placeHintT-dt);const s=heldStack();let sp=null;if(G.mode==='play'&&placeable(s)&&!P.dead)sp=placeSpot(s.id,true);ghost.visible=!!sp;if(sp){ghost.position.set(sp.x+.5,sp.y+.5,sp.z+.5);ghost.children[0].material.opacity=.22+Math.sin(G.time*6)*.08}}
-export function placeAt(x,y,z,pid,free){if(!canPlaceAt(x,y,z,pid))return false;const w=G.world;w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
+function updateGhost(dt){placeHintT=Math.max(0,placeHintT-dt);const s=heldStack();let sp=null;const useHits=target&&!(input.keys.ShiftLeft||input.sneak)&&(BLOCKS[target.id].door||[B.workbench,B.kiln,B.kiln_lit,B.chest,B.bed,B.socket,B.ferry_bell].includes(target.id));if(G.mode==='play'&&placeable(s)&&!P.dead&&!useHits&&!targetEnt)sp=placeSpot(s.id,true);ghost.visible=!!sp;if(sp){const tall=sp.pid===B.door?2:1;ghost.scale.set(1,tall,1);ghost.position.set(sp.x+.5,sp.y+tall/2,sp.z+.5);ghost.children[0].material.opacity=.22+Math.sin(G.time*6)*.08}}
+export function placeAt(x,y,z,pid,free){if(!canPlaceSpot(x,y,z,pid))return false;const w=G.world;if(pid===B.door){w.meta.set('door:'+w.idx(x,y,z),{f:facingEdge(),o:0});w.set(x,y+1,z,B.door_top)}w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
  if(!G.opt.cheat&&!free){const s=heldStack();if(s){s.count--;if(s.count<=0)P.inv[P.sel]=null}}sfx('place',pid);P.swing=.25;UI.dirty();questCheck();Tut.onPlace(pid);return true}
 export function growAt(i,force){const w=G.world;const id=w.data[i];const b=BLOCKS[id];if(!b||id===undefined){G.growing.delete(i);return}const y=Math.floor(i/(w.W*w.D)),r=i-y*w.W*w.D,z=Math.floor(r/w.W),x=r-z*w.W;
  if(b.crop!==undefined){if(b.crop<3){w.set(x,y,z,force?33:id+1);if(force)E.glowBurst(x+.5,y+.5,z+.5,['#e9f7c8','#9ccf5a'],12,2)}if(BLOCKS[w.data[i]].crop===3)G.growing.delete(i)}
@@ -320,10 +324,14 @@ function updateActions(dt){updateTarget();updateGhost(dt);
   if(!P.eating&&!P.bow&&useHoldT>.3&&placeable(s)&&target){useHoldT=0;placeBlock(s.id,false)}}
  else{if(P.bow){const ch=Math.min(1,P.bow.t);if(ch>.15&&(G.opt.cheat||removeItem(109,1))){const[o,dv]=lookRay();const sp=10+22*ch;E.fire('arrow',o.x+dv.x*.5,o.y+dv.y*.5-.1,o.z+dv.z*.5,dv.x*sp,dv.y*sp+1,dv.z*sp,'player',2+Math.round(7*ch));sfx('shoot');useDurability(1)}P.bow=null}P.eating=null}
  UI.action(contextLabel())}
-function contextLabel(){if(targetEnt&&targetEnt.npc)return T('talkto',{name:tx(NPC[targetEnt.id].name)});const n=nearestNPC();if(n)return T('talkto',{name:tx(NPC[n.id].name)});if(!target)return'';const id=target.id;if(id===B.workbench)return T('usebench');if(id===B.kiln||id===B.kiln_lit)return T('usekiln');if(id===B.chest)return T('openchest');if(id===B.bed)return T('sleep');if(id===B.socket)return T('setshard');if(id===B.ferry_bell)return T('ringbell');if(G.dim==='coast'&&(G.world.pois.murals||[]).some(m=>target.x>=m.box[0]&&target.x<=m.box[3]&&target.y>=m.box[1]&&target.y<=m.box[4]&&target.z>=m.box[2]&&target.z<=m.box[5]))return T('viewmural');return''}
+function contextLabel(){if(targetEnt&&targetEnt.npc)return T('talkto',{name:tx(NPC[targetEnt.id].name)});const n=nearestNPC();if(n)return T('talkto',{name:tx(NPC[n.id].name)});if(!target)return'';const id=target.id;if(BLOCKS[id].door)return E.doorOpen(target.x,target.y,target.z)?T('doorClose'):T('doorOpen');if(id===B.workbench)return T('usebench');if(id===B.kiln||id===B.kiln_lit)return T('usekiln');if(id===B.chest)return T('openchest');if(id===B.bed)return T('sleep');if(id===B.socket)return T('setshard');if(id===B.ferry_bell)return T('ringbell');if(G.dim==='coast'&&(G.world.pois.murals||[]).some(m=>target.x>=m.box[0]&&target.x<=m.box[3]&&target.y>=m.box[1]&&target.y<=m.box[4]&&target.z>=m.box[2]&&target.z<=m.box[5]))return T('viewmural');return''}
 function nearestNPC(){let best=null,bd=3;for(const n of G.npcs){const d=Math.hypot(n.pos.x-P.pos.x,n.pos.z-P.pos.z);if(d<bd&&Math.abs(n.pos.y-P.pos.y)<2){bd=d;best=n}}return best}
 export function interactNearest(){updateTarget();if(targetEnt&&targetEnt.npc){talkTo(targetEnt);return true}const n=nearestNPC();if(n){talkTo(n);return true}if(target&&interactBlock(target))return true;return false}
+function toggleDoor(x,y,z){const w=G.world,b=BLOCKS[w.get(x,y,z)];const ly=b.door===2?y-1:y;const k='door:'+w.idx(x,ly,z);const m=w.meta.get(k)||{f:0,o:0};
+ if(m.o&&(overlapsBody(x,ly,z)||overlapsBody(x,ly+1,z))){UI.toast(T('doorStepOut'));return}
+ m.o=m.o?0:1;w.meta.set(k,m);w.markDirty(x,ly,z);w.markDirty(x,ly+1,z);sfx('door',m.o);Tut.onDoor&&Tut.onDoor(m.o)}
 function interactBlock(t){const w=G.world,id=t.id,i=w.idx(t.x,t.y,t.z);
+ if(BLOCKS[id].door){toggleDoor(t.x,t.y,t.z);return true}
  if(id===B.workbench){UI.inventory('craft');return true}
  if(id===B.kiln||id===B.kiln_lit){UI.kiln(i);return true}
  if(id===B.chest){UI.chest(i);return true}
