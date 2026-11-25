@@ -228,3 +228,14 @@ body.lesson #panelwrap{padding-top:max(8px,calc(env(safe-area-inset-top,0px) + 8
  .btn.tab{font-size:12px;padding:6px 3px;min-height:38px}
  .phead{gap:3px}
 }
+/* v1.1.2: clearer lesson hints, skip-step, held item */
+#lesson .lbody{white-space:pre-line}
+#lesson .lskipstep{background:#5a4a7a}
+#hotbar .slot.sel{border:3px solid #ffd25a;box-shadow:0 0 0 2px #000,0 0 10px 2px rgba(255,210,90,.85);transform:scale(1.14)}
+#heldname{position:absolute;z-index:20;left:50%;bottom:calc(100% + 4px);transform:translateX(-50%);background:rgba(16,14,24,.92);border:2px solid #ffd25a;color:#ffe9a8;font-size:14px;padding:3px 10px;white-space:nowrap;text-shadow:2px 2px 0 #000;pointer-events:none!important;opacity:0;transition:opacity .25s}
+#heldname.show{opacity:1}
+@media (orientation:landscape) and (max-height:500px){
+ #lesson{left:8px;right:auto;transform:none;width:min(330px,40vw);max-height:calc(100vh - 130px)}
+ #lesson .lbody{max-height:none}
+ body.lesson #toasts{left:calc(min(330px,40vw) + 16px);right:8px;width:auto;transform:none}
+}

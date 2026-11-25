@@ -1,7 +1,7 @@
 // First-play guided lesson and contextual tips for Blockhaven. Touch-only wording.
-import {G} from './state.js?v=1.1.1';
-import {T,itemName} from './i18n.js?v=1.1.1';
-import {B,def,isBlock} from './blocks.js?v=1.1.1';
+import {G} from './state.js?v=1.1.2';
+import {T,itemName} from './i18n.js?v=1.1.2';
+import {B,def,isBlock} from './blocks.js?v=1.1.2';
 
 const LOGS=[7,35,49,62];
 const TOOLS=[120,121,122,123,124,125,126,127,128,129,130,131]; // wood/stone/iron tools
@@ -117,9 +117,10 @@ function firstSlot(pred){
 }
 function selectSlot(i){if(i>=0){if(i>=9){/* leave in bag; try to find hotbar */}P().sel=i<9?i:P().sel;if(i>=9){const inv=P().inv;for(let h=0;h<9;h++)if(!inv[h]){inv[h]=inv[i];inv[i]=null;P().sel=h;break}}}if(U&&U.dirty)U.dirty()}
 
-function ensurePlaceable(){
+function ensurePlaceable(quiet){
  const i=firstSlot(PLACEABLE);
  if(i>=0){selectSlot(i);return}
+ if(stepStart)stepStart.gaveDirt=true;
  api().addItem(2,8); // dirt
  const j=firstSlot(id=>id===2);selectSlot(j);
  if(U&&U.toast)U.toast(T('tutGaveDirt'));
@@ -147,11 +148,22 @@ function craftHint(){
  return T('tutCraftBench');
 }
 
+const HINT_AT=25, SKIPSTEP_AT=10;
 function stepText(){
  const s=STEPS[step];
- if(s.id==='bag'&&stepStart&&stepStart.bagOpened)return {title:T('tutBagOpenTitle'),body:T('tutBagOpenBody')};
- if(s.id==='craft')return {title:T('tut_craft_t'),body:craftHint()};
- return {title:T('tut_'+s.id+'_t'),body:T('tut_'+s.id+'_b')};
+ let out;
+ if(s.id==='bag'&&stepStart&&stepStart.bagOpened)out={title:T('tutBagOpenTitle'),body:T('tutBagOpenBody')};
+ else if(s.id==='craft')out={title:T('tut_craft_t'),body:craftHint()};
+ else out={title:T('tut_'+s.id+'_t'),body:T('tut_'+s.id+'_b')};
+ if(s.id==='break'&&stepStart&&stepStart.hardBlock)out.body=T('tutBreakHard');
+ else if(stepT>=HINT_AT&&!s.next)out.body=T('tutStuck')+T('tutHint_'+s.id)+'\n'+out.body;
+ return out;
+}
+export function skipStep(){
+ if(!active)return;
+ cancelSkip();stepT=1;step++;
+ if(step>=STEPS.length){finish(false);return}
+ enterStep();
 }
 
 export function renderLesson(){
@@ -165,7 +177,8 @@ export function renderLesson(){
  el.querySelector('.ltitle').textContent=tx.title;
  el.querySelector('.lbody').textContent=tx.body;
  const next=el.querySelector('.lnext');
- next.classList.toggle('hidden',!(s.next||(s.id==='bag'&&stepStart&&stepStart.bagOpened)||(s.id==='craft'&&invHas(TOOLS,1))||(s.id==='collect'&&stepStart&&stepStart.collected)));
+ next.classList.toggle('hidden',!(s.next||(s.id==='bag'&&stepStart&&stepStart.bagOpened)||(s.id==='craft'&&invHas(TOOLS,1))||(s.id==='collect'&&stepStart&&(stepStart.collected||stepT>8))));
+ const sk=el.querySelector('.lskipstep');if(sk){sk.classList.toggle('hidden',!!s.next||stepT<SKIPSTEP_AT);sk.textContent=T('tutSkipStep')}
  next.textContent=T('tutGotIt');
  el.querySelector('.lskip').textContent=T('tutSkip');
  el.querySelector('.lyes').textContent=T('tutSkipYes');
@@ -243,7 +256,8 @@ function layoutLookZone(z){
  const topbar=$('#topbar');let top=(topbar?topbar.getBoundingClientRect().bottom:8)+8;
  const lesson=$('#lesson');const lr=lesson&&!lesson.classList.contains('hidden')?lesson.getBoundingClientRect():null;
  let left=innerWidth*0.40, width=innerWidth*0.54;
- if(lr){
+ if(lr&&lr.right<innerWidth*0.5&&innerWidth>innerHeight){left=lr.right+12;width=Math.max(140,Math.min(innerWidth*0.4,innerWidth-left-210))}
+ else if(lr){
   if(lr.width>innerWidth*0.66){top=Math.max(top,lr.bottom+8);left=innerWidth*0.34;width=innerWidth*0.62}
   else{width=Math.max(110,lr.left-16-innerWidth*0.08);left=Math.max(8,lr.left-width-10);if(width<120){left=8;width=Math.max(100,lr.left-16)}}
  }
@@ -272,6 +286,9 @@ export function tick(dt){
  renderLesson();
  if(U&&U.isOpen&&U.isOpen())hidePointer();
  else pointAt(s.target);
+ // keep the lesson un-stuckable
+ if(s.id==='place'&&!PLACEABLE(P().inv[P().sel]&&P().inv[P().sel].id)&&!(U&&U.isOpen&&U.isOpen()))ensurePlaceable(true);
+ if(s.id==='break'&&stepStart){const b=api().breakingInfo&&api().breakingInfo();if(b&&b.need>3&&b.t>0.8)stepStart.hardBlock=true}
  // completion
  if(checkDone(s))advance();
 }
@@ -294,7 +311,7 @@ function checkDone(s){
   return G.stats.mined>st.mined;
  }
  if(s.id==='collect'){
-  return !!st.collected;
+  return !!st.collected||!!st.acked;
  }
  if(s.id==='bag'){
   return !!st.bagClosed;
@@ -402,6 +419,7 @@ export function bindLessonDom(){
  // called once from ui.js after #lesson exists
  const el=$('#lesson');if(!el||el._bound)return;el._bound=true;
  el.querySelector('.lskip').addEventListener('click',e=>{e.stopPropagation();confirmSkip()});
+ const ss=el.querySelector('.lskipstep');if(ss)ss.addEventListener('click',e=>{e.stopPropagation();skipStep()});
  el.querySelector('.lnext').addEventListener('click',e=>{e.stopPropagation();gotIt()});
  el.querySelector('.lyes').addEventListener('click',e=>{e.stopPropagation();skip(false)});
  el.querySelector('.lno').addEventListener('click',e=>{e.stopPropagation();cancelSkip()});

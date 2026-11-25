@@ -1,6 +1,6 @@
 // English + Japanese strings for Blockhaven UI, items and the intro captions.
-import {G} from './state.js?v=1.1.1';
-import {def} from './blocks.js?v=1.1.1';
+import {G} from './state.js?v=1.1.2';
+import {def} from './blocks.js?v=1.1.2';
 const S={
  title:['Blockhaven','ブロックヘイブン'],subtitle:['A voxel adventure in Honeyvale','ハニーヴェイルのボクセル冒険'],
  newgame:['New Adventure','新しい冒険'],cont:['Continue','つづきから'],options:['Options','設定'],picker:['◀ Game Picker','◀ ゲーム選択'],intro:['Watch Intro','オープニング'],
@@ -57,7 +57,7 @@ const S={
  tut_collect_t:['Pick it up','拾おう'],tut_collect_b:['Walk over the floating item to pick it up. It goes into the hotbar at the bottom of the screen.','浮かんでいるアイテムの上を歩くと拾えるよ。画面下のホットバーに入る。'],
  tut_bag_t:['Open your bag','バッグを開こう'],tut_bag_b:['Tap the Bag button next to the hotbar. This is your inventory — every item you carry lives here.','ホットバーの横のバッグボタンをタップしてね。持ち物は全部ここに入るよ。'],
  tutBagOpenTitle:['This is your bag','これがバッグ'],tutBagOpenBody:['Tap a slot, then tap another slot to move items. Double-tap food or armor to use it. Tap ✕ to close when you are done.','スロットをタップして、別のスロットをタップするとアイテムが移動するよ。食べ物やよろいはダブルタップで使える。終わったら✕で閉じよう。'],
- tut_place_t:['Place a block','ブロックを置こう'],tut_place_b:['Select a block in the hotbar, look at the ground, then tap the Use button to place it. Hold Use to place more than one.','ホットバーでブロックを選んで地面を見ながら、使うボタンをタップして置こう。長押しすると連続で置けるよ。'],
+ tut_place_t:['Place a block','ブロックを置こう'],tut_place_b:['A block is ready in your hotbar (gold box). The yellow see-through cube shows where it will go. Tap the ✋ Use button to place it. Hold Use to place more.','ホットバーにブロックを用意したよ（金色のわく）。黄色い半とうめいの箱が置く場所だよ。✋使うボタンをタップして置こう。長押しで連続で置けるよ。'],
  tut_craft_t:['Craft a tool','道具を作ろう'],tut_craft_b:['Open Bag, then tap Crafting.','バッグを開いて「クラフト」をタップ。'],
  tutCraftPlanks:['In Crafting, tap Planks and then Craft. One log becomes four planks. You do not need a workbench for this.','クラフトで「板」を選んで作ろう。丸太1つで板が4枚できるよ。このときは作業台はいらないよ。'],
  tutCraftSticks:['Now craft Sticks from planks. Two planks become four sticks.','次は板から「棒」を作ろう。板2枚で棒が4本できるよ。'],
@@ -69,6 +69,20 @@ const S={
  tut_night_t:['Day, night and danger','昼と夜と危険'],tut_night_b:['The sun moves across the sky. At night, monsters can appear in the dark. Stay near lamps, place torches, or sleep in a bed. Peaceful difficulty has no monsters — you can change this in Options.','太陽は空を移動するよ。夜の暗やみにはモンスターが出ることがある。ランプの近くにいる、たいまつを置く、ベッドで眠る、どれでも大丈夫。ピースフルにするとモンスターは出ないよ。設定で変えられる。'],
  tut_save_t:['Your game is saved','セーブされるよ'],tut_save_b:['Blockhaven saves by itself as you play, and when you leave. Tap the Pause button at the top left anytime. Save & Title keeps your adventure and returns to the menu.','ブロックヘイブンは遊んでいるあいだと、離れるときに自動でセーブされるよ。左上の一時停止ボタンはいつでも押せる。「セーブしてタイトルへ」で冒険を残してメニューにもどるよ。'],
  tutGaveDirt:['Here are some dirt blocks so you can practice placing.','置く練習用に土ブロックを渡したよ。'],tutGaveLogs:['Here are some logs for crafting.','クラフト用に丸太を渡したよ。'],
+ placeAim:['No spot to place here. Look a little down at the ground near you until the yellow cube shows, then tap ✋ Use.','ここには置けないよ。黄色い箱が出るまで、近くの地面を少し見下ろしてから✋使うをタップしてね。'],
+ tutSkipStep:['Skip step','このステップをとばす'],tutStuck:['Stuck? ','うまくいかない？ '],
+ tutBreakHard:['That block is too hard for bare hands. Walk onto grass or dirt, look down at it, and hold ⛏ Mine there.','そのブロックは素手ではかたすぎるよ。草か土の上へ歩いて、足元を見て⛏掘るを長押ししてね。'],
+ tutHint_look:['Put one finger on the empty middle of the screen and slide it left or right.','画面のまん中のあいている所に指を置いて、左右にすべらせてね。'],
+ tutHint_move:['Press the circle at the bottom left and push your thumb up.','左下の丸を押して、親指を上へおしてね。'],
+ tutHint_jump:['Tap the ⤒ button on the far right.','いちばん右の⤒ボタンをタップしてね。'],
+ tutHint_break:['Walk onto grass, look down at your feet a little, and hold ⛏ Mine for two seconds.','草の上へ歩いて、少し足元を見て、⛏掘るを2秒長押ししてね。'],
+ tutHint_collect:['Walk forward over the small spinning item. If you do not see one, tap Skip step.','くるくる回る小さなアイテムの上を歩いてね。見つからなければ「このステップをとばす」をタップ。'],
+ tutHint_bag:['Tap ▦ next to the hotbar, then tap ✕ to close it.','ホットバーの横の▦をタップして、✕で閉じてね。'],
+ tutHint_place:['Tap ✋ Use once. If nothing happens, look a little down at the ground first.','✋使うを1回タップ。何も起きなければ、先に少し地面を見下ろしてね。'],
+ tutHint_craft:['Crafting has a few steps. You can tap Skip step and come back to it later.','クラフトは少し手順があるよ。「このステップをとばす」で後回しにしてもOK。'],
+ tutHint_eat:['Keep your finger on ✋ Use for one second until the apple is eaten.','りんごを食べ終わるまで、✋使うを1秒押したままにしてね。'],
+ tutHint_night:['Tap Got it to continue.','「わかった」をタップして進もう。'],
+ tutHint_save:['Tap Got it, or the pause button at the top left.','「わかった」か、左上の一時停止ボタンをタップしてね。'],
  tipPickup:['Picked up! Items land in the hotbar at the bottom. Open the Bag to see the rest.','拾ったよ！アイテムは下のホットバーに入る。残りはバッグで見られるよ。'],
  tipHurt:['You got hurt! Eat food so your hunger stays high — hearts refill while you are full.','ダメージを受けたよ！満腹度が高いとハートが回復するから、食べ物を食べてね。'],
  tipNightfall:['The sun is setting. Monsters may appear in the dark. Stay near lights or go inside.','日が沈んできたよ。暗やみにはモンスターが出ることがある。明かりの近くにいるか、屋内へ入ろう。'],

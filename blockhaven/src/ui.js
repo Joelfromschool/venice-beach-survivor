@@ -1,12 +1,12 @@
 // Chunky pixel-style DOM UI for Blockhaven: HUD, hotbar, bag, crafting, kiln, chest, shop, dialog, menus.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.1';
-import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.1';
-import {T,tx,itemName} from './i18n.js?v=1.1.1';
-import * as Tut from './tutorial.js?v=1.1.1';
-import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.1';
-import {makeModel,animate} from './models.js?v=1.1.1';
-import {sfx,audioWake} from './audio.js?v=1.1.1';
+import {G,VERSION} from './state.js?v=1.1.2';
+import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.2';
+import {T,tx,itemName} from './i18n.js?v=1.1.2';
+import * as Tut from './tutorial.js?v=1.1.2';
+import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.2';
+import {makeModel,animate} from './models.js?v=1.1.2';
+import {sfx,audioWake} from './audio.js?v=1.1.2';
 const $=s=>document.querySelector(s);
 const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -46,7 +46,7 @@ root.innerHTML=`
  <div id="pickups"></div>
  <div id="status"><div id="hearts"></div><div id="armorrow"></div><div id="hunger"></div></div>
  <div id="xp"><div id="xpfill"></div><span id="xplv"></span></div>
- <div id="hotbarwrap"><div id="hotbar"></div><button id="bBag" class="btn sq bag">▦</button></div>
+ <div id="hotbarwrap"><div id="heldname"></div><div id="hotbar"></div><button id="bBag" class="btn sq bag">▦</button></div>
  <div id="touch">
   <div id="stickZone"><div id="stick"><div id="knob"></div></div></div>
   <div id="tbtns"><button id="bTalk" class="btn tb">💬</button><button id="bSneak" class="btn tb">⇩</button><button id="bUse" class="btn tb big">✋</button><button id="bMine" class="btn tb big">⛏</button><button id="bJump" class="btn tb big">⤒</button></div>
@@ -60,7 +60,7 @@ root.innerHTML=`
   <div class="lstep"></div>
   <div class="ltitle"></div>
   <div class="lbody"></div>
-  <div class="lrow"><button class="btn lskip" type="button"></button><button class="btn go lnext hidden" type="button"></button></div>
+  <div class="lrow"><button class="btn lskip" type="button"></button><button class="btn lskipstep hidden" type="button"></button><button class="btn go lnext hidden" type="button"></button></div>
   <div class="lconfirm hidden"><div class="lskipq"></div><div class="lrow"><button class="btn lyes" type="button"></button><button class="btn go lno" type="button"></button></div></div>
  </div>
 <div id="coachpulse" class="hidden"></div>
@@ -79,8 +79,9 @@ Tut.bindLessonDom();
 // ---------- slot rendering ----------
 function slotHTML(s,extra=''){if(!s)return'';const d=def(s.id);let html=`<img src="${iconURL(s.id)}" draggable="false">`;if(s.count>1)html+=`<b class="cnt">${s.count}</b>`;if(d&&d.dur&&s.dur!==undefined&&s.dur<d.dur){const f=s.dur/d.dur;html+=`<span class="dur"><span style="width:${Math.round(f*100)}%;background:hsl(${Math.round(f*120)},80%,50%)"></span></span>`}return html+extra}
 // ---------- HUD ----------
-let tickT=0;export function tick(dt){tickT-=dt;tickToasts(dt);if(!isDirty&&tickT>0)return;tickT=.2;isDirty=false;const P=A().P;
+let tickT=0,heldKey=null;export function tick(dt){tickT-=dt;tickToasts(dt);if(!isDirty&&tickT>0)return;tickT=.2;isDirty=false;const P=A().P;
  [...hotbar.children].forEach((el,i)=>{el.innerHTML=slotHTML(P.inv[i]);el.classList.toggle('sel',i===P.sel)});
+ const hs=P.inv[P.sel],hk=P.sel+':'+(hs?hs.id:0);if(hk!==heldKey){const first=heldKey===null;heldKey=hk;const hn=$('#heldname');if(hn&&hs&&!first){hn.textContent=itemName(hs.id);hn.classList.add('show');clearTimeout(hn._t);hn._t=setTimeout(()=>hn.classList.remove('show'),2200)}else if(hn&&!hs)hn.classList.remove('show')}
  const mh=A().maxHp();$('#hearts').innerHTML=bar(Math.ceil(P.hp),mh,heartFull,heartEmpty,Math.ceil(mh/2));
  $('#hunger').innerHTML=bar(Math.ceil(P.hunger),20,foodFull,foodEmpty);
  const ad=A().armorDef();$('#armorrow').innerHTML=ad>0?bar(ad,20,armorFull,armorEmpty):'';
@@ -128,7 +129,7 @@ export function inventory(tab='inv'){const P=A().P;if(!G.inGame)return;
   const right=h('div','invright');const grid=h('div','grid main');for(let i=9;i<36;i++)grid.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{onDouble:()=>A().equipFromSlot(i)}));right.appendChild(grid);
   const hb=h('div','grid hot');for(let i=0;i<9;i++)hb.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{cls:'hb',onDouble:()=>{if(def(P.inv[i].id).armor!==undefined)A().equipFromSlot(i);else{P.sel=i;closePanel()}}}));right.appendChild(hb);
   const info=h('div','iteminfo');right.appendChild(info);right.appendChild(h('div','help',T('tapmove')));
-  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.1').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
+  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.2').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
   body.appendChild(right);p.appendChild(body);p._info=info},
  ()=>{P_.querySelectorAll('.slot').forEach(e=>e._draw&&e._draw());const info=P_._info;if(info){const s=selSlot&&selSlot.get();info.innerHTML=s?itemInfo(s):''}})}
 function itemInfo(s){const d=def(s.id);let t=`<b>${esc(itemName(s.id))}</b>`;if(d.dmg&&d.tool==='sword')t+=` · ⚔${d.dmg}`;if(d.def)t+=` · 🛡${d.def}`;if(d.food)t+=` · 🍎+${d.food[0]}`;if(d.dur&&s.dur!==undefined)t+=` · ${s.dur}/${d.dur}`;return t}

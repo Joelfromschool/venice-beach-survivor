@@ -1,11 +1,11 @@
 // Entities: shared voxel physics, mobs + AI, bosses, projectiles, item drops, particles.
 import * as THREE from '../vendor/three.module.min.js';
-import {G} from './state.js?v=1.1.1';
-import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.1';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.1';
-import {tileUV} from './mesher.js?v=1.1.1';
-import {sfx} from './audio.js?v=1.1.1';
-import {clamp,angleWrap} from './util.js?v=1.1.1';
+import {G} from './state.js?v=1.1.2';
+import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.2';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.2';
+import {tileUV} from './mesher.js?v=1.1.2';
+import {sfx} from './audio.js?v=1.1.2';
+import {clamp,angleWrap} from './util.js?v=1.1.2';
 // ---------- physics ----------
 export function solidCell(x,y,z){return BLOCKS[G.world.get(x,y,z)].solid}
 export function boxHits(px,py,pz,w,h){const x0=Math.floor(px-w),x1=Math.floor(px+w-1e-7),y0=Math.floor(py),y1=Math.floor(py+h-1e-7),z0=Math.floor(pz-w),z1=Math.floor(pz+w-1e-7);for(let y=y0;y<=y1;y++)for(let z=z0;z<=z1;z++)for(let x=x0;x<=x1;x++)if(solidCell(x,y,z))return true;return false}

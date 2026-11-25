@@ -1,18 +1,18 @@
 // Blockhaven main game: renderer, chunk streaming, player, interaction, survival, quests, saving, cinema.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.1';
-import {buildAtlas,buildCracks} from './textures.js?v=1.1.1';
-import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.1';
-import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.1';
-import {meshChunk,makeMaterials} from './mesher.js?v=1.1.1';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.1';
-import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.1';
-import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.1';
-import * as E from './entities.js?v=1.1.1';
-import * as UI from './ui.js?v=1.1.1';
-import {T,tx,itemName} from './i18n.js?v=1.1.1';
-import * as Tut from './tutorial.js?v=1.1.1';
-import {clamp,angleWrap,mulberry} from './util.js?v=1.1.1';
+import {G,VERSION} from './state.js?v=1.1.2';
+import {buildAtlas,buildCracks} from './textures.js?v=1.1.2';
+import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.2';
+import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.2';
+import {meshChunk,makeMaterials} from './mesher.js?v=1.1.2';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.2';
+import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.2';
+import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.2';
+import * as E from './entities.js?v=1.1.2';
+import * as UI from './ui.js?v=1.1.2';
+import {T,tx,itemName} from './i18n.js?v=1.1.2';
+import * as Tut from './tutorial.js?v=1.1.2';
+import {clamp,angleWrap,mulberry} from './util.js?v=1.1.2';
 const $=s=>document.querySelector(s);
 const QA=new URLSearchParams(location.search).has('qa');
 const forceTouch=new URLSearchParams(location.search).has('touch');
@@ -47,7 +47,9 @@ const cloudTex=new THREE.CanvasTexture(cloudCanvas);cloudTex.magFilter=cloudTex.
 const clouds=new THREE.Mesh(new THREE.PlaneGeometry(1024,1024),new THREE.MeshBasicMaterial({map:cloudTex,transparent:true,opacity:.75,fog:false,depthWrite:false,side:THREE.DoubleSide}));clouds.rotation.x=-Math.PI/2;clouds.position.y=62;scene.add(clouds);
 const ocean=new THREE.Mesh(new THREE.PlaneGeometry(2400,2400),new THREE.MeshBasicMaterial({color:0x2f63c0}));ocean.rotation.x=-Math.PI/2;ocean.position.set(128,SEA+.8,128);scene.add(ocean);
 // target outline + cracks
-const outline=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.004,1.004,1.004)),new THREE.LineBasicMaterial({color:0x111111,transparent:true,opacity:.55}));outline.visible=false;scene.add(outline);
+const outline=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.006,1.006,1.006)),new THREE.LineBasicMaterial({color:0xffffff,transparent:true,opacity:.9}));outline.visible=false;scene.add(outline);
+// ghost cube: shows exactly where Use will put the held block
+const ghost=new THREE.Group();{const gm=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshBasicMaterial({color:0xffd25a,transparent:true,opacity:.3,depthWrite:false}));const ge=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.01,1.01,1.01)),new THREE.LineBasicMaterial({color:0xffd25a,transparent:true,opacity:.95}));ghost.add(gm,ge)}ghost.visible=false;scene.add(ghost);
 const crackTex=new THREE.CanvasTexture(buildCracks());crackTex.magFilter=crackTex.minFilter=THREE.NearestFilter;crackTex.generateMipmaps=false;crackTex.repeat.set(.1,1);
 const crack=new THREE.Mesh(new THREE.BoxGeometry(1.01,1.01,1.01),new THREE.MeshBasicMaterial({map:crackTex,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-1}));crack.visible=false;scene.add(crack);
 // quest beam
@@ -119,8 +121,24 @@ function canPlaceAt(x,y,z,id){const w=G.world;if(!w.inb(x,y,z))return false;cons
  if(b.solid){if(x+1>P.pos.x-PW&&x<P.pos.x+PW&&z+1>P.pos.z-PW&&z<P.pos.z+PW&&y+1>P.pos.y&&y<P.pos.y+PH)return false;for(const m of G.mobs)if(x+1>m.pos.x-m.w&&x<m.pos.x+m.w&&z+1>m.pos.z-m.w&&z<m.pos.z+m.w&&y+1>m.pos.y&&y<m.pos.y+m.h)return false;for(const n of G.npcs)if(x+1>n.pos.x-.3&&x<n.pos.x+.3&&z+1>n.pos.z-.3&&z<n.pos.z+.3&&y+1>n.pos.y&&y<n.pos.y+1.8)return false}
  if(b.cross||b.torch){const below=w.get(x,y-1,z);if(!BLOCKS[below].solid)return false;if((b.crop!==undefined||b.sapling||[B.flower_red,B.flower_yellow,B.flower_blue,B.tallgrass,B.berry_bush].includes(id))&&![B.grass,B.dirt,B.gloomgrass,B.snowgrass].includes(below))return false}
  return true}
-function placeBlock(id){if(!target)return false;const x=target.x+target.face[0],y=target.y+target.face[1],z=target.z+target.face[2];let pid=id;const it=heldDef();if(it&&it.plants)pid=it.plants;
- if(BLOCKS[target.id].replace&&pid!==B.tallgrass)return placeAt(target.x,target.y,target.z,pid);return placeAt(x,y,z,pid)}
+function placeable(s){if(!s)return false;const d=def(s.id);return isBlock(s.id)||!!(d&&d.plants)}
+// Where Use would put the held block. Aimed face first; if that is out of reach, blocked by the player (looking at own feet) or the
+// crosshair is on nothing (sky / far away), fall back to the spot just in front of the player's feet so phone players are never stuck.
+function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.plants)pid=it.plants;
+ if(target){if(BLOCKS[target.id].replace&&pid!==B.tallgrass&&canPlaceAt(target.x,target.y,target.z,pid))return{x:target.x,y:target.y,z:target.z,pid};
+  const x=target.x+target.face[0],y=target.y+target.face[1],z=target.z+target.face[2];if(canPlaceAt(x,y,z,pid))return{x,y,z,pid}}
+ if(!allowFallback||targetEnt)return null;
+ const w=G.world,fy=Math.floor(P.pos.y+.01),sx=-Math.sin(P.yaw),sz=-Math.cos(P.yaw);
+ const support=(x,y,z)=>{const b=w.get(x,y-1,z);return!!(b&&BLOCKS[b].solid)};
+ const free=(x,y,z)=>{const c=w.get(x,y,z);return!c||BLOCKS[c].liquid||BLOCKS[c].replace};
+ // front first, then right / left / behind (e.g. standing in a hole you just dug)
+ for(const[dx,dz]of[[sx,sz],[-sz,sx],[sz,-sx],[-sx,-sz]])for(const d of[1.25,1.9,.85,2.5]){const x=Math.floor(P.pos.x+dx*d),z=Math.floor(P.pos.z+dz*d);
+  if(x===Math.floor(P.pos.x)&&z===Math.floor(P.pos.z))continue;
+  for(const y of[fy,fy-1,fy+1,fy+2]){if(!free(x,y,z)||!support(x,y,z))continue;if(canPlaceAt(x,y,z,pid))return{x,y,z,pid}}}
+ return null}
+function placeBlock(id,allowFallback=true){const sp=placeSpot(id,allowFallback);if(!sp)return false;return placeAt(sp.x,sp.y,sp.z,sp.pid)}
+let placeHintT=0;
+function updateGhost(dt){placeHintT=Math.max(0,placeHintT-dt);const s=heldStack();let sp=null;if(G.mode==='play'&&placeable(s)&&!P.dead)sp=placeSpot(s.id,true);ghost.visible=!!sp;if(sp){ghost.position.set(sp.x+.5,sp.y+.5,sp.z+.5);ghost.children[0].material.opacity=.22+Math.sin(G.time*6)*.08}}
 export function placeAt(x,y,z,pid,free){if(!canPlaceAt(x,y,z,pid))return false;const w=G.world;w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
  if(!G.opt.cheat&&!free){const s=heldStack();if(s){s.count--;if(s.count<=0)P.inv[P.sel]=null}}sfx('place',pid);P.swing=.25;UI.dirty();questCheck();Tut.onPlace(pid);return true}
 export function growAt(i,force){const w=G.world;const id=w.data[i];const b=BLOCKS[id];if(!b||id===undefined){G.growing.delete(i);return}const y=Math.floor(i/(w.W*w.D)),r=i-y*w.W*w.D,z=Math.floor(r/w.W),x=r-z*w.W;
@@ -285,7 +303,7 @@ let useHoldT=0;
 function weaponCD(d){if(!d||!d.tool)return .32;return d.tool==='sword'?.55:d.tool==='axe'?.85:.4}
 export function doAttack(){if(!targetEnt||targetEnt.npc)return false;if(P.atkCD>0)return true;const d=heldDef();let dmg=d&&d.dmg?d.dmg:1;const crit=!P.onGround&&P.vel.y<-1;if(crit){dmg*=1.5;E.glowBurst(targetEnt.pos.x,targetEnt.pos.y+targetEnt.h*.7,targetEnt.pos.z,['#fff6a8','#ffffff'],8,3,.5)}if(G.opt.cheat)dmg*=3;
  E.hurtMob(targetEnt,dmg,P.pos,targetEnt.boss?0:6.5);P.atkCD=weaponCD(d);P.swing=.3;sfx('swing');if(d&&d.dur)useDurability(d.tool==='sword'?1:2);P.exh+=.1;return true}
-function updateActions(dt){updateTarget();
+function updateActions(dt){updateTarget();updateGhost(dt);
  const attacking=input.attack||input.mouseL;
  if(attacking){if(targetEnt&&!targetEnt.npc){doAttack();breaking=null}
   else if(target){const key=target.x+','+target.y+','+target.z;if(!breaking||breaking.key!==key)breaking={key,x:target.x,y:target.y,z:target.z,id:target.id,t:0,need:breakTime(target.id),snd:0};
@@ -299,7 +317,7 @@ function updateActions(dt){updateTarget();
  if(input.use){useHoldT+=dt;
   if(P.eating){P.eating.t+=dt;if(Math.floor(P.eating.t*5)!==Math.floor((P.eating.t-dt)*5))sfx('eat');if(P.eating.t>=1){const st=heldStack();if(st&&st.id===P.eating.id)eat(st);P.eating=null}}
   if(P.bow)P.bow.t=Math.min(1.1,P.bow.t+dt);
-  if(!P.eating&&!P.bow&&useHoldT>.3&&s&&(isBlock(s.id)||d.plants)&&target){useHoldT=0;placeBlock(s.id)}}
+  if(!P.eating&&!P.bow&&useHoldT>.3&&placeable(s)&&target){useHoldT=0;placeBlock(s.id,false)}}
  else{if(P.bow){const ch=Math.min(1,P.bow.t);if(ch>.15&&(G.opt.cheat||removeItem(109,1))){const[o,dv]=lookRay();const sp=10+22*ch;E.fire('arrow',o.x+dv.x*.5,o.y+dv.y*.5-.1,o.z+dv.z*.5,dv.x*sp,dv.y*sp+1,dv.z*sp,'player',2+Math.round(7*ch));sfx('shoot');useDurability(1)}P.bow=null}P.eating=null}
  UI.action(contextLabel())}
 function contextLabel(){if(targetEnt&&targetEnt.npc)return T('talkto',{name:tx(NPC[targetEnt.id].name)});const n=nearestNPC();if(n)return T('talkto',{name:tx(NPC[n.id].name)});if(!target)return'';const id=target.id;if(id===B.workbench)return T('usebench');if(id===B.kiln||id===B.kiln_lit)return T('usekiln');if(id===B.chest)return T('openchest');if(id===B.bed)return T('sleep');if(id===B.socket)return T('setshard');if(id===B.ferry_bell)return T('ringbell');if(G.dim==='coast'&&(G.world.pois.murals||[]).some(m=>target.x>=m.box[0]&&target.x<=m.box[3]&&target.y>=m.box[1]&&target.y<=m.box[4]&&target.z>=m.box[2]&&target.z<=m.box[5]))return T('viewmural');return''}
@@ -321,7 +339,7 @@ export function onUse(){const s=heldStack(),d=heldDef();
  if(d&&d.grow&&target){const i=G.world.idx(target.x,target.y,target.z);const b=BLOCKS[target.id];if(b.crop!==undefined||b.sapling){growAt(i,true);if(!G.opt.cheat){s.count--;if(s.count<=0)P.inv[P.sel]=null}UI.dirty();return}}
  const food=d&&(d.food);if(food){if(P.hunger<20||(d.heal&&P.hp<maxHp())||G.opt.cheat)P.eating={t:0,id:s.id};else UI.toast(T('nothungry'));return}
  if(d&&d.bow){if(countItem(109)>0||G.opt.cheat){P.bow={t:0};sfx('bow')}else UI.toast(T('noarrows'));return}
- if(s&&(isBlock(s.id)||d.plants)&&target){placeBlock(s.id);return}
+ if(placeable(s)){if(!target&&!Tut.isActive()&&nearestNPC()){interactNearest();return}if(placeBlock(s.id))return;if(!target&&nearestNPC()){interactNearest();return}if(placeHintT<=0){placeHintT=2.5;UI.toast(T('placeAim'))}return}
  if(d&&d.armor!==undefined){equipFromSlot(P.sel);return}
  if(!target&&!targetEnt)interactNearest()}
 export function equipFromSlot(i){const s=P.inv[i];if(!s)return;const d=def(s.id);if(d.armor===undefined)return;const old=P.armor[d.armor];P.armor[d.armor]=s;P.inv[i]=old;sfx('place',B.iron_block);UI.dirty()}
@@ -436,7 +454,7 @@ function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,Math.max(0,
   if(G.mode==='play'){G.playtime+=dt;if(!Tut.isActive())G.clock=(G.clock+dt/DAY_LEN)%1;updatePlayer(dt);updateActions(dt);E.updateEntities(dt);updateNPCs(dt);if(!Tut.isActive())updateSpawning(dt);updateBossTriggers();updateKilns(dt);updateGrowth(dt);updateCamera(dt);updateHand();UI.tick(dt);Tut.tick(dt);if(performance.now()-(G.lastSave||0)>30000)save();
    setMood(G.activeBoss?'boss':G.dim==='realm'?'realm':P.pos.y<SEA-4&&G.world.skyAt(Math.floor(P.pos.x),Math.floor(P.pos.y+1.6),Math.floor(P.pos.z))<8?'cave':isNight()?'night':'day');
    const op=objectivePos();beam.visible=!!op;if(op){beam.position.set(op.x+.5,(op.y||30)+44,op.z+.5);beam.material.opacity=.22+Math.sin(G.time*3)*.08}}
-  else{beam.visible=false;outline.visible=false;crack.visible=false;
+  else{beam.visible=false;outline.visible=false;crack.visible=false;ghost.visible=false;
    if(G.mode==='cinema'&&cine){updateCinema(dt);E.updateEntities(dt);updateNPCs(dt)}
    else if(G.mode==='title'){updateTitleCam();updateNPCs(dt)}
    else if(G.inGame){updateCamera(0);updateKilns(dt);if(G.mode==='sleep'||G.mode==='ending'){E.updateEntities(dt);updateNPCs(dt)}if(Tut.isActive())Tut.tick(dt)}}
@@ -447,5 +465,5 @@ requestAnimationFrame(loop);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();audioSuspend(true);if(G.mode==='play')UI.pause()}else audioSuspend(false)});
 addEventListener('pagehide',()=>save());
 // ---------------- API for UI/entities ----------------
-G.api={giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);Tut.onPickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch,tutorial:Tut};
+G.api={breakingInfo:()=>breaking,canPlaceHeld:()=>{const s=heldStack();return placeable(s)&&!!placeSpot(s.id,true)},giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);Tut.onPickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch,tutorial:Tut};
 if(QA){window.BH={G,P,E,B,I,BLOCKS,RECIPES,SMELT,addItem,countItem,removeItem,breakBlock,placeAt,craft,canCraft,smelt,collectKiln,kilnState,chestSlots,save,readSave,continueGame,newGame,enterPlay,toTitle,startCinema,skipCinema,switchDim,sail,interactBlock,QUESTS,AWAY,giverHere,questWorld,questCheck,talkTo,finishQuest,curQuest,objectivePos,hurtPlayer,respawn,updateChunks,target:()=>{updateTarget();return{target,ent:targetEnt&&(targetEnt.id||targetEnt.type)}},interactNearest,openGate,insertShard,growAt,isNight,explode,gainXP,UI,camera,renderer,scene,chunks,raycast,spawnNPCs,trySleep,onUse,doAttack,maxHp,Tut}}
