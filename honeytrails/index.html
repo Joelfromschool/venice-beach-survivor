@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ffc93c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Honey Trails</title>
+<link rel="icon" href="icon-192.png?v=1.0.0">
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=1.0.0">
+<link rel="manifest" href="manifest.json?v=1.0.0">
+<link rel="stylesheet" href="style.css?v=1.0.0">
+<script>window.__V='1.0.0';</script>
+</head>
+<body>
+<canvas id="map"></canvas>
+<video id="arVid" playsinline muted autoplay></video>
+<canvas id="enc"></canvas>
+<canvas id="bat"></canvas>
+
+<!-- MAP HUD -->
+<div id="hud">
+ <button class="hbtn" id="hHome" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" fill="currentColor"/></svg></button>
+ <div class="htr"><span class="chip" id="hMode"></span><button class="hbtn" id="hCompass" aria-label="North"><svg viewBox="0 0 24 24"><path id="hNeedle" d="M12 3l4 9h-8z" fill="#e0457b"/><path d="M12 21l-4-9h8z" fill="#fff"/></svg></button></div>
+ <div id="hGps" class="hmsg"></div>
+ <div id="joy"><i></i></div>
+ <div class="hbot">
+  <button id="hMe" class="hme"><img id="hAv" alt=""><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="16" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="3"/><circle id="hXp" cx="18" cy="18" r="16" fill="none" stroke="#ffd23a" stroke-width="3" stroke-dasharray="100.5" stroke-dashoffset="100" transform="rotate(-90 18 18)" stroke-linecap="round"/></svg><b id="hLv">1</b></button>
+  <button id="hMenu" class="hmenu" aria-label="Menu"><span></span></button>
+  <button id="hNear" class="hnear"><small data-t="nearby">Nearby</small><div id="hNearL"></div></button>
+ </div>
+ <div id="hHint" class="hhint"></div>
+</div>
+
+<!-- ENCOUNTER UI -->
+<div id="encUI">
+ <button class="ebtn erun" id="eRun"><span data-t="run">Run</span></button>
+ <div class="etop"><div class="ename"><b id="eName"></b><span id="eShiny">✦</span></div><div class="ecp" id="eCp"></div></div>
+ <button class="ebtn ear" id="eAR">AR</button>
+ <button class="ebtn edrop" id="eDrop"><img src="art/drop.png?v=1.0.0" alt=""><b id="eBerryN"></b></button>
+ <button class="ebtn ejar" id="eJar"><img id="eJarI" alt=""><b id="eJarN"></b></button>
+ <div class="ehint" id="eHint"></div>
+ <div class="esheet" id="eSheet"></div>
+</div>
+
+<!-- BATTLE UI -->
+<div id="batUI">
+ <div class="btop"><div class="bname" id="bOppN"></div><div class="bbar"><i id="bOppHp"></i></div><div class="btime" id="bTime"></div></div>
+ <div class="bbot"><div class="bteam" id="bTeam"></div><div class="bname" id="bMeN"></div><div class="bbar me"><i id="bMeHp"></i></div><div class="bbar en"><i id="bEn"></i></div></div>
+ <button id="bSpec" class="bspec" data-t="special">Special!</button>
+ <div class="bhint" id="bHint"></div>
+</div>
+
+<!-- SCREENS (filled by ui.js) -->
+<div id="scr"></div>
+<div id="pop"></div>
+<div id="toast"></div>
+<div id="update" class="hidden"><span></span><button></button></div>
+<noscript>Honey Trails needs JavaScript.</noscript>
+<script type="module" src="js/main.js?v=1.0.0"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+Fonts bundled with Pinco Pooh Snap:
+- Chewy (chewy.woff2), Copyright Sideshow, Apache License 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
