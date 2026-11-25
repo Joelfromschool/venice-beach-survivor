@@ -1,5 +1,5 @@
 // Blocks, items, recipes, smelting and icons for Blockhaven.
-import {TILE,TS,AT,PER} from './textures.js?v=1.1.3';
+import {TILE,TS,AT,PER} from './textures.js?v=1.1.4';
 export const B={};export const BLOCKS=[];
 const t=n=>TILE[n];
 function blk(id,key,o){const d=Object.assign({id,key,solid:true,opaque:true,cross:false,liquid:false,light:0,hard:1,tool:null,tier:0,cutout:false,drop:id,stack:64},o);if(typeof d.tex==='string')d.tex={top:t(d.tex),bottom:t(d.tex),side:t(d.tex)};else{const x=d.tex;d.tex={top:t(x.top||x.side),bottom:t(x.bottom||x.top||x.side),side:t(x.side),front:t(x.front||x.side)}}BLOCKS[id]=d;B[key]=id;return d}
@@ -73,8 +73,11 @@ blk(73,'awning',{tex:'awning',hard:.8});
 blk(74,'felt_red',{tex:'felt_red',hard:.8});blk(75,'felt_white',{tex:'felt_white',hard:.8});
 blk(76,'ferry_bell',{tex:{top:'planks',side:'ferry_bell'},hard:-1,light:7,bell:true});
 blk(77,'neon',{tex:'neon',hard:.8,light:13});
-// Doors (v1.1.3): two cells tall; facing/open state lives in world meta 'door:'+lowerIdx
+// Doors (v1.1.4): two cells tall; facing/open state lives in world meta 'door:'+lowerIdx
 blk(78,'door',{tex:'door_lo',solid:false,opaque:false,cutout:true,hard:1.5,tool:'axe',door:1});
+// Waystones (v1.1.4): warp / teleport stones. 81 = pre-placed village/coast stones that cannot be mined
+blk(80,'waystone',{tex:{top:'waystone_top',side:'waystone'},hard:1.5,tool:'pick',light:12,ws:true});
+blk(81,'waystone_fixed',{tex:{top:'waystone_top',side:'waystone'},hard:-1,light:12,ws:true,drop:0});
 blk(79,'door_top',{tex:'door_hi',solid:false,opaque:false,cutout:true,hard:1.5,tool:'axe',door:2,drop:78});
 // Items (ids >= 100)
 export const ITEMS={};export const I={};
@@ -104,6 +107,7 @@ rc(26,4,[[101,1],[100,1]],'a..b',false);
 rc(24,1,[[4,8]],'aaaa.aaaa');
 rc(25,1,[[8,8]],'aaaa.aaaa');
 rc(78,3,[[8,6]],'aa.aa.aa.');
+rc(80,1,[[4,4],[100,2]],'aba.b.a.a');rc(80,2,[[4,4],[166,1]],'a.a.b.a.a');
 rc(41,1,[[22,3],[8,3]],'aaabbb');
 rc(6,4,[[5,4]],'aa.aa',false);rc(52,4,[[3,4]],'aa.aa',false);rc(21,2,[[3,2],[5,2]],'ab.ba',false);
 rc(43,1,[[22,1],[113,1]],'ab',false);rc(44,1,[[22,1],[58,1]],'ab',false);rc(45,1,[[22,1],[28,1]],'ab',false);rc(46,1,[[22,1],[9,1]],'ab',false);

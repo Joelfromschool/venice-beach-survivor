@@ -1,18 +1,18 @@
 // Blockhaven main game: renderer, chunk streaming, player, interaction, survival, quests, saving, cinema.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.3';
-import {buildAtlas,buildCracks} from './textures.js?v=1.1.3';
-import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.3';
-import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.3';
-import {meshChunk,makeMaterials} from './mesher.js?v=1.1.3';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.3';
-import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.3';
-import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.3';
-import * as E from './entities.js?v=1.1.3';
-import * as UI from './ui.js?v=1.1.3';
-import {T,tx,itemName} from './i18n.js?v=1.1.3';
-import * as Tut from './tutorial.js?v=1.1.3';
-import {clamp,angleWrap,mulberry} from './util.js?v=1.1.3';
+import {G,VERSION} from './state.js?v=1.1.4';
+import {buildAtlas,buildCracks} from './textures.js?v=1.1.4';
+import {BLOCKS,B,ITEMS,I,def,isBlock,maxStack,foodOf,fuelOf,RECIPES,SMELT,setAtlas,iconCanvas,itemPixels} from './blocks.js?v=1.1.4';
+import {World,generateOverworld,generateRealm,generateCoast,SEA} from './world.js?v=1.1.4';
+import {meshChunk,makeMaterials} from './mesher.js?v=1.1.4';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.4';
+import {audioWake,sfx,setMood,musicVolume,audioSuspend} from './audio.js?v=1.1.4';
+import {QUESTS,NPC,BOSSES,BOSS_LINES,ASMON_JOIN,ENDING,IDLE,TRADES,AWAY,PLACE} from './story.js?v=1.1.4';
+import * as E from './entities.js?v=1.1.4';
+import * as UI from './ui.js?v=1.1.4';
+import {T,tx,itemName} from './i18n.js?v=1.1.4';
+import * as Tut from './tutorial.js?v=1.1.4';
+import {clamp,angleWrap,mulberry} from './util.js?v=1.1.4';
 const $=s=>document.querySelector(s);
 const QA=new URLSearchParams(location.search).has('qa');
 const forceTouch=new URLSearchParams(location.search).has('touch');
@@ -108,6 +108,7 @@ function breakTime(id){const b=BLOCKS[id];if(b.hard<0)return Infinity;if(b.hard=
 function harvestable(id){const b=BLOCKS[id];if(!b.tier)return true;const t=heldDef();return!!(t&&t.tool===b.tool&&t.tier>=b.tier)}
 function dropsFor(id){const b=BLOCKS[id];const r=Math.random();if(b.drop===0)return[];if(b.drop==='leaves'){const out=[];if(r<.07)out.push([B.sapling,1]);if(id===B.leaves&&Math.random()<.06)out.push([111,1]);return out}if(b.drop==='grass')return r<.14?[[115,1]]:[];if(b.drop==='wheat')return b.crop===3?[[114,1],[115,1+Math.floor(Math.random()*2)]]:[[115,1]];if(b.drop==='berries')return[[113,2]];return[[b.drop,1]]}
 export function breakBlock(x,y,z,byPlayer=true){const w=G.world;let id=w.get(x,y,z);if(!id)return;
+ if(id===B.waystone)unregisterWaystone(x,y,z);
  if(BLOCKS[id].door){const ly=BLOCKS[id].door===2?y-1:y;w.meta.delete('door:'+w.idx(x,ly,z));const other=BLOCKS[id].door===2?ly:ly+1;if(BLOCKS[w.get(x,other,z)].door)w.set(x,other,z,0);if(BLOCKS[id].door===2){y=ly;id=B.door;w.set(x,y+1,z,0);w.set(x,y,z,id)}}
  const drops=!byPlayer||harvestable(id)?dropsFor(id):[];w.set(x,y,z,0);for(const[d,n]of drops)E.dropItem(d,n,x+.5,y+.4,z+.5);
  const i=w.idx(x,y,z);const ch=w.meta.get('chest:'+i);if(ch){for(const s of chestSlots(i))if(s)E.dropItem(s.id,s.count,x+.5,y+.5,z+.5,null,s.dur);w.meta.delete('chest:'+i)}
@@ -126,7 +127,7 @@ function placeable(s){if(!s)return false;const d=def(s.id);return isBlock(s.id)|
 // Where Use would put the held block. Aimed face first; if that is out of reach, blocked by the player (looking at own feet) or the
 // crosshair is on nothing (sky / far away), fall back to the spot just in front of the player's feet so phone players are never stuck.
 const overlapsBody=(x,y,z)=>{if(x+1>P.pos.x-PW&&x<P.pos.x+PW&&z+1>P.pos.z-PW&&z<P.pos.z+PW&&y+1>P.pos.y&&y<P.pos.y+PH)return true;for(const m of G.mobs)if(x+1>m.pos.x-m.w&&x<m.pos.x+m.w&&z+1>m.pos.z-m.w&&z<m.pos.z+m.w&&y+1>m.pos.y&&y<m.pos.y+m.h)return true;return false};
-function canPlaceSpot(x,y,z,pid){if(pid!==B.door)return canPlaceAt(x,y,z,pid);const w=G.world;const below=w.get(x,y-1,z);if(!below||!BLOCKS[below].solid)return false;return canPlaceAt(x,y,z,pid)&&canPlaceAt(x,y+1,z,B.door_top)&&!overlapsBody(x,y,z)&&!overlapsBody(x,y+1,z)}
+function canPlaceSpot(x,y,z,pid){if(pid===B.waystone&&G.dim==='realm')return false;if(pid!==B.door)return canPlaceAt(x,y,z,pid);const w=G.world;const below=w.get(x,y-1,z);if(!below||!BLOCKS[below].solid)return false;return canPlaceAt(x,y,z,pid)&&canPlaceAt(x,y+1,z,B.door_top)&&!overlapsBody(x,y,z)&&!overlapsBody(x,y+1,z)}
 function facingEdge(){const sx=-Math.sin(P.yaw),sz=-Math.cos(P.yaw);return Math.abs(sz)>=Math.abs(sx)?(sz<0?2:0):(sx<0?1:3)}
 function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.plants)pid=it.plants;const canPlaceAt=canPlaceSpot;
  if(target){if(BLOCKS[target.id].replace&&pid!==B.tallgrass&&canPlaceAt(target.x,target.y,target.z,pid))return{x:target.x,y:target.y,z:target.z,pid};
@@ -142,8 +143,8 @@ function placeSpot(id,allowFallback=true){let pid=id;const it=def(id);if(it&&it.
  return null}
 function placeBlock(id,allowFallback=true){const sp=placeSpot(id,allowFallback);if(!sp)return false;return placeAt(sp.x,sp.y,sp.z,sp.pid)}
 let placeHintT=0;
-function updateGhost(dt){placeHintT=Math.max(0,placeHintT-dt);const s=heldStack();let sp=null;const useHits=target&&!(input.keys.ShiftLeft||input.sneak)&&(BLOCKS[target.id].door||[B.workbench,B.kiln,B.kiln_lit,B.chest,B.bed,B.socket,B.ferry_bell].includes(target.id));if(G.mode==='play'&&placeable(s)&&!P.dead&&!useHits&&!targetEnt)sp=placeSpot(s.id,true);ghost.visible=!!sp;if(sp){const tall=sp.pid===B.door?2:1;ghost.scale.set(1,tall,1);ghost.position.set(sp.x+.5,sp.y+tall/2,sp.z+.5);ghost.children[0].material.opacity=.22+Math.sin(G.time*6)*.08}}
-export function placeAt(x,y,z,pid,free){if(!canPlaceSpot(x,y,z,pid))return false;const w=G.world;if(pid===B.door){w.meta.set('door:'+w.idx(x,y,z),{f:facingEdge(),o:0});w.set(x,y+1,z,B.door_top)}w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
+function updateGhost(dt){placeHintT=Math.max(0,placeHintT-dt);const s=heldStack();let sp=null;const useHits=target&&!(input.keys.ShiftLeft||input.sneak)&&(BLOCKS[target.id].door||BLOCKS[target.id].ws||[B.workbench,B.kiln,B.kiln_lit,B.chest,B.bed,B.socket,B.ferry_bell].includes(target.id));if(G.mode==='play'&&placeable(s)&&!P.dead&&!useHits&&!targetEnt)sp=placeSpot(s.id,true);ghost.visible=!!sp;if(sp){const tall=sp.pid===B.door?2:1;ghost.scale.set(1,tall,1);ghost.position.set(sp.x+.5,sp.y+tall/2,sp.z+.5);ghost.children[0].material.opacity=.22+Math.sin(G.time*6)*.08}}
+export function placeAt(x,y,z,pid,free){if(!canPlaceSpot(x,y,z,pid))return false;const w=G.world;if(pid===B.waystone&&!free)registerWaystone(x,y,z);if(pid===B.door){w.meta.set('door:'+w.idx(x,y,z),{f:facingEdge(),o:0});w.set(x,y+1,z,B.door_top)}w.set(x,y,z,pid);if(BLOCKS[pid].crop!==undefined){if(w.get(x,y-1,z)!==B.dirt)w.set(x,y-1,z,B.dirt);G.growing.add(w.idx(x,y,z))}if(BLOCKS[pid].sapling)G.growing.add(w.idx(x,y,z));
  if(!G.opt.cheat&&!free){const s=heldStack();if(s){s.count--;if(s.count<=0)P.inv[P.sel]=null}}sfx('place',pid);P.swing=.25;UI.dirty();questCheck();Tut.onPlace(pid);return true}
 export function growAt(i,force){const w=G.world;const id=w.data[i];const b=BLOCKS[id];if(!b||id===undefined){G.growing.delete(i);return}const y=Math.floor(i/(w.W*w.D)),r=i-y*w.W*w.D,z=Math.floor(r/w.W),x=r-z*w.W;
  if(b.crop!==undefined){if(b.crop<3){w.set(x,y,z,force?33:id+1);if(force)E.glowBurst(x+.5,y+.5,z+.5,['#e9f7c8','#9ccf5a'],12,2)}if(BLOCKS[w.data[i]].crop===3)G.growing.delete(i)}
@@ -324,13 +325,29 @@ function updateActions(dt){updateTarget();updateGhost(dt);
   if(!P.eating&&!P.bow&&useHoldT>.3&&placeable(s)&&target){useHoldT=0;placeBlock(s.id,false)}}
  else{if(P.bow){const ch=Math.min(1,P.bow.t);if(ch>.15&&(G.opt.cheat||removeItem(109,1))){const[o,dv]=lookRay();const sp=10+22*ch;E.fire('arrow',o.x+dv.x*.5,o.y+dv.y*.5-.1,o.z+dv.z*.5,dv.x*sp,dv.y*sp+1,dv.z*sp,'player',2+Math.round(7*ch));sfx('shoot');useDurability(1)}P.bow=null}P.eating=null}
  UI.action(contextLabel())}
-function contextLabel(){if(targetEnt&&targetEnt.npc)return T('talkto',{name:tx(NPC[targetEnt.id].name)});const n=nearestNPC();if(n)return T('talkto',{name:tx(NPC[n.id].name)});if(!target)return'';const id=target.id;if(BLOCKS[id].door)return E.doorOpen(target.x,target.y,target.z)?T('doorClose'):T('doorOpen');if(id===B.workbench)return T('usebench');if(id===B.kiln||id===B.kiln_lit)return T('usekiln');if(id===B.chest)return T('openchest');if(id===B.bed)return T('sleep');if(id===B.socket)return T('setshard');if(id===B.ferry_bell)return T('ringbell');if(G.dim==='coast'&&(G.world.pois.murals||[]).some(m=>target.x>=m.box[0]&&target.x<=m.box[3]&&target.y>=m.box[1]&&target.y<=m.box[4]&&target.z>=m.box[2]&&target.z<=m.box[5]))return T('viewmural');return''}
+function contextLabel(){if(targetEnt&&targetEnt.npc)return T('talkto',{name:tx(NPC[targetEnt.id].name)});const n=nearestNPC();if(n)return T('talkto',{name:tx(NPC[n.id].name)});if(!target)return'';const id=target.id;if(BLOCKS[id].ws)return T('wsUse');if(BLOCKS[id].door)return E.doorOpen(target.x,target.y,target.z)?T('doorClose'):T('doorOpen');if(id===B.workbench)return T('usebench');if(id===B.kiln||id===B.kiln_lit)return T('usekiln');if(id===B.chest)return T('openchest');if(id===B.bed)return T('sleep');if(id===B.socket)return T('setshard');if(id===B.ferry_bell)return T('ringbell');if(G.dim==='coast'&&(G.world.pois.murals||[]).some(m=>target.x>=m.box[0]&&target.x<=m.box[3]&&target.y>=m.box[1]&&target.y<=m.box[4]&&target.z>=m.box[2]&&target.z<=m.box[5]))return T('viewmural');return''}
 function nearestNPC(){let best=null,bd=3;for(const n of G.npcs){const d=Math.hypot(n.pos.x-P.pos.x,n.pos.z-P.pos.z);if(d<bd&&Math.abs(n.pos.y-P.pos.y)<2){bd=d;best=n}}return best}
 export function interactNearest(){updateTarget();if(targetEnt&&targetEnt.npc){talkTo(targetEnt);return true}const n=nearestNPC();if(n){talkTo(n);return true}if(target&&interactBlock(target))return true;return false}
+// ---------------- waystones (warp / teleport) ----------------
+function wsList(){const f=G.flags;if(!Array.isArray(f.waystones))f.waystones=[];return f.waystones}
+function registerWaystone(x,y,z){const l=wsList();G.flags.wsCount=(G.flags.wsCount||0)+1;const home=!!(P.spawn&&(P.spawnDim||'over')===G.dim&&Math.hypot(P.spawn.x-x,P.spawn.z-z)<16);l.push({dim:G.dim,x,y,z,n:G.flags.wsCount,home});sfx('warp');E.glowBurst(x+.5,y+.8,z+.5,['#6af0ff','#e8fdff','#ffd25a'],16,2.5,.8);setTimeout(()=>UI.toast(T('wsPlaced')),300)}
+function unregisterWaystone(x,y,z){const l=wsList();const i=l.findIndex(e=>e.dim===G.dim&&e.x===x&&e.y===y&&e.z===z);if(i>=0){l.splice(i,1);UI.toast(T('wsRemoved'))}}
+export function waystoneList(){const out=[];const ov=G.worlds.over.pois.waystone;if(ov)out.push({dim:'over',...ov,pre:1,name:T('wsVillage')});const cw=(G.worlds.coast&&G.worlds.coast.pois.waystone)||{x:37,y:24,z:114};out.push({dim:'coast',...cw,pre:1,name:T('wsCoastName')});
+ for(const e of wsList())out.push({...e,name:e.home?T('wsNearHome',{n:String(e.n)}):T('wsNamed',{n:String(e.n)})});
+ if(P.spawn&&(P.spawnDim||'over')!=='realm')out.push({dim:P.spawnDim||'over',x:Math.floor(P.spawn.x),y:Math.floor(P.spawn.y),z:Math.floor(P.spawn.z),bed:1,name:T('wsHomeBed')});return out}
+function safeSpotNear(x,y,z){const free=(a,b,c)=>!E.solidCell(a,b,c)&&!BLOCKS[G.world.get(a,b,c)].liquid&&!BLOCKS[G.world.get(a,b,c)].hurt&&!BLOCKS[G.world.get(a,b,c)].portal;const floor=(a,b,c)=>E.solidCell(a,b-1,c)&&!BLOCKS[G.world.get(a,b-1,c)].hurt&&G.world.get(a,b-1,c)!==B.magma;
+ const ring=[[0,1],[1,0],[0,-1],[-1,0],[1,1],[-1,1],[1,-1],[-1,-1]];for(let r=1;r<=4;r++)for(const[dx,dz]of ring)for(const dy of[0,1,-1,2,-2,3]){const a=x+dx*r,c=z+dz*r,b=y+dy;if(b<1||!G.world.inb(a,b+1,c))continue;if(free(a,b,c)&&free(a,b+1,c)&&floor(a,b,c))return{x:a+.5,y:b,z:c+.5}}
+ const sy=G.world.surface(x+1.5,z+.5);return{x:x+1.5,y:Math.max(sy,1),z:z+.5}}
+export function warpTo(e){if(G.warping)return;G.warping=true;sfx('warp');E.glowBurst(P.pos.x,P.pos.y+1,P.pos.z,['#6af0ff','#e8fdff','#b07cf5'],26,3.5,.9);UI.flashWarp&&UI.flashWarp();
+ setTimeout(()=>{try{if(e.dim!==G.dim)switchDim(e.dim,false);const s=e.bed?(()=>{const t={x:e.x+.5,y:e.y,z:e.z+.5};return E.solidCell(e.x,e.y,e.z)||E.solidCell(e.x,e.y+1,e.z)?safeSpotNear(e.x,e.y,e.z):t})():safeSpotNear(e.x,e.y,e.z);
+  P.pos.set(s.x,s.y,s.z);P.vel.set(0,0,0);P.fallStart=null;P.yaw=Math.atan2(-(s.x-(e.x+.5)),-(s.z-(e.z+.5)));if(e.pre&&e.dim==='coast')P.yaw=-Math.PI/2;P.pitch=-.1;for(const m of[...G.mobs])if(m.d.hostile&&Math.hypot(m.pos.x-P.pos.x,m.pos.z-P.pos.z)<10)E.removeMob(m);
+  updateChunks(400,P.pos.x,P.pos.z);G.region=null;if(e.dim==='coast'&&!G.flags.coastVisited){G.flags.coastVisited=true;questCheck()}
+  E.glowBurst(P.pos.x,P.pos.y+1,P.pos.z,['#6af0ff','#e8fdff','#ffd25a'],26,3,.9);UI.banner(e.name,tx(PLACE[e.dim]));sfx('warp');save()}finally{G.warping=false}},QA?60:450)}
 function toggleDoor(x,y,z){const w=G.world,b=BLOCKS[w.get(x,y,z)];const ly=b.door===2?y-1:y;const k='door:'+w.idx(x,ly,z);const m=w.meta.get(k)||{f:0,o:0};
  if(m.o&&(overlapsBody(x,ly,z)||overlapsBody(x,ly+1,z))){UI.toast(T('doorStepOut'));return}
  m.o=m.o?0:1;w.meta.set(k,m);w.markDirty(x,ly,z);w.markDirty(x,ly+1,z);sfx('door',m.o);Tut.onDoor&&Tut.onDoor(m.o)}
 function interactBlock(t){const w=G.world,id=t.id,i=w.idx(t.x,t.y,t.z);
+ if(BLOCKS[id].ws){UI.warpList({dim:G.dim,x:t.x,y:t.y,z:t.z});Tut.onWaystone&&Tut.onWaystone();return true}
  if(BLOCKS[id].door){toggleDoor(t.x,t.y,t.z);return true}
  if(id===B.workbench){UI.inventory('craft');return true}
  if(id===B.kiln||id===B.kiln_lit){UI.kiln(i);return true}
@@ -430,7 +447,7 @@ export async function continueGame(){const d=readSave();if(!d)return false;pendi
  const p=d.player;P.pos.set(...p.pos);P.vel.set(0,0,0);P.yaw=p.yaw;P.pitch=p.pitch;P.hp=p.hp>0?p.hp:20;P.hunger=p.hunger;P.sat=p.sat;P.xp=p.xp;P.level=p.level;P.inv=p.inv.map(unpackStack);P.armor=p.armor.map(unpackStack);P.sel=p.sel;P.spawn=p.spawn;P.spawnDim=p.spawnDim||'over';P.dead=false;P.fallStart=null;
  G.quest=d.quest;G.bossesDown=d.bossesDown||{};G.stats=d.stats||G.stats;G.clock=d.clock;G.playtime=d.playtime||0;
  if(d.dim==='realm'||d.dim==='coast'){switchDim(d.dim,false);P.pos.set(...p.pos);P.yaw=p.yaw}return true}
-export function enterPlay(){G.mode='play';G.started=true;G.inGame=true;UI.hud(true);spawnNPCs();refreshSocketGems();updateChunks(400,P.pos.x,P.pos.z);UI.dirty();setMood(G.dim==='realm'?'realm':isNight()?'night':'day');if(!isTouch&&!QA)canvas.requestPointerLock?.();save();Tut.maybeStart()}
+export function enterPlay(){G.mode='play';G.started=true;G.inGame=true;UI.hud(true);spawnNPCs();refreshSocketGems();updateChunks(400,P.pos.x,P.pos.z);UI.dirty();setMood(G.dim==='realm'?'realm':isNight()?'night':'day');if(!isTouch&&!QA)canvas.requestPointerLock?.();if(!G.flags.wsGift){G.flags.wsGift=true;addItem(B.waystone,1);setTimeout(()=>UI.toast(T('wsGift')),G.flags.needTut?9000:1500)}save();Tut.maybeStart()}
 export function toTitle(){save();G.inGame=false;G.mode='title';UI.hud(false);E.clearEntities();if(G.dim!=='over')switchDim('over',false);spawnNPCs();document.exitPointerLock?.();setMood('title');UI.title()}
 // ---------------- cinema (in-engine intro) ----------------
 let cine=null;const castActors=[];
@@ -473,5 +490,5 @@ requestAnimationFrame(loop);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){save();audioSuspend(true);if(G.mode==='play')UI.pause()}else audioSuspend(false)});
 addEventListener('pagehide',()=>save());
 // ---------------- API for UI/entities ----------------
-G.api={breakingInfo:()=>breaking,canPlaceHeld:()=>{const s=heldStack();return placeable(s)&&!!placeSpot(s.id,true)},giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);Tut.onPickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch,tutorial:Tut};
+G.api={waystoneList,warpTo,breakingInfo:()=>breaking,canPlaceHeld:()=>{const s=heldStack();return placeable(s)&&!!placeSpot(s.id,true)},giverHere,questWorld,addItem,countItem,removeItem,onPickup:(id,n)=>{UI.pickup(id,n);Tut.onPickup(id,n);questCheck()},hurtPlayer,aoe,explode,gainXP,dmgMul,onBossDefeated,onAsmonYield,bossPhase,craft,canCraft,smelt,collectKiln,kilnState,fuelUnits,chestSlots,equipFromSlot,unequip,doTrade,talkTo,respawn,save,newGame,continueGame,enterPlay,toTitle,startCinema,skipCinema,readSave,saveOptions,maxHp,armorDef,interactNearest,curQuest,objectivePos,giverHere,questWorld,QUESTS,AWAY,isNight,rematch,musicVolume,setMood,bindTouchControls,nearBlock,dropHeld,bootWorld,setView:v=>{G.view=v},P,input,isTouch,tutorial:Tut};
 if(QA){window.BH={G,P,E,B,I,BLOCKS,RECIPES,SMELT,addItem,countItem,removeItem,breakBlock,placeAt,craft,canCraft,smelt,collectKiln,kilnState,chestSlots,save,readSave,continueGame,newGame,enterPlay,toTitle,startCinema,skipCinema,switchDim,sail,interactBlock,QUESTS,AWAY,giverHere,questWorld,questCheck,talkTo,finishQuest,curQuest,objectivePos,hurtPlayer,respawn,updateChunks,target:()=>{updateTarget();return{target,ent:targetEnt&&(targetEnt.id||targetEnt.type)}},interactNearest,openGate,insertShard,growAt,isNight,explode,gainXP,UI,camera,renderer,scene,chunks,raycast,spawnNPCs,trySleep,onUse,doAttack,maxHp,Tut}}

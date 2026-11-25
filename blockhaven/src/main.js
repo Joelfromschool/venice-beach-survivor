@@ -1,12 +1,12 @@
 // Boot: build the world incrementally behind a loading bar, then show the title.
-import {G} from './state.js?v=1.1.3';
-import * as UI from './ui.js?v=1.1.3';
-import {T} from './i18n.js?v=1.1.3';
+import {G} from './state.js?v=1.1.4';
+import * as UI from './ui.js?v=1.1.4';
+import {T} from './i18n.js?v=1.1.4';
 async function boot(){
  const fail=m=>{document.querySelector('#loading .ltext').textContent=m};
  try{const t=document.createElement('canvas');if(!(t.getContext('webgl2')||t.getContext('webgl'))){fail('WebGL is not available on this device.');return}}catch(e){}
  UI.loading(.05,T('loading'));
- await import('./game.js?v=1.1.3');
+ await import('./game.js?v=1.1.4');
  document.documentElement.lang=G.opt.lang;
  await G.api.bootWorld((p,k)=>UI.loading(p,T(k)));
  G.api.bindTouchControls();

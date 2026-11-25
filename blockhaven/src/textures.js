@@ -1,6 +1,6 @@
 // Original procedural 16x16 pixel textures for every block, painted at startup.
 // Nothing here is copied from any existing game; palettes and patterns are hand-tuned for Blockhaven.
-import {mulberry} from './util.js?v=1.1.3';
+import {mulberry} from './util.js?v=1.1.4';
 export const TS=16, AT=256, PER=AT/TS;
 const hex=h=>{h=h.replace('#','');return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]};
 const vary=(c,a)=>c.map(v=>Math.max(0,Math.min(255,Math.round(v+a))));
@@ -119,6 +119,8 @@ T('ferry_bell',p=>{planksP(p,hex('#8a6a42'));for(let y=3;y<13;y++)for(let x=4;x<
 T('neon',p=>{for(let y=0;y<16;y++)for(let x=0;x<16;x++)p.px(x,y,hex('#2a1838'));for(let i=1;i<15;i++){p.px(i,2,hex('#ff6ad5'));p.px(i,13,hex('#ff6ad5'));p.px(2,i,hex('#6af0ff'));p.px(13,i,hex('#6af0ff'))}for(let i=5;i<11;i++)p.px(i,i-1,hex('#ffe066'))});
 // Wooden door: vertical boards, dark frame, little window up top, brass handle
 function doorBase(p){const base=hex('#a8743f'),dk=hex('#5e3d1e');for(let y=0;y<16;y++)for(let x=0;x<16;x++){let c=vary(base,(p.r()-.5)*12+(Math.floor(x/4)%2?-6:4));if(x%4===0)c=vary(base,-34);if(x<2||x>13)c=vary(dk,(p.r()-.5)*8);p.px(x,y,c)}}
+T('waystone',p=>{const sl=['#3b3f58','#454a66','#343850','#4d5272'].map(hex);p.clump(sl,.5);for(let y=0;y<16;y++){p.px(0,y,hex('#262838'));p.px(15,y,hex('#262838'))}const glow=hex('#6af0ff'),hi=hex('#e8fdff'),gold=hex('#ffd25a');for(const[x,y]of[[7,2],[8,2],[6,3],[9,3],[5,4],[10,4],[5,5],[10,5],[6,6],[9,6],[7,7],[8,7],[7,8],[8,8],[6,9],[9,9],[5,10],[10,10],[7,12],[8,12],[7,13],[8,13]])p.px(x,y,glow);p.px(7,7,hi);p.px(8,8,hi);p.px(7,12,gold);p.px(8,13,gold);for(let x=1;x<15;x++){p.px(x,0,hex('#5d6388'));p.px(x,15,hex('#262838'))}});
+T('waystone_top',p=>{const sl=['#3b3f58','#454a66','#343850'].map(hex);p.clump(sl,.5);for(let a=0;a<40;a++){const t=a/40*6.283;p.px(Math.round(7.5+Math.cos(t)*5),Math.round(7.5+Math.sin(t)*5),hex('#6af0ff'))}for(const[x,y]of[[7,7],[8,7],[7,8],[8,8]])p.px(x,y,hex('#e8fdff'))});
 T('door_lo',p=>{doorBase(p);const dk=hex('#5e3d1e');for(let x=0;x<16;x++)p.px(x,15,dk);for(const[y0,y1]of[[3,7],[9,13]])for(let y=y0;y<=y1;y++)for(let x=4;x<=11;x++)if(y===y0||y===y1||x===4||x===11)p.px(x,y,hex('#7a5230'));p.px(12,1,hex('#f2c447'));p.px(12,2,hex('#c98f1e'));p.px(11,1,hex('#c98f1e'))});
 T('door_hi',p=>{doorBase(p);const dk=hex('#5e3d1e');for(let x=0;x<16;x++)p.px(x,0,dk);for(let y=3;y<=10;y++)for(let x=4;x<=11;x++){const bar=(x===7||x===8||y===6||y===7);p.px(x,y,bar?dk:(x+y)%5===0?hex('#e8f6ff'):hex('#8fc4e6'))}for(let x=4;x<=11;x++){p.px(x,2,dk);p.px(x,11,dk)}for(let y=2;y<=11;y++){p.px(3,y,dk);p.px(12,y,dk)}for(let y=13;y<=15;y++)for(let x=4;x<=11;x++)if(y===13||x===4||x===11)p.px(x,y,hex('#7a5230'))});
 export function buildAtlas(){const c=document.createElement('canvas');c.width=c.height=AT;const g=c.getContext('2d');const img=g.createImageData(AT,AT);painters.forEach((fn,i)=>fn(P(img.data,(i%PER)*TS,Math.floor(i/PER)*TS,i+1)));g.putImageData(img,0,0);return c}

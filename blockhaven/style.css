@@ -228,7 +228,7 @@ body.lesson #panelwrap{padding-top:max(8px,calc(env(safe-area-inset-top,0px) + 8
  .btn.tab{font-size:12px;padding:6px 3px;min-height:38px}
  .phead{gap:3px}
 }
-/* v1.1.3: clearer lesson hints, skip-step, held item */
+/* v1.1.4: clearer lesson hints, skip-step, held item */
 #lesson .lbody{white-space:pre-line}
 #lesson .lskipstep{background:#5a4a7a}
 #hotbar .slot.sel{border:3px solid #ffd25a;box-shadow:0 0 0 2px #000,0 0 10px 2px rgba(255,210,90,.85);transform:scale(1.14)}
@@ -239,3 +239,11 @@ body.lesson #panelwrap{padding-top:max(8px,calc(env(safe-area-inset-top,0px) + 8
  #lesson .lbody{max-height:none}
  body.lesson #toasts{left:calc(min(330px,40vw) + 16px);right:8px;width:auto;transform:none}
 }
+/* v1.1.4 warp list */
+.p-warp .whelp{font-size:13px;margin:4px 0 8px}
+.p-warp .wlist{display:flex;flex-direction:column;gap:8px}
+.p-warp .wbtn{display:flex;align-items:center;gap:10px;text-align:left;min-height:52px;padding:6px 10px;width:100%}
+.p-warp .wbtn .wic{font-size:22px;color:#6af0ff;text-shadow:1px 1px 0 #000;width:26px;text-align:center}
+.p-warp .wbtn .wtx{display:flex;flex-direction:column;line-height:1.25}
+.p-warp .wbtn .wtx b{font-size:15px}.p-warp .wbtn .wtx i{font-style:normal;font-size:12px;opacity:.85}
+.p-warp .wbtn.here{opacity:.6}

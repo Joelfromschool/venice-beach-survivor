@@ -1,12 +1,12 @@
 // Chunky pixel-style DOM UI for Blockhaven: HUD, hotbar, bag, crafting, kiln, chest, shop, dialog, menus.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.3';
-import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.3';
-import {T,tx,itemName} from './i18n.js?v=1.1.3';
-import * as Tut from './tutorial.js?v=1.1.3';
-import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.3';
-import {makeModel,animate} from './models.js?v=1.1.3';
-import {sfx,audioWake} from './audio.js?v=1.1.3';
+import {G,VERSION} from './state.js?v=1.1.4';
+import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.4';
+import {T,tx,itemName} from './i18n.js?v=1.1.4';
+import * as Tut from './tutorial.js?v=1.1.4';
+import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.4';
+import {makeModel,animate} from './models.js?v=1.1.4';
+import {sfx,audioWake} from './audio.js?v=1.1.4';
 const $=s=>document.querySelector(s);
 const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -108,6 +108,11 @@ $('#caption .skip').addEventListener('click',()=>A().skipCinema());
 const wrap=$('#panelwrap'),P_=$('#panel');
 export function isOpen(){return!!panelKind}
 function openPanel(kind,build,refresh){audioWake();if(G.inGame&&G.mode==='play'){G.mode='menu';document.exitPointerLock?.()}panelKind=kind;wrap.classList.remove('hidden');P_.className='panel p-'+kind;panelRefresh=null;build(P_);panelRefresh=refresh||null;if(refresh)refresh();Tut.onPanel(kind,true)}
+export function warpList(here){sfx('pop');openPanel('warp',p=>{p.innerHTML='';p.appendChild(head(T('warpTitle')));p.appendChild(h('div','whelp',esc(T('warpHelp'))));const l=h('div','wlist');
+  for(const e of A().waystoneList()){const isHere=!!here&&!e.bed&&e.dim===here.dim&&e.x===here.x&&e.y===here.y&&e.z===here.z;const b=btn('',()=>{if(isHere)return;closePanel(true);A().warpTo(e)},'wbtn'+(isHere?' here':' go'));
+   b.innerHTML=`<span class="wic">${e.bed?'🛏':'✦'}</span><span class="wtx"><b>${esc(e.name)}</b><i>${esc(tx(PLACE[e.dim]))}${isHere?' · '+esc(T('warpHere')):''}</i></span>`;l.appendChild(b)}
+  p.appendChild(l)})}
+export function flashWarp(){const f=$('#fade');if(!f)return;f.style.transition='opacity .22s';f.style.background='radial-gradient(circle,#e8fdff 0%,#6af0ff 45%,#3a2a6a 100%)';f.style.opacity='.85';setTimeout(()=>{f.style.opacity='0';setTimeout(()=>{f.style.background='';f.style.transition=''},400)},380)}
 export function closePanel(silent){if(!panelKind)return;const was=panelKind;panelKind=null;panelRefresh=null;wrap.classList.add('hidden');P_.innerHTML='';selSlot=null;if(!silent)sfx('ui');if(G.inGame&&(G.mode==='menu'||G.mode==='dead'&&false)){G.mode='play'}Tut.onPanel(was,false);const f=afterClose;afterClose=null;f&&f();isDirty=true}
 wrap.addEventListener('click',e=>{if(e.target===wrap&&G.inGame&&panelKind&&panelKind!=='pause')closePanel()});
 const head=(title,tabs)=>{const d=h('div','phead');if(tabs){const t=h('div','tabs');for(const[k,label]of tabs){const b=h('button','btn tab'+(k===tabs.cur?' on':''),label);b.onclick=()=>{sfx('ui');tabs.go(k)};t.appendChild(b)}d.appendChild(t)}else d.appendChild(h('div','ptitle',esc(title)));const x=h('button','btn sq close','✕');x.onclick=()=>closePanel();d.appendChild(x);return d};
@@ -129,7 +134,7 @@ export function inventory(tab='inv'){const P=A().P;if(!G.inGame)return;
   const right=h('div','invright');const grid=h('div','grid main');for(let i=9;i<36;i++)grid.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{onDouble:()=>A().equipFromSlot(i)}));right.appendChild(grid);
   const hb=h('div','grid hot');for(let i=0;i<9;i++)hb.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{cls:'hb',onDouble:()=>{if(def(P.inv[i].id).armor!==undefined)A().equipFromSlot(i);else{P.sel=i;closePanel()}}}));right.appendChild(hb);
   const info=h('div','iteminfo');right.appendChild(info);right.appendChild(h('div','help',T('tapmove')));
-  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.3').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
+  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.4').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
   body.appendChild(right);p.appendChild(body);p._info=info},
  ()=>{P_.querySelectorAll('.slot').forEach(e=>e._draw&&e._draw());const info=P_._info;if(info){const s=selSlot&&selSlot.get();info.innerHTML=s?itemInfo(s):''}})}
 function itemInfo(s){const d=def(s.id);let t=`<b>${esc(itemName(s.id))}</b>`;if(d.dmg&&d.tool==='sword')t+=` · ⚔${d.dmg}`;if(d.def)t+=` · 🛡${d.def}`;if(d.food)t+=` · 🍎+${d.food[0]}`;if(d.dur&&s.dur!==undefined)t+=` · ${s.dur}/${d.dur}`;return t}
@@ -227,15 +232,16 @@ export function howToPlay(){
   bag:`<div class="htp-ill"><div class="htp-grid">${'<i></i>'.repeat(6)}<i class="on"></i>${'<i></i>'.repeat(2)}</div><b>▦</b></div>`,
   craft:`<div class="htp-ill"><div class="htp-grid"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i class="on"></i><i></i><i></i><i class="on"></i><i></i></div><span class="carrow">➜</span><b style="font-size:28px">⛏</b></div>`,
   house:`<div class="htp-ill"><img src="${iconURL(B.door)}" style="width:56px;height:56px;image-rendering:pixelated"><b style="font-size:28px">✋</b></div>`,
+  warp:`<div class="htp-ill"><img src="${iconURL(B.waystone)}" style="width:52px;height:52px;image-rendering:pixelated"><span class="carrow">✦➜✦</span><img src="${iconURL(B.waystone)}" style="width:52px;height:52px;image-rendering:pixelated"></div>`,
   vitals:`<div class="htp-ill"><span class="htp-hearts"><i></i><i></i><i></i><i></i></span><span class="htp-food"><i></i><i></i><i></i></span></div>`,
   night:`<div class="htp-ill"><div class="htp-sky"><span class="sun"></span><span class="lamp"></span><span class="moon"></span></div></div>`,
   save:`<div class="htp-ill htp-save"><b class="btn sq">❚❚</b><span class="badge">${T('saved')}</span></div>`,
   quests:`<div class="htp-ill"><span class="qarrow">▲</span><b>💬</b><b class="btn sq">🗺</b></div>`,
   coast:`<div class="htp-ill"><b style="font-size:36px">🔔</b></div>`
  };
- const keys=['look','buttons','mine','place','bag','craft','house','vitals','night','save','quests','coast'];
- const titleOf={look:'htpLookT',buttons:'htpBtnT',mine:'htpMineT',place:'htpPlaceT',bag:'htpBagT',craft:'htpCraftT',house:'htpHouseT',vitals:'htpVitT',night:'htpNightT',save:'htpSaveT',quests:'htpQuestT',coast:'htpCoastT'};
- const bodyOf={look:'htpLookB',buttons:'htpBtnB',mine:'htpMineB',place:'htpPlaceB',bag:'htpBagB',craft:'htpCraftB',house:'htpHouseB',vitals:'htpVitB',night:'htpNightB',save:'htpSaveB',quests:'htpQuestB',coast:'htpCoastB'};
+ const keys=['look','buttons','mine','place','bag','craft','house','warp','vitals','night','save','quests','coast'];
+ const titleOf={look:'htpLookT',buttons:'htpBtnT',mine:'htpMineT',place:'htpPlaceT',bag:'htpBagT',craft:'htpCraftT',house:'htpHouseT',warp:'htpWarpT',vitals:'htpVitT',night:'htpNightT',save:'htpSaveT',quests:'htpQuestT',coast:'htpCoastT'};
+ const bodyOf={look:'htpLookB',buttons:'htpBtnB',mine:'htpMineB',place:'htpPlaceB',bag:'htpBagB',craft:'htpCraftB',house:'htpHouseB',warp:'htpWarpB',vitals:'htpVitB',night:'htpNightB',save:'htpSaveB',quests:'htpQuestB',coast:'htpCoastB'};
  const goBack=()=>{if(from==='pause')pause();else if(from==='options')options();else{closePanel();title()}};
  document.querySelector('#title')?.classList.add('hidden');
  openPanel('howto',p=>{

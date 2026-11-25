@@ -1,11 +1,11 @@
 // First-play guided lesson and contextual tips for Blockhaven. Touch-only wording.
-import {G} from './state.js?v=1.1.3';
-import {T,itemName} from './i18n.js?v=1.1.3';
-import {B,def,isBlock} from './blocks.js?v=1.1.3';
+import {G} from './state.js?v=1.1.4';
+import {T,itemName} from './i18n.js?v=1.1.4';
+import {B,def,isBlock} from './blocks.js?v=1.1.4';
 
 const LOGS=[7,35,49,62];
 const TOOLS=[120,121,122,123,124,125,126,127,128,129,130,131]; // wood/stone/iron tools
-const PLACEABLE=id=>id&&(isBlock(id)||(def(id)&&def(id).plants));
+const PLACEABLE=id=>id&&id!==B.waystone&&id!==B.door&&(isBlock(id)||(def(id)&&def(id).plants));
 const $ = s=>document.querySelector(s);
 
 let U=null; // UI bindings (set from ui.js to avoid a cycle)
@@ -379,6 +379,7 @@ export function onEat(){
  if(active&&stepStart){stepStart.ate=true;stepT=Math.max(stepT,0.9)}
  firstTip('ate',T('tipAte'));
 }
+export function onWaystone(){tips().waystone=true}
 export function onDoor(open){firstTip('door1',T('tipDoorUse'))}
 export function onHurt(){firstTip('hurt',T('tipHurt'))}
 
@@ -394,6 +395,7 @@ function tickTips(dt){
  if(a.nearBlock&&a.nearBlock([B.workbench],4))firstTip('nearbench',T('tipNearBench'));
  if(a.nearBlock&&a.nearBlock([B.kiln,B.kiln_lit],4))firstTip('nearkiln',T('tipNearKiln'));
  if(a.nearBlock&&a.nearBlock([B.bed],3))firstTip('nearbed',T('tipNearBed'));
+ if(a.nearBlock&&a.nearBlock([B.waystone,B.waystone_fixed],4))firstTip('waystone',T('tipWaystone'));
  if(a.nearBlock&&a.nearBlock([B.chest],3))firstTip('nearchest',T('tipNearChest'));
  if(a.nearBlock&&a.nearBlock([B.ferry_bell],5))firstTip('ferry',T('tipFerry'));
  // hostile nearby
@@ -430,4 +432,4 @@ export function bindLessonDom(){
 }
 
 // How-to-play section data (illustrated in ui.js)
-export const HTP_SECTIONS=['look','buttons','mine','place','bag','craft','house','vitals','night','save','quests','coast'];
+export const HTP_SECTIONS=['look','buttons','mine','place','bag','craft','house','warp','vitals','night','save','quests','coast'];

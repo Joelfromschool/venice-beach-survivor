@@ -1,6 +1,6 @@
 // Voxel world: storage, authored-procedural generation, light propagation and edits.
-import {BLOCKS,B} from './blocks.js?v=1.1.3';
-import {makeNoise,mulberry,hash2,hash3,smooth,clamp} from './util.js?v=1.1.3';
+import {BLOCKS,B} from './blocks.js?v=1.1.4';
+import {makeNoise,mulberry,hash2,hash3,smooth,clamp} from './util.js?v=1.1.4';
 export const SEA=20;
 export class World{
  constructor(kind='over',W=256,D=256,H=64){this.kind=kind;this.W=W;this.D=D;this.H=H;const n=W*D*H;this.data=new Uint8Array(n);this.sky=new Uint8Array(n);this.blk=new Uint8Array(n);this.hm=new Uint8Array(W*D);this.edits=new Map();this.meta=new Map();this.pois={};this.dirty=new Set();this.urgent=new Set();this.biome=new Uint8Array(W*D);this.protect=[]}
@@ -138,6 +138,8 @@ function buildStructures(w,heights,R){const P=w.pois;const H=w.H;
  // lamp posts
  for(const[x,z]of[[118,118],[138,118],[118,138],[138,138],[128,104],[128,152],[104,128],[152,128]]){fill(w,x,vy+1,z,x,vy+2,z,B.log);w.raw(x,vy+3,z,B.lamp)}
  w.protect.push([100,0,100,156,H,156]);
+ // village waystone (warp stone) just west of the spawn plaza
+ w.raw(125,vy+1,133,B.waystone_fixed);P.waystone={x:125,y:vy+1,z:133};
  P.village={x:128,y:vy+1,z:128};P.spawn={x:128.5,y:vy+1,z:133.5};
  P.npcs=[{id:'bean',x:117.5,y:vy+1,z:113.5},{id:'pooping',x:142.5,y:vy+1,z:115.5},{id:'pooh',x:142.5,y:vy+1,z:145.5},{id:'bronny',x:111.5,y:vy+1,z:137.5},{id:'kermit',x:131.5,y:vy+1,z:122.5}];
  w.meta.set('chest:'+w.idx(151,vy+1,130),{items:[[111,3],[100,2]]});w.meta.set('chest:'+w.idx(145,vy+1,146),{items:[[163,2],[105,5]]});
@@ -249,7 +251,7 @@ export function generateCoast(seed=310){const W=128,D=256,H=64;const w=new World
  w.protect.push([6,DY,Z0,104,DY+30,Z1]);
  // ---- Ferry jetty between the two neighbourhoods ----
  for(let x=30;x<=88;x++)for(let z=114;z<=116;z++){if(w.surface(x,z)<=23){w.raw(x,23,z,B.boardwalk);if(x%4===0&&(z===114||z===116))for(let y=1;y<23;y++){const id=w.get(x,y,z);if(id===B.water||id===0)w.raw(x,y,z,B.palm_log)}}}
- w.raw(30,24,115,B.ferry_bell);w.raw(30,24,114,B.lamp);w.raw(30,24,116,B.lamp);P.ferry={x:30,y:24,z:115};P.spawn={x:33.5,y:24,z:115.5};w.protect.push([29,1,113,40,30,117]);
+ w.raw(30,24,115,B.ferry_bell);w.raw(30,24,114,B.lamp);w.raw(30,24,116,B.lamp);P.ferry={x:30,y:24,z:115};P.spawn={x:33.5,y:24,z:115.5};w.raw(37,24,114,B.waystone_fixed);P.waystone={x:37,y:24,z:114};w.protect.push([29,1,113,40,30,117]);
  // ---- Venice Beach ----
  // Mural Walk shopfronts on the promenade (murals face the ocean)
  const COLS=[B.felt_pink,B.felt_blue,B.felt_yellow,B.felt_green,B.bricks,B.felt_white,B.felt_red];

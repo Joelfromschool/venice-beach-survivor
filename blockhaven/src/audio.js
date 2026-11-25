@@ -1,5 +1,5 @@
 // Original WebAudio sound effects and generative ambient music (no samples, no speech).
-import {G} from './state.js?v=1.1.3';
+import {G} from './state.js?v=1.1.4';
 let ctx=null,master,sfxBus,musicBus,verb,started=false;
 export function audioWake(){if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();master=ctx.createGain();master.gain.value=.9;master.connect(ctx.destination);sfxBus=ctx.createGain();sfxBus.connect(master);musicBus=ctx.createGain();musicBus.gain.value=.0;musicBus.connect(master);
  // simple feedback-delay "room" for music
@@ -31,6 +31,7 @@ export function sfx(name,arg){if(!ctx||!G.opt.sound)return;const t=ctx.currentTi
  case'level':[523,659,784,1046].forEach((f,i)=>tone(t+i*.09,f,.25,.15,'triangle'));break;
  case'bow':nz(t,.25,600,.6,.15,'lowpass');tone(t,180,.2,.1,'triangle',1.6);break;
  case'shoot':nz(t,.12,2400,1,.25,'highpass');tone(t,600,.1,.08,'sine',.5);break;
+ case'warp':for(let i=0;i<10;i++)tone(t+i*.04,900-i*60,.35,.07,'sine',1.4);nz(t,.6,2600,3,.1,'highpass');tone(t+.45,1318,.4,.12,'triangle');break;
  case'thunk':nz(t,.06,500,2,.3);break;
  case'door':if(arg){nz(t,.18,700,1.5,.22);tone(t+.02,210,.16,.12,'triangle',1.3)}else{nz(t,.1,380,1.2,.4);tone(t+.06,120,.12,.3,'sine',.6)}break;
  case'fuse':nz(t,1.4,5000,.5,.12,'highpass');break;
