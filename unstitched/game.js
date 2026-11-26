@@ -1,6 +1,6 @@
 'use strict';
 (()=>{
-const VERSION='1.1.1',KEY='unstitched-kingdom-save-v1',OPTKEY='unstitched-kingdom-options-v1';
+const VERSION='1.1.2',KEY='unstitched-kingdom-save-v1',OPTKEY='unstitched-kingdom-options-v1';
 const $=s=>document.querySelector(s),canvas=$('#world'),ctx=canvas.getContext('2d',{alpha:false}),screen=$('#screen');
 let W=innerWidth,H=innerHeight,DPR=1,time=0,mode='title',last=performance.now(),camera={x:384,y:600},zoom=.8,shake=0,hitstop=0,toastTimer=0,slot=0,menuReturn='title',modalBack=null,dialogueDone=null,dialogueIndex=0,dialogueLines=[],cinemaDone=null,frameTimes=[],lastHud=0;
 let opt={lang:'en',sound:true,assist:false,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,cheat:false};try{Object.assign(opt,JSON.parse(localStorage.getItem(OPTKEY)||'{}'))}catch(e){}if(!['en','ja'].includes(opt.lang))opt.lang='en';

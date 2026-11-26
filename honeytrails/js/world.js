@@ -1,6 +1,6 @@
 // Procedural world: deterministic from absolute coordinates, so the same street looks the same every visit.
 // No map tiles or network: roads, parks and water come from seeded noise around the player's coordinates.
-import {SPECIES,SP,RAR_W,STOP_NAMES} from './data.js?v=1.0.3';
+import {SPECIES,SP,RAR_W,STOP_NAMES} from './data.js?v=1.0.4';
 export const CELL=160;
 export const HATS=new Set(['bean','pinco','pooh','mogu','bronny']);
 export function hash(...a){let h=2166136261>>>0;for(const v of a){let x=(typeof v==='number'?Math.floor(v):strH(v))|0;h^=x&255;h=Math.imul(h,16777619);h^=(x>>>8)&255;h=Math.imul(h,16777619);h^=(x>>>16)&255;h=Math.imul(h,16777619);h^=x>>>24;h=Math.imul(h,16777619)}

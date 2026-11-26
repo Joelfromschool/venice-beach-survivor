@@ -18,7 +18,7 @@ const CHARS={
   blurb:{en:'No arms, all nerve. Weapons clamp to side pylons and a spine mount; the tail takes the thruster.',ja:'うではないけど、度胸はある。武器はサイドパイロンと背骨マウントに。しっぽにはスラスター。'},
   mul:{ap:.82,spd:1.2,en:1,fire:1,dash:1.25},
   a:{shw:[44,128],bkw:[156,122],head:[100,46],hw:100,eyeY:100,torso:[98,196,96,92],shl:[56,132],shr:[144,132],hl:[8,186],hr:[192,186],ml:[50,186],mr:[148,186],tail:[150,272],bottom:[94,300],back:[98,128],hip:[98,250],unit:92}},
- asmon:{img:'art/c_asmon.webp?v=3.1.2',w:136,h:320,body:'humanoid',play:false,
+ asmon:{img:'art/c_asmon.webp?v=3.1.3',w:136,h:320,body:'humanoid',play:false,
   name:{en:'Asmon',ja:'アズモン'},role:{en:'Override duelist',ja:'オーバーライド・デュエリスト'},
   blurb:{en:'Former LOOMCORP ace. Fights like he owns the city and wants it to know.',ja:'元ルームコープのエース。街ごと自分のものだと言わんばかりに戦う。'},
   mul:{ap:1.05,spd:1.05,en:1,fire:1.1,dash:1.05},

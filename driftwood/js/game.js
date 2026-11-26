@@ -1,6 +1,6 @@
 'use strict';
 // ================= Driftwood Days core =================
-const VERSION='1.0.2';
+const VERSION='1.0.3';
 const SAVE_KEY='driftwood_save_v1';
 const LAY={dock:[27,43],marquee:[27,28.3],bench:[30.3,29.7],shop:[32.5,34.5],museum:[31.5,21.5],tent:[21.5,32.6],
  homes:{bean:[11.5,21.5],pinco:[12,29],bronny:[38.5,21.5],asmon:[37.5,31.5],mogu:[27.5,37.6]},

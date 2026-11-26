@@ -1,7 +1,7 @@
 // Catch screen: flick a honey jar at the pal. Pseudo-3D physics, shrinking ring bonus, curveballs, shakes.
-import {SP,ITEMS} from './data.js?v=1.0.3';
-import {S} from './state.js?v=1.0.3';
-import {AU} from './audio.js?v=1.0.3';
+import {SP,ITEMS} from './data.js?v=1.0.4';
+import {S} from './state.js?v=1.0.4';
+import {AU} from './audio.js?v=1.0.4';
 let cv,g,W,H,DPR,st=null,raf=0,img=null,bgImg=null,video=null;
 const F=()=>.30*H,HH=()=>.485*H,ZC=6;
 const proj=(x,y,z)=>[W/2+x*F()/z,HH()-(y-1.5)*F()/z];
