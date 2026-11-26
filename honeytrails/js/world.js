@@ -1,6 +1,6 @@
 // Procedural world: deterministic from absolute coordinates, so the same street looks the same every visit.
 // No map tiles or network: roads, parks and water come from seeded noise around the player's coordinates.
-import {SPECIES,SP,RAR_W,STOP_NAMES} from './data.js?v=1.0.1';
+import {SPECIES,SP,RAR_W,STOP_NAMES} from './data.js?v=1.0.2';
 export const CELL=160;
 export const HATS=new Set(['bean','pinco','pooh','mogu','bronny']);
 export function hash(...a){let h=2166136261>>>0;for(const v of a){let x=(typeof v==='number'?Math.floor(v):strH(v))|0;h^=x&255;h=Math.imul(h,16777619);h^=(x>>>8)&255;h=Math.imul(h,16777619);h^=(x>>>16)&255;h=Math.imul(h,16777619);h^=x>>>24;h=Math.imul(h,16777619)}
@@ -38,19 +38,19 @@ export function cellStops(ix,iy){const r=rng(hash(ix,iy,51));const n=r()<.35?0:(
 export function cellArena(ix,iy){const h=hash(ix,iy,61);if(h>.11)return null;const r=rng(hash(ix,iy,62));const x=ix*CELL+30+r()*(CELL-60),y=iy*CELL+30+r()*(CELL-60);
  if(terrain(x,y)==='water')return null;return {id:`a${ix}_${iy}`,x,y,def:pickSpecies(r,terrain(x,y),false,true),tier:1+Math.floor(r()*3)}}
 export function raidAt(arena,now){const hr=Math.floor(now/3600000);if(hash(arena.id,hr,71)>.45)return null;const r=rng(hash(arena.id,hr,72));
- const tierR=r();const tier=tierR<.4?1:tierR<.75?3:5;const pool={1:['prof','pinco','bramble'],3:['bronny','troll','moth','kermit'],5:['asmon']}[tier];
+ const tierR=r();const tier=tierR<.4?1:tierR<.75?3:5;const pool={1:['prof','pinco','bramble','lkpooh'],3:['bronny','troll','moth','kermit','hpbronny','wzpoop'],5:['asmon']}[tier];
  const sp=pool[Math.floor(r()*pool.length)];const end=(hr+1)*3600000;return {sp,tier,end,key:arena.id+':'+hr}}
 export function isNight(d=new Date()){const h=d.getHours();return h>=18||h<6}
 export function pickSpecies(r,ter,night,strong){const pool=[];for(const s of SPECIES){if(s.raidOnly||!s.bio.length)continue;let w=RAR_W[s.rar];
   const ok=s.bio.includes(ter)||(night&&s.bio.includes('night'));if(!ok)w*=.12;if(s.bio.includes('night')&&!night&&s.bio.length===1)w*=.15;
   if(strong&&s.rar==='c')w*=.03;if(strong&&s.id==='kaise')w=0;pool.push([s.id,w])}
  let t=pool.reduce((a,b)=>a+b[1],0)*r();for(const [id,w] of pool){t-=w;if(t<=0)return id}return pool[0][0]}
-// spawns for a cell during a 15-minute window. Each spawn lives 9-15 minutes inside its window.
-const WIN=15*60000;
+// spawns for a cell during a 10-minute window. Each spawn lives 8-12 minutes (1.0.2: denser + faster respawn).
+const WIN=10*60000;
 export function cellSpawns(ix,iy,now,night,boost){const out=[];for(const wk of [Math.floor(now/WIN)-1,Math.floor(now/WIN)]){
-  const r=rng(hash(ix,iy,wk,81));const cx=ix*CELL+CELL/2,cy=iy*CELL+CELL/2;const t=terrain(cx,cy);let n=(t==='park'?3:2)+(r()<.5?1:0)+(boost?2:0);
+  const r=rng(hash(ix,iy,wk,81));const cx=ix*CELL+CELL/2,cy=iy*CELL+CELL/2;const t=terrain(cx,cy);let n=(t==='park'?5:4)+(r()<.5?1:0)+(boost?3:0);
   for(let i=0;i<n;i++){let x=ix*CELL+r()*CELL,y=iy*CELL+r()*CELL;const ter=terrain(x,y);
-   const start=wk*WIN+r()*WIN*.6,dur=9*60000+r()*6*60000;const sp=pickSpecies(r,ter,night);
+   const start=wk*WIN+r()*WIN*.7,dur=8*60000+r()*4*60000;const sp=pickSpecies(r,ter,night);
    const lvR=r(),iv=[Math.floor(r()*16),Math.floor(r()*16),Math.floor(r()*16)],shR=r();const hR=r();
    if(now<start||now>start+dur)continue;
    out.push({key:`w${ix}_${iy}_${wk}_${i}`,x,y,sp,ter,lvR,iv,shiny:shR<(boost?1/20:1/256),hat:HATS.has(sp)&&holiday(now)&&hR<.4,end:start+dur})}}

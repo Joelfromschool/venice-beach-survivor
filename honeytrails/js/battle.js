@@ -1,6 +1,6 @@
 // Arena / boss party battle: tap to attack, fill energy for a special, swipe left/right to dodge.
-import {SP,cpm} from './data.js?v=1.0.1';
-import {AU} from './audio.js?v=1.0.1';
+import {SP,cpm} from './data.js?v=1.0.2';
+import {AU} from './audio.js?v=1.0.2';
 let cv,g,W,H,DPR,st=null,raf=0;const imgs={};
 const L=src=>{if(!imgs[src]){const i=new Image();i.src=src;imgs[src]=i}return imgs[src]};
 export function startBattle(o){// o:{team:[pal], opp:{sp,lv,hpMax,tier}, raid, bg, T, onEnd}

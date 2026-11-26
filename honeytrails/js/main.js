@@ -1,11 +1,11 @@
 // Honey Trails: game controller and UI.
-import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.1';
-import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.1';
-import {AU} from './audio.js?v=1.0.1';
-import * as MAP from './map.js?v=1.0.1';
-import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.1';
-import * as ENC from './encounter.js?v=1.0.1';
-import * as BAT from './battle.js?v=1.0.1';
+import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.2';
+import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.2';
+import {AU} from './audio.js?v=1.0.2';
+import * as MAP from './map.js?v=1.0.2';
+import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.2';
+import * as ENC from './encounter.js?v=1.0.2';
+import * as BAT from './battle.js?v=1.0.2';
 const V=window.__V;const $=id=>document.getElementById(id);
 window.__art=(sp,shiny,hat)=>hat&&HATS.has(sp)?`art/${sp==='bean'?'beanx':sp+'_h'}.webp?v=${V}`:`art/${sp}${shiny&&SHINY.has(sp)?'_s':''}.webp?v=${V}`;
 const art=window.__art;
@@ -239,7 +239,7 @@ function openOptions(fromMap){const seg=(id,opts,cur)=>`<div class="seg" id="${i
  el.querySelector('#oCb').onclick=()=>{const v=(el.querySelector('#oC').value||'').trim().toUpperCase();el.querySelector('#oC').blur();if(v==='AMSABABY'){cheat()}else{AU.play('back');toast(T('cheatBad'))}};
  el.querySelector('#oR').onclick=async()=>{const v=await popup({title:T('reset'),html:`<p>${esc(T('resetQ'))}</p>`,buttons:[{t:T('no'),v:0},{t:T('yes'),v:1,c:'pink'}]});if(v){wipe();save();location.replace(location.pathname+'?r='+Date.now())}}}
 function cheat(){S.cheat=true;S.glitter+=50000;['bean','pooping','goblin','wisp'].forEach(f=>S.treats[f]=(S.treats[f]||0)+200);S.boostUntil=Date.now()+30*60000;
- const now=Date.now();const rares=['bronny','kermit','kaise','bramble','toll','ogre'];MAP.M.extra=(MAP.M.extra||[]).filter(s=>s.end>now);
+ const now=Date.now();const rares=['bronny','kermit','kaise','bramble','toll','ogre','kgkermit','knasmon','hpbronny','wzpoop'];MAP.M.extra=(MAP.M.extra||[]).filter(s=>s.end>now);
  rares.forEach((sp,i)=>{const a=i/rares.length*Math.PI*2;MAP.M.extra.push({key:'ch'+now+'_'+i,sp,x:MAP.M.px+Math.cos(a)*22,y:MAP.M.py+Math.sin(a)*22,ter:'park',lvR:.7,iv:[15,15,15],shiny:i===0?false:SHINY.has(sp),end:now+30*60000})});
  G.refreshT=0;save();AU.play('lvup');toast(T('cheatOk'),3500)}
 // ---------- daily ----------

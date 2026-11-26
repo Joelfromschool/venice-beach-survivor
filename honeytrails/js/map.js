@@ -1,8 +1,8 @@
 // 3D map view (Three.js). Soft, bright stylized world drawn from world.js; nothing loaded from the network.
-import * as THREE from '../vendor/three.module.min.js?v=1.0.1';
-import {CELL,parkV,waterV,cellRoads,cellPaths,cellStops,cellArena,cellSpawns,raidAt,terrain,hash,rng} from './world.js?v=1.0.1';
-import {SP} from './data.js?v=1.0.1';
-import {S} from './state.js?v=1.0.1';
+import * as THREE from '../vendor/three.module.min.js?v=1.0.2';
+import {CELL,parkV,waterV,cellRoads,cellPaths,cellStops,cellArena,cellSpawns,raidAt,terrain,hash,rng} from './world.js?v=1.0.2';
+import {SP} from './data.js?v=1.0.2';
+import {S} from './state.js?v=1.0.2';
 const TP=192,SAMP=33; // texture px per cell, noise samples per side
 export const M={yaw:0,dist:90,tyaw:0,tdist:90,px:0,py:0,ax:0,ay:0,moving:0,face:1,night:false,spawns:[],stops:[],arenas:[],ready:false};
 let R,scene,cam,ground,ox=0,oy=0,chunks=new Map(),queue=[],texCache={},avatar,avShadow,ring,ring2,sun,hemi,clock=0;
@@ -14,7 +14,7 @@ export function texFor(src){if(!texCache[src]){const t=new THREE.TextureLoader()
 export function artSrc(sp,shiny,hat){return window.__art(sp,shiny,hat)}
 export function initMap(canvas){
  R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});R.setPixelRatio(Math.min(devicePixelRatio,2));R.setClearColor(0,0);
- R.outputColorSpace=THREE.SRGBColorSpace;
+ R.outputColorSpace=THREE.SRGBColorSpace;M.info=()=>({calls:R.info.render.calls,tris:R.info.render.triangles,ents:ents.size,spawns:M.spawns.length,shown:M.spawns.filter(x=>Math.hypot(x.x-M.ax,x.y-M.ay)<110).length});
  scene=new THREE.Scene();scene.fog=new THREE.Fog(P.fog,230,470);
  cam=new THREE.PerspectiveCamera(42,1,1,1200);
  hemi=new THREE.HemisphereLight(0xffffff,0x9ab89a,1.1);scene.add(hemi);sun=new THREE.DirectionalLight(0xffffff,1.0);sun.position.set(-60,120,40);scene.add(sun);
@@ -91,9 +91,16 @@ function arenaMesh(a){const g=new THREE.Group();
  g.userData={sp,label};return g}
 function labelTex(text,col){const c=document.createElement('canvas');c.width=256;c.height=64;const g=c.getContext('2d');g.font='bold 30px Chewy, sans-serif';const w=Math.min(250,g.measureText(text).width+34);
  g.fillStyle=col||'rgba(224,69,123,.92)';const x=(256-w)/2;g.beginPath();g.roundRect(x,8,w,48,24);g.fill();g.fillStyle='#fff';g.textAlign='center';g.textBaseline='middle';g.fillText(text,128,33);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t}
-function spawnMesh(s){const g=new THREE.Group();const sh=new THREE.Mesh(new THREE.CircleGeometry(2.4,20),new THREE.MeshBasicMaterial({map:M.shTex,transparent:true,depthWrite:false}));sh.rotation.x=-Math.PI/2;sh.position.y=.12;g.add(sh);
+// shared spawn resources (1.0.2): one merged grass mesh + shared geometry/materials keep draw calls low with denser spawns
+let SPR=null;function spawnRes(){if(SPR)return SPR;const pos=[],col=[];const m=new THREE.Matrix4(),q=new THREE.Quaternion(),e=new THREE.Euler(),cA=new THREE.Color(0x3fae4e),cB=new THREE.Color(0x5cc85a);
+ for(let i=0;i<5;i++){const g=new THREE.ConeGeometry(.55,2.6,4).toNonIndexed();e.set(0,0,(i-2)*.25);q.setFromEuler(e);m.compose(new THREE.Vector3(Math.cos(i*1.3)*1.2,1.2,Math.sin(i*1.3)*1.2),q,new THREE.Vector3(1,1,1));g.applyMatrix4(m);
+  const P=g.attributes.position;for(let j=0;j<P.count;j++){pos.push(P.getX(j),P.getY(j),P.getZ(j));const c=i%2?cA:cB;col.push(c.r,c.g,c.b)}g.dispose()}
+ const gg=new THREE.BufferGeometry();gg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));gg.setAttribute('color',new THREE.Float32BufferAttribute(col,3));gg.computeVertexNormals();
+ SPR={grassGeo:gg,grassMat:new THREE.MeshLambertMaterial({vertexColors:true,flatShading:true}),shGeo:new THREE.CircleGeometry(2.4,20),shMat:new THREE.MeshBasicMaterial({map:M.shTex,transparent:true,depthWrite:false})};
+ for(const k in SPR)SPR[k].userData.shared=true;return SPR}
+function spawnMesh(s){const R=spawnRes();const g=new THREE.Group();const sh=new THREE.Mesh(R.shGeo,R.shMat);sh.rotation.x=-Math.PI/2;sh.position.y=.12;g.add(sh);
  const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:texFor(artSrc(s.sp,s.shiny,s.hat)),fog:true,alphaTest:.04}));sp.center.set(.5,0);g.add(sp);
- const grass=new THREE.Group();for(let i=0;i<5;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(.55,2.6,4),new THREE.MeshLambertMaterial({color:i%2?0x3fae4e:0x5cc85a,flatShading:true}));c.position.set(Math.cos(i*1.3)*1.2,1.2,Math.sin(i*1.3)*1.2);c.rotation.z=(i-2)*.25;grass.add(c)}g.add(grass);
+ const grass=new THREE.Mesh(R.grassGeo,R.grassMat);g.add(grass);
  g.userData={sp,grass,sh};return g}
 function setSpriteSize(sp,h){const im=sp.material.map&&sp.material.map.image;const ar=im&&im.width?im.width/im.height:.7;sp.scale.set(h*ar,h,1)}
 // refresh which entities exist around the player (called ~every 1.5s)
@@ -104,7 +111,7 @@ export function refreshEntities(now,boost){const ix=Math.floor(M.px/CELL),iy=Mat
   const a=cellArena(cx,cy);if(a){M.arenas.push(a);want.add(a.id);if(!ents.has(a.id)){const o=arenaMesh(a);ents.set(a.id,{kind:'arena',o,d:a});scene.add(o)}}}
  // extra spawns injected by the game (cheat, raid rewards)
  for(const s of (M.extra||[])){if(S.gone[s.key]||s.end<now)continue;M.spawns.push(s);want.add(s.key);if(!ents.has(s.key)){const o=spawnMesh(s);ents.set(s.key,{kind:'spawn',o,d:s});scene.add(o)}}
- for(const [k,e] of ents)if(!want.has(k)){scene.remove(e.o);e.o.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material&&!(o.material.map&&texCache_has(o.material.map)))o.material.dispose()});ents.delete(k)}
+ for(const [k,e] of ents)if(!want.has(k)){scene.remove(e.o);e.o.traverse(o=>{if(o.geometry&&!o.geometry.userData.shared)o.geometry.dispose();if(o.material&&!o.material.userData.shared&&!(o.material.map&&texCache_has(o.material.map)))o.material.dispose()});ents.delete(k)}
  for(const a of M.arenas){const e=ents.get(a.id);const rd=raidAt(a,now);a.raid=rd;const sp=e.o.userData.sp;const want2=rd?rd.sp:a.def;if(sp._sp!==want2){sp.material.map=texFor(artSrc(want2));sp.material.needsUpdate=true;sp._sp=want2}
   const lab=e.o.userData.label;if(rd&&!S.raidsDone[rd.key]){const txt='★'.repeat(rd.tier>3?5:rd.tier)+' '+mmss(rd.end-now);if(lab._t!==txt){if(lab.material.map)lab.material.map.dispose();lab.material.map=labelTex(txt);lab.material.needsUpdate=true;lab._t=txt}lab.visible=true}else lab.visible=false}}
 const texCache_has=t=>Object.values(texCache).includes(t);
@@ -127,9 +134,9 @@ export function frame(dt,now){if(!R)return;clock+=dt;
  const rp=(clock*.6)%1;ring2.scale.setScalar(4+rp*36);ring2.material.opacity=.32*(1-rp);
  // entities
  for(const [k,e] of ents){const d=e.d;const [x,z]=W2S(d.x,d.y);e.o.position.set(x,0,z);const dist=Math.hypot(d.x-M.ax,d.y-M.ay);
-  if(e.kind==='spawn'){const u=e.o.userData,near=dist<75;e.near=near;e.o.visible=dist<140;u.sp.visible=near;u.sh.visible=near;u.grass.visible=!near;
+  if(e.kind==='spawn'){const u=e.o.userData,near=dist<110;e.near=near;e.o.visible=dist<170;u.sp.visible=near;u.sh.visible=near;u.grass.visible=!near;
    if(near){const ph=hash(k)*6;const bb=Math.abs(Math.sin(clock*2.4+ph))*.6;u.sp.position.y=bb;setSpriteSize(u.sp,(SP[d.sp].sz||1)*8.5*(d.raid?1.2:1));if(!e.seen){e.seen=true;e.pop=0}if(e.pop<1){e.pop=Math.min(1,e.pop+dt*3);u.sp.scale.multiplyScalar(.3+.7*e.pop)}}
-   else{u.grass.rotation.y=Math.sin(clock*7+hash(k)*9)*.25;u.grass.children.forEach((c,i)=>c.rotation.z=(i-2)*.25+Math.sin(clock*14+i)*.18)}}
+   else{const hk=e.hk??(e.hk=hash(k)*9);u.grass.rotation.y=Math.sin(clock*7+hk)*.25;u.grass.rotation.z=Math.sin(clock*14+hk)*.12}}
   else if(e.kind==='stop'){const u=e.o.userData;const used=!!S.spun[d.id]&&S.spun[d.id]>Date.now();u.hold.rotation.y+=dt*(used?.3:1.2);u.hexM.color.setHex(used?0xc9a6ff:0xffc233);u.hexM.emissive.setHex(used?0x2a1050:(dist<45?0x775000:0x553300));
    u.hold.position.y=9.2+Math.sin(clock*2+hash(k)*5)*.4;e.o.scale.setScalar(dist<45?1.15:1)}
   else if(e.kind==='arena'){const u=e.o.userData;setSpriteSize(u.sp,d.raid&&!S.raidsDone[d.raid.key]?13:10);u.sp.position.y=12.3+Math.sin(clock*1.6)*.3}}
