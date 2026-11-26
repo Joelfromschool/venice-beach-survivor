@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Slice ATTICUS VORN art sheets -> glad_art.js (window.GART). Run from gladiator/art/.
+"""Slice NOODLUS MAXIMUS art sheets -> glad_art.js (window.GART). Run from gladiator/art/.
 Sheets are cut into equal cells (any resolution). Missing sheets/cells fall back to code art."""
 import base64,io,os,json
 import numpy as np

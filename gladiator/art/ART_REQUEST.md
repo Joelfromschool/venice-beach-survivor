@@ -1,10 +1,10 @@
-# ATTICUS VORN: art request (5 sheets)
+# NOODLUS MAXIMUS: art request (5 sheets)
 Save the sheets in gladiator/art/ and run `python3 slice_glad.py`. Sheets are cut into equal cells at any resolution (16:9, for example 1280x720). A missing sheet falls back to the code-drawn art.
 
 Style for all sheets: rich hand-painted SoR4-style 2D game art with thick dark ink outlines, strong shading, a warm Mediterranean sun from the upper left and a crimson/gold palette. Characters are full-body and fill about 85% of their cell, centred, with no text, no ground shadows and nothing crossing cell borders. The background is flat pure magenta #FF00FF (sheets 1-3 only), with an equal grid and no gutters.
 
 ## 1. glad_party.jpg: 4 columns x 3 rows. Party, side view, all facing LEFT
-Columns: (1) ATTICUS VORN, the hero: young Thracian murmillo, tanned, scarred, crested grill-visor helmet with a red plume, red loincloth and belt, red rectangular scutum, gladius. (2) BRUTUS: huge bald older Nubian hoplomachus, bronze Greek helmet with a gold crest, round bronze shield, spear. (3) SABINA: priestess of Mars, white and gold robes, dark braided hair, staff topped with a glowing sun. (4) NYX: lean retiaria, short black hair, teal wraps, net over her shoulder, trident.
+Columns: (1) NOODLUS MAXIMUS, the hero: young Thracian murmillo, tanned, scarred, crested grill-visor helmet with a red plume, red loincloth and belt, red rectangular scutum, gladius. (2) BRUTUS: huge bald older Nubian hoplomachus, bronze Greek helmet with a gold crest, round bronze shield, spear. (3) SABINA: priestess of Mars, white and gold robes, dark braided hair, staff topped with a glowing sun. (4) NYX: lean retiaria, short black hair, teal wraps, net over her shoulder, trident.
 Rows: (1) battle-ready idle stance; (2) attacking mid-swing or thrust, lunging left (Sabina casting with her staff raised); (3) hurt, recoiling backward.
 
 ## 2. glad_foes.jpg: 4 columns x 3 rows. Enemies, side view, all facing RIGHT
@@ -23,5 +23,5 @@ Row 4, item icons: gladius sword, lorica armor, scutum shield, bread loaf, olive
 1 title: the Colosseum at sunset, dramatic sky. 2 battle: arena floor seen from the side with a sandy fighting area across the lower 45% and cheering crowd stands behind. 3 final battle: the same arena at night with torches and the golden imperial box. 4 the ludus training yard (sand, wooden posts, practice dummies, stone walls) for practice bouts.
 
 ## 5. glad_story.jpg: 3 columns x 2 rows. Painted story panels, cinematic, no text
-Intro: 1 Legion soldiers burning a Thracian village at night while young Atticus is dragged away in chains · 2 a Roman slave market with Atticus chained on the block and the lanista pointing at him · 3 Atticus gripping a wooden sword in the ludus at dawn, looking up at the distant Colosseum.
-Ending: 4 Malvex falling on the arena sand with Atticus standing over him and the crowd roaring · 5 the Emperor in the golden box reluctantly holding out the wooden rudis of freedom · 6 Atticus, Brutus, Sabina and Nyx walking out of the arena gate into golden sunlight.
+Intro: 1 Legion soldiers burning a Thracian village at night while young Noodlus is dragged away in chains · 2 a Roman slave market with Noodlus chained on the block and the lanista pointing at him · 3 Noodlus gripping a wooden sword in the ludus at dawn, looking up at the distant Colosseum.
+Ending: 4 Malvex falling on the arena sand with Noodlus standing over him and the crowd roaring · 5 the Emperor in the golden box reluctantly holding out the wooden rudis of freedom · 6 Noodlus, Brutus, Sabina and Nyx walking out of the arena gate into golden sunlight.

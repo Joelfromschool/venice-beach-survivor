@@ -74,8 +74,8 @@ GAMES = [
   en=('Mossheart','Forest FPS','Pick a side, forest spirits or the Ironworks, and fight for the sunlit grove.'),
   ja=('モスハート','森のFPS','森の精霊か、鉄工団か。陣営を選んで、光の森をかけて戦え。')),
  dict(id='gladiator', cat='adv', pos='50% 50%',
-  en=('Atticus Vorn','Gladiator RPG','From slave to Champion of Rome. Fight in the arena, gather a party and win your freedom.'),
-  ja=('アティカス・ヴォーン','剣闘士RPG','奴隷からローマの王者へ。闘技場で戦い、仲間を集め、自由を勝ち取れ。')),
+  en=('Noodlus Maximus','Gladiator RPG','From slave to Champion of Rome. Fight in the arena, gather a party and win your freedom.'),
+  ja=('ヌードラス・マキシマス','剣闘士RPG','奴隷からローマの王者へ。闘技場で戦い、仲間を集め、自由を勝ち取れ。')),
 ]
 ROWS = [
  ('all',  'All games',                 'すべてのゲーム', None),
