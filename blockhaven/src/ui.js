@@ -1,12 +1,12 @@
 // Chunky pixel-style DOM UI for Blockhaven: HUD, hotbar, bag, crafting, kiln, chest, shop, dialog, menus.
 import * as THREE from '../vendor/three.module.min.js';
-import {G,VERSION} from './state.js?v=1.1.4';
-import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.4';
-import {T,tx,itemName} from './i18n.js?v=1.1.4';
-import * as Tut from './tutorial.js?v=1.1.4';
-import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.4';
-import {makeModel,animate} from './models.js?v=1.1.4';
-import {sfx,audioWake} from './audio.js?v=1.1.4';
+import {G,VERSION} from './state.js?v=1.1.5';
+import {BLOCKS,def,isBlock,RECIPES,SMELT,iconURL,ARMOR_SLOTS,B} from './blocks.js?v=1.1.5';
+import {T,tx,itemName} from './i18n.js?v=1.1.5';
+import * as Tut from './tutorial.js?v=1.1.5';
+import {NPC,QUESTS,TRADES,PLACE} from './story.js?v=1.1.5';
+import {makeModel,animate} from './models.js?v=1.1.5';
+import {sfx,audioWake} from './audio.js?v=1.1.5';
 const $=s=>document.querySelector(s);
 const h=(tag,cls,html)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -134,7 +134,7 @@ export function inventory(tab='inv'){const P=A().P;if(!G.inGame)return;
   const right=h('div','invright');const grid=h('div','grid main');for(let i=9;i<36;i++)grid.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{onDouble:()=>A().equipFromSlot(i)}));right.appendChild(grid);
   const hb=h('div','grid hot');for(let i=0;i<9;i++)hb.appendChild(slotEl(()=>P.inv[i],v=>{P.inv[i]=v},'i'+i,{cls:'hb',onDouble:()=>{if(def(P.inv[i].id).armor!==undefined)A().equipFromSlot(i);else{P.sel=i;closePanel()}}}));right.appendChild(hb);
   const info=h('div','iteminfo');right.appendChild(info);right.appendChild(h('div','help',T('tapmove')));
-  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.4').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
+  const row=h('div','row');row.appendChild(btn('🗑 '+(G.opt.lang==='ja'?'すてる':'Drop'),()=>{if(selSlot&&selSlot.get()){const s=selSlot.get();selSlot.set(null);selSlot=null;const pp=A().P.pos;import('./entities.js?v=1.1.5').then(E=>{const it=E.dropItem(s.id,s.count,pp.x,pp.y+1.2,pp.z,null,s.dur);if(it)it.t=-1.5});dirty()}}));right.appendChild(row);
   body.appendChild(right);p.appendChild(body);p._info=info},
  ()=>{P_.querySelectorAll('.slot').forEach(e=>e._draw&&e._draw());const info=P_._info;if(info){const s=selSlot&&selSlot.get();info.innerHTML=s?itemInfo(s):''}})}
 function itemInfo(s){const d=def(s.id);let t=`<b>${esc(itemName(s.id))}</b>`;if(d.dmg&&d.tool==='sword')t+=` · ⚔${d.dmg}`;if(d.def)t+=` · 🛡${d.def}`;if(d.food)t+=` · 🍎+${d.food[0]}`;if(d.dur&&s.dur!==undefined)t+=` · ${s.dur}/${d.dur}`;return t}

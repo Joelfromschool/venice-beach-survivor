@@ -1,7 +1,7 @@
 // First-play guided lesson and contextual tips for Blockhaven. Touch-only wording.
-import {G} from './state.js?v=1.1.4';
-import {T,itemName} from './i18n.js?v=1.1.4';
-import {B,def,isBlock} from './blocks.js?v=1.1.4';
+import {G} from './state.js?v=1.1.5';
+import {T,itemName} from './i18n.js?v=1.1.5';
+import {B,def,isBlock} from './blocks.js?v=1.1.5';
 
 const LOGS=[7,35,49,62];
 const TOOLS=[120,121,122,123,124,125,126,127,128,129,130,131]; // wood/stone/iron tools

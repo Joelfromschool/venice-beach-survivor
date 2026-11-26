@@ -1,11 +1,11 @@
 // Honey Trails: game controller and UI.
-import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.2';
-import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.2';
-import {AU} from './audio.js?v=1.0.2';
-import * as MAP from './map.js?v=1.0.2';
-import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.2';
-import * as ENC from './encounter.js?v=1.0.2';
-import * as BAT from './battle.js?v=1.0.2';
+import {SP,SPECIES,ITEMS,STR,TYPES,RAR_N,XP_LV,calcCP,calcHP,cpm,SHINY} from './data.js?v=1.0.3';
+import {S,load,save,wipe,lvFromXp,newPal,refresh,today,bagCount,BAG_MAX} from './state.js?v=1.0.3';
+import {AU} from './audio.js?v=1.0.3';
+import * as MAP from './map.js?v=1.0.3';
+import {project,terrain,isNight,hash,rng,CELL,HATS} from './world.js?v=1.0.3';
+import * as ENC from './encounter.js?v=1.0.3';
+import * as BAT from './battle.js?v=1.0.3';
 const V=window.__V;const $=id=>document.getElementById(id);
 window.__art=(sp,shiny,hat)=>hat&&HATS.has(sp)?`art/${sp==='bean'?'beanx':sp+'_h'}.webp?v=${V}`:`art/${sp}${shiny&&SHINY.has(sp)?'_s':''}.webp?v=${V}`;
 const art=window.__art;

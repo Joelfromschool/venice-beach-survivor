@@ -1,6 +1,6 @@
 // English + Japanese strings for Blockhaven UI, items and the intro captions.
-import {G} from './state.js?v=1.1.4';
-import {def} from './blocks.js?v=1.1.4';
+import {G} from './state.js?v=1.1.5';
+import {def} from './blocks.js?v=1.1.5';
 const S={
  title:['Blockhaven','ブロックヘイブン'],subtitle:['A voxel adventure in Honeyvale','ハニーヴェイルのボクセル冒険'],
  newgame:['New Adventure','新しい冒険'],cont:['Continue','つづきから'],options:['Options','設定'],picker:['◀ Game Picker','◀ ゲーム選択'],intro:['Watch Intro','オープニング'],

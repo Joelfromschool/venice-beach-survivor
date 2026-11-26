@@ -1,4 +1,4 @@
-import {SP,ITEMS,XP_LV,calcCP,calcHP} from './data.js?v=1.0.2';
+import {SP,ITEMS,XP_LV,calcCP,calcHP} from './data.js?v=1.0.3';
 const KEY='honeytrails_v1';
 export const S={};
 export function defaults(){return {v:1,lang:(navigator.language||'').startsWith('ja')?'ja':'en',started:false,mode:'',avatar:'pinco',music:true,sfx:true,arDef:false,

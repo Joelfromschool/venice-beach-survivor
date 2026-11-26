@@ -154,7 +154,7 @@ canvas{position:absolute;left:0;top:0;width:100%;height:100%}
 </div>
 <div id="upd"></div>
 <script>
-const VER='v1.1.2';
+const VER='v1.1.3';
 const W=1280,H=720;
 let SV;
 function T(o){return typeof o==='string'?o:(o[SV&&SV.lang||'en']||o.en)}
@@ -324,7 +324,7 @@ function starsSpent(){return SV.upg.reduce((a,id)=>a+UPG.find(u=>u.id==id).c,0)}
 function heroLv(id){let xp=SV.xp[id]||0,l=1;while(l<10&&xp>=xpNeed(l)){xp-=xpNeed(l);l++}return l}
 function xpNeed(l){return 120+l*110}
 // ---------- images ----------
-const IM={};function img(n){if(!IM[n]){const i=new Image();i.decoding='async';i.src='art/'+n+'.webp';IM[n]=i}return IM[n]}
+const IM={};function img(n){if(!IM[n]){const i=new Image();i.decoding='async';i.src='art/'+n+'.webp?v='+VER;IM[n]=i}return IM[n]}
 const ok=i=>i&&i.complete&&i.naturalWidth>0;
 // ---------- audio ----------
 let AC=null,MG=null,MUS=null,SFG=null,REV=null,musicOn=false;
@@ -740,7 +740,7 @@ function el(tag,cls,html){const e=document.createElement(tag);if(cls)e.className
 // ---------- title ----------
 function showTitle(){G=null;setHUD(false);hideToast();music('menu');const t=$('title');t.innerHTML='';t.style.background='#3a2a1c url('+mapImg()+') center/cover';
  const m=el('div','mid');m.appendChild(el('div','dim'));const p=el('div','felt panel');p.style.position='relative';p.appendChild(el('div','ttl',T(S.title)));p.appendChild(el('div','',T(S.sub)));
- const cast=el('div','row');cast.style.marginTop='calc(var(--u)*4)';['pooh','pinco','bean'].forEach(k=>{const i=el('img');i.src='art/h_'+k+'.webp';i.style.height='calc(var(--u)*22)';i.style.animation='dance .5s infinite alternate';i.style.animationDelay=(Math.random()*.4)+'s';cast.appendChild(i)});p.appendChild(cast);
+ const cast=el('div','row');cast.style.marginTop='calc(var(--u)*4)';['pooh','pinco','bean'].forEach(k=>{const i=el('img');i.src='art/h_'+k+'.webp?v='+VER;i.style.height='calc(var(--u)*22)';i.style.animation='dance .5s infinite alternate';i.style.animationDelay=(Math.random()*.4)+'s';cast.appendChild(i)});p.appendChild(cast);
  const r=el('div','row');r.style.marginTop='calc(var(--u)*2)';r.appendChild(btn('▶ '+T(S.play),'g',()=>{music('menu');if(!SV.seen.b0){playStory('b0',()=>showMap())}else showMap()},'bPlay'));r.appendChild(btn('📖 '+T(S.intro),'p',()=>playIntro(showTitle),'bIntro'));r.appendChild(btn('⚙️ '+T(S.options),'b',showOptions,'bOpt'));r.appendChild(btn('🏠 '+T(S.menu),'',()=>location.href='../'));p.appendChild(r);
  const v=el('div','small',VER);v.style.opacity=.6;p.appendChild(v);m.appendChild(p);t.appendChild(m);show('title')}
 // ---------- map ----------
@@ -759,7 +759,7 @@ function heroSelect(i){const md=$('modal');md.innerHTML='';const m=el('div','mid
  p.appendChild(el('div','ttl',T(LV[i].n)));p.appendChild(el('div','',T(S.heroes)));const r=el('div','row');let pick=SV.last.filter(h=>SV.heroes.includes(h)).slice(0,3);if(pick.length<2)pick=SV.heroes.slice(0,Math.min(3,SV.heroes.length));
  const cards={};const upd=()=>{for(const k in cards){cards[k].classList.toggle('on',pick.includes(k));cards[k].querySelector('.ck').textContent=pick.includes(k)?'✅':''}const key=techKey(pick);info.innerHTML=pick.length>=2&&TECH[key]?'✨ '+T(TECH[key].n)+(TECH[key].sig?' 💖 '+T(S.bff):''):(pick.length==3&&TECH[techKey(pick.slice(0,2))]?'✨ '+T(TECH[techKey(pick.slice(0,2))].n):'');goB.classList.toggle('dis',pick.length<2)};
  const bossLv=!!LV[i].boss;pick=pick.filter(k=>!(bossLv&&k=='asmon'));if(pick.length<2)pick=SV.heroes.filter(k=>k!='asmon').slice(0,3);
- for(const k of HERO_ORDER){const busy=bossLv&&k=='asmon',own=SV.heroes.includes(k)&&!busy;const c=el('div','felt hcard');c.id='hc_'+k;const im=el('img');im.src='art/'+HEROES[k].img+'.webp';if(!own)im.style.filter=busy?'grayscale(1) opacity(.5)':'brightness(0) opacity(.5)';c.appendChild(im);
+ for(const k of HERO_ORDER){const busy=bossLv&&k=='asmon',own=SV.heroes.includes(k)&&!busy;const c=el('div','felt hcard');c.id='hc_'+k;const im=el('img');im.src='art/'+HEROES[k].img+'.webp?v='+VER;if(!own)im.style.filter=busy?'grayscale(1) opacity(.5)':'brightness(0) opacity(.5)';c.appendChild(im);
   c.appendChild(el('div','',(own?'<b>'+T(HEROES[k].n)+'</b> Lv'+heroLv(k):'<b>'+T(S.locked)+'</b>')));c.appendChild(el('div','small',busy?T({en:'Busy being the boss here!',ja:'ここではボス役で忙しい！'}):own?T(HEROES[k].role):''));if(busy)c.querySelector('div').innerHTML='<b>'+T(HEROES[k].n)+'</b>';c.appendChild(el('div','ck',''));
   if(own)c.onclick=()=>{SFX.tap();if(pick.includes(k))pick=pick.filter(x=>x!=k);else if(pick.length<3)pick.push(k);upd()};cards[k]=c;r.appendChild(c)}
  p.appendChild(r);const info=el('div','small','');info.style.minHeight='calc(var(--u)*5)';info.style.marginTop='calc(var(--u)*1)';p.appendChild(info);
@@ -790,7 +790,7 @@ function hudTick(){if(!G)return;{const lv=Math.max(0,G.lives|0),mx=G.maxLives||2
 $('techBtn').onclick=e=>{e.stopPropagation();ac();useTech()};
 $('bSpeed').onclick=e=>{e.stopPropagation();SFX.tap();G.speed=G.speed>=3?1:G.speed+1;SV.speed=G.speed;save()};
 $('bPause').onclick=e=>{e.stopPropagation();SFX.tap();pauseMenu()};
-function showTechFx(ids,tc,isNew){G.paused=true;hideToast();const f=$('techFx');const pr=f.querySelector('.pr');pr.innerHTML='';ids.forEach((k,i)=>{const im=el('img');im.src='art/'+HEROES[k].img+'.webp';im.style.animationDelay=i*.12+'s';pr.appendChild(im)});f.querySelector('.tn').textContent=T(tc.n);f.style.display='flex';
+function showTechFx(ids,tc,isNew){G.paused=true;hideToast();const f=$('techFx');const pr=f.querySelector('.pr');pr.innerHTML='';ids.forEach((k,i)=>{const im=el('img');im.src='art/'+HEROES[k].img+'.webp?v='+VER;im.style.animationDelay=i*.12+'s';pr.appendChild(im)});f.querySelector('.tn').textContent=T(tc.n);f.style.display='flex';
  const conf=['🪙','💖','🍯','🌟','🫛','✨'];for(let i=0;i<14;i++){const c=el('div','cf',conf[i%conf.length]);c.style.cssText='position:absolute;font-size:calc(var(--u)*6);left:'+Math.random()*95+'%;top:-10%;transition:top 1.4s ease-in, transform 1.4s';f.appendChild(c);setTimeout(()=>{c.style.top='110%';c.style.transform='rotate('+(Math.random()*720-360)+'deg)'},30);setTimeout(()=>c.remove(),1600)}
  G.techUntil=performance.now()+1600;G.techNew=isNew?tc:null}
 function endTechFx(){const f=$('techFx');f.style.display='none';f.querySelectorAll('.cf').forEach(c=>c.remove());if(!G)return;G.techUntil=0;if(!$('modal').classList.contains('on'))G.paused=false;if(G.techNew){toast('📖 '+T(S.newTech)+T(G.techNew.n),2.5);G.techNew=null}}

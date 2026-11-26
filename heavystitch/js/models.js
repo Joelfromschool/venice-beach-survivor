@@ -123,7 +123,7 @@ function between(mesh,a,b){const d=new V3().subVectors(b,a);const L=d.length();m
 const SPEC={
  pinco:{type:'hum',H:4.6,skin:'#ef9fb4',top:'#8b8e92',bottom:'#7d8084',bare:{legs:1,arms:0,feet:1,hands:1},hipY:1.98,th:.86,sh:.9,legR:.12,thR:.15,
   waist:.42,chestR:.54,chestZ:.8,torsoH:.95,shX:.58,uLen:.6,fLen:.58,armR:.15,hand:.17,headR:.6,neck:.22,foot:[.23,.15,.42],tail:1,face:'pinco'},
- asmon:{type:'hum',H:4.6,skin:'#e3b497',top:'#3b2466',bottom:'#17161d',boot:'#221d2b',trim:'#b585ff',bare:{legs:0,arms:0,feet:0,hands:0},glove:'#1c1824',hipY:1.95,th:.9,sh:.9,legR:.14,thR:.17,
+ asmon:{type:'hum',H:4.6,skin:'#ecc3a6',tee:'#f4f1ea',top:'#3b2466',bottom:'#17161d',boot:'#221d2b',trim:'#b585ff',bare:{legs:0,arms:0,feet:0,hands:0},glove:'#1c1824',hipY:1.95,th:.9,sh:.9,legR:.14,thR:.17,
   waist:.4,chestR:.5,chestZ:.74,torsoH:.95,shX:.56,uLen:.6,fLen:.56,armR:.14,hand:.14,headR:.52,neck:.19,foot:[.16,.14,.32],coat:1,face:'asmon'},
  bronny:{type:'hum',H:4.6,skin:'#7b4a33',top:'#eef0f4',bottom:'#eef0f4',trim:'#1e2d50',acc:'#ff8a1a',boot:'#1e2d50',bare:{legs:1,arms:1,feet:0,hands:1},hipY:1.98,th:.9,sh:.92,legR:.15,thR:.18,
   waist:.44,chestR:.56,chestZ:.72,torsoH:1.0,shX:.62,uLen:.6,fLen:.58,armR:.16,hand:.16,headR:.52,neck:.2,foot:[.17,.16,.36],jersey:1,face:'bronny'},
@@ -185,8 +185,9 @@ function buildHuman(id,sp){const root=new T.Group(),J={},D={},B=[];LIDS=J.lids=[
  // ----- coat (Asmon / Dark Kermit)
  if(sp.coat){const tr=glowM(sp.trim);
   add(mk(latheG(id+'coatT',[[w*1.08,-.25],[r*1.0,th*.45],[r*1.05,th*.62],[r*.98,th*.82],[r*.6,th*.98]],14),top,chest,0,0,0,0,0,0,1.02,1,sp.chestZ*1.05));
-  for(const s of[-1,1]){add(mk(boxG(.03,th*.95,.02),tr,chest,s*.09,th*.45,r*sp.chestZ*1.07+.02,-.08,0,0));}
+  for(const s of[-1,1]){add(mk(boxG(.03,th*.95,.02),tr,chest,s*(sp.tee?.17:.09),th*.45,r*sp.chestZ*1.07+.02,-.08,0,0));}
   add(mk(trapG(r*.9,r*.5,.42,.06),top,chest,0,th*.96,-.08,-.4,0,0)); // collar
+  if(sp.tee)add(mk(boxG(.31,th*.62,.02),feltM(sp.tee),chest,0,th*.6,r*sp.chestZ*1.07+.008,-.08,0,0));
   // skirt panels on thighs + hips back
   for(const s of['R','L']){const sg=s==='R'?-1:1;const sk=mk(shellG(sp.thR*1.5,.035,sg>0?-.3:-2.4,sg>0?2.4:.3,1.15,5),top,J['th'+s],0,-.5,0);add(sk);
    add(mk(boxG(.025,1.1,.025),tr,J['th'+s],sg*sp.thR*1.6,-.5,sp.thR*.4));}
@@ -207,10 +208,12 @@ function buildHuman(id,sp){const root=new T.Group(),J={},D={},B=[];LIDS=J.lids=[
  }else{const sk=feltM(sp.skin);const hs=face==='kermit'?[1.15,.85,1]:[.92,1.08,.98];add(mk(sphG(hr,24,18),sk,head,0,hr*.95,0,0,0,0,...hs));
   add(mk(sphG(hr*.62,16,12),sk,head,0,hr*.55,0,0,0,0,1.2,1,1.15));
   D.faceZ=hr*.98;D.eyeY=hr*1.05;
-  if(face==='asmon'){const hair=feltM('#5b3a26'),beard=feltM('#6e4a33'),dk=basicM('#2a1810');
-   // hair: full back cap + side-swept fringe tufts
+  if(face==='asmon'){const hair=feltM('#9b6b40'),beard=feltM('#8e5530'),dk=basicM('#2a1810');
+   // hair: long, straight, centre-parted, hanging past the shoulders
    add(mk(capBack(hr*1.07,.75,0,PI*.62),hair,head,0,hr*.95,0,0,0,0,1,1.04,1.02));add(mk(capFront(hr*1.08,.8,0,PI*.19),hair,head,0,hr*.95,0));
-   for(const[x,y,z,sc,rz,rx]of[[0,1.8,.3,.5,.1,.4],[-.36,1.74,.42,.44,.7,.35],[.38,1.72,.38,.4,-.6,.3],[.15,1.88,.0,.5,-.2,0],[-.2,1.82,-.32,.5,.3,-.3],[.64,1.45,.28,.3,-1,0],[-.66,1.45,.28,.3,1,0],[-.55,1.6,.55,.34,1.1,.5]])add(mk(sphG(hr*sc,12,8),hair,head,x*hr,y*hr,z*hr,rx,0,rz,1.3,.62,1.1));
+   for(const s of[-1,1]){add(mk(sphG(hr*.5,12,8),hair,head,s*hr*.42,hr*1.78,hr*.2,.3,0,-s*.5,1.25,.4,1));
+    add(mk(capG(hr*.24,hr*1.35,10),hair,head,s*hr*.86,hr*.45,hr*.18,.05,0,s*.06,1,1,.8));}
+   add(mk(capG(hr*.5,hr*1.3,12),hair,head,0,hr*.35,-hr*.5,0,0,0,1.75,1,.55));
    // beard + jaw + moustache
    add(mk(capFront(hr*1.03,1.15,PI*.7,PI*.93),beard,head,0,hr*.95,0,0,0,0,1,1.05,1.02));
    add(mk(tubeG('asMou',[[-.22,.76,.93],[-.08,.8,1.0],[.08,.8,1.0],[.22,.76,.93]].map(p=>[p[0]*hr,p[1]*hr,p[2]*hr]),hr*.032,12,8),beard,head));

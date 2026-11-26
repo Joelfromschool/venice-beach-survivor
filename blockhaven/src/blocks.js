@@ -1,5 +1,5 @@
 // Blocks, items, recipes, smelting and icons for Blockhaven.
-import {TILE,TS,AT,PER} from './textures.js?v=1.1.4';
+import {TILE,TS,AT,PER} from './textures.js?v=1.1.5';
 export const B={};export const BLOCKS=[];
 const t=n=>TILE[n];
 function blk(id,key,o){const d=Object.assign({id,key,solid:true,opaque:true,cross:false,liquid:false,light:0,hard:1,tool:null,tier:0,cutout:false,drop:id,stack:64},o);if(typeof d.tex==='string')d.tex={top:t(d.tex),bottom:t(d.tex),side:t(d.tex)};else{const x=d.tex;d.tex={top:t(x.top||x.side),bottom:t(x.bottom||x.top||x.side),side:t(x.side),front:t(x.front||x.side)}}BLOCKS[id]=d;B[key]=id;return d}

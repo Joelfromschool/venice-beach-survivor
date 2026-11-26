@@ -1,11 +1,11 @@
 // Entities: shared voxel physics, mobs + AI, bosses, projectiles, item drops, particles.
 import * as THREE from '../vendor/three.module.min.js';
-import {G} from './state.js?v=1.1.4';
-import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.4';
-import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.4';
-import {tileUV} from './mesher.js?v=1.1.4';
-import {sfx} from './audio.js?v=1.1.4';
-import {clamp,angleWrap} from './util.js?v=1.1.4';
+import {G} from './state.js?v=1.1.5';
+import {BLOCKS,B,I,def,iconCanvas,itemPixels} from './blocks.js?v=1.1.5';
+import {makeModel,animate,extrudeIcon} from './models.js?v=1.1.5';
+import {tileUV} from './mesher.js?v=1.1.5';
+import {sfx} from './audio.js?v=1.1.5';
+import {clamp,angleWrap} from './util.js?v=1.1.5';
 // ---------- physics ----------
 export function doorOpen(x,y,z){const w=G.world,b=BLOCKS[w.get(x,y,z)];if(!b||!b.door)return false;const m=w.meta.get('door:'+w.idx(x,b.door===2?y-1:y,z));return!!(m&&m.o)}
 export function solidCell(x,y,z){const b=BLOCKS[G.world.get(x,y,z)];if(b.door)return!doorOpen(x,y,z);return b.solid}
