@@ -68,6 +68,8 @@ const AU=(()=>{
  // chords as scale-degree roots (0-6) + quality, scales as semitone arrays
  const MAJ=[0,2,4,5,7,9,11],MIN=[0,2,3,5,7,8,10],DOR=[0,2,3,5,7,9,10],MIX=[0,2,4,5,7,9,10];
  const STY={
+  chant:{bpm:[98,104],swing:0,fixed:1,scale:[MAJ],root:[55],progs:[[0,0,3,4]],
+   drums:{kick:'x...x...x...x...',clap:'....x.......x...',hat:'..x...x...x...x.',shaker:'x.x.x.x.x.x.x.x.'},chord:'stab',crhythm:'x.......x.......',bass:'bass',brhythm:'x.....x.x.......',lead:'bell',ldens:0},
   food:{bpm:[86,98],swing:.16,scale:[MAJ,DOR],root:[50,52,53,55],progs:[[1,4,0,5],[3,2,1,4],[0,5,3,4],[5,1,4,0]],
    drums:{kick:'x.....x...x.....|x.....x..x......',snare:'....x.......x...',hat:'x.x.x.x.x.x.xxx.',shaker:'..x...x...x...x.'},chord:'keys',crhythm:'x......x..x.....',bass:'bass',brhythm:'x.....x...x..x..',lead:'marimba',ldens:.45},
   comedy:{bpm:[124,138],swing:.0,scale:[MAJ,MIX],root:[53,55,57,58],progs:[[0,3,4,0],[0,5,1,4],[0,4,5,3],[3,0,4,4]],
@@ -101,7 +103,7 @@ const AU=(()=>{
   const S=STY[style]||STY.food,r=rng(seed*13+7);
   const scale=S.scale[Math.floor(r()*S.scale.length)],root=S.root[Math.floor(r()*S.root.length)];
   const bpm=bpmOverride||Math.round(S.bpm[0]+r()*(S.bpm[1]-S.bpm[0]));
-  const prog=S.progs[Math.floor(r()*S.progs.length)].slice();if(r()<.35){const i=1+Math.floor(r()*3),j=Math.floor(r()*7);prog[i]=j}
+  const prog=S.progs[Math.floor(r()*S.progs.length)].slice();if(!S.fixed&&r()<.35){const i=1+Math.floor(r()*3),j=Math.floor(r()*7);prog[i]=j}
   const deg=(d)=>{const o=Math.floor(d/7),i=((d%7)+7)%7;return scale[i]+12*o};
   // generate a 2-bar hook (32 steps) on chord tones, then answer phrase
   const mk=()=>{const notes=[];let cur=Math.floor(r()*3)*2;const dens=S.ldens;
@@ -128,7 +130,19 @@ const AU=(()=>{
   if(S.pad||song.style==='parent'||song.style==='villain'){if(st===0)I.pad(t,NOTE(song.root+song.deg(ch)),song.step*16,.8,bus)}
  }
  // ---------- SFX ----------
+ const VOW={a:[800,1200],e:[480,1900],i:[300,2250],o:[480,850],u:[340,750]};
+ function singNote(t,o,b){const m=o.m+(VOICE_SHIFT[o.who]||0),f=NOTE(m),d=o.d,amp=(o.a||1)*.16;const F=VOW[o.v]||VOW.a;
+  const out=gain(0,b);env(out,t,.035,amp,.25,.85,.06,t+d*.96);
+  const f1=filt('bandpass',F[0],5,out),f2=filt('bandpass',F[1],7,gain(.55,out)),f3=filt('bandpass',2800,6,gain(.18,out));
+  const src=ctx.createGain();src.gain.value=1;src.connect(f1);src.connect(f2);src.connect(f3);
+  const o1=osc('sawtooth',f,t,t+d,src),o2=osc('sawtooth',f,t,t+d,gain(.5,src),7);
+  if(o.gl){[o1,o2].forEach(x=>{x.frequency.setValueAtTime(f,t+Math.min(.25,d*.3));x.frequency.exponentialRampToValueAtTime(NOTE(m+o.gl),t+d*.8)})}
+  if(d>.45){const lfo=ctx.createOscillator();lfo.frequency.value=o.vib||5.6;const lg=ctx.createGain();lg.gain.setValueAtTime(0,t);lg.gain.linearRampToValueAtTime(f*(o.vib?.03:.018),t+Math.min(1,d*.6));lfo.connect(lg);lg.connect(o1.frequency);lg.connect(o2.frequency);lfo.start(t);lfo.stop(t+d+.2)}
+  if(o.c){const g=gain(0,b);env(g,t,.001,amp*.5,.02,0,.01,t+.05);nz(t,.05,filt('bandpass',o.c==='l'?900:300,1.5,g))}
+  out.connect(verbIn)}
+ const VOICE_SHIFT={pooh:-12,pooping:-12,bronny:-12,asmon:-17,pinco:0,bean:5,prof:-12,max:0};
  const FX={
+  sing(t,b,o){(o.who||['pooh']).forEach((w,k)=>singNote(t+k*.008,Object.assign({},o,{who:w,a:(o.a||1)/Math.sqrt((o.who||[1]).length)*(w==='asmon'&&o.grump?.7:1)}),b))},
   boing(t,b){const g=gain(0,b);env(g,t,.005,.5,.15,0,.08,t+.45);const o=osc('sine',180,t,t+.5,g);o.frequency.exponentialRampToValueAtTime(520,t+.08);o.frequency.exponentialRampToValueAtTime(140,t+.4);const vib=ctx.createOscillator();vib.frequency.value=22;const vg=ctx.createGain();vg.gain.value=40;vib.connect(vg);vg.connect(o.frequency);vib.start(t);vib.stop(t+.5)},
   pop(t,b){const g=gain(0,b);env(g,t,.001,.6,.03,0,.02,t+.08);const o=osc('sine',900,t,t+.1,g);o.frequency.exponentialRampToValueAtTime(260,t+.06)},
   whoosh(t,b){const g=gain(0,b);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.55,t+.12);g.gain.linearRampToValueAtTime(0,t+.32);const f=filt('bandpass',400,1.6,g);f.frequency.setValueAtTime(300,t);f.frequency.exponentialRampToValueAtTime(3500,t+.28);nz(t,.35,f)},
