@@ -30,7 +30,7 @@ const AU=(()=>{
   if(ctx.state!=='running')ctx.resume().catch(()=>{});
   if(!unlocked){unlocked=true;try{const b=ctx.createBuffer(1,1,22050),s=ctx.createBufferSource();s.buffer=b;s.connect(ctx.destination);s.start(0)}catch(e){}
    try{if(!silentEl){silentEl=document.createElement('audio');silentEl.setAttribute('playsinline','');silentEl.loop=true;silentEl.src=silentWav();silentEl.volume=0.01}silentEl.play().catch(()=>{})}catch(e){}}
-  setMuted(!want)}
+  setMuted(!want);if(!unlock._vp){unlock._vp=1;setTimeout(()=>{try{(window.CLIPS||[]).forEach(voxPreload)}catch(e){}},1200)}}
  function setMuted(m){muted=m;if(!ctx)return;const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(m?0:1,t,.04)}
  // ---------- instruments ----------
  function env(g,t,a,peak,dec,sus,rel,end){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.setTargetAtTime(sus*peak,t+a,dec);g.gain.setTargetAtTime(0,end,rel)}
@@ -69,7 +69,7 @@ const AU=(()=>{
  const MAJ=[0,2,4,5,7,9,11],MIN=[0,2,3,5,7,8,10],DOR=[0,2,3,5,7,9,10],MIX=[0,2,4,5,7,9,10];
  const STY={
   chant:{bpm:[98,104],swing:0,fixed:1,scale:[MAJ],root:[55],progs:[[0,0,3,4]],
-   drums:{kick:'x...x...x...x...',clap:'....x.......x...',hat:'..x...x...x...x.',shaker:'x.x.x.x.x.x.x.x.'},chord:'stab',crhythm:'x.......x.......',bass:'bass',brhythm:'x.....x.x.......',lead:'bell',ldens:0},
+   drums:{kick:'x...x...x...x...',clap:'....x.......x...',hat:'..x...x...x...x.',shaker:'x.x.x.x.x.x.x.x.'},chord:'stab',crhythm:'................',bass:'bass',brhythm:'x.....x.x.......',lead:'bell',ldens:0},
   food:{bpm:[86,98],swing:.16,scale:[MAJ,DOR],root:[50,52,53,55],progs:[[1,4,0,5],[3,2,1,4],[0,5,3,4],[5,1,4,0]],
    drums:{kick:'x.....x...x.....|x.....x..x......',snare:'....x.......x...',hat:'x.x.x.x.x.x.xxx.',shaker:'..x...x...x...x.'},chord:'keys',crhythm:'x......x..x.....',bass:'bass',brhythm:'x.....x...x..x..',lead:'marimba',ldens:.45},
   comedy:{bpm:[124,138],swing:.0,scale:[MAJ,MIX],root:[53,55,57,58],progs:[[0,3,4,0],[0,5,1,4],[0,4,5,3],[3,0,4,4]],
@@ -192,21 +192,36 @@ const AU=(()=>{
  function voice(t,who,n,b){const v=VOICE[who]||[300,1];const r=rng(Math.floor(t*1000)%9973);n=Math.min(n,14);
   for(let i=0;i<n;i++){const tt=t+i*.075,g=gain(0,b);env(g,tt,.004,.17,.03,.4,.02,tt+.06);const f=filt('bandpass',v[0]*3,2,g);const o=osc(who==='bean'||who.startsWith('baby')?'triangle':'sawtooth',v[0]*(.85+r()*.45),tt,tt+.07,f);o.frequency.linearRampToValueAtTime(v[0]*(.9+r()*.3),tt+.06)}}
  // ---------- clip player ----------
+ // ---- recorded vocal tracks (clip.vox): decoded once, played sample-accurately against the same clock as the beat ----
+ const VOX={};
+ function voxLoad(url){if(VOX[url])return VOX[url];const ver=window.__BUILD__||'';
+  const dec=ab=>new Promise((res,rej)=>{try{const r=ctx.decodeAudioData(ab,res,rej);if(r&&r.then)r.then(res,rej)}catch(e){rej(e)}});
+  const get=u=>fetch(u+(u.includes('?')?'':'?v='+ver)).then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer()}).then(dec);
+  const alt=url.replace(/\.m4a$/,'.mp3');
+  VOX[url]=get(url).catch(()=>alt!==url?get(alt):Promise.reject()).catch(()=>{VOX[url]=null;return null});return VOX[url]}
+ function voxPreload(clip){if(clip&&clip.vox&&ctx)voxLoad(clip.vox)}
+ function voxStart(p){const c=p.clip;voxLoad(c.vox).then(buf=>{if(play!==p||!ctx)return;
+   if(!buf){p.voxFail=1;return}
+   const now=ctx.currentTime,off=Math.max(0,now-p.t0);if(off>=buf.duration-.05)return;
+   const g=ctx.createGain();g.gain.value=0;g.connect(p.vbus);g.gain.setTargetAtTime(c.voxVol||1,now,.012);
+   const src=ctx.createBufferSource();src.buffer=buf;src.connect(g);src.start(now+.005,off+.005);p.vsrc=src;p.vg=g;p.voxOn=1})}
  function start(clip,offset){
   stop();if(!ctx||!unlocked)return;
   const song=clip._song||(clip._song=makeSong(clip.song,clip.seed||1,clip.bpm));
-  const bus=ctx.createGain();bus.gain.value=0;bus.connect(musicBus);bus.gain.setTargetAtTime(1,ctx.currentTime,.03);
+  const bus=ctx.createGain();bus.gain.value=0;bus.connect(musicBus);bus.gain.setTargetAtTime(clip.musicVol==null?1:Math.max(.0001,clip.musicVol),ctx.currentTime,.03);
   const sbus=ctx.createGain();sbus.connect(sfxBus);
-  const t0=ctx.currentTime-offset;const p={clip,song,bus,sbus,t0,next:Math.ceil(offset/song.step-1e-6),ev:(clip._ev||[]),evi:0,dur:clip.dur};
+  let ev=(clip._ev||[]);if(clip.vox)ev=ev.filter(e=>e[1]!=='voice');
+  const t0=ctx.currentTime-offset;const p={clip,song,bus,sbus,t0,next:Math.ceil(offset/song.step-1e-6),ev,evi:0,dur:clip.dur};
+  if(clip.vox){p.vbus=ctx.createGain();p.vbus.gain.value=.9;p.vbus.connect(master);voxStart(p)}
   while(p.evi<p.ev.length&&p.ev[p.evi][0]<offset-0.02)p.evi++;
   play=p;pump();p.timer=setInterval(pump,25);return p}
  function pump(){const p=play;if(!p||!ctx)return;const now=ctx.currentTime,ahead=now+.14;
   while(p.t0+p.next*p.song.step<ahead){const st=p.next*p.song.step;if(st<p.dur-.04){const vol=p.clip.musicVol==null?1:p.clip.musicVol;if(vol>0)playStep(p.song,p.next,p.t0+st,p.bus)}p.next++;if(st>p.dur)break}
-  while(p.evi<p.ev.length&&p.t0+p.ev[p.evi][0]<ahead){const e=p.ev[p.evi++];const tt=Math.max(now,p.t0+e[0]);try{if(e[1]==='voice')voice(tt,e[2],e[3],p.sbus);else if(FX[e[1]])FX[e[1]](tt,p.sbus,e[2])}catch(err){}}}
- function stop(){const p=play;if(!p)return;play=null;clearInterval(p.timer);if(ctx){const t=ctx.currentTime;[p.bus,p.sbus].forEach(g=>{g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0,t+.06);setTimeout(()=>{try{g.disconnect()}catch(e){}},300)})}}
+  while(p.evi<p.ev.length&&p.t0+p.ev[p.evi][0]<ahead){const e=p.ev[p.evi++];const tt=Math.max(now,p.t0+e[0]);if(e[1]==='sing'&&p.clip.vox&&!p.voxFail)continue;try{if(e[1]==='voice')voice(tt,e[2],e[3],p.sbus);else if(FX[e[1]])FX[e[1]](tt,p.sbus,e[2])}catch(err){}}}
+ function stop(){const p=play;if(!p)return;play=null;clearInterval(p.timer);if(ctx){const t=ctx.currentTime;if(p.vsrc){try{p.vsrc.stop(t+.07)}catch(e){}}[p.bus,p.sbus].concat(p.vbus?[p.vbus]:[]).forEach(g=>{g.gain.cancelScheduledValues(t);g.gain.setValueAtTime(g.gain.value,t);g.gain.linearRampToValueAtTime(0,t+.06);setTimeout(()=>{try{g.disconnect()}catch(e){}},300)})}}
  function time(){return play&&ctx?ctx.currentTime-play.t0:null}
  function sfx(name){if(!ctx||!unlocked)return;try{FX[name](ctx.currentTime+.005,sfxBus)}catch(e){}}
- return {unlock,init,start,stop,time,sfx,
+ return {unlock,init,start,stop,time,sfx,voxPreload,get voxState(){return play?{on:!!play.voxOn,fail:!!play.voxFail}:null},
   get unlocked(){return unlocked},get running(){return !!ctx&&ctx.state==='running'},get muted(){return muted},
   setWant(w){want=w;if(unlocked)setMuted(!w)},get want(){return want},makeSong,STY,FX};
 })();

@@ -1,5 +1,7 @@
 'use strict';
-// v1.5.7: Pooh & the gang do the "LeBron, LeBron, LeBroooon" chant. Original backing beat ('chant' style) + formant-synth chant voices.
+// v1.5.10: Pooh & the gang do the "LeBron, LeBron, LeBroooon" chant. Original backing beat ('chant' style, quiet) + recorded vocal track
+// aud/lb01_vox.m4a: Piper neural TTS voices (one per character) re-pitched onto the chant notes and time-stretched with Praat PSOLA, layered + reverb.
+// The `sing` notes below are the score the vocal track was rendered from; they only play as a synth fallback if the vocal track can't load.
 // The chant hook is the viral fan chant; music, melody pitches and all other text are original. No league/team logos.
 window.CLIPS=window.CLIPS||[];
 (()=>{
@@ -13,7 +15,7 @@ const K=(t0,dur,en,ja,st,y,o)=>[t0,t0+dur,en,ja,st||'big',y||.2,o];
 // karaoke lines for one cycle (times in beats inside the shot)
 const kar=(big,longEN,longJA,y)=>[K(0,2,'LeBron,','レブロン、','big',y||.18),K(2,2,'LeBron,','レブロン、','big',y||.18),K(4,4,longEN,longJA,big?'neon':'big',y||.18,big?{g:'#ffd84a'}:undefined)];
 CLIPS.push(
-{id:'lb01',cat:'comedy',also:['la'],by:'pooh',song:'chant',seed:7101,bpm:100,likes:612000,cm:24800,
+{id:'lb01',cat:'comedy',also:['la'],by:'pooh',song:'chant',seed:7101,bpm:100,vox:'aud/lb01_vox.m4a',voxVol:1,musicVol:.12,likes:612000,cm:24800,
  cap:['the gang tried the LeBron chant and it got out of hand 🎤👑 #lebronchant #pooh #bronny','みんなで「レブロン」チャントをやったら止まらなくなった🎤👑 #レブロン #プー #ブロニー'],
  snd:['LeBron Chant (Pooh & the Gang)','レブロン・チャント（プーと仲間たち）'],
  com:[['bronny','I am not crying, you are 😭👑','泣いてない、泣いてるのはそっち😭👑'],['asmon','I was forced. @pooh.cooks knows what he did.','無理やりだった。@pooh.cooks のせい。'],['pinco','the third LeBroooon gave me chills','3回目のレブローーンで鳥肌'],['bean','I held the note with my one tooth','歯1本で音を伸ばした'],['pooping','@bronny9 you’re welcome','@bronny9 どういたしまして']],
